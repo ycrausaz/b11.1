@@ -1,0 +1,1 @@
+insert into "b11_1_basismengeneinheit" (text) values ('ST'),('M'),('KG'),('PAA'),('L'),('LE'),('T'),('STD'),('JHR'),('GLL'),('GLI'),('TO'),('G'),('MG'),('ML'),('CM'),('MM'),('M2'),('DM2'),('CM2'),('M3'),('CDM'),('CCM'),('PT'),('OZ'),('LB');

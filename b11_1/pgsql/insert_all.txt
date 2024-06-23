@@ -1,0 +1,9 @@
+insert into "b11_1_basismengeneinheit" (text) values ('ST'),('M'),('KG'),('PAA'),('L'),('LE'),('T'),('STD'),('JHR'),('GLL'),('GLI'),('TO'),('G'),('MG'),('ML'),('CM'),('MM'),('M2'),('DM2'),('CM2'),('M3'),('CDM'),('CCM'),('PT'),('OZ'),('LB');
+insert into "b11_1_begru" (text) values ('3000'), ('4000'), ('5000'), ('6000'), ('7000'), ('8000'), ('9000');
+insert into "b11_1_materialart" (text) values ('V001'),('V002'),('V003'),('V005'),('V006'),('V007'),('V008'),('V009'),('V010'),('V011'),('V012'),('V013'),('V014'),('V015'),('V016'),('V017'),('V099');
+insert into "b11_1_materialzustandsverwaltung" (text) values ('1'), ('2');
+insert into "b11_1_rueckfuehrungscode" (text) values ('R'),('N'),('V');
+insert into "b11_1_serialnummerprofil" (text) values ('ZM01'),('ZM02'),('ZM03'),('ZM05');
+insert into "b11_1_sparepartclasscode" (text) values ('0'),('1'),('2'),('6');
+insert into "b11_1_sparte" (text) values ('V0'),('V1'),('V2'),('V3'),('V4'),('V5'),('V6'),('V7'),('V8');
+insert into "b11_1_uebersetzungsstatus" (text) values ('P'),('U'),('N');

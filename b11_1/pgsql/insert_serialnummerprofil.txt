@@ -1,0 +1,1 @@
+insert into "b11_1_serialnummerprofil" (text) values ('ZM01'),('ZM02'),('ZM03'),('ZM05');

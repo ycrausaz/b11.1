@@ -1,0 +1,1 @@
+insert into "b11_1_sparepartclasscode" (text) values ('0'),('1'),('2'),('6');
