@@ -5,13 +5,15 @@ import django.db.models.deletion
 from django.conf import settings
 
 
+def update_view_owner(apps, schema_editor, view_name):
+    from django.conf import settings
+    sql = f'ALTER TABLE public."{view_name}" OWNER TO "{settings.DATABASES["default"]["USER"]}";'
+    schema_editor.execute(sql)
+
+
 class Migration(migrations.Migration):
 
     initial = True
-
-    def update_view_owner(apps, schema_editor, view_name):
-        sql = f'ALTER TABLE public."{view_name}" OWNER TO "{settings.DATABASES["default"]["USER"]}";'
-        schema_editor.execute(sql)
 
     dependencies = [
         ('b11_1', '0001_initial'),
@@ -22,7 +24,7 @@ class Migration(migrations.Migration):
             name='View_GD',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('begru', models.CharField(blank=True, null=True)),
+                ('begru_', models.CharField(blank=True, null=True)),
                 ('materialart_grunddaten', models.CharField(blank=True, null=True)),
                 ('sparte', models.CharField(blank=True, null=True)),
                 ('produkthierarchie', models.CharField(blank=True, null=True)),
@@ -39,13 +41,42 @@ class Migration(migrations.Migration):
                 ('zertifiziert_fuer_flug', models.BooleanField(blank=True, null=True)),
                 ('a_nummer', models.CharField(blank=True, null=True)),
                 ('verteilung_an_psd', models.BooleanField(blank=True, null=True)),
-                ('verteilung_an_tuag', models.BooleanField(blank=True, null=True)),
+                ('verteilung_an_ruag', models.BooleanField(blank=True, null=True)),
             ],
             options={
-                'db_table': "b11_1_view_gd",
+                'db_table': "b11_1_gd",
                 'managed': False,
             },
         ),
+        migrations.RunSQL(
+            """
+            CREATE OR REPLACE VIEW public.b11_1_gd
+             AS
+             SELECT b11_1_material.begru_id,
+                b11_1_material.materialart_grunddaten_id,
+                b11_1_material.sparte_id,
+                b11_1_material.produkthierarchie,
+                b11_1_material.materialzustandsverwaltung_id,
+                b11_1_material.rueckfuehrungscode_id,
+                b11_1_material.serialnummerprofil_id,
+                b11_1_material.spare_part_class_code_id,
+                b11_1_material.hersteller_nr_gp,
+                b11_1_material.warengruppe,
+                b11_1_material.uebersetzungsstatus_id,
+                b11_1_material.endbevorratet,
+                b11_1_material.revision_fremd,
+                b11_1_material.revision_eigen,
+                b11_1_material.zertifiziert_fuer_flug,
+                b11_1_material.a_nummer,
+                b11_1_material.verteilung_an_psd,
+                b11_1_material.verteilung_an_ruag
+               FROM b11_1_material;
+            """,
+            """
+            DROP VIEW b11_1_gd;
+            """
+        ),
+        migrations.RunPython(lambda apps, schema_editor: update_view_owner(apps, schema_editor, "b11_1_gd")),
         migrations.CreateModel(
             name='View_IL',
             fields=[
@@ -95,10 +126,64 @@ class Migration(migrations.Migration):
                 ('bemerkung', models.CharField(blank=True, null=True)),
             ],
             options={
-                'db_table': "b11_1_view_il",
+                'db_table': "b11_1_il",
                 'managed': False,
             },
         ),
+        migrations.RunSQL(
+            """
+            CREATE OR REPLACE VIEW public.b11_1_il
+             AS
+             SELECT b11_1_material.positions_nr,
+                b11_1_material.kurztext_de,
+                b11_1_material.kurztext_fr,
+                b11_1_material.kurztext_en,
+                b11_1_material.grunddatentext_de_1_zeile,
+                b11_1_material.grunddatentext_de_2_zeile,
+                b11_1_material.grunddatentext_fr_1_zeile,
+                b11_1_material.grunddatentext_fr_2_zeile,
+                b11_1_material.grunddatentext_en_1_zeile,
+                b11_1_material.grunddatentext_en_2_zeile,
+                b11_1_material.basismengeneinheit_id,
+                b11_1_material.bruttogewicht,
+                b11_1_material.gewichtseinheit,
+                b11_1_material.nettogewicht,
+                b11_1_material.groesse_abmessung,
+                b11_1_material.ean_upc_code,
+                b11_1_material.nato_stock_number,
+                b11_1_material.nsn_gruppe_klasse,
+                b11_1_material.nato_versorgungs_nr,
+                b11_1_material.herstellerteilenummer,
+                b11_1_material.normbezeichnung,
+                b11_1_material.gefahrgutkennzeichen,
+                b11_1_material.instandsetzbar,
+                b11_1_material.chargenpflicht,
+                b11_1_material.bestellmengeneinheit,
+                b11_1_material.mindestbestellmenge,
+                b11_1_material.lieferzeit,
+                b11_1_material.einheit_l_b_h,
+                b11_1_material.laenge,
+                b11_1_material.breite,
+                b11_1_material.hoehe,
+                b11_1_material.preis,
+                b11_1_material.waehrung,
+                b11_1_material.preiseinheit,
+                b11_1_material.lagerfaehigkeit,
+                b11_1_material.exportkontrollauflage,
+                b11_1_material.cage_code,
+                b11_1_material.hersteller_name,
+                b11_1_material.hersteller_adresse,
+                b11_1_material.hersteller_plz,
+                b11_1_material.hersteller_ort,
+                b11_1_material.revision,
+                b11_1_material.bemerkung
+               FROM b11_1_material;
+            """,
+            """
+            DROP VIEW b11_1_il;
+            """
+        ),
+        migrations.RunPython(lambda apps, schema_editor: update_view_owner(apps, schema_editor, "b11_1_il")),
         migrations.CreateModel(
             name='View_SM_DA',
             fields=[
@@ -130,21 +215,44 @@ class Migration(migrations.Migration):
                 ('auspraegung', models.CharField(blank=True, null=True)),
             ],
             options={
-                'db_table': "b11_1_view_sm_da",
+                'db_table': "b11_1_sm_da",
                 'managed': False,
             },
         ),
         migrations.RunSQL(
             """
-            CREATE OR REPLACE VIEW public.b11_1_view_sm_da
+            CREATE OR REPLACE VIEW public.b11_1_sm_da
              AS
              SELECT b11_1_material.werk_1,
-                b11_1_material.werk_2
+                b11_1_material.werk_2,
+                b11_1_material.werk_3,
+                b11_1_material.werk_4,
+                b11_1_material.allgemeine_positionstypengruppe,
+                b11_1_material.verkaufsorg,
+                b11_1_material.vertriebsweg,
+                b11_1_material.fuehrendes_material,
+                b11_1_material.auszeichnungsfeld,
+                b11_1_material.cpv_code,
+                b11_1_material.fertigungssteuerer,
+                b11_1_material.kennzeichen_komplexes_system,
+                b11_1_material.sonderablauf,
+                b11_1_material.temperaturbedingung,
+                b11_1_material.bewertungsklasse,
+                b11_1_material.systemmanager,
+                b11_1_material.kennziffer_bamf,
+                b11_1_material.mietrelevanz,
+                b11_1_material.next_higher_assembly,
+                b11_1_material.nachschubklasse,
+                b11_1_material.verteilung_apm_kerda,
+                b11_1_material.verteilung_svsaa,
+                b11_1_material.verteilung_cheops,
+                b11_1_material.zuteilung,
+                b11_1_material.auspraegung
                FROM b11_1_material;
             """,
             """
-            DROP VIEW b11_1_view_sm_da;
+            DROP VIEW b11_1_sm_da;
             """
         ),
-        migrations.RunPython(lambda apps, schema_editor: update_view_owner(apps, schema_editor, "b11_1_view_sm_da")),
+        migrations.RunPython(lambda apps, schema_editor: update_view_owner(apps, schema_editor, "b11_1_sm_da")),
     ]
