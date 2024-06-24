@@ -1,0 +1,1 @@
+insert into "b11_1_gefahrgutkennzeichen" (text) values ('V01'),('V02'),('V03');
