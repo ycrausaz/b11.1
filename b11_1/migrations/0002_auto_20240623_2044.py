@@ -44,13 +44,13 @@ class Migration(migrations.Migration):
                 ('verteilung_an_ruag', models.BooleanField(blank=True, null=True)),
             ],
             options={
-                'db_table': "b11_1_gd",
+                'db_table': "b11_1_gd_view",
                 'managed': False,
             },
         ),
         migrations.RunSQL(
             """
-            CREATE OR REPLACE VIEW public.b11_1_gd
+            CREATE OR REPLACE VIEW public.b11_1_gd_view
              AS
              SELECT b11_1_material.begru_id,
                 b11_1_material.materialart_grunddaten_id,
@@ -73,10 +73,10 @@ class Migration(migrations.Migration):
                FROM b11_1_material;
             """,
             """
-            DROP VIEW b11_1_gd;
+            DROP VIEW b11_1_gd_view;
             """
         ),
-        migrations.RunPython(lambda apps, schema_editor: update_view_owner(apps, schema_editor, "b11_1_gd")),
+        migrations.RunPython(lambda apps, schema_editor: update_view_owner(apps, schema_editor, "b11_1_gd_view")),
         migrations.CreateModel(
             name='View_IL',
             fields=[
@@ -126,13 +126,13 @@ class Migration(migrations.Migration):
                 ('bemerkung', models.CharField(blank=True, null=True)),
             ],
             options={
-                'db_table': "b11_1_il",
+                'db_table': "b11_1_il_view",
                 'managed': False,
             },
         ),
         migrations.RunSQL(
             """
-            CREATE OR REPLACE VIEW public.b11_1_il
+            CREATE OR REPLACE VIEW public.b11_1_il_view
              AS
              SELECT b11_1_material.positions_nr,
                 b11_1_material.kurztext_de,
@@ -180,10 +180,10 @@ class Migration(migrations.Migration):
                FROM b11_1_material;
             """,
             """
-            DROP VIEW b11_1_il;
+            DROP VIEW b11_1_il_view;
             """
         ),
-        migrations.RunPython(lambda apps, schema_editor: update_view_owner(apps, schema_editor, "b11_1_il")),
+        migrations.RunPython(lambda apps, schema_editor: update_view_owner(apps, schema_editor, "b11_1_il_view")),
         migrations.CreateModel(
             name='View_SM_DA',
             fields=[
@@ -215,13 +215,13 @@ class Migration(migrations.Migration):
                 ('auspraegung', models.CharField(blank=True, null=True)),
             ],
             options={
-                'db_table': "b11_1_sm_da",
+                'db_table': "b11_1_sm_da_view",
                 'managed': False,
             },
         ),
         migrations.RunSQL(
             """
-            CREATE OR REPLACE VIEW public.b11_1_sm_da
+            CREATE OR REPLACE VIEW public.b11_1_sm_da_view
              AS
              SELECT b11_1_material.werk_1,
                 b11_1_material.werk_2,
@@ -251,8 +251,8 @@ class Migration(migrations.Migration):
                FROM b11_1_material;
             """,
             """
-            DROP VIEW b11_1_sm_da;
+            DROP VIEW b11_1_sm_da_view;
             """
         ),
-        migrations.RunPython(lambda apps, schema_editor: update_view_owner(apps, schema_editor, "b11_1_sm_da")),
+        migrations.RunPython(lambda apps, schema_editor: update_view_owner(apps, schema_editor, "b11_1_sm_da_view")),
     ]
