@@ -1,7 +1,7 @@
 {% extends "base_generic.html" %}
 
 {% block content %}
-<h1>Liste des matériels</h1>
+<h1>Liste des matériels (vision IL)</h1>
     <br/>
 {#    {% if messages %}
         {% for message in messages %}
@@ -15,12 +15,6 @@
     <tr>
       <td>
             {{ mat }}
-      </td>
-       <td>
-          <a href="{% url 'show-client' client.client_id %}">Détail</a><br/>
-      </td>
-     <td>
-          <a href="{% url 'update-client' client.client_id %}">Mettre à jour</a><br/>
       </td>
     </tr>
   {% endfor %}

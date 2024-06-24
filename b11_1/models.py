@@ -153,7 +153,10 @@ class Material(models.Model):
     auspraegung = models.CharField(null=True, blank=True)
 
     def __str__(self):
-        return self.positions_nr + " - " + self.kurztext_de
+        if self.positions_nr is not None:
+            return str(self.positions_nr) + " - " + self.kurztext_de
+        else:
+            return "<None> - " + self.kurztext_de
 
 
 class View_IL(models.Model):

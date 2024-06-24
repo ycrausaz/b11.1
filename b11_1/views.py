@@ -3,7 +3,7 @@ from django.views.generic import ListView, DetailView
 from django.views.generic.base import View
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from .models import View_IL
+from .models import Material, View_IL
 
 # Create your views here.
 
@@ -11,6 +11,11 @@ class ListMaterial_IL_View(ListView):
     model = View_IL
     template_name = 'il/list_material_il.html'
     context_object_name = 'list_material_il'
+
+class ListMaterial_View(ListView):
+    model = Material
+    template_name = 'list_material.html'
+    context_object_name = 'list_material'
 
 def home(request):
    return redirect('list-material-il')
@@ -24,7 +29,7 @@ class UserLogin(View):
             login(request, user)
             return redirect('list-material-il')
         else:
-            messages.success(request, ("Erreur dans le login"))
+#            messages.success(request, ("Erreur dans le login"))
             return redirect('login-user')
 
     def get(self, request, *args, **kwargs):
