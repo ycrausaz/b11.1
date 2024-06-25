@@ -18,7 +18,7 @@ class ListMaterial_View(ListView):
     context_object_name = 'list_material'
 
 def home(request):
-   return redirect('list-material-il')
+   return redirect('list-material')
 
 class UserLogin(View):
     def post(self, request, *args, **kwargs):
@@ -27,7 +27,7 @@ class UserLogin(View):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
-            return redirect('list-material-il')
+            return redirect('list-material')
         else:
 #            messages.success(request, ("Erreur dans le login"))
             return redirect('login-user')
