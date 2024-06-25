@@ -1,0 +1,29 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+    <h1>Modifier un matériel</h1>
+    <br/>
+    {% if submitted %}
+      <div class="alert alert-success" role="alert">
+          Le client a été modifié.
+      </div>
+    {% endif %}
+
+<form method="post">
+    {% csrf_token %}
+    {{ form.non_field_errors }}
+    {% for field in form %}
+        <p>
+            {{ field.label_tag }} {{ field }}
+            {% if field.errors %}
+                {% for error in field.errors %}
+                    <div style="color: red;">{{ error }}</div>
+                {% endfor %}
+            {% endif %}
+        </p>
+    {% endfor %}
+      <input type="submit" value="Enregistrer les modifications" class="btn btn-primary">
+      <input type=button value="Retour" class="btn btn-secondary" onClick="javascript:history.go(-1);">
+</form>
+   
+{% endblock %}

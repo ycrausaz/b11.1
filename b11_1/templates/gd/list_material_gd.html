@@ -1,0 +1,18 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+<h1>Liste des matériels (vision GD)</h1>
+    <br/>
+<table class="table table-striped table-hover">
+  {% for mat in list_material_gd %}
+    <tr>
+      <td>
+            <a href="{% url 'update-material-gd' mat.id %}">{{ mat }}</a><br/>
+      </td>
+    </tr>
+  {% endfor %}
+</table>
+<br/>
+<hr><br/>
+
+{% endblock %}

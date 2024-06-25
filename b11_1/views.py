@@ -3,8 +3,8 @@ from django.views.generic import ListView, DetailView
 from django.views.generic.base import View
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from .models import Material, View_IL
-from .forms import MaterialForm
+from .models import Material
+from .forms import MaterialForm_IL, MaterialForm_GD
 from django.contrib.messages.views import SuccessMessageMixin
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
 from django.urls import reverse_lazy
@@ -44,22 +44,46 @@ class ListMaterial_IL_View(ListView):
     template_name = 'il/list_material_il.html'
     context_object_name = 'list_material_il'
 
-class AddMaterial_IL(SuccessMessageMixin, CreateView):
+class AddMaterial_IL_View(SuccessMessageMixin, CreateView):
     model = Material
     template_name = 'il/add_material_il.html'
-    form_class = MaterialForm
+    form_class = MaterialForm_IL
     success_url = reverse_lazy('add-material-il')
     success_message = "Le matériel a été ajouté avec succès."
 
-class UpdateMaterial_IL(SuccessMessageMixin, UpdateView):
+class UpdateMaterial_IL_View(SuccessMessageMixin, UpdateView):
     model = Material
     template_name = 'il/update_material_il.html'
-    form_class = MaterialForm
+    form_class = MaterialForm_IL
     success_url = reverse_lazy('list-material-il')
     success_message = "Le matériel a été ajouté avec succès."
 
-class ShowMaterial_IL(SuccessMessageMixin, DetailView):
+class ShowMaterial_IL_View(SuccessMessageMixin, DetailView):
     model = Material
     template_name = 'il/show_material_il.html'
-    form_class = MaterialForm
+    form_class = MaterialForm_IL
+
+class ListMaterial_GD_View(ListView):
+    model = Material
+    template_name = 'gd/list_material_gd.html'
+    context_object_name = 'list_material_gd'
+
+class AddMaterial_GD_View(SuccessMessageMixin, CreateView):
+    model = Material
+    template_name = 'gd/add_material_gd.html'
+    form_class = MaterialForm_GD
+    success_url = reverse_lazy('add-material-gd')
+    success_message = "Le matériel a été ajouté avec succès."
+
+class UpdateMaterial_GD_View(SuccessMessageMixin, UpdateView):
+    model = Material
+    template_name = 'gd/update_material_gd.html'
+    form_class = MaterialForm_GD
+    success_url = reverse_lazy('list-material-gd')
+    success_message = "Le matériel a été ajouté avec succès."
+
+class ShowMaterial_GD_View(SuccessMessageMixin, DetailView):
+    model = Material
+    template_name = 'gd/show_material_gd.html'
+    form_class = MaterialForm_GD
 

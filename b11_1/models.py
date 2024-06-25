@@ -260,6 +260,9 @@ class Material(models.Model):
         else:
             return "<None> - " + self.kurztext_de
 
+    class Meta:
+        ordering = ["positions_nr"]
+
 
 class View_IL(models.Model):
     positions_nr = models.CharField(null=True, blank=True, max_length=40)

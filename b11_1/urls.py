@@ -2,7 +2,7 @@ from django.views.i18n import JavaScriptCatalog
 from django.urls import include
 from django.urls import path
 from . import views
-from .views import UserLogin, UserLogout, ListMaterial_View, ListMaterial_IL_View, AddMaterial_IL, UpdateMaterial_IL, ShowMaterial_IL
+from .views import UserLogin, UserLogout, ListMaterial_View, ListMaterial_IL_View, AddMaterial_IL_View, UpdateMaterial_IL_View, ShowMaterial_IL_View, ListMaterial_GD_View, AddMaterial_GD_View, UpdateMaterial_GD_View, ShowMaterial_GD_View
 from django.contrib.auth.decorators import login_required
 
 # urlpatterns += [
@@ -14,8 +14,14 @@ urlpatterns = [
     path('login_user', UserLogin.as_view(), name='login-user'),
     path('logout_user', UserLogout.as_view(), name='logout-user'),
     path('list_material', login_required(ListMaterial_View.as_view()), name='list-material'),
+
     path('list_material_il', login_required(ListMaterial_IL_View.as_view()), name='list-material-il'),
-    path('add_material_il', login_required(AddMaterial_IL.as_view()), name='add-material-il'),
-    path('update_material_il/<int:pk>', login_required(UpdateMaterial_IL.as_view()), name='update-material-il'),
-    path('show_material_il/<int:pk>', login_required(ShowMaterial_IL.as_view()), name='show-material-il'),
+    path('add_material_il', login_required(AddMaterial_IL_View.as_view()), name='add-material-il'),
+    path('update_material_il/<int:pk>', login_required(UpdateMaterial_IL_View.as_view()), name='update-material-il'),
+    path('show_material_il/<int:pk>', login_required(ShowMaterial_IL_View.as_view()), name='show-material-il'),
+
+    path('list_material_gd', login_required(ListMaterial_GD_View.as_view()), name='list-material-gd'),
+    path('add_material_gd', login_required(AddMaterial_GD_View.as_view()), name='add-material-gd'),
+    path('update_material_gd/<int:pk>', login_required(UpdateMaterial_GD_View.as_view()), name='update-material-gd'),
+    path('show_material_gd/<int:pk>', login_required(ShowMaterial_GD_View.as_view()), name='show-material-gd'),
 ]
