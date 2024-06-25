@@ -3,25 +3,16 @@
 {% block content %}
 <h1>Liste des matériels (vision IL)</h1>
     <br/>
-{#    {% if messages %}
-        {% for message in messages %}
-            <div class="alert alert-{{ message.tags }}" role="alert">
-                {{ message }}
-            </div>
-        {% endfor %}
-    {% endif %}#}
 <table class="table table-striped table-hover">
   {% for mat in list_material_il %}
     <tr>
       <td>
-            {{ mat }}
+            <a href="{% url 'update-material-il' mat.id %}">{{ mat }}</a><br/>
       </td>
     </tr>
   {% endfor %}
 </table>
 <br/>
 <hr><br/>
-
-{#{% include 'pagination.html' %}#}
 
 {% endblock %}
