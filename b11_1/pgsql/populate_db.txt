@@ -95,15 +95,15 @@ werk_3_id, -- 55
 werk_4_id, -- 56
 allgemeine_positionstypengruppe_id, -- 57
 verkaufsorg, -- 58
-vertriebsweg, -- 59
+vertriebsweg_id, -- 59
 fuehrendes_material, -- 60
-auszeichnungsfeld, -- 61
+auszeichnungsfeld_id, -- 61
 cpv_code, -- 62
-fertigungssteuerer, -- 63
+fertigungssteuerer_id, -- 63
 kennzeichen_komplexes_system, -- 64
-sonderablauf, -- 65
-temperaturbedingung, -- 66
-bewertungsklasse, -- 67
+sonderablauf_id, -- 65
+temperaturbedingung_id, -- 66
+bewertungsklasse_id, -- 67
 systemmanager, -- 68
 kennziffer_bamf, -- 69
 mietrelevanz, -- 70
@@ -112,8 +112,8 @@ nachschubklasse, -- 72
 verteilung_apm_kerda, -- 73
 verteilung_svsaa, -- 74
 verteilung_cheops, -- 75
-zuteilung, -- 76
-auspraegung, -- 77
+zuteilung_id, -- 76
+auspraegung_id, -- 77
 basismengeneinheit_id, -- 78
 begru_id, -- 79
 materialart_grunddaten_id, -- 80
@@ -182,15 +182,15 @@ uebersetzungsstatus_id -- 86
 (select id from b11_1_werk_4 order by random() limit 1), -- werk_4, -- 56
 (select id from b11_1_allgemeinepositionstypengruppe order by random() limit 1), -- allgemeine_positionstypengruppe, -- 57
 'M100', -- verkaufsorg, -- 58
-'V0', -- vertriebsweg, -- 59
+(select id from b11_1_vertriebsweg order by random() limit 1), -- vertriebsweg, -- 59
 '', -- fuehrendes_material, -- 60
-'R', -- auszeichnungsfeld, -- 61
+(select id from b11_1_auszeichnungsfeld order by random() limit 1), -- auszeichnungsfeld, -- 61
 '09221000-4', -- cpv_code, -- 62
-'T06', -- fertigungssteuerer, -- 63
+(select id from b11_1_fertigungssteuerer order by random() limit 1), -- fertigungssteuerer, -- 63
 (select random()::int::boolean), -- kennzeichen_komplexes_system, -- 64
-'M', -- sonderablauf, -- 65
-'01', -- temperaturbedingung, -- 66
-'M230', -- bewertungsklasse, -- 67
+(select id from b11_1_sonderablauf order by random() limit 1), -- sonderablauf, -- 65
+(select id from b11_1_temperaturbedingung order by random() limit 1), -- temperaturbedingung, -- 66
+(select id from b11_1_bewertungsklasse order by random() limit 1), -- bewertungsklasse, -- 67
 (select random_string(10)), -- systemmanager, -- 68
 '55G', -- kennziffer_bamf, -- 69
 (select random()::int::boolean), -- mietrelevanz, -- 70
@@ -199,8 +199,8 @@ uebersetzungsstatus_id -- 86
 (select random()::int::boolean), -- verteilung_apm_kerda, -- 73
 (select random()::int::boolean), -- verteilung_svsaa, -- 74
 (select random()::int::boolean), -- verteilung_cheops, -- 75
-'BM', -- zuteilung, -- 76
-'01', -- auspraegung, -- 77
+(select id from b11_1_zuteilung order by random() limit 1), -- zuteilung, -- 76
+(select id from b11_1_auspraegung order by random() limit 1), -- auspraegung, -- 77
 (select id from b11_1_basismengeneinheit order by random() limit 1), -- basismengeneinheit_id, -- 78
 (select id from b11_1_begru order by random() limit 1), -- begru_id, -- 79
 (select id from b11_1_materialart order by random() limit 1), -- materialart_grunddaten_id, -- 80

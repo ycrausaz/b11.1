@@ -1,0 +1,1 @@
+insert into "b11_1_auspraegung" (text) values ('01'), ('02') ('03'), ('04');

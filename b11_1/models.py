@@ -106,6 +106,62 @@ class AllgemeinePositionstypengruppe(models.Model):
         return self.text
 
 
+class Vertriebsweg(models.Model):
+    text = models.CharField(null=True, blank=True, max_length=40)
+
+    def __str__(self):
+        return self.text
+
+
+class Auszeichnungsfeld(models.Model):
+    text = models.CharField(null=True, blank=True, max_length=40)
+
+    def __str__(self):
+        return self.text
+
+
+class Fertigungssteuerer(models.Model):
+    text = models.CharField(null=True, blank=True, max_length=40)
+
+    def __str__(self):
+        return self.text
+
+
+class Sonderablauf(models.Model):
+    text = models.CharField(null=True, blank=True, max_length=40)
+
+    def __str__(self):
+        return self.text
+
+
+class Temperaturbedingung(models.Model):
+    text = models.CharField(null=True, blank=True, max_length=40)
+
+    def __str__(self):
+        return self.text
+
+
+class Bewertungsklasse(models.Model):
+    text = models.CharField(null=True, blank=True, max_length=40)
+
+    def __str__(self):
+        return self.text
+
+
+class Zuteilung(models.Model):
+    text = models.CharField(null=True, blank=True, max_length=40)
+
+    def __str__(self):
+        return self.text
+
+
+class Auspraegung(models.Model):
+    text = models.CharField(null=True, blank=True, max_length=40)
+
+    def __str__(self):
+        return self.text
+
+
 class Material(models.Model):
     positions_nr = models.CharField(null=True, blank=True, max_length=40)
     kurztext_de = models.CharField(null=True, blank=True, max_length=40)

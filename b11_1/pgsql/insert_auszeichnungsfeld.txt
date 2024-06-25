@@ -1,0 +1,1 @@
+insert into "b11_1_auszeichnungsfeld" (text) values ('N'), ('R'), ('A');
