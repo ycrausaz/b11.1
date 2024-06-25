@@ -99,7 +99,7 @@ class Werk_4(models.Model):
         return self.text
 
 
-class Uebersetzungsstatus(models.Model):
+class AllgemeinePositionstypengruppe(models.Model):
     text = models.CharField(null=True, blank=True, max_length=40)
 
     def __str__(self):
@@ -173,7 +173,7 @@ class Material(models.Model):
     werk_2 = models.ForeignKey(Werk_2, null=True, on_delete=models.DO_NOTHING, verbose_name="Werk (2) ")
     werk_3 = models.ForeignKey(Werk_3, null=True, on_delete=models.DO_NOTHING, verbose_name="Werk (3) ")
     werk_4 = models.ForeignKey(Werk_4, null=True, on_delete=models.DO_NOTHING, verbose_name="Werk (4) ")
-    allgemeine_positionstypengruppe = models.CharField(null=True, blank=True)
+    allgemeine_positionstypengruppe = models.ForeignKey(AllgemeinePositionstypengruppe, null=True, on_delete=models.DO_NOTHING, verbose_name="Allgemeine Positionstypengruppe ")
     verkaufsorg = models.CharField(null=True, blank=True)
     vertriebsweg = models.CharField(null=True, blank=True)
     fuehrendes_material = models.CharField(null=True, blank=True)
