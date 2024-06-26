@@ -24,7 +24,7 @@ class Migration(migrations.Migration):
             name='View_GD',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('begru_', models.CharField(blank=True, null=True)),
+                ('begru', models.CharField(blank=True, null=True)),
                 ('materialart_grunddaten', models.CharField(blank=True, null=True)),
                 ('sparte', models.CharField(blank=True, null=True)),
                 ('produkthierarchie', models.CharField(blank=True, null=True)),
