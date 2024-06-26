@@ -5,7 +5,7 @@ from django.views.generic.base import View
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from .models import Material
-from .forms import MaterialForm_IL, MaterialForm_GD
+from .forms import MaterialForm_IL, MaterialForm_GD, MaterialForm_SMDA
 from django.contrib.messages.views import SuccessMessageMixin
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
 from django.urls import reverse_lazy
@@ -16,17 +16,17 @@ from .mixins import grIL_GroupRequiredMixin, grGD_GroupRequiredMixin, grSMDA_Gro
 def home(request):
    return redirect('list-material')
 
-class UserLogin(View):
-    def post(self, request, *args, **kwargs):
-        username = request.POST['username']
-        password = request.POST['password']
-        user = authenticate(request, username=username, password=password)
-        if user is not None:
-            login(request, user)
-            return redirect('list-material')
-        else:
-#            messages.success(request, ("Erreur dans le login"))
-            return redirect('login-user')
+#class UserLogin(View):
+#    def post(self, request, *args, **kwargs):
+#        username = request.POST['username']
+#        password = request.POST['password']
+#        user = authenticate(request, username=username, password=password)
+#        if user is not None:
+#            login(request, user)
+#            return redirect('list-material')
+#        else:
+##            messages.success(request, ("Erreur dans le login"))
+#            return redirect('login-user')
 
 class CustomLoginView(LoginView):
     def form_valid(self, form):
@@ -102,4 +102,28 @@ class ShowMaterial_GD_View(grGD_GroupRequiredMixin, SuccessMessageMixin, DetailV
     model = Material
     template_name = 'gd/show_material_gd.html'
     form_class = MaterialForm_GD
+
+class ListMaterial_SMDA_View(grSMDA_GroupRequiredMixin, ListView):
+    model = Material
+    template_name = 'smda/list_material_smda.html'
+    context_object_name = 'list_material_smda'
+
+class AddMaterial_SMDA_View(grSMDA_GroupRequiredMixin, SuccessMessageMixin, CreateView):
+    model = Material
+    template_name = 'smda/add_material_smda.html'
+    form_class = MaterialForm_SMDA
+    success_url = reverse_lazy('add-material-smda')
+    success_message = "Le matériel a été ajouté avec succès."
+
+class UpdateMaterial_SMDA_View(grSMDA_GroupRequiredMixin, SuccessMessageMixin, UpdateView):
+    model = Material
+    template_name = 'smda/update_material_smda.html'
+    form_class = MaterialForm_SMDA
+    success_url = reverse_lazy('list-material-smda')
+    success_message = "Le matériel a été ajouté avec succès."
+
+class ShowMaterial_SMDA_View(grSMDA_GroupRequiredMixin, SuccessMessageMixin, DetailView):
+    model = Material
+    template_name = 'smda/show_material_smda.html'
+    form_class = MaterialForm_SMDA
 
