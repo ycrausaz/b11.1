@@ -66,6 +66,10 @@ class ListMaterial_IL_View(grIL_GroupRequiredMixin, ListView):
     template_name = 'il/list_material_il.html'
     context_object_name = 'list_material_il'
 
+    def get_queryset(self, **kwargs):
+       qs = super().get_queryset(**kwargs)
+       return qs.filter(is_transferred=False)
+
 class AddMaterial_IL_View(grIL_GroupRequiredMixin, SuccessMessageMixin, CreateView):
     model = Material
     template_name = 'il/add_material_il.html'
@@ -90,6 +94,10 @@ class ListMaterial_GD_View(grGD_GroupRequiredMixin, ListView):
     template_name = 'gd/list_material_gd.html'
     context_object_name = 'list_material_gd'
 
+    def get_queryset(self, **kwargs):
+       qs = super().get_queryset(**kwargs)
+       return qs.filter(is_transferred=True)
+
 class AddMaterial_GD_View(grGD_GroupRequiredMixin, SuccessMessageMixin, CreateView):
     model = Material
     template_name = 'gd/add_material_gd.html'
@@ -113,6 +121,10 @@ class ListMaterial_SMDA_View(grSMDA_GroupRequiredMixin, ListView):
     model = Material
     template_name = 'smda/list_material_smda.html'
     context_object_name = 'list_material_smda'
+
+    def get_queryset(self, **kwargs):
+       qs = super().get_queryset(**kwargs)
+       return qs.filter(is_transferred=True)
 
 class AddMaterial_SMDA_View(grSMDA_GroupRequiredMixin, SuccessMessageMixin, CreateView):
     model = Material
