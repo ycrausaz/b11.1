@@ -23,11 +23,6 @@ def readonly_field_style():
     return styles_string
 
 class MaterialForm_IL(ModelForm):
-    selected_materials = forms.ModelMultipleChoiceField(
-        queryset=Material.objects.all(),
-        widget=forms.CheckboxSelectMultiple
-    )
-    action = forms.CharField(max_length=20)
 
     class Meta:
         model = Material
