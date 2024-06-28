@@ -17,6 +17,7 @@ from django.views import View
 from django.db import connections
 from .forms import ExportForm
 from django.urls import reverse
+from django.utils import timezone
 
 # Create your views here.
 
@@ -78,7 +79,7 @@ class ListMaterial_IL_View(grIL_GroupRequiredMixin, ListView):
         if selected_material_ids and action:
             selected_materials = Material.objects.filter(id__in=selected_material_ids)
             if action == 'transfer':
-                selected_materials.update(is_transferred=True)
+                selected_materials.update(is_transferred=True, transfer_date=timezone.now())
             elif action == 'delete':
                 selected_materials.delete()
 
