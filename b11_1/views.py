@@ -18,6 +18,8 @@ from django.db import connections
 from .forms import ExportForm
 from django.urls import reverse
 from django.utils import timezone
+from django.db.models.functions import Cast
+from django.db.models import IntegerField
 
 # Create your views here.
 
@@ -112,8 +114,14 @@ class ListMaterial_IL_View(grIL_GroupRequiredMixin, ListView):
     context_object_name = 'list_material_il'
 
     def get_queryset(self, **kwargs):
-       qs = super().get_queryset(**kwargs)
-       return qs.filter(is_transferred=False).order_by('positions_nr')
+        # Call the superclass method to get the base queryset
+        qs = super().get_queryset(**kwargs)
+        # Filter the queryset to exclude transferred items
+        qs = qs.filter(is_transferred=False)
+        # Cast 'positions_nr' to an IntegerField for proper numeric sorting
+        qs = qs.annotate(positions_nr_int=Cast('positions_nr', IntegerField()))
+        # Order by the cast integer field
+        return qs.order_by('positions_nr_int')
 
     def post(self, request, *args, **kwargs):
         selected_material_ids = request.POST.getlist('selected_materials')
@@ -153,8 +161,14 @@ class ListMaterial_GD_View(grGD_GroupRequiredMixin, ListView):
     context_object_name = 'list_material_gd'
 
     def get_queryset(self, **kwargs):
-       qs = super().get_queryset(**kwargs)
-       return qs.filter(is_transferred=True).order_by('positions_nr')
+        # Call the superclass method to get the base queryset
+        qs = super().get_queryset(**kwargs)
+        # Filter the queryset to exclude transferred items
+        qs = qs.filter(is_transferred=True)
+        # Cast 'positions_nr' to an IntegerField for proper numeric sorting
+        qs = qs.annotate(positions_nr_int=Cast('positions_nr', IntegerField()))
+        # Order by the cast integer field
+        return qs.order_by('positions_nr_int')
 
     def post(self, request, *args, **kwargs):
         selected_material_ids = request.POST.getlist('selected_materials')
@@ -196,8 +210,14 @@ class ListMaterial_SMDA_View(grSMDA_GroupRequiredMixin, ListView):
     context_object_name = 'list_material_smda'
 
     def get_queryset(self, **kwargs):
-       qs = super().get_queryset(**kwargs)
-       return qs.filter(is_transferred=True).order_by('positions_nr')
+        # Call the superclass method to get the base queryset
+        qs = super().get_queryset(**kwargs)
+        # Filter the queryset to exclude transferred items
+        qs = qs.filter(is_transferred=True)
+        # Cast 'positions_nr' to an IntegerField for proper numeric sorting
+        qs = qs.annotate(positions_nr_int=Cast('positions_nr', IntegerField()))
+        # Order by the cast integer field
+        return qs.order_by('positions_nr_int')
 
     def post(self, request, *args, **kwargs):
         selected_material_ids = request.POST.getlist('selected_materials')
