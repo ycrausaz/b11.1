@@ -74,3 +74,6 @@ class MaterialForm_SMDA(ModelForm):
         widgets = {
 
         }
+
+class ExportForm(forms.Form):
+    export = forms.BooleanField(widget=forms.HiddenInput, initial=True)

@@ -2,7 +2,7 @@ from django.views.i18n import JavaScriptCatalog
 from django.urls import include
 from django.urls import path
 from . import views
-from .views import CustomLoginView, UserLogout, ListMaterial_View, ListMaterial_IL_View, AddMaterial_IL_View, UpdateMaterial_IL_View, ShowMaterial_IL_View, ListMaterial_GD_View, AddMaterial_GD_View, UpdateMaterial_GD_View, ShowMaterial_GD_View, ListMaterial_SMDA_View, AddMaterial_SMDA_View, UpdateMaterial_SMDA_View, ShowMaterial_SMDA_View
+from .views import CustomLoginView, UserLogout, ListMaterial_View, ListMaterial_IL_View, AddMaterial_IL_View, UpdateMaterial_IL_View, ShowMaterial_IL_View, ListMaterial_GD_View, AddMaterial_GD_View, UpdateMaterial_GD_View, ShowMaterial_GD_View, ListMaterial_SMDA_View, AddMaterial_SMDA_View, UpdateMaterial_SMDA_View, ShowMaterial_SMDA_View, ExportView
 from django.contrib.auth.decorators import login_required
 
 # urlpatterns += [
@@ -30,4 +30,5 @@ urlpatterns = [
     path('update_material_smda/<int:pk>', login_required(UpdateMaterial_SMDA_View.as_view()), name='update-material-smda'),
     path('show_material_smda/<int:pk>', login_required(ShowMaterial_SMDA_View.as_view()), name='show-material-smda'),
 
+    path('export', ExportView.as_view(), name='export'),
 ]

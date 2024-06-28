@@ -1,0 +1,17 @@
+<!-- myapp/templates/export.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Export to Excel</title>
+</head>
+<body>
+    <h1>Export Database Views to Excel</h1>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Export</button>
+    </form>
+</body>
+</html>
+
