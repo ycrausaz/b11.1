@@ -2,7 +2,7 @@
 
 <!-- templates/list_material.html -->
 {% block content %}
-<h1>Liste des matériels</h1>
+<h1>Liste des matériels (vision IL)</h1>
 <br/>
 <form method="post" id="material-form">
     {% csrf_token %}
@@ -17,7 +17,7 @@
             {% for mat in list_material_il %}
                 <tr>
                     <td><input type="checkbox" name="selected_materials" value="{{ mat.id }}"></td>
-                    <td><a href="{% url 'update-material-il' mat.id %}">{{ mat }}</a></td>
+                    <td>{{ mat.id }} {{ mat.positions_nr }} <a href="{% url 'update-material-il' mat.id %}">{{ mat.kurztext_de }}</a></td>
                 </tr>
             {% endfor %}
         </tbody>

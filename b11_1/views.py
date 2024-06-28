@@ -113,6 +113,19 @@ class ListMaterial_GD_View(grGD_GroupRequiredMixin, ListView):
        qs = super().get_queryset(**kwargs)
        return qs.filter(is_transferred=True).order_by('positions_nr')
 
+    def post(self, request, *args, **kwargs):
+        selected_material_ids = request.POST.getlist('selected_materials')
+        action = request.POST.get('action')
+
+        if selected_material_ids and action:
+            selected_materials = Material.objects.filter(id__in=selected_material_ids)
+            if action == 'transfer':
+                selected_materials.update(is_transferred=False, transfer_date=timezone.now())
+            elif action == 'delete':
+                selected_materials.delete()
+
+        return redirect(reverse('list-material-gd'))
+
 class AddMaterial_GD_View(grGD_GroupRequiredMixin, SuccessMessageMixin, CreateView):
     model = Material
     template_name = 'gd/add_material_gd.html'
@@ -141,6 +154,19 @@ class ListMaterial_SMDA_View(grSMDA_GroupRequiredMixin, ListView):
        qs = super().get_queryset(**kwargs)
        return qs.filter(is_transferred=True).order_by('positions_nr')
 
+    def post(self, request, *args, **kwargs):
+        selected_material_ids = request.POST.getlist('selected_materials')
+        action = request.POST.get('action')
+
+        if selected_material_ids and action:
+            selected_materials = Material.objects.filter(id__in=selected_material_ids)
+            if action == 'transfer':
+                selected_materials.update(is_transferred=False, transfer_date=timezone.now())
+            elif action == 'delete':
+                selected_materials.delete()
+
+        return redirect(reverse('list-material-smda'))
+
 class AddMaterial_SMDA_View(grSMDA_GroupRequiredMixin, SuccessMessageMixin, CreateView):
     model = Material
     template_name = 'smda/add_material_smda.html'
@@ -160,7 +186,7 @@ class ShowMaterial_SMDA_View(grSMDA_GroupRequiredMixin, SuccessMessageMixin, Det
     template_name = 'smda/show_material_smda.html'
     form_class = MaterialForm_SMDA
 
-class ExportView(View):
+class ExportView(grSMDA_GroupRequiredMixin, View):
     def get(self, request):
         form = ExportForm()
         return render(request, 'export.html', {'form': form})
