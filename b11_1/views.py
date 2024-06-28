@@ -24,17 +24,60 @@ from django.utils import timezone
 def home(request):
    return redirect('list-material')
 
-#class UserLogin(View):
-#    def post(self, request, *args, **kwargs):
-#        username = request.POST['username']
-#        password = request.POST['password']
-#        user = authenticate(request, username=username, password=password)
-#        if user is not None:
-#            login(request, user)
-#            return redirect('list-material')
-#        else:
-##            messages.success(request, ("Erreur dans le login"))
-#            return redirect('login-user')
+def export_to_excel(materials):
+    # Define your database views and their specific columns
+    views = {
+        'view1': ['col1', 'col2', 'col3'],
+        'view2': ['colA', 'colB', 'colC'],
+        # Add all your view names and their specific columns here
+    }
+
+    # Define the column header tokens for each view
+    header_tokens = {
+        'view1': {
+            'col1': 'Token1',
+            'col2': 'Token2',
+            'col3': 'Token3',
+        },
+        'view2': {
+            'colA': 'TokenA',
+            'colB': 'TokenB',
+            'colC': 'TokenC',
+        },
+        # Add header tokens for all your views here
+    }
+
+    # Open a connection to the database
+    connection = connections['default']
+
+    # Create a Pandas Excel writer using openpyxl as the engine
+    with pd.ExcelWriter('database_views.xlsx', engine='openpyxl') as writer:
+        for view, columns in views.items():
+            # Execute a raw SQL query to fetch all data from the view
+            query = f'SELECT {", ".join(columns)} FROM {view}'
+            df = pd.read_sql_query(query, connection)
+
+            # Rename the DataFrame columns using the header tokens
+            df.columns = [header_tokens[view].get(col, col) for col in df.columns]
+
+            # Write the DataFrame to a specific sheet
+            df.to_excel(writer, sheet_name=view, index=False)
+
+        # Also write the selected materials to a new sheet
+        selected_df = pd.DataFrame(list(materials.values()))
+        # Assuming 'materials' has consistent column names across views
+        selected_df.columns = [col.capitalize().replace('_', ' ') for col in selected_df.columns]
+        selected_df.to_excel(writer, sheet_name='Selected Materials', index=False)
+
+    # Create the HttpResponse object with the appropriate Excel header
+    response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    response['Content-Disposition'] = 'attachment; filename=database_views.xlsx'
+
+    # Write the Excel file to the response
+    writer.save()
+    response.write(open('database_views.xlsx', 'rb').read())
+
+    return response
 
 class CustomLoginView(LoginView):
     def form_valid(self, form):
@@ -123,6 +166,8 @@ class ListMaterial_GD_View(grGD_GroupRequiredMixin, ListView):
                 selected_materials.update(is_transferred=False, transfer_date=timezone.now())
             elif action == 'delete':
                 selected_materials.delete()
+            elif action == 'export':
+                return export_to_excel(selected_materials)
 
         return redirect(reverse('list-material-gd'))
 
@@ -185,48 +230,3 @@ class ShowMaterial_SMDA_View(grSMDA_GroupRequiredMixin, SuccessMessageMixin, Det
     model = Material
     template_name = 'smda/show_material_smda.html'
     form_class = MaterialForm_SMDA
-
-class ExportView(grSMDA_GroupRequiredMixin, View):
-    def get(self, request):
-        form = ExportForm()
-        return render(request, 'export.html', {'form': form})
-
-    def post(self, request):
-        form = ExportForm(request.POST)
-        if form.is_valid():
-            # Define your database views and column header tokens
-            views = {
-                'view1': ['col1', 'col2', 'col3'],
-                'view2': ['col1', 'col2', 'col3'],
-                # Add all your view names and their columns here
-            }
-
-            header_tokens = {
-                'col1': 'Token1',
-                'col2': 'Token2',
-                'col3': 'Token3',
-                # Map all your column names to tokens here
-            }
-
-            # Open a connection to the database
-            connection = connections['default']
-
-            # Create a Pandas Excel writer using openpyxl as the engine
-            with pd.ExcelWriter('database_views.xlsx', engine='openpyxl') as writer:
-                for view, columns in views.items():
-                    query = f'SELECT {", ".join(columns)} FROM {view}'
-                    df = pd.read_sql_query(query, connection)
-                    df.columns = [header_tokens[col] for col in df.columns]
-                    df.to_excel(writer, sheet_name=view, index=False)
-
-            # Create the HttpResponse object with the appropriate Excel header
-            response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-            response['Content-Disposition'] = 'attachment; filename=database_views.xlsx'
-
-            # Write the Excel file to the response
-            writer.save()
-            response.write(open('database_views.xlsx', 'rb').read())
-
-            return response
-
-        return render(request, 'export.html', {'form': form})
