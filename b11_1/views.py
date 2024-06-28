@@ -16,6 +16,7 @@ from django.http import HttpResponse
 from django.views import View
 from django.db import connections
 from .forms import ExportForm
+from django.urls import reverse
 
 # Create your views here.
 
@@ -69,6 +70,19 @@ class ListMaterial_IL_View(grIL_GroupRequiredMixin, ListView):
     def get_queryset(self, **kwargs):
        qs = super().get_queryset(**kwargs)
        return qs.filter(is_transferred=False).order_by('positions_nr')
+
+    def post(self, request, *args, **kwargs):
+        selected_material_ids = request.POST.getlist('selected_materials')
+        action = request.POST.get('action')
+
+        if selected_material_ids and action:
+            selected_materials = Material.objects.filter(id__in=selected_material_ids)
+            if action == 'transfer':
+                selected_materials.update(is_transferred=True)
+            elif action == 'delete':
+                selected_materials.delete()
+
+        return redirect(reverse('list-material-il'))
 
 class AddMaterial_IL_View(grIL_GroupRequiredMixin, SuccessMessageMixin, CreateView):
     model = Material
