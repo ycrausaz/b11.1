@@ -7,7 +7,7 @@
   {% for mat in list_material_gd %}
     <tr>
       <td>
-            <a href="{% url 'update-material-gd' mat.id %}">{{ mat }}</a><br/>
+            {{ mat.is_transferred }} <a href="{% url 'update-material-gd' mat.id %}">{{ mat.id }} {{ mat.positions_nr }} {{ mat.kurztext_de }}</a><br/>
       </td>
     </tr>
   {% endfor %}

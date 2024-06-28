@@ -68,7 +68,7 @@ class ListMaterial_IL_View(grIL_GroupRequiredMixin, ListView):
 
     def get_queryset(self, **kwargs):
        qs = super().get_queryset(**kwargs)
-       return qs.filter(is_transferred=False)
+       return qs.filter(is_transferred=False).order_by('positions_nr')
 
 class AddMaterial_IL_View(grIL_GroupRequiredMixin, SuccessMessageMixin, CreateView):
     model = Material
@@ -96,7 +96,7 @@ class ListMaterial_GD_View(grGD_GroupRequiredMixin, ListView):
 
     def get_queryset(self, **kwargs):
        qs = super().get_queryset(**kwargs)
-       return qs.filter(is_transferred=True)
+       return qs.filter(is_transferred=True).order_by('positions_nr')
 
 class AddMaterial_GD_View(grGD_GroupRequiredMixin, SuccessMessageMixin, CreateView):
     model = Material
@@ -124,7 +124,7 @@ class ListMaterial_SMDA_View(grSMDA_GroupRequiredMixin, ListView):
 
     def get_queryset(self, **kwargs):
        qs = super().get_queryset(**kwargs)
-       return qs.filter(is_transferred=True)
+       return qs.filter(is_transferred=True).order_by('positions_nr')
 
 class AddMaterial_SMDA_View(grSMDA_GroupRequiredMixin, SuccessMessageMixin, CreateView):
     model = Material
