@@ -1,4 +1,10 @@
-SOURCE_ID
-VKORG
-VTWEG
-MTPOS
+DROP VIEW IF EXISTS MVKE_Verkaufsdaten;
+CREATE VIEW MVKE_Verkaufsdaten AS
+SELECT
+    a.positions_nr AS SOURCE_ID,
+    'M100' AS VKORG,
+    b.text AS VTWEG,
+    c.text AS MTPOS
+FROM b11_1_material a
+join b11_1_vertriebsweg b on b.id = a.vertriebsweg_id
+join b11_1_allgemeinepositionstypengruppe c on c.id = a.allgemeine_positionstypengruppe_id;
