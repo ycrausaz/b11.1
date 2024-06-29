@@ -65,7 +65,7 @@ def drop_views_MARA(apps, schema_editor):
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('myapp', '0001_initial'),
+        ('b11_1', '0001_initial'),
     ]
 
     operations = [
