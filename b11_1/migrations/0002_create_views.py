@@ -1,3 +1,9 @@
+from django.db import migrations, models
+from django.db import connection
+
+def create_views_MARA(apps, schema_editor):
+    with connection.cursor() as cursor:
+        cursor.execute('''
 DROP VIEW IF EXISTS MARA;
 CREATE VIEW MARA AS
 SELECT
@@ -50,3 +56,22 @@ join b11_1_rueckfuehrungscode h on h.id = a.rueckfuehrungscode_id
 join b11_1_sparepartclasscode i on i.id = a.spare_part_class_code_id
 join b11_1_temperaturbedingung j on j.id = a.temperaturbedingung_id
 join b11_1_sonderablauf k on k.id = a.sonderablauf_id;
+        ''')
+
+def drop_views_MARA(apps, schema_editor):
+    with connection.cursor() as cursor:
+        cursor.execute('DROP VIEW IF EXISTS MARA;')
+
+class Migration(migrations.Migration):
+
+    dependencies = [
+        ('myapp', '0001_initial'),
+    ]
+
+    operations = [
+        migrations.RunSQL(
+            sql=create_views_MARA,
+            reverse_sql=drop_views_MARA,
+        ),
+    ]
+
