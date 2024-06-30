@@ -37,17 +37,17 @@ def make_timezone_naive(df):
     return df
 
 def export_to_excel(materials):
-#    try:
+    try:
         # Define your database views and their specific columns
         views = {
-            'MKVE_Verkaufsdaten': ['SOURCE_ID', 'VKORG', 'VTWEG', 'MTPOS'],
+            'MVKE_Verkaufsdaten': ['SOURCE_ID', 'VKORG', 'VTWEG', 'MTPOS'],
 #            'view2': ['colA', 'colB', 'colC'],
             # Add all your view names and their specific columns here
         }
     
         # Define the column header tokens for each view
         header_tokens = {
-            'MKVE_Verkaufsdaten': {
+            'MVKE_Verkaufsdaten': {
                 'col1': 'SOURCE_ID',
                 'col2': 'VKORG',
                 'col3': 'VTWEG',
@@ -91,7 +91,7 @@ def export_to_excel(materials):
             if not selected_df.empty:
                 selected_df = make_timezone_naive(selected_df)
                 selected_df.columns = [col.capitalize().replace('_', ' ') for col in selected_df.columns]
-                selected_df.to_excel(writer, sheet_name='Selected Materials', index=False)
+#                selected_df.to_excel(writer, sheet_name='Selected Materials', index=False)
 
         # Seek to the beginning of the stream
         output.seek(0)
@@ -101,7 +101,7 @@ def export_to_excel(materials):
         response['Content-Disposition'] = 'attachment; filename=database_views.xlsx'
 
         return response
-#    except Exception as e:
-#        print(f"Error generating Excel file: {e}")
-#        return HttpResponse("An error occurred while generating the Excel file.", status=500)
+    except Exception as e:
+        print(f"Error generating Excel file: {e}")
+        return HttpResponse("An error occurred while generating the Excel file.", status=500)
 
