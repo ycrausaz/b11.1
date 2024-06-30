@@ -49,4 +49,5 @@ join b11_1_auszeichnungsfeld g on g.id = a.auszeichnungsfeld_id
 join b11_1_rueckfuehrungscode h on h.id = a.rueckfuehrungscode_id
 join b11_1_sparepartclasscode i on i.id = a.spare_part_class_code_id
 join b11_1_temperaturbedingung j on j.id = a.temperaturbedingung_id
-join b11_1_sonderablauf k on k.id = a.sonderablauf_id;
+join b11_1_sonderablauf k on k.id = a.sonderablauf_id
+where a.is_transferred='t';
