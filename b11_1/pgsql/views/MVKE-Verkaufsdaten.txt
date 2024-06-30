@@ -6,6 +6,6 @@ SELECT
     b.text AS VTWEG,
     c.text AS MTPOS
 FROM b11_1_material a
-join b11_1_vertriebsweg b on b.id = a.vertriebsweg_id
-join b11_1_allgemeinepositionstypengruppe c on c.id = a.allgemeine_positionstypengruppe_id
+left join b11_1_vertriebsweg b on b.id = a.vertriebsweg_id
+left join b11_1_allgemeinepositionstypengruppe c on c.id = a.allgemeine_positionstypengruppe_id
 where a.is_transferred='t';

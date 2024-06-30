@@ -20,8 +20,8 @@ SELECT
     e.text AS BEGRU,
     a.normbezeichnung AS NORMT,
     'M' AS MBRSH,
-    a.warengruppe as MATKL,
-    '' as BISMT,
+    a.warengruppe AS MATKL,
+    '' AS BISMT,
     a.bruttogewicht AS BRGEW,
     a.bestellmengeneinheit AS BSTME,
     f.text AS SPART,
@@ -35,19 +35,19 @@ SELECT
     i.text AS ADSPC_SPC,
     a.produkthierarchie AS PRDHA,
     'UAM' AS HNDLCODE,
-    j.text as TEMPB,
+    j.text AS TEMPB,
     a.cpv_code AS ZZCPVCODE,
-    k.text as ZZSONDERABLAUF,
-    a.lagerfaehigkeit as "MARA-MHDHB"
+    k.text AS ZZSONDERABLAUF,
+    a.lagerfaehigkeit AS "MARA-MHDHB"
 FROM b11_1_material a
-join b11_1_materialart b on b.id = a.materialart_grunddaten_id
-join b11_1_basismengeneinheit c on c.id = a.basismengeneinheit_id
-join b11_1_gefahrgutkennzeichen d on d.id = a.gefahrgutkennzeichen_id
-join b11_1_begru e on e.id = a.begru_id
-join b11_1_sparte f on f.id = a.sparte_id
-join b11_1_auszeichnungsfeld g on g.id = a.auszeichnungsfeld_id
-join b11_1_rueckfuehrungscode h on h.id = a.rueckfuehrungscode_id
-join b11_1_sparepartclasscode i on i.id = a.spare_part_class_code_id
-join b11_1_temperaturbedingung j on j.id = a.temperaturbedingung_id
-join b11_1_sonderablauf k on k.id = a.sonderablauf_id
+left join b11_1_materialart b on b.id = a.materialart_grunddaten_id
+left join b11_1_basismengeneinheit c on c.id = a.basismengeneinheit_id
+left join b11_1_gefahrgutkennzeichen d on d.id = a.gefahrgutkennzeichen_id
+left join b11_1_begru e on e.id = a.begru_id
+left join b11_1_sparte f on f.id = a.sparte_id
+left join b11_1_auszeichnungsfeld g on g.id = a.auszeichnungsfeld_id
+left join b11_1_rueckfuehrungscode h on h.id = a.rueckfuehrungscode_id
+left join b11_1_sparepartclasscode i on i.id = a.spare_part_class_code_id
+left join b11_1_temperaturbedingung j on j.id = a.temperaturbedingung_id
+left join b11_1_sonderablauf k on k.id = a.sonderablauf_id
 where a.is_transferred='t';
