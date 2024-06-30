@@ -20,6 +20,7 @@ from django.urls import reverse
 from django.utils import timezone
 from django.db.models.functions import Cast
 from django.db.models import IntegerField
+from django.utils.timezone import is_aware
 
 # Create your views here.
 
@@ -27,59 +28,100 @@ def home(request):
    return redirect('list-material')
 
 def export_to_excel(materials):
-    # Define your database views and their specific columns
-    views = {
-        'view1': ['col1', 'col2', 'col3'],
-        'view2': ['colA', 'colB', 'colC'],
-        # Add all your view names and their specific columns here
-    }
+    export_to_excel_type_1(materials)
 
-    # Define the column header tokens for each view
-    header_tokens = {
-        'view1': {
-            'col1': 'Token1',
-            'col2': 'Token2',
-            'col3': 'Token3',
-        },
-        'view2': {
-            'colA': 'TokenA',
-            'colB': 'TokenB',
-            'colC': 'TokenC',
-        },
-        # Add header tokens for all your views here
-    }
+#        # Define your database views and their specific columns
+#        views = {
+#            'MKVE_Verkaufsdaten': ['col1', 'col2', 'col3', 'col4'],
+#            'view2': ['colA', 'colB', 'colC'],
+#            # Add all your view names and their specific columns here
+#        }
+#    
+#        # Define the column header tokens for each view
+#        header_tokens = {
+#            'MKVE_Verkaufsdaten': {
+#                'col1': 'SOURCE_ID',
+#                'col2': 'VKORG',
+#                'col3': 'VTWEG',
+#                'col4': 'MTPOS',
+#            },
+#            'view2': {
+#                'colA': 'TokenA',
+#                'colB': 'TokenB',
+#                'colC': 'TokenC',
+#            },
+#            # Add header tokens for all your views here
+#        }
 
-    # Open a connection to the database
-    connection = connections['default']
+def make_timezone_naive(df):
+    for col in df.select_dtypes(include=['datetime64[ns]']).columns:
+        df[col] = df[col].apply(lambda x: x.replace(tzinfo=None) if pd.notnull(x) and is_aware(x) else x)
+    return df
 
-    # Create a Pandas Excel writer using openpyxl as the engine
-    with pd.ExcelWriter('database_views.xlsx', engine='openpyxl') as writer:
-        for view, columns in views.items():
-            # Execute a raw SQL query to fetch all data from the view
-            query = f'SELECT {", ".join(columns)} FROM {view}'
-            df = pd.read_sql_query(query, connection)
+def export_to_excel(materials):
+#    try:
+        # Define your database views and their specific columns
+        views = {
+            'MKVE_Verkaufsdaten': ['SOURCE_ID', 'VKORG', 'VTWEG', 'MTPOS'],
+#            'view2': ['colA', 'colB', 'colC'],
+            # Add all your view names and their specific columns here
+        }
+    
+        # Define the column header tokens for each view
+        header_tokens = {
+            'MKVE_Verkaufsdaten': {
+                'col1': 'SOURCE_ID',
+                'col2': 'VKORG',
+                'col3': 'VTWEG',
+                'col4': 'MTPOS',
+            },
+ #           'view2': {
+ #               'colA': 'TokenA',
+ #               'colB': 'TokenB',
+ #               'colC': 'TokenC',
+ #           },
+            # Add header tokens for all your views here
+        }
 
-            # Rename the DataFrame columns using the header tokens
-            df.columns = [header_tokens[view].get(col, col) for col in df.columns]
+        connection = connections['default']
+        print("*** connection ok")
 
-            # Write the DataFrame to a specific sheet
-            df.to_excel(writer, sheet_name=view, index=False)
+        with pd.ExcelWriter('database_views.xlsx', engine='openpyxl') as writer:
+            sheet_added = False
+            for view, columns in views.items():
+                try:
+                    query = f'SELECT {", ".join(columns)} FROM {view}'
+                    df = pd.read_sql_query(query, connection)
 
-        # Also write the selected materials to a new sheet
-        selected_df = pd.DataFrame(list(materials.values()))
-        # Assuming 'materials' has consistent column names across views
-        selected_df.columns = [col.capitalize().replace('_', ' ') for col in selected_df.columns]
-        selected_df.to_excel(writer, sheet_name='Selected Materials', index=False)
+                    df = make_timezone_naive(df)
 
-    # Create the HttpResponse object with the appropriate Excel header
-    response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-    response['Content-Disposition'] = 'attachment; filename=database_views.xlsx'
+                    df.columns = [header_tokens[view].get(col, col) for col in df.columns]
 
-    # Write the Excel file to the response
-    writer.save()
-    response.write(open('database_views.xlsx', 'rb').read())
+                    df.to_excel(writer, sheet_name=view, index=False)
+                    sheet_added = True
+                except Exception as e:
+                    print(f"Error fetching data for view '{view}': {e}")
 
-    return response
+            if not sheet_added:
+                # Add an empty sheet if no data was added
+                pd.DataFrame().to_excel(writer, sheet_name='EmptySheet')
+
+            selected_df = pd.DataFrame(list(materials.values()))
+            if not selected_df.empty:
+                selected_df = make_timezone_naive(selected_df)
+                selected_df.columns = [col.capitalize().replace('_', ' ') for col in selected_df.columns]
+                selected_df.to_excel(writer, sheet_name='Selected Materials', index=False)
+
+        response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+        response['Content-Disposition'] = 'attachment; filename=database_views.xlsx'
+
+        with open('database_views.xlsx', 'rb') as file:
+            response.write(file.read())
+
+        return response
+#    except Exception as e:
+#        print(f"Error generating Excel file: {e}")
+#        return HttpResponse("An error occurred while generating the Excel file.", status=500)
 
 class CustomLoginView(LoginView):
     def form_valid(self, form):
@@ -130,7 +172,8 @@ class ListMaterial_IL_View(grIL_GroupRequiredMixin, ListView):
         if selected_material_ids and action:
             selected_materials = Material.objects.filter(id__in=selected_material_ids)
             if action == 'transfer':
-                selected_materials.update(is_transferred=True, transfer_date=timezone.now())
+#                selected_materials.update(is_transferred=True, transfer_date=timezone.now())
+                selected_materials.update(is_transferred=True)
             elif action == 'delete':
                 selected_materials.delete()
 
