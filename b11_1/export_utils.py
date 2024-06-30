@@ -18,7 +18,7 @@ def export_to_excel(materials):
         # Define your database views and their specific columns
         views = {
             'MVKE_Verkaufsdaten': ['SOURCE_ID', 'VKORG', 'VTWEG', 'MTPOS'],
-#            'view2': ['colA', 'colB', 'colC'],
+            'MARA_Grunddaten': ['SOURCE_ID', 'MTART', 'MEINS', 'MFRPN', 'MFRNR', 'GROES', 'NTGEW', 'LAENG', 'BREIT', 'HOEHE', 'MEABM', 'GEWEI', 'PROFL', 'NSNID', 'EAN11', 'NUMTP', 'BEGRU', 'NORMT', 'MBRSH', 'MATKL', 'BISMT', 'BRGEW', 'BSTME', 'SPART', 'XCHPF', 'MSTAE', 'MTPOS_MARA', 'MCOND', 'ZZFUEHR_MAT', 'ZZLABEL', 'RETDELC', 'ADSPC_SPC', 'PRDHA', 'HNDLCODE', 'TEMPB', 'ZZCPVCODE', 'ZZSONDERABLAUF', '"MARA-MHDHB"'],
             # Add all your view names and their specific columns here
         }
     
