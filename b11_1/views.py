@@ -20,108 +20,12 @@ from django.urls import reverse
 from django.utils import timezone
 from django.db.models.functions import Cast
 from django.db.models import IntegerField
-from django.utils.timezone import is_aware
+from .export_utils import export_to_excel
 
 # Create your views here.
 
 def home(request):
    return redirect('list-material')
-
-def export_to_excel(materials):
-    export_to_excel_type_1(materials)
-
-#        # Define your database views and their specific columns
-#        views = {
-#            'MKVE_Verkaufsdaten': ['col1', 'col2', 'col3', 'col4'],
-#            'view2': ['colA', 'colB', 'colC'],
-#            # Add all your view names and their specific columns here
-#        }
-#    
-#        # Define the column header tokens for each view
-#        header_tokens = {
-#            'MKVE_Verkaufsdaten': {
-#                'col1': 'SOURCE_ID',
-#                'col2': 'VKORG',
-#                'col3': 'VTWEG',
-#                'col4': 'MTPOS',
-#            },
-#            'view2': {
-#                'colA': 'TokenA',
-#                'colB': 'TokenB',
-#                'colC': 'TokenC',
-#            },
-#            # Add header tokens for all your views here
-#        }
-
-def make_timezone_naive(df):
-    for col in df.select_dtypes(include=['datetime64[ns]']).columns:
-        df[col] = df[col].apply(lambda x: x.replace(tzinfo=None) if pd.notnull(x) and is_aware(x) else x)
-    return df
-
-def export_to_excel(materials):
-#    try:
-        # Define your database views and their specific columns
-        views = {
-            'MKVE_Verkaufsdaten': ['SOURCE_ID', 'VKORG', 'VTWEG', 'MTPOS'],
-#            'view2': ['colA', 'colB', 'colC'],
-            # Add all your view names and their specific columns here
-        }
-    
-        # Define the column header tokens for each view
-        header_tokens = {
-            'MKVE_Verkaufsdaten': {
-                'col1': 'SOURCE_ID',
-                'col2': 'VKORG',
-                'col3': 'VTWEG',
-                'col4': 'MTPOS',
-            },
- #           'view2': {
- #               'colA': 'TokenA',
- #               'colB': 'TokenB',
- #               'colC': 'TokenC',
- #           },
-            # Add header tokens for all your views here
-        }
-
-        connection = connections['default']
-        print("*** connection ok")
-
-        with pd.ExcelWriter('database_views.xlsx', engine='openpyxl') as writer:
-            sheet_added = False
-            for view, columns in views.items():
-                try:
-                    query = f'SELECT {", ".join(columns)} FROM {view}'
-                    df = pd.read_sql_query(query, connection)
-
-                    df = make_timezone_naive(df)
-
-                    df.columns = [header_tokens[view].get(col, col) for col in df.columns]
-
-                    df.to_excel(writer, sheet_name=view, index=False)
-                    sheet_added = True
-                except Exception as e:
-                    print(f"Error fetching data for view '{view}': {e}")
-
-            if not sheet_added:
-                # Add an empty sheet if no data was added
-                pd.DataFrame().to_excel(writer, sheet_name='EmptySheet')
-
-            selected_df = pd.DataFrame(list(materials.values()))
-            if not selected_df.empty:
-                selected_df = make_timezone_naive(selected_df)
-                selected_df.columns = [col.capitalize().replace('_', ' ') for col in selected_df.columns]
-                selected_df.to_excel(writer, sheet_name='Selected Materials', index=False)
-
-        response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-        response['Content-Disposition'] = 'attachment; filename=database_views.xlsx'
-
-        with open('database_views.xlsx', 'rb') as file:
-            response.write(file.read())
-
-        return response
-#    except Exception as e:
-#        print(f"Error generating Excel file: {e}")
-#        return HttpResponse("An error occurred while generating the Excel file.", status=500)
 
 class CustomLoginView(LoginView):
     def form_valid(self, form):
