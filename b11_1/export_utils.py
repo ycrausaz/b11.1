@@ -8,29 +8,6 @@ from django.utils.timezone import is_aware
 def export_to_excel(materials):
     export_to_excel_type_1(materials)
 
-#        # Define your database views and their specific columns
-#        views = {
-#            'MKVE_Verkaufsdaten': ['col1', 'col2', 'col3', 'col4'],
-#            'view2': ['colA', 'colB', 'colC'],
-#            # Add all your view names and their specific columns here
-#        }
-#    
-#        # Define the column header tokens for each view
-#        header_tokens = {
-#            'MKVE_Verkaufsdaten': {
-#                'col1': 'SOURCE_ID',
-#                'col2': 'VKORG',
-#                'col3': 'VTWEG',
-#                'col4': 'MTPOS',
-#            },
-#            'view2': {
-#                'colA': 'TokenA',
-#                'colB': 'TokenB',
-#                'colC': 'TokenC',
-#            },
-#            # Add header tokens for all your views here
-#        }
-
 def make_timezone_naive(df):
     for col in df.select_dtypes(include=['datetime64[ns]']).columns:
         df[col] = df[col].apply(lambda x: x.replace(tzinfo=None) if pd.notnull(x) and is_aware(x) else x)
@@ -45,24 +22,7 @@ def export_to_excel(materials):
             # Add all your view names and their specific columns here
         }
     
-        # Define the column header tokens for each view
-        header_tokens = {
-            'MVKE_Verkaufsdaten': {
-                'col1': 'SOURCE_ID',
-                'col2': 'VKORG',
-                'col3': 'VTWEG',
-                'col4': 'MTPOS',
-            },
- #           'view2': {
- #               'colA': 'TokenA',
- #               'colB': 'TokenB',
- #               'colC': 'TokenC',
- #           },
-            # Add header tokens for all your views here
-        }
-
         connection = connections['default']
-        print("*** connection ok")
 
         # Create a BytesIO buffer to hold the Excel data
         output = BytesIO()
@@ -77,7 +37,6 @@ def export_to_excel(materials):
 
                     df = make_timezone_naive(df)
 
-                    df.columns = [header_tokens[view].get(col, col) for col in df.columns]
 
                     df.to_excel(writer, sheet_name=view, index=False)
                     sheet_added = True
