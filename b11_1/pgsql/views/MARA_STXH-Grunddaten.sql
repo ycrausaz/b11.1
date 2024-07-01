@@ -11,6 +11,7 @@ SELECT
   'GRUN' AS TDID,
   'D' AS spras
 FROM b11_1_material
+WHERE is_transferred = 't'
 
 UNION ALL
 
@@ -22,6 +23,7 @@ SELECT
   'GRUN' AS TDID,
   'F' AS spras
 FROM b11_1_material
+WHERE is_transferred = 't'
 
 UNION ALL
 
@@ -32,7 +34,8 @@ SELECT
   positions_nr AS TDNAME,
   'GRUN' AS TDID,
   'E' AS spras
-FROM b11_1_material;
+FROM b11_1_material
+WHERE is_transferred = 't';
 
 -- After creating the view, you can query it as a regular table
 -- For example: SELECT * FROM MARA_STXH_Grunddaten;

@@ -76,6 +76,7 @@ FROM (
         '/' AS tdformat,
         grunddatentext_en_2_zeile
     FROM b11_1_material
+    WHERE is_transferred = 't'
 ) AS MARA_STXL_Grunddaten
 ORDER BY source_id, tdspras, line_counter;
 

@@ -9,6 +9,7 @@ SELECT
   'D' AS spras, 
   kurztext_de AS maktx
 FROM b11_1_material
+WHERE is_transferred = 't'
 
 UNION ALL
 
@@ -18,6 +19,7 @@ SELECT
   'F' AS spras, 
   kurztext_fr AS maktx
 FROM b11_1_material
+WHERE is_transferred = 't'
 
 UNION ALL
 
@@ -26,7 +28,8 @@ SELECT
   positions_nr AS source_id, 
   'E' AS spras, 
   kurztext_en AS maktx
-FROM b11_1_material;
+FROM b11_1_material
+WHERE is_transferred = 't';
 
 -- After creating the view, you can query it as a regular table
 -- For example: SELECT * FROM MAKT_Beschreibung;
