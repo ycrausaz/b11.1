@@ -21,6 +21,7 @@ FROM (
         '' AS tdformat,
         grunddatentext_de_1_zeile AS text
     FROM b11_1_material
+    WHERE is_transferred = 't'
 
     UNION ALL
 
@@ -32,6 +33,7 @@ FROM (
         '/' AS tdformat,
         grunddatentext_de_2_zeile
     FROM b11_1_material
+    WHERE is_transferred = 't'
 
     UNION ALL
 
@@ -43,6 +45,7 @@ FROM (
         '' AS tdformat,
         grunddatentext_fr_1_zeile
     FROM b11_1_material
+    WHERE is_transferred = 't'
 
     UNION ALL
 
@@ -54,6 +57,7 @@ FROM (
         '/' AS tdformat,
         grunddatentext_fr_2_zeile
     FROM b11_1_material
+    WHERE is_transferred = 't'
 
     UNION ALL
 
@@ -65,6 +69,7 @@ FROM (
         '' AS tdformat,
         grunddatentext_en_1_zeile
     FROM b11_1_material
+    WHERE is_transferred = 't'
 
     UNION ALL
 
