@@ -1,3 +1,23 @@
-SOURCE_ID
-SPRAS
-MAKTX
+-- Create the function to dynamically generate the unpivot view with join
+CREATE OR REPLACE FUNCTION create_unpivot_view_with_join() RETURNS VOID AS $$
+DECLARE
+    col_name RECORD;
+    unpivot_query TEXT := 'CREATE OR REPLACE VIEW unpivoted_view AS SELECT unpivoted.id, unpivoted.positions_nr, unpivoted.instandsetzbar, b11_1_begru.text AS begru_text, unpivoted.lang, unpivoted.text FROM (';
+    union_selects TEXT := '';
+    column_names TEXT[] := ARRAY['text_1', 'text_2', 'text_3']; -- Adjust this array based on the number of text columns you have
+BEGIN
+    FOR i IN 1..array_length(column_names, 1) LOOP
+        IF union_selects <> '' THEN
+            union_selects := union_selects || ' UNION ALL ';
+        END IF;
+        union_selects := union_selects ||
+            'SELECT my_table.id, my_table.positions_nr, my_table.instandsetzbar, my_table.begru_id, ''' || substr('D,F,E', (i-1)*2+1, 1) || ''' AS lang, ' || column_names[i] || ' AS text FROM my_table';
+    END LOOP;
+    unpivot_query := unpivot_query || union_selects || ') AS unpivoted LEFT JOIN public.b11_1_begru ON unpivoted.begru_id = b11_1_begru.id;';
+
+    EXECUTE unpivot_query;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Execute the function to create the view
+SELECT create_unpivot_view_with_join();
