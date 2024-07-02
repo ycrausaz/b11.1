@@ -5,6 +5,7 @@ from django.db import connections
 from django.utils.timezone import is_aware
 import random
 import string
+from datetime import datetime
 
 
 def export_to_excel(materials):
@@ -105,7 +106,7 @@ def export_to_excel(materials):
 
     # Create the HttpResponse object with the appropriate Excel header
     response = HttpResponse(output, content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-    response['Content-Disposition'] = 'attachment; filename=database_views.xlsx'
+    response['Content-Disposition'] = 'attachment; filename=database_views_' + datetime.today().strftime('%Y%m%d_%H%M%S') + '.xlsx'
 
     return response
 #    except Exception as e:
