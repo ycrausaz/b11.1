@@ -45,9 +45,9 @@ def export_to_excel(materials):
     views = ['MARA_Grunddaten', 'MARA_AUSP_Merkmale', 'MARA_KSSK_Klassenzuordnung', 'MARA_STXH_Grunddaten', 'MARA_STXL_Grunddaten', 'MARC_Werkdaten', 'MBEW_Buchhaltung', 'MLAN_Steuer', 'MVKE_Verkaufsdaten', 'MAKT_Beschreibung']
 
     view_to_sheet = {
+        'MARA_Grunddaten': 'MARA - Grunddaten',
         'MAKT_Beschreibung': 'MAKT - Beschreibung',
         'MARA_AUSP_Merkmale': 'MARA_AUSP - Merkmale',
-        'MARA_Grunddaten': 'MARA - Grunddaten',
         'MARA_KSSK_Klassenzuordnung': 'MARA_KSSK - Klassenzuordnung',
         'MARA_STXH_Grunddaten': 'MARA_STXH - Grunddaten. Text Al',
         'MARA_STXL_Grunddaten': 'MARA_STXL - Grunddaten. Text',
