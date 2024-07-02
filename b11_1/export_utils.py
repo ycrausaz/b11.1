@@ -6,6 +6,7 @@ from django.utils.timezone import is_aware
 import random
 import string
 from datetime import datetime
+from sqlalchemy import create_engine
 
 
 def export_to_excel(materials):
@@ -42,7 +43,7 @@ def export_to_excel(materials):
     """
 #    try:
     # List of your database view names
-    views = ['MARA_Grunddaten', 'MARA_AUSP_Merkmale', 'MARA_KSSK_Klassenzuordnung', 'MARA_STXH_Grunddaten', 'MARA_STXL_Grunddaten', 'MARC_Werkdaten', 'MBEW_Buchhaltung', 'MLAN_Steuer', 'MVKE_Verkaufsdaten', 'MAKT_Beschreibung']
+    views = ['MARA_Grunddaten', 'MARA_AUSP_Merkmale', 'MARA_KSSK_Klassenzuordnung', 'MARA_STXH_Grunddaten', 'MARA_STXL_Grunddaten', 'MARC_Werksdaten', 'MBEW_Buchhaltung', 'MLAN_Steuer', 'MVKE_Verkaufsdaten', 'MAKT_Beschreibung']
 
     view_to_sheet = {
         'MARA_Grunddaten': 'MARA - Grunddaten',
@@ -51,14 +52,18 @@ def export_to_excel(materials):
         'MARA_KSSK_Klassenzuordnung': 'MARA_KSSK - Klassenzuordnung',
         'MARA_STXH_Grunddaten': 'MARA_STXH - Grunddaten. Text Al',
         'MARA_STXL_Grunddaten': 'MARA_STXL - Grunddaten. Text',
-        'MARC_Werkdaten': 'MARC - Werksdaten',
+        'MARC_Werksdaten': 'MARC - Werksdaten',
         'MBEW_Buchhaltung': 'MBEW - Buchhaltung',
         'MLAN_Steuer': 'MLAN - Steuer',
         'MVKE_Verkaufsdaten': 'MVKE - Verkaufsdaten',
     }
 
-    # Open a connection to the database
-    connection = connections['default']
+    # Get the database connection settings from Django
+    db_settings = connections.databases['default']
+    db_url = f"postgresql+psycopg2://{db_settings['USER']}:{db_settings['PASSWORD']}@{db_settings['HOST']}:{db_settings['PORT']}/{db_settings['NAME']}"
+
+    # Create a SQLAlchemy engine
+    engine = create_engine(db_url)
 
     # Create a BytesIO buffer to hold the Excel data
     output = BytesIO()
@@ -70,12 +75,12 @@ def export_to_excel(materials):
             try:
                 # Query all data from the view
                 query = f'SELECT * FROM {view}'
-                df = pd.read_sql_query(query, connection)
+                df = pd.read_sql_query(query, engine)
 
                 # Convert headers to capital letters
                 df.columns = [col.upper() for col in df.columns]
 
-                # Pad 'source_id' column values to 3 digits with leading zeros
+                # Pad 'SOURCE_ID' column values to 3 digits with leading zeros and sort by 'SOURCE_ID'
                 if 'SOURCE_ID' in df.columns:
                     df['SOURCE_ID'] = df['SOURCE_ID'].astype(str).str.zfill(3)
                     df = df.sort_values(by='SOURCE_ID')
@@ -85,7 +90,7 @@ def export_to_excel(materials):
                     df['MFRPN'] = df['MFRPN'].apply(lambda x: generate_random_string())
 
                 # Filter out records with null values in specified columns for specific views
-                if view == 'MARC_Werkdaten' and 'WERKS' in df.columns:
+                if view == 'MARC_Werksdaten' and 'WERKS' in df.columns:
                     df = df.dropna(subset=['WERKS'])
                 elif view == 'MBEW_Buchhaltung' and 'BWKEY' in df.columns:
                     df = df.dropna(subset=['BWKEY'])
@@ -100,21 +105,27 @@ def export_to_excel(materials):
             # Add an empty sheet if no data was added
             pd.DataFrame().to_excel(writer, sheet_name='EmptySheet')
 
-#        # Also write the selected materials to a new sheet
-#        selected_df = pd.DataFrame(list(materials.values()))
-#        if not selected_df.empty:
-#            # Convert headers to capital letters
-#            selected_df.columns = [col.upper() for col in selected_df.columns]
-#            selected_df.to_excel(writer, sheet_name='Selected Materials', index=False)
+        # Also write the selected materials to a new sheet
+        selected_df = pd.DataFrame(list(materials.values()))
+        if not selected_df.empty:
+            # Convert headers to capital letters
+            selected_df.columns = [col.upper() for col in selected_df.columns]
+            if 'SOURCE_ID' in selected_df.columns:
+                selected_df['SOURCE_ID'] = selected_df['SOURCE_ID'].astype(str).str.zfill(3)
+                selected_df = selected_df.sort_values(by='SOURCE_ID')
+            if 'MFRPN' in selected_df.columns:
+                selected_df['MFRPN'] = selected_df['MFRPN'].apply(lambda x: generate_random_string())
+            selected_df.to_excel(writer, sheet_name='Selected Materials', index=False)
 
     # Seek to the beginning of the stream
     output.seek(0)
 
     # Create the HttpResponse object with the appropriate Excel header
     response = HttpResponse(output, content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-    response['Content-Disposition'] = 'attachment; filename=database_views_' + datetime.today().strftime('%Y%m%d_%H%M%S') + '.xlsx'
+    response['Content-Disposition'] = 'attachment; filename=database_views.xlsx'
 
     return response
+
 #    except Exception as e:
 #        print(f"Error generating Excel file: {e}")
 #        return HttpResponse("An error occurred while generating the Excel file.", status=500)

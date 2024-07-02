@@ -7,6 +7,7 @@ django-bootstrap-datepicker-plus==5.0.5
 django-on-heroku==1.1.2
 django-pwa==1.1.0
 et-xmlfile==1.1.0
+greenlet==3.0.3
 gunicorn==21.2.0
 numpy==1.26.4
 openpyxl==3.1.4
@@ -21,6 +22,7 @@ python-dateutil==2.9.0.post0
 pytz==2024.1
 reportlab==4.1.0
 six==1.16.0
+SQLAlchemy==2.0.31
 sqlparse==0.4.4
 typing_extensions==4.10.0
 tzdata==2024.1
