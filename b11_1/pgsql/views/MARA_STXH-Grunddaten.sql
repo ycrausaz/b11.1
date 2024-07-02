@@ -9,7 +9,7 @@ SELECT
   'MATERIAL' AS tdobject,
   positions_nr AS TDNAME,
   'GRUN' AS TDID,
-  'D' AS spras
+  'D' AS TDSPRAS
 FROM b11_1_material
 WHERE is_transferred = 't'
 
@@ -21,7 +21,7 @@ SELECT
   'MATERIAL' AS tdobject,
   positions_nr AS TDNAME,
   'GRUN' AS TDID,
-  'F' AS spras
+  'F' AS TDSPRAS
 FROM b11_1_material
 WHERE is_transferred = 't'
 
@@ -33,7 +33,7 @@ SELECT
   'MATERIAL' AS tdobject,
   positions_nr AS TDNAME,
   'GRUN' AS TDID,
-  'E' AS spras
+  'E' AS TDSPRAS
 FROM b11_1_material
 WHERE is_transferred = 't';
 

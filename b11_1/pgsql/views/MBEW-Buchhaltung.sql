@@ -30,7 +30,7 @@ WITH material_data AS (
 -- Unpivot the werk columns into rows
 SELECT 
     source_id, 
-    werk AS werks, 
+    werk AS BWKEY, 
     VERPR,
     STPRS,
     PEINH,
@@ -78,5 +78,5 @@ FROM (
 ) AS unpivoted_data
 ORDER BY 
     source_id, 
-    werks;
+    BWKEY;
 
