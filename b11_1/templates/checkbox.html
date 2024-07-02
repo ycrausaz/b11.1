@@ -1,0 +1,26 @@
+<script>
+    // Function to toggle button state based on checkbox selection
+    function toggleButtons() {
+        var checkboxes = document.getElementsByClassName('material-checkbox');
+        var anyChecked = Array.from(checkboxes).some(checkbox => checkbox.checked);
+        var buttons = document.getElementsByClassName('action-button');
+        for (var button of buttons) {
+            button.disabled = !anyChecked;
+        }
+    }
+
+    // Toggle all checkboxes when "select-all" checkbox is clicked
+    document.getElementById('select-all').onclick = function() {
+        var checkboxes = document.getElementsByClassName('material-checkbox');
+        var isChecked = this.checked;
+        for (var checkbox of checkboxes) {
+            checkbox.checked = isChecked;
+        }
+        toggleButtons();
+    }
+
+    // Add onclick event to all material checkboxes to toggle buttons
+    document.querySelectorAll('.material-checkbox').forEach(function(checkbox) {
+        checkbox.onclick = toggleButtons;
+    });
+</script>

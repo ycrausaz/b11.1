@@ -59,15 +59,15 @@ class ListMaterial_IL_View(grIL_GroupRequiredMixin, ListView):
     template_name = 'il/list_material_il.html'
     context_object_name = 'list_material_il'
 
-    def get_queryset(self, **kwargs):
-        # Call the superclass method to get the base queryset
-        qs = super().get_queryset(**kwargs)
-        # Filter the queryset to exclude transferred items
-        qs = qs.filter(is_transferred=False)
-        # Cast 'positions_nr' to an IntegerField for proper numeric sorting
-        qs = qs.annotate(positions_nr_int=Cast('positions_nr', IntegerField()))
-        # Order by the cast integer field
-        return qs.order_by('positions_nr_int')
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        list_material_il_transferred = Material.objects.filter(is_transferred=True)
+        list_material_il = Material.objects.filter(is_transferred=False)
+
+        # Convert positions_nr to integers for sorting
+        context['list_material_il_transferred'] = sorted(list_material_il_transferred, key=lambda x: int(x.positions_nr))
+        context['list_material_il'] = sorted(list_material_il, key=lambda x: int(x.positions_nr))
+        return context
 
     def post(self, request, *args, **kwargs):
         selected_material_ids = request.POST.getlist('selected_materials')
@@ -176,6 +176,8 @@ class ListMaterial_SMDA_View(grSMDA_GroupRequiredMixin, ListView):
                 selected_materials.update(is_transferred=False, transfer_date=timezone.now())
             elif action == 'delete':
                 selected_materials.delete()
+            elif action == 'export':
+                return export_to_excel(selected_materials)
 
         return redirect(reverse('list-material-smda'))
 

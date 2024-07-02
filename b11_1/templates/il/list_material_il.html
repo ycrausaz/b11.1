@@ -10,31 +10,37 @@
         <thead>
             <tr>
                 <th><input type="checkbox" id="select-all"></th>
-                <th>Material</th>
+                <th>Open materials</th>
             </tr>
         </thead>
         <tbody>
             {% for mat in list_material_il %}
                 <tr>
-                    <td><input type="checkbox" name="selected_materials" value="{{ mat.id }}"></td>
-                    <td>{{ mat.id }} {{ mat.positions_nr }} <a href="{% url 'update-material-il' mat.id %}">{{ mat.kurztext_de }}</a></td>
+                    <td><input type="checkbox" name="selected_materials" value="{{ mat.id }}" class="material-checkbox"></td>
+                    <td>{{ mat.positions_nr }} <a href="{% url 'update-material-il' mat.id %}">{{ mat.kurztext_de }}</a></td>
                 </tr>
             {% endfor %}
         </tbody>
     </table>
     <br/>
-    <button type="submit" name="action" value="transfer" class="btn btn-primary">Transfer</button>
-    <button type="submit" name="action" value="delete" class="btn btn-danger">Delete</button>
+    <button type="submit" name="action" value="transfer" class="btn btn-primary action-button" disabled>Transfer</button>
+    <button type="submit" name="action" value="delete" class="btn btn-danger action-button" disabled>Delete</button>
 </form>
 <br/>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Transferred materials</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for mat in list_material_il_transferred %}
+                <tr>
+                    <td>{{ mat.positions_nr }} {{ mat.kurztext_de }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 <hr><br/>
-
-<script>
-    document.getElementById('select-all').onclick = function() {
-        var checkboxes = document.getElementsByName('selected_materials');
-        for (var checkbox of checkboxes) {
-            checkbox.checked = this.checked;
-        }
-    }
-</script>
+{% include 'checkbox.html' %}
 {% endblock %}

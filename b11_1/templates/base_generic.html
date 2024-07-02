@@ -51,23 +51,7 @@
 {{ form.media }}
 
     <script>
-        async function loadS3Image(imageElement, fileName) {
-            const response = await fetch(`/get-image-url/${fileName}/`);
-            if (response.ok) {
-                const data = await response.json();
-                imageElement.src = data.url;
-            } else {
-                console.error('Error fetching the image URL');
-            }
-        }
 
-        document.addEventListener('DOMContentLoaded', () => {
-            const images = document.querySelectorAll('.S3_image');
-            images.forEach(img => {
-                const fileName = img.dataset.filename;
-                loadS3Image(img, fileName);
-            });
-        });
     </script>
 
 <style>
@@ -102,7 +86,7 @@ label.required::after {
 
 </style>
 
-    <title>deb.massage <= mgmt</title>
+  <title>Beilage 11.1</title>
   </head>
   <body>
 
