@@ -60,6 +60,10 @@ def export_to_excel(materials):
                 # Convert headers to capital letters
                 df.columns = [col.upper() for col in df.columns]
 
+                # Pad 'source_id' column values to 3 digits with leading zeros
+                if 'SOURCE_ID' in df.columns:
+                    df['SOURCE_ID'] = df['SOURCE_ID'].astype(str).str.zfill(3)
+
                 # Write the DataFrame to a specific sheet, including headers
                 df.to_excel(writer, sheet_name=sheet_name, index=False)
                 sheet_added = True
