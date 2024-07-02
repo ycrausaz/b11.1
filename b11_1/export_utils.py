@@ -42,20 +42,19 @@ def export_to_excel(materials):
     """
 #    try:
     # List of your database view names
-    views = ['MAKT_Beschreibung', 'MARA_KSSK_Klassenzuordnung', 'MARA_AUSP_Merkmale', 'MARA_STXH_Grunddaten', 'MARA_STXL_Grunddaten', 'MARC_Werkdaten', 'MBEW_Buchhaltung', 'MLAN_Steuer', 'MVKE_Verkaufsdaten', 'MARA_Grunddaten']
+    views = ['MARA_Grunddaten', 'MARA_AUSP_Merkmale', 'MARA_KSSK_Klassenzuordnung', 'MARA_STXH_Grunddaten', 'MARA_STXL_Grunddaten', 'MARC_Werkdaten', 'MBEW_Buchhaltung', 'MLAN_Steuer', 'MVKE_Verkaufsdaten', 'MAKT_Beschreibung']
 
     view_to_sheet = {
         'MAKT_Beschreibung': 'MAKT - Beschreibung',
-        'MARA_KSSK_Klassenzuordnung': 'MARA_KSSK - Klassenzuordnung',
         'MARA_AUSP_Merkmale': 'MARA_AUSP - Merkmale',
+        'MARA_Grunddaten': 'MARA - Grunddaten',
+        'MARA_KSSK_Klassenzuordnung': 'MARA_KSSK - Klassenzuordnung',
         'MARA_STXH_Grunddaten': 'MARA_STXH - Grunddaten. Text Al',
         'MARA_STXL_Grunddaten': 'MARA_STXL - Grunddaten. Text',
         'MARC_Werkdaten': 'MARC - Werksdaten',
         'MBEW_Buchhaltung': 'MBEW - Buchhaltung',
         'MLAN_Steuer': 'MLAN - Steuer',
         'MVKE_Verkaufsdaten': 'MVKE - Verkaufsdaten',
-        'MARA_Grunddaten': 'MARA - Grunddaten',
-        # Add all your view names and their corresponding sheet names here
     }
 
     # Open a connection to the database
@@ -79,6 +78,7 @@ def export_to_excel(materials):
                 # Pad 'source_id' column values to 3 digits with leading zeros
                 if 'SOURCE_ID' in df.columns:
                     df['SOURCE_ID'] = df['SOURCE_ID'].astype(str).str.zfill(3)
+                    df = df.sort_values(by='SOURCE_ID')
 
                 # Replace 'MFRPN' column values with 16-character random strings
                 if 'MFRPN' in df.columns:
