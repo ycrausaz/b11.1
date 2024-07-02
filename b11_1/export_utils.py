@@ -3,6 +3,8 @@ from io import BytesIO  # Import BytesIO
 from django.http import HttpResponse
 from django.db import connections
 from django.utils.timezone import is_aware
+import random
+import string
 
 
 def export_to_excel(materials):
@@ -11,6 +13,19 @@ def export_to_excel(materials):
 def make_timezone_naive(df):
     for col in df.select_dtypes(include=['datetime64[ns]']).columns:
         df[col] = df[col].apply(lambda x: x.replace(tzinfo=None) if pd.notnull(x) and is_aware(x) else x)
+
+def generate_random_string(length=16):
+    """
+    Generates a random string of the specified length with letters only.
+
+    Parameters:
+    length (int): The length of the random string.
+
+    Returns:
+    str: The generated random string.
+    """
+    letters = string.ascii_uppercase  # Use uppercase letters only
+    return ''.join(random.choice(letters) for i in range(length))
     return df
 
 def export_to_excel(materials):
@@ -63,6 +78,10 @@ def export_to_excel(materials):
                 # Pad 'source_id' column values to 3 digits with leading zeros
                 if 'SOURCE_ID' in df.columns:
                     df['SOURCE_ID'] = df['SOURCE_ID'].astype(str).str.zfill(3)
+
+                # Replace 'MFRPN' column values with 16-character random strings
+                if 'MFRPN' in df.columns:
+                    df['MFRPN'] = df['MFRPN'].apply(lambda x: generate_random_string())
 
                 # Write the DataFrame to a specific sheet, including headers
                 df.to_excel(writer, sheet_name=sheet_name, index=False)
