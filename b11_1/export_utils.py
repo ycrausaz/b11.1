@@ -28,6 +28,20 @@ def export_to_excel(materials):
     # List of your database view names
     views = ['MAKT_Beschreibung', 'MARA_KSSK_Klassenzuordnung', 'MARA_AUSP_Merkmale', 'MARA_STXH_Grunddaten', 'MARA_STXL_Grunddaten', 'MARC_Werkdaten', 'MBEW_Buchhaltung', 'MLAN_Steuer', 'MVKE_Verkaufsdaten', 'MARA_Grunddaten']
 
+    view_to_sheet = {
+        'MAKT_Beschreibung': 'MAKT - Beschreibung',
+        'MARA_KSSK_Klassenzuordnung': 'MARA_KSSK - Klassenzuordnung',
+        'MARA_AUSP_Merkmale': 'MARA_AUSP - Merkmale',
+        'MARA_STXH_Grunddaten': 'MARA_STXH - Grunddaten. Text Al',
+        'MARA_STXL_Grunddaten': 'MARA_STXL - Grunddaten. Text',
+        'MARC_Werkdaten': 'MARC - Werksdaten',
+        'MBEW_Buchhaltung': 'MBEW - Buchhaltung',
+        'MLAN_Steuer': 'MLAN - Steuer',
+        'MVKE_Verkaufsdaten': 'MVKE - Verkaufsdaten',
+        'MARA_Grunddaten': 'MARA - Grunddaten',
+        # Add all your view names and their corresponding sheet names here
+    }
+
     # Open a connection to the database
     connection = connections['default']
 
@@ -37,14 +51,17 @@ def export_to_excel(materials):
     # Create a Pandas Excel writer using openpyxl as the engine, writing to the BytesIO buffer
     with pd.ExcelWriter(output, engine='openpyxl') as writer:
         sheet_added = False
-        for view in views:
+        for view, sheet_name in view_to_sheet.items():
             try:
                 # Query all data from the view
                 query = f'SELECT * FROM {view}'
                 df = pd.read_sql_query(query, connection)
 
+                # Convert headers to capital letters
+                df.columns = [col.upper() for col in df.columns]
+
                 # Write the DataFrame to a specific sheet, including headers
-                df.to_excel(writer, sheet_name=view, index=False)
+                df.to_excel(writer, sheet_name=sheet_name, index=False)
                 sheet_added = True
             except Exception as e:
                 print(f"Error fetching data for view '{view}': {e}")
@@ -53,10 +70,12 @@ def export_to_excel(materials):
             # Add an empty sheet if no data was added
             pd.DataFrame().to_excel(writer, sheet_name='EmptySheet')
 
-        # Also write the selected materials to a new sheet
-        selected_df = pd.DataFrame(list(materials.values()))
-        if not selected_df.empty:
-            selected_df.to_excel(writer, sheet_name='Selected Materials', index=False)
+#        # Also write the selected materials to a new sheet
+#        selected_df = pd.DataFrame(list(materials.values()))
+#        if not selected_df.empty:
+#            # Convert headers to capital letters
+#            selected_df.columns = [col.upper() for col in selected_df.columns]
+#            selected_df.to_excel(writer, sheet_name='Selected Materials', index=False)
 
     # Seek to the beginning of the stream
     output.seek(0)
