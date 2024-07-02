@@ -346,9 +346,9 @@ def drop_views_mara_stxl_grunddaten(apps, schema_editor):
     schema_editor.execute('DROP VIEW IF EXISTS mara_stxl_grunddaten;')
 
 # 7
-def create_views_marc_werkdaten(apps, schema_editor):
+def create_views_marc_werksdaten(apps, schema_editor):
     view_sql = '''
-CREATE OR REPLACE VIEW public.marc_werkdaten
+CREATE OR REPLACE VIEW public.marc_werksdaten
  AS
  WITH material_data AS (
          SELECT a.positions_nr AS source_id,
@@ -390,8 +390,8 @@ CREATE OR REPLACE VIEW public.marc_werkdaten
         '''
     schema_editor.execute(view_sql)
 
-def drop_views_marc_werkdaten(apps, schema_editor):
-    schema_editor.execute('DROP VIEW IF EXISTS marc_werkdaten;')
+def drop_views_marc_werksdaten(apps, schema_editor):
+    schema_editor.execute('DROP VIEW IF EXISTS marc_werksdaten;')
 
 # 8
 def create_views_mbew_buchhaltung(apps, schema_editor):
@@ -515,7 +515,7 @@ class Migration(migrations.Migration):
 # 6
         migrations.RunPython(create_views_mara_stxl_grunddaten, reverse_code=drop_views_mara_stxl_grunddaten),
 # 7
-        migrations.RunPython(create_views_marc_werkdaten, reverse_code=drop_views_marc_werkdaten),
+        migrations.RunPython(create_views_marc_werksdaten, reverse_code=drop_views_marc_werksdaten),
 # 8
         migrations.RunPython(create_views_mbew_buchhaltung, reverse_code=drop_views_mbew_buchhaltung),
 # 9
