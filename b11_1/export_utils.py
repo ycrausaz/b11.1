@@ -84,6 +84,12 @@ def export_to_excel(materials):
                 if 'MFRPN' in df.columns:
                     df['MFRPN'] = df['MFRPN'].apply(lambda x: generate_random_string())
 
+                # Filter out records with null values in specified columns for specific views
+                if view == 'MARC_Werkdaten' and 'WERKS' in df.columns:
+                    df = df.dropna(subset=['WERKS'])
+                elif view == 'MBEW_Buchhaltung' and 'BWKEY' in df.columns:
+                    df = df.dropna(subset=['BWKEY'])
+
                 # Write the DataFrame to a specific sheet, including headers
                 df.to_excel(writer, sheet_name=sheet_name, index=False)
                 sheet_added = True
