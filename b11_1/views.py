@@ -61,8 +61,8 @@ class ListMaterial_IL_View(grIL_GroupRequiredMixin, ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        list_material_il_transferred = Material.objects.filter(is_transferred=True)
-        list_material_il = Material.objects.filter(is_transferred=False)
+        list_material_il_transferred = Material.objects.filter(is_transferred=True, hersteller=self.request.user)
+        list_material_il = Material.objects.filter(is_transferred=False, hersteller=self.request.user)
 
         # Convert positions_nr to integers for sorting
         context['list_material_il_transferred'] = sorted(list_material_il_transferred, key=lambda x: int(x.positions_nr))

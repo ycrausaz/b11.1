@@ -164,6 +164,7 @@ class Auspraegung(models.Model):
 
 
 class Material(models.Model):
+    hersteller = models.CharField(null=True, blank=True)
     is_transferred = models.BooleanField(default=False)
     transfer_date = models.DateTimeField(null=True, blank=True)
     positions_nr = models.CharField(null=True, blank=True, max_length=40)
