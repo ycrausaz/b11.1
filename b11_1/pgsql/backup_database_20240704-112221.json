@@ -1,0 +1,3076 @@
+[
+{
+    "model": "auth.group",
+    "pk": 1,
+    "fields": {
+        "name": "grIL",
+        "permissions": []
+    }
+},
+{
+    "model": "auth.group",
+    "pk": 2,
+    "fields": {
+        "name": "grGD",
+        "permissions": []
+    }
+},
+{
+    "model": "auth.group",
+    "pk": 3,
+    "fields": {
+        "name": "grSMDA",
+        "permissions": []
+    }
+},
+{
+    "model": "auth.user",
+    "pk": 1,
+    "fields": {
+        "password": "pbkdf2_sha256$720000$Drk81ampJsId02wg70YKYo$mhxHlGOu8JSYtTY8KSk7i7YDkOnqFBQfnqJ2QUsFZb0=",
+        "last_login": "2024-06-26T18:04:12.427Z",
+        "is_superuser": true,
+        "username": "yann",
+        "first_name": "",
+        "last_name": "",
+        "email": "",
+        "is_staff": true,
+        "is_active": true,
+        "date_joined": "2024-06-26T17:04:56.755Z",
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "auth.user",
+    "pk": 2,
+    "fields": {
+        "password": "pbkdf2_sha256$720000$OWr3VIWlzKQLkaUxLgYpzz$fKU6foVY1Jm3JbwU6XeCD7sJpn1v0kHG5lft4r80KMc=",
+        "last_login": "2024-06-28T05:27:02.245Z",
+        "is_superuser": false,
+        "username": "grIL_01",
+        "first_name": "",
+        "last_name": "",
+        "email": "",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2024-06-26T17:24:40Z",
+        "groups": [
+            [
+                "grIL"
+            ]
+        ],
+        "user_permissions": []
+    }
+},
+{
+    "model": "auth.user",
+    "pk": 3,
+    "fields": {
+        "password": "pbkdf2_sha256$720000$00A6T4sVjr09QMLE3p6jLG$DFSecz3u2TTOlqg18kjLBK6UulsenYK+PL29B+kRczY=",
+        "last_login": "2024-07-04T09:19:56.054Z",
+        "is_superuser": false,
+        "username": "grIL_02",
+        "first_name": "",
+        "last_name": "",
+        "email": "",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2024-06-26T17:24:55Z",
+        "groups": [
+            [
+                "grIL"
+            ]
+        ],
+        "user_permissions": []
+    }
+},
+{
+    "model": "auth.user",
+    "pk": 4,
+    "fields": {
+        "password": "pbkdf2_sha256$720000$eYQ1VX9693ecUfeI6FT1Rf$SZQmk49FI9du5Dzyxkye0Q3BEdgEMDcwJK7OwRKJT0o=",
+        "last_login": null,
+        "is_superuser": false,
+        "username": "grIL_03",
+        "first_name": "",
+        "last_name": "",
+        "email": "",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2024-06-26T17:25:08Z",
+        "groups": [
+            [
+                "grIL"
+            ]
+        ],
+        "user_permissions": []
+    }
+},
+{
+    "model": "auth.user",
+    "pk": 5,
+    "fields": {
+        "password": "pbkdf2_sha256$720000$2Q6SWsOLmyTQk0Lu09Lgeg$T5yL0mMRxBN7Y4MUxadXr67M8kPhb9tlUYBr85Fdkis=",
+        "last_login": "2024-06-26T17:45:04.401Z",
+        "is_superuser": false,
+        "username": "grGD_01",
+        "first_name": "",
+        "last_name": "",
+        "email": "",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2024-06-26T17:25:33Z",
+        "groups": [
+            [
+                "grGD"
+            ]
+        ],
+        "user_permissions": []
+    }
+},
+{
+    "model": "auth.user",
+    "pk": 6,
+    "fields": {
+        "password": "pbkdf2_sha256$720000$41qOozjnAeRLdCZaKVd7UD$jGJXtV37Tdi5j/4Oa0mlsohtvsxxIoIYXZ5tuf5M5R8=",
+        "last_login": "2024-06-26T18:02:50.375Z",
+        "is_superuser": false,
+        "username": "grGD_02",
+        "first_name": "",
+        "last_name": "",
+        "email": "",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2024-06-26T17:25:44Z",
+        "groups": [
+            [
+                "grGD"
+            ]
+        ],
+        "user_permissions": []
+    }
+},
+{
+    "model": "auth.user",
+    "pk": 7,
+    "fields": {
+        "password": "pbkdf2_sha256$720000$sWuaCLxihiSPxL94OoHM03$fKTL7pp3zWg3J5PhYa2sfLg/OrGJSVbPmcdG3Co90CI=",
+        "last_login": null,
+        "is_superuser": false,
+        "username": "grGD_03",
+        "first_name": "",
+        "last_name": "",
+        "email": "",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2024-06-26T17:25:54Z",
+        "groups": [
+            [
+                "grGD"
+            ]
+        ],
+        "user_permissions": []
+    }
+},
+{
+    "model": "auth.user",
+    "pk": 8,
+    "fields": {
+        "password": "pbkdf2_sha256$720000$TKYXCnI9JUSMKpW7wTbyqT$YUfRvQo8jvGSAAJ/HE9qRvKN29zTNCUw0MtVS7zkcg8=",
+        "last_login": null,
+        "is_superuser": false,
+        "username": "grSMDA_01",
+        "first_name": "",
+        "last_name": "",
+        "email": "",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2024-06-26T18:05:01Z",
+        "groups": [
+            [
+                "grSMDA"
+            ]
+        ],
+        "user_permissions": []
+    }
+},
+{
+    "model": "auth.user",
+    "pk": 9,
+    "fields": {
+        "password": "pbkdf2_sha256$720000$nw9zWt3JJg9mjLEkgImYYQ$3OY1OYDKnoYsp2PcE5A+45ZRYypGztQxXOlMbMIwVRY=",
+        "last_login": null,
+        "is_superuser": false,
+        "username": "grSMDA_02",
+        "first_name": "",
+        "last_name": "",
+        "email": "",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2024-06-26T18:05:10Z",
+        "groups": [
+            [
+                "grSMDA"
+            ]
+        ],
+        "user_permissions": []
+    }
+},
+{
+    "model": "auth.user",
+    "pk": 10,
+    "fields": {
+        "password": "pbkdf2_sha256$720000$NKqiEPN8IqTFbDdvOgvCpO$YcI3IirYEQtZ/nOvb5/gb+gTPH+qINXMr3CcHi6AFsw=",
+        "last_login": "2024-06-26T18:06:19.939Z",
+        "is_superuser": false,
+        "username": "grSMDA_03",
+        "first_name": "",
+        "last_name": "",
+        "email": "",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2024-06-26T18:05:22Z",
+        "groups": [
+            [
+                "grSMDA"
+            ]
+        ],
+        "user_permissions": []
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "jxe18qrf2kl3edvjboncpgmjhhbacnvh",
+    "fields": {
+        "session_data": ".eJxVjEEOwiAQRe_C2pAppTC6dN8zkGEYpGpoUtqV8e7apAvd_vfef6lA21rC1mQJU1IX1avT7xaJH1J3kO5Ub7Pmua7LFPWu6IM2Pc5JntfD_Tso1Mq39skSUGQYemE6ZwLwDsmLBWcZ2cSOMPWI0nUuDZnFGgAnSJidNYN6fwD1fTf2:1sPIdA:PkVtx2WTtnXgT2M_HrK8L8axGEorBcc2ZMR1R3fo42M",
+        "expire_date": "2024-07-18T09:19:56.058Z"
+    }
+},
+{
+    "model": "b11_1.begru",
+    "pk": 1,
+    "fields": {
+        "text": "3000"
+    }
+},
+{
+    "model": "b11_1.begru",
+    "pk": 2,
+    "fields": {
+        "text": "4000"
+    }
+},
+{
+    "model": "b11_1.begru",
+    "pk": 3,
+    "fields": {
+        "text": "5000"
+    }
+},
+{
+    "model": "b11_1.begru",
+    "pk": 4,
+    "fields": {
+        "text": "6000"
+    }
+},
+{
+    "model": "b11_1.begru",
+    "pk": 5,
+    "fields": {
+        "text": "7000"
+    }
+},
+{
+    "model": "b11_1.begru",
+    "pk": 6,
+    "fields": {
+        "text": "8000"
+    }
+},
+{
+    "model": "b11_1.begru",
+    "pk": 7,
+    "fields": {
+        "text": "9000"
+    }
+},
+{
+    "model": "b11_1.basismengeneinheit",
+    "pk": 1,
+    "fields": {
+        "text": "ST"
+    }
+},
+{
+    "model": "b11_1.basismengeneinheit",
+    "pk": 2,
+    "fields": {
+        "text": "M"
+    }
+},
+{
+    "model": "b11_1.basismengeneinheit",
+    "pk": 3,
+    "fields": {
+        "text": "KG"
+    }
+},
+{
+    "model": "b11_1.basismengeneinheit",
+    "pk": 4,
+    "fields": {
+        "text": "PAA"
+    }
+},
+{
+    "model": "b11_1.basismengeneinheit",
+    "pk": 5,
+    "fields": {
+        "text": "L"
+    }
+},
+{
+    "model": "b11_1.basismengeneinheit",
+    "pk": 6,
+    "fields": {
+        "text": "LE"
+    }
+},
+{
+    "model": "b11_1.basismengeneinheit",
+    "pk": 7,
+    "fields": {
+        "text": "T"
+    }
+},
+{
+    "model": "b11_1.basismengeneinheit",
+    "pk": 8,
+    "fields": {
+        "text": "STD"
+    }
+},
+{
+    "model": "b11_1.basismengeneinheit",
+    "pk": 9,
+    "fields": {
+        "text": "JHR"
+    }
+},
+{
+    "model": "b11_1.basismengeneinheit",
+    "pk": 10,
+    "fields": {
+        "text": "GLL"
+    }
+},
+{
+    "model": "b11_1.basismengeneinheit",
+    "pk": 11,
+    "fields": {
+        "text": "GLI"
+    }
+},
+{
+    "model": "b11_1.basismengeneinheit",
+    "pk": 12,
+    "fields": {
+        "text": "TO"
+    }
+},
+{
+    "model": "b11_1.basismengeneinheit",
+    "pk": 13,
+    "fields": {
+        "text": "G"
+    }
+},
+{
+    "model": "b11_1.basismengeneinheit",
+    "pk": 14,
+    "fields": {
+        "text": "MG"
+    }
+},
+{
+    "model": "b11_1.basismengeneinheit",
+    "pk": 15,
+    "fields": {
+        "text": "ML"
+    }
+},
+{
+    "model": "b11_1.basismengeneinheit",
+    "pk": 16,
+    "fields": {
+        "text": "CM"
+    }
+},
+{
+    "model": "b11_1.basismengeneinheit",
+    "pk": 17,
+    "fields": {
+        "text": "MM"
+    }
+},
+{
+    "model": "b11_1.basismengeneinheit",
+    "pk": 18,
+    "fields": {
+        "text": "M2"
+    }
+},
+{
+    "model": "b11_1.basismengeneinheit",
+    "pk": 19,
+    "fields": {
+        "text": "DM2"
+    }
+},
+{
+    "model": "b11_1.basismengeneinheit",
+    "pk": 20,
+    "fields": {
+        "text": "CM2"
+    }
+},
+{
+    "model": "b11_1.basismengeneinheit",
+    "pk": 21,
+    "fields": {
+        "text": "M3"
+    }
+},
+{
+    "model": "b11_1.basismengeneinheit",
+    "pk": 22,
+    "fields": {
+        "text": "CDM"
+    }
+},
+{
+    "model": "b11_1.basismengeneinheit",
+    "pk": 23,
+    "fields": {
+        "text": "CCM"
+    }
+},
+{
+    "model": "b11_1.basismengeneinheit",
+    "pk": 24,
+    "fields": {
+        "text": "PT"
+    }
+},
+{
+    "model": "b11_1.basismengeneinheit",
+    "pk": 25,
+    "fields": {
+        "text": "OZ"
+    }
+},
+{
+    "model": "b11_1.basismengeneinheit",
+    "pk": 26,
+    "fields": {
+        "text": "LB"
+    }
+},
+{
+    "model": "b11_1.materialart",
+    "pk": 1,
+    "fields": {
+        "text": "V001"
+    }
+},
+{
+    "model": "b11_1.materialart",
+    "pk": 2,
+    "fields": {
+        "text": "V002"
+    }
+},
+{
+    "model": "b11_1.materialart",
+    "pk": 3,
+    "fields": {
+        "text": "V003"
+    }
+},
+{
+    "model": "b11_1.materialart",
+    "pk": 4,
+    "fields": {
+        "text": "V005"
+    }
+},
+{
+    "model": "b11_1.materialart",
+    "pk": 5,
+    "fields": {
+        "text": "V006"
+    }
+},
+{
+    "model": "b11_1.materialart",
+    "pk": 6,
+    "fields": {
+        "text": "V007"
+    }
+},
+{
+    "model": "b11_1.materialart",
+    "pk": 7,
+    "fields": {
+        "text": "V008"
+    }
+},
+{
+    "model": "b11_1.materialart",
+    "pk": 8,
+    "fields": {
+        "text": "V009"
+    }
+},
+{
+    "model": "b11_1.materialart",
+    "pk": 9,
+    "fields": {
+        "text": "V010"
+    }
+},
+{
+    "model": "b11_1.materialart",
+    "pk": 10,
+    "fields": {
+        "text": "V011"
+    }
+},
+{
+    "model": "b11_1.materialart",
+    "pk": 11,
+    "fields": {
+        "text": "V012"
+    }
+},
+{
+    "model": "b11_1.materialart",
+    "pk": 12,
+    "fields": {
+        "text": "V013"
+    }
+},
+{
+    "model": "b11_1.materialart",
+    "pk": 13,
+    "fields": {
+        "text": "V014"
+    }
+},
+{
+    "model": "b11_1.materialart",
+    "pk": 14,
+    "fields": {
+        "text": "V015"
+    }
+},
+{
+    "model": "b11_1.materialart",
+    "pk": 15,
+    "fields": {
+        "text": "V016"
+    }
+},
+{
+    "model": "b11_1.materialart",
+    "pk": 16,
+    "fields": {
+        "text": "V017"
+    }
+},
+{
+    "model": "b11_1.materialart",
+    "pk": 17,
+    "fields": {
+        "text": "V099"
+    }
+},
+{
+    "model": "b11_1.sparte",
+    "pk": 1,
+    "fields": {
+        "text": "V0"
+    }
+},
+{
+    "model": "b11_1.sparte",
+    "pk": 2,
+    "fields": {
+        "text": "V1"
+    }
+},
+{
+    "model": "b11_1.sparte",
+    "pk": 3,
+    "fields": {
+        "text": "V2"
+    }
+},
+{
+    "model": "b11_1.sparte",
+    "pk": 4,
+    "fields": {
+        "text": "V3"
+    }
+},
+{
+    "model": "b11_1.sparte",
+    "pk": 5,
+    "fields": {
+        "text": "V4"
+    }
+},
+{
+    "model": "b11_1.sparte",
+    "pk": 6,
+    "fields": {
+        "text": "V5"
+    }
+},
+{
+    "model": "b11_1.sparte",
+    "pk": 7,
+    "fields": {
+        "text": "V6"
+    }
+},
+{
+    "model": "b11_1.sparte",
+    "pk": 8,
+    "fields": {
+        "text": "V7"
+    }
+},
+{
+    "model": "b11_1.sparte",
+    "pk": 9,
+    "fields": {
+        "text": "V8"
+    }
+},
+{
+    "model": "b11_1.materialzustandsverwaltung",
+    "pk": 1,
+    "fields": {
+        "text": "1"
+    }
+},
+{
+    "model": "b11_1.materialzustandsverwaltung",
+    "pk": 2,
+    "fields": {
+        "text": "2"
+    }
+},
+{
+    "model": "b11_1.rueckfuehrungscode",
+    "pk": 1,
+    "fields": {
+        "text": "R"
+    }
+},
+{
+    "model": "b11_1.rueckfuehrungscode",
+    "pk": 2,
+    "fields": {
+        "text": "N"
+    }
+},
+{
+    "model": "b11_1.rueckfuehrungscode",
+    "pk": 3,
+    "fields": {
+        "text": "V"
+    }
+},
+{
+    "model": "b11_1.serialnummerprofil",
+    "pk": 1,
+    "fields": {
+        "text": "ZM01"
+    }
+},
+{
+    "model": "b11_1.serialnummerprofil",
+    "pk": 2,
+    "fields": {
+        "text": "ZM02"
+    }
+},
+{
+    "model": "b11_1.serialnummerprofil",
+    "pk": 3,
+    "fields": {
+        "text": "ZM03"
+    }
+},
+{
+    "model": "b11_1.serialnummerprofil",
+    "pk": 4,
+    "fields": {
+        "text": "ZM05"
+    }
+},
+{
+    "model": "b11_1.sparepartclasscode",
+    "pk": 1,
+    "fields": {
+        "text": "0"
+    }
+},
+{
+    "model": "b11_1.sparepartclasscode",
+    "pk": 2,
+    "fields": {
+        "text": "1"
+    }
+},
+{
+    "model": "b11_1.sparepartclasscode",
+    "pk": 3,
+    "fields": {
+        "text": "2"
+    }
+},
+{
+    "model": "b11_1.sparepartclasscode",
+    "pk": 4,
+    "fields": {
+        "text": "6"
+    }
+},
+{
+    "model": "b11_1.uebersetzungsstatus",
+    "pk": 1,
+    "fields": {
+        "text": "P"
+    }
+},
+{
+    "model": "b11_1.uebersetzungsstatus",
+    "pk": 2,
+    "fields": {
+        "text": "U"
+    }
+},
+{
+    "model": "b11_1.uebersetzungsstatus",
+    "pk": 3,
+    "fields": {
+        "text": "N"
+    }
+},
+{
+    "model": "b11_1.gefahrgutkennzeichen",
+    "pk": 1,
+    "fields": {
+        "text": "V01"
+    }
+},
+{
+    "model": "b11_1.gefahrgutkennzeichen",
+    "pk": 2,
+    "fields": {
+        "text": "V02"
+    }
+},
+{
+    "model": "b11_1.gefahrgutkennzeichen",
+    "pk": 3,
+    "fields": {
+        "text": "V03"
+    }
+},
+{
+    "model": "b11_1.werk_1",
+    "pk": 1,
+    "fields": {
+        "text": "0420"
+    }
+},
+{
+    "model": "b11_1.werk_1",
+    "pk": 2,
+    "fields": {
+        "text": "0430"
+    }
+},
+{
+    "model": "b11_1.werk_1",
+    "pk": 3,
+    "fields": {
+        "text": "0440"
+    }
+},
+{
+    "model": "b11_1.werk_1",
+    "pk": 4,
+    "fields": {
+        "text": "0800"
+    }
+},
+{
+    "model": "b11_1.werk_2",
+    "pk": 1,
+    "fields": {
+        "text": "0420"
+    }
+},
+{
+    "model": "b11_1.werk_2",
+    "pk": 2,
+    "fields": {
+        "text": "0430"
+    }
+},
+{
+    "model": "b11_1.werk_2",
+    "pk": 3,
+    "fields": {
+        "text": "0440"
+    }
+},
+{
+    "model": "b11_1.werk_2",
+    "pk": 4,
+    "fields": {
+        "text": "0800"
+    }
+},
+{
+    "model": "b11_1.werk_3",
+    "pk": 1,
+    "fields": {
+        "text": "0420"
+    }
+},
+{
+    "model": "b11_1.werk_3",
+    "pk": 2,
+    "fields": {
+        "text": "0430"
+    }
+},
+{
+    "model": "b11_1.werk_3",
+    "pk": 3,
+    "fields": {
+        "text": "0440"
+    }
+},
+{
+    "model": "b11_1.werk_3",
+    "pk": 4,
+    "fields": {
+        "text": "0800"
+    }
+},
+{
+    "model": "b11_1.werk_4",
+    "pk": 1,
+    "fields": {
+        "text": "0420"
+    }
+},
+{
+    "model": "b11_1.werk_4",
+    "pk": 2,
+    "fields": {
+        "text": "0430"
+    }
+},
+{
+    "model": "b11_1.werk_4",
+    "pk": 3,
+    "fields": {
+        "text": "0440"
+    }
+},
+{
+    "model": "b11_1.werk_4",
+    "pk": 4,
+    "fields": {
+        "text": "0800"
+    }
+},
+{
+    "model": "b11_1.allgemeinepositionstypengruppe",
+    "pk": 1,
+    "fields": {
+        "text": "ALEN"
+    }
+},
+{
+    "model": "b11_1.allgemeinepositionstypengruppe",
+    "pk": 2,
+    "fields": {
+        "text": "ALES"
+    }
+},
+{
+    "model": "b11_1.allgemeinepositionstypengruppe",
+    "pk": 3,
+    "fields": {
+        "text": "BADS"
+    }
+},
+{
+    "model": "b11_1.allgemeinepositionstypengruppe",
+    "pk": 4,
+    "fields": {
+        "text": "BANC"
+    }
+},
+{
+    "model": "b11_1.allgemeinepositionstypengruppe",
+    "pk": 5,
+    "fields": {
+        "text": "BANS"
+    }
+},
+{
+    "model": "b11_1.allgemeinepositionstypengruppe",
+    "pk": 6,
+    "fields": {
+        "text": "DIEN"
+    }
+},
+{
+    "model": "b11_1.allgemeinepositionstypengruppe",
+    "pk": 7,
+    "fields": {
+        "text": "ERLA"
+    }
+},
+{
+    "model": "b11_1.allgemeinepositionstypengruppe",
+    "pk": 8,
+    "fields": {
+        "text": "ERLB"
+    }
+},
+{
+    "model": "b11_1.allgemeinepositionstypengruppe",
+    "pk": 9,
+    "fields": {
+        "text": "GG01"
+    }
+},
+{
+    "model": "b11_1.allgemeinepositionstypengruppe",
+    "pk": 10,
+    "fields": {
+        "text": "GG02"
+    }
+},
+{
+    "model": "b11_1.allgemeinepositionstypengruppe",
+    "pk": 11,
+    "fields": {
+        "text": "GG04"
+    }
+},
+{
+    "model": "b11_1.allgemeinepositionstypengruppe",
+    "pk": 12,
+    "fields": {
+        "text": "GG05"
+    }
+},
+{
+    "model": "b11_1.allgemeinepositionstypengruppe",
+    "pk": 13,
+    "fields": {
+        "text": "LEAS"
+    }
+},
+{
+    "model": "b11_1.allgemeinepositionstypengruppe",
+    "pk": 14,
+    "fields": {
+        "text": "LEER"
+    }
+},
+{
+    "model": "b11_1.allgemeinepositionstypengruppe",
+    "pk": 15,
+    "fields": {
+        "text": "LEIC"
+    }
+},
+{
+    "model": "b11_1.allgemeinepositionstypengruppe",
+    "pk": 16,
+    "fields": {
+        "text": "LEIH"
+    }
+},
+{
+    "model": "b11_1.allgemeinepositionstypengruppe",
+    "pk": 17,
+    "fields": {
+        "text": "LEIS"
+    }
+},
+{
+    "model": "b11_1.allgemeinepositionstypengruppe",
+    "pk": 18,
+    "fields": {
+        "text": "LO01"
+    }
+},
+{
+    "model": "b11_1.allgemeinepositionstypengruppe",
+    "pk": 19,
+    "fields": {
+        "text": "LO02"
+    }
+},
+{
+    "model": "b11_1.allgemeinepositionstypengruppe",
+    "pk": 20,
+    "fields": {
+        "text": "LO03"
+    }
+},
+{
+    "model": "b11_1.allgemeinepositionstypengruppe",
+    "pk": 21,
+    "fields": {
+        "text": "LO04"
+    }
+},
+{
+    "model": "b11_1.allgemeinepositionstypengruppe",
+    "pk": 22,
+    "fields": {
+        "text": "LO06"
+    }
+},
+{
+    "model": "b11_1.allgemeinepositionstypengruppe",
+    "pk": 23,
+    "fields": {
+        "text": "LO08"
+    }
+},
+{
+    "model": "b11_1.allgemeinepositionstypengruppe",
+    "pk": 24,
+    "fields": {
+        "text": "LO09"
+    }
+},
+{
+    "model": "b11_1.allgemeinepositionstypengruppe",
+    "pk": 25,
+    "fields": {
+        "text": "LO11"
+    }
+},
+{
+    "model": "b11_1.allgemeinepositionstypengruppe",
+    "pk": 26,
+    "fields": {
+        "text": "LO12"
+    }
+},
+{
+    "model": "b11_1.allgemeinepositionstypengruppe",
+    "pk": 27,
+    "fields": {
+        "text": "LO13"
+    }
+},
+{
+    "model": "b11_1.allgemeinepositionstypengruppe",
+    "pk": 28,
+    "fields": {
+        "text": "LO14"
+    }
+},
+{
+    "model": "b11_1.allgemeinepositionstypengruppe",
+    "pk": 29,
+    "fields": {
+        "text": "LO16"
+    }
+},
+{
+    "model": "b11_1.allgemeinepositionstypengruppe",
+    "pk": 30,
+    "fields": {
+        "text": "LO18"
+    }
+},
+{
+    "model": "b11_1.allgemeinepositionstypengruppe",
+    "pk": 31,
+    "fields": {
+        "text": "LO19"
+    }
+},
+{
+    "model": "b11_1.allgemeinepositionstypengruppe",
+    "pk": 32,
+    "fields": {
+        "text": "LUMB"
+    }
+},
+{
+    "model": "b11_1.allgemeinepositionstypengruppe",
+    "pk": 33,
+    "fields": {
+        "text": "LUMF"
+    }
+},
+{
+    "model": "b11_1.allgemeinepositionstypengruppe",
+    "pk": 34,
+    "fields": {
+        "text": "NLAG"
+    }
+},
+{
+    "model": "b11_1.allgemeinepositionstypengruppe",
+    "pk": 35,
+    "fields": {
+        "text": "NORM"
+    }
+},
+{
+    "model": "b11_1.allgemeinepositionstypengruppe",
+    "pk": 36,
+    "fields": {
+        "text": "PBOS"
+    }
+},
+{
+    "model": "b11_1.allgemeinepositionstypengruppe",
+    "pk": 37,
+    "fields": {
+        "text": "PRRP"
+    }
+},
+{
+    "model": "b11_1.allgemeinepositionstypengruppe",
+    "pk": 38,
+    "fields": {
+        "text": "PRSR"
+    }
+},
+{
+    "model": "b11_1.allgemeinepositionstypengruppe",
+    "pk": 39,
+    "fields": {
+        "text": "PRSV"
+    }
+},
+{
+    "model": "b11_1.allgemeinepositionstypengruppe",
+    "pk": 40,
+    "fields": {
+        "text": "SAMM"
+    }
+},
+{
+    "model": "b11_1.allgemeinepositionstypengruppe",
+    "pk": 41,
+    "fields": {
+        "text": "SCNP"
+    }
+},
+{
+    "model": "b11_1.allgemeinepositionstypengruppe",
+    "pk": 42,
+    "fields": {
+        "text": "SRVE"
+    }
+},
+{
+    "model": "b11_1.allgemeinepositionstypengruppe",
+    "pk": 43,
+    "fields": {
+        "text": "SRVM"
+    }
+},
+{
+    "model": "b11_1.allgemeinepositionstypengruppe",
+    "pk": 44,
+    "fields": {
+        "text": "SRVP"
+    }
+},
+{
+    "model": "b11_1.allgemeinepositionstypengruppe",
+    "pk": 45,
+    "fields": {
+        "text": "VCIT"
+    }
+},
+{
+    "model": "b11_1.allgemeinepositionstypengruppe",
+    "pk": 46,
+    "fields": {
+        "text": "VERP"
+    }
+},
+{
+    "model": "b11_1.allgemeinepositionstypengruppe",
+    "pk": 47,
+    "fields": {
+        "text": "VMS0"
+    }
+},
+{
+    "model": "b11_1.allgemeinepositionstypengruppe",
+    "pk": 48,
+    "fields": {
+        "text": "VOLL"
+    }
+},
+{
+    "model": "b11_1.allgemeinepositionstypengruppe",
+    "pk": 49,
+    "fields": {
+        "text": "WERT"
+    }
+},
+{
+    "model": "b11_1.allgemeinepositionstypengruppe",
+    "pk": 50,
+    "fields": {
+        "text": "WMPP"
+    }
+},
+{
+    "model": "b11_1.allgemeinepositionstypengruppe",
+    "pk": 51,
+    "fields": {
+        "text": "ZUOC"
+    }
+},
+{
+    "model": "b11_1.allgemeinepositionstypengruppe",
+    "pk": 52,
+    "fields": {
+        "text": "ZVER"
+    }
+},
+{
+    "model": "b11_1.vertriebsweg",
+    "pk": 1,
+    "fields": {
+        "text": "A1"
+    }
+},
+{
+    "model": "b11_1.vertriebsweg",
+    "pk": 2,
+    "fields": {
+        "text": "A2"
+    }
+},
+{
+    "model": "b11_1.vertriebsweg",
+    "pk": 3,
+    "fields": {
+        "text": "A3"
+    }
+},
+{
+    "model": "b11_1.vertriebsweg",
+    "pk": 4,
+    "fields": {
+        "text": "A4"
+    }
+},
+{
+    "model": "b11_1.vertriebsweg",
+    "pk": 5,
+    "fields": {
+        "text": "A5"
+    }
+},
+{
+    "model": "b11_1.vertriebsweg",
+    "pk": 6,
+    "fields": {
+        "text": "A6"
+    }
+},
+{
+    "model": "b11_1.vertriebsweg",
+    "pk": 7,
+    "fields": {
+        "text": "I1"
+    }
+},
+{
+    "model": "b11_1.vertriebsweg",
+    "pk": 8,
+    "fields": {
+        "text": "M1"
+    }
+},
+{
+    "model": "b11_1.vertriebsweg",
+    "pk": 9,
+    "fields": {
+        "text": "MP"
+    }
+},
+{
+    "model": "b11_1.vertriebsweg",
+    "pk": 10,
+    "fields": {
+        "text": "O1"
+    }
+},
+{
+    "model": "b11_1.vertriebsweg",
+    "pk": 11,
+    "fields": {
+        "text": "P1"
+    }
+},
+{
+    "model": "b11_1.vertriebsweg",
+    "pk": 12,
+    "fields": {
+        "text": "S1"
+    }
+},
+{
+    "model": "b11_1.vertriebsweg",
+    "pk": 13,
+    "fields": {
+        "text": "S2"
+    }
+},
+{
+    "model": "b11_1.vertriebsweg",
+    "pk": 14,
+    "fields": {
+        "text": "S3"
+    }
+},
+{
+    "model": "b11_1.vertriebsweg",
+    "pk": 15,
+    "fields": {
+        "text": "S4"
+    }
+},
+{
+    "model": "b11_1.vertriebsweg",
+    "pk": 16,
+    "fields": {
+        "text": "S5"
+    }
+},
+{
+    "model": "b11_1.vertriebsweg",
+    "pk": 17,
+    "fields": {
+        "text": "S7"
+    }
+},
+{
+    "model": "b11_1.vertriebsweg",
+    "pk": 18,
+    "fields": {
+        "text": "S8"
+    }
+},
+{
+    "model": "b11_1.vertriebsweg",
+    "pk": 19,
+    "fields": {
+        "text": "S9"
+    }
+},
+{
+    "model": "b11_1.vertriebsweg",
+    "pk": 20,
+    "fields": {
+        "text": "SM"
+    }
+},
+{
+    "model": "b11_1.vertriebsweg",
+    "pk": 21,
+    "fields": {
+        "text": "T1"
+    }
+},
+{
+    "model": "b11_1.vertriebsweg",
+    "pk": 22,
+    "fields": {
+        "text": "TA"
+    }
+},
+{
+    "model": "b11_1.vertriebsweg",
+    "pk": 23,
+    "fields": {
+        "text": "TB"
+    }
+},
+{
+    "model": "b11_1.vertriebsweg",
+    "pk": 24,
+    "fields": {
+        "text": "TC"
+    }
+},
+{
+    "model": "b11_1.vertriebsweg",
+    "pk": 25,
+    "fields": {
+        "text": "TD"
+    }
+},
+{
+    "model": "b11_1.vertriebsweg",
+    "pk": 26,
+    "fields": {
+        "text": "TE"
+    }
+},
+{
+    "model": "b11_1.vertriebsweg",
+    "pk": 27,
+    "fields": {
+        "text": "TL"
+    }
+},
+{
+    "model": "b11_1.vertriebsweg",
+    "pk": 28,
+    "fields": {
+        "text": "TM"
+    }
+},
+{
+    "model": "b11_1.vertriebsweg",
+    "pk": 29,
+    "fields": {
+        "text": "TO"
+    }
+},
+{
+    "model": "b11_1.vertriebsweg",
+    "pk": 30,
+    "fields": {
+        "text": "TQ"
+    }
+},
+{
+    "model": "b11_1.vertriebsweg",
+    "pk": 31,
+    "fields": {
+        "text": "TV"
+    }
+},
+{
+    "model": "b11_1.vertriebsweg",
+    "pk": 32,
+    "fields": {
+        "text": "TZ"
+    }
+},
+{
+    "model": "b11_1.vertriebsweg",
+    "pk": 33,
+    "fields": {
+        "text": "U1"
+    }
+},
+{
+    "model": "b11_1.vertriebsweg",
+    "pk": 34,
+    "fields": {
+        "text": "U2"
+    }
+},
+{
+    "model": "b11_1.vertriebsweg",
+    "pk": 35,
+    "fields": {
+        "text": "V0"
+    }
+},
+{
+    "model": "b11_1.auszeichnungsfeld",
+    "pk": 1,
+    "fields": {
+        "text": "N"
+    }
+},
+{
+    "model": "b11_1.auszeichnungsfeld",
+    "pk": 2,
+    "fields": {
+        "text": "R"
+    }
+},
+{
+    "model": "b11_1.auszeichnungsfeld",
+    "pk": 3,
+    "fields": {
+        "text": "A"
+    }
+},
+{
+    "model": "b11_1.fertigungssteuerer",
+    "pk": 1,
+    "fields": {
+        "text": "S04"
+    }
+},
+{
+    "model": "b11_1.fertigungssteuerer",
+    "pk": 2,
+    "fields": {
+        "text": "T01"
+    }
+},
+{
+    "model": "b11_1.fertigungssteuerer",
+    "pk": 3,
+    "fields": {
+        "text": "T02"
+    }
+},
+{
+    "model": "b11_1.fertigungssteuerer",
+    "pk": 4,
+    "fields": {
+        "text": "T03"
+    }
+},
+{
+    "model": "b11_1.fertigungssteuerer",
+    "pk": 5,
+    "fields": {
+        "text": "T04"
+    }
+},
+{
+    "model": "b11_1.fertigungssteuerer",
+    "pk": 6,
+    "fields": {
+        "text": "T05"
+    }
+},
+{
+    "model": "b11_1.fertigungssteuerer",
+    "pk": 7,
+    "fields": {
+        "text": "T06"
+    }
+},
+{
+    "model": "b11_1.fertigungssteuerer",
+    "pk": 8,
+    "fields": {
+        "text": "T07"
+    }
+},
+{
+    "model": "b11_1.fertigungssteuerer",
+    "pk": 9,
+    "fields": {
+        "text": "T08"
+    }
+},
+{
+    "model": "b11_1.fertigungssteuerer",
+    "pk": 10,
+    "fields": {
+        "text": "T09"
+    }
+},
+{
+    "model": "b11_1.fertigungssteuerer",
+    "pk": 11,
+    "fields": {
+        "text": "T10"
+    }
+},
+{
+    "model": "b11_1.fertigungssteuerer",
+    "pk": 12,
+    "fields": {
+        "text": "T11"
+    }
+},
+{
+    "model": "b11_1.fertigungssteuerer",
+    "pk": 13,
+    "fields": {
+        "text": "T12"
+    }
+},
+{
+    "model": "b11_1.fertigungssteuerer",
+    "pk": 14,
+    "fields": {
+        "text": "T13"
+    }
+},
+{
+    "model": "b11_1.fertigungssteuerer",
+    "pk": 15,
+    "fields": {
+        "text": "T14"
+    }
+},
+{
+    "model": "b11_1.fertigungssteuerer",
+    "pk": 16,
+    "fields": {
+        "text": "TP3"
+    }
+},
+{
+    "model": "b11_1.fertigungssteuerer",
+    "pk": 17,
+    "fields": {
+        "text": "TP4"
+    }
+},
+{
+    "model": "b11_1.fertigungssteuerer",
+    "pk": 18,
+    "fields": {
+        "text": "TP5"
+    }
+},
+{
+    "model": "b11_1.fertigungssteuerer",
+    "pk": 19,
+    "fields": {
+        "text": "TP6"
+    }
+},
+{
+    "model": "b11_1.fertigungssteuerer",
+    "pk": 20,
+    "fields": {
+        "text": "TP7"
+    }
+},
+{
+    "model": "b11_1.fertigungssteuerer",
+    "pk": 21,
+    "fields": {
+        "text": "U01"
+    }
+},
+{
+    "model": "b11_1.fertigungssteuerer",
+    "pk": 22,
+    "fields": {
+        "text": "U02"
+    }
+},
+{
+    "model": "b11_1.fertigungssteuerer",
+    "pk": 23,
+    "fields": {
+        "text": "U03"
+    }
+},
+{
+    "model": "b11_1.fertigungssteuerer",
+    "pk": 24,
+    "fields": {
+        "text": "U04"
+    }
+},
+{
+    "model": "b11_1.fertigungssteuerer",
+    "pk": 25,
+    "fields": {
+        "text": "U05"
+    }
+},
+{
+    "model": "b11_1.fertigungssteuerer",
+    "pk": 26,
+    "fields": {
+        "text": "U06"
+    }
+},
+{
+    "model": "b11_1.fertigungssteuerer",
+    "pk": 27,
+    "fields": {
+        "text": "U07"
+    }
+},
+{
+    "model": "b11_1.fertigungssteuerer",
+    "pk": 28,
+    "fields": {
+        "text": "U08"
+    }
+},
+{
+    "model": "b11_1.fertigungssteuerer",
+    "pk": 29,
+    "fields": {
+        "text": "U09"
+    }
+},
+{
+    "model": "b11_1.fertigungssteuerer",
+    "pk": 30,
+    "fields": {
+        "text": "URD"
+    }
+},
+{
+    "model": "b11_1.fertigungssteuerer",
+    "pk": 31,
+    "fields": {
+        "text": "T15"
+    }
+},
+{
+    "model": "b11_1.fertigungssteuerer",
+    "pk": 32,
+    "fields": {
+        "text": "T16"
+    }
+},
+{
+    "model": "b11_1.fertigungssteuerer",
+    "pk": 33,
+    "fields": {
+        "text": "T17"
+    }
+},
+{
+    "model": "b11_1.fertigungssteuerer",
+    "pk": 34,
+    "fields": {
+        "text": "T18"
+    }
+},
+{
+    "model": "b11_1.fertigungssteuerer",
+    "pk": 35,
+    "fields": {
+        "text": "T8A"
+    }
+},
+{
+    "model": "b11_1.fertigungssteuerer",
+    "pk": 36,
+    "fields": {
+        "text": "TP1"
+    }
+},
+{
+    "model": "b11_1.fertigungssteuerer",
+    "pk": 37,
+    "fields": {
+        "text": "TP2"
+    }
+},
+{
+    "model": "b11_1.fertigungssteuerer",
+    "pk": 38,
+    "fields": {
+        "text": "TW1"
+    }
+},
+{
+    "model": "b11_1.sonderablauf",
+    "pk": 1,
+    "fields": {
+        "text": "M"
+    }
+},
+{
+    "model": "b11_1.sonderablauf",
+    "pk": 2,
+    "fields": {
+        "text": "N"
+    }
+},
+{
+    "model": "b11_1.temperaturbedingung",
+    "pk": 1,
+    "fields": {
+        "text": "00"
+    }
+},
+{
+    "model": "b11_1.temperaturbedingung",
+    "pk": 2,
+    "fields": {
+        "text": "01"
+    }
+},
+{
+    "model": "b11_1.temperaturbedingung",
+    "pk": 3,
+    "fields": {
+        "text": "02"
+    }
+},
+{
+    "model": "b11_1.temperaturbedingung",
+    "pk": 4,
+    "fields": {
+        "text": "03"
+    }
+},
+{
+    "model": "b11_1.temperaturbedingung",
+    "pk": 5,
+    "fields": {
+        "text": "04"
+    }
+},
+{
+    "model": "b11_1.bewertungsklasse",
+    "pk": 1,
+    "fields": {
+        "text": "A000"
+    }
+},
+{
+    "model": "b11_1.bewertungsklasse",
+    "pk": 2,
+    "fields": {
+        "text": "A100"
+    }
+},
+{
+    "model": "b11_1.bewertungsklasse",
+    "pk": 3,
+    "fields": {
+        "text": "M100"
+    }
+},
+{
+    "model": "b11_1.bewertungsklasse",
+    "pk": 4,
+    "fields": {
+        "text": "M110"
+    }
+},
+{
+    "model": "b11_1.bewertungsklasse",
+    "pk": 5,
+    "fields": {
+        "text": "M120"
+    }
+},
+{
+    "model": "b11_1.bewertungsklasse",
+    "pk": 6,
+    "fields": {
+        "text": "M130"
+    }
+},
+{
+    "model": "b11_1.bewertungsklasse",
+    "pk": 7,
+    "fields": {
+        "text": "M131"
+    }
+},
+{
+    "model": "b11_1.bewertungsklasse",
+    "pk": 8,
+    "fields": {
+        "text": "M140"
+    }
+},
+{
+    "model": "b11_1.bewertungsklasse",
+    "pk": 9,
+    "fields": {
+        "text": "M141"
+    }
+},
+{
+    "model": "b11_1.bewertungsklasse",
+    "pk": 10,
+    "fields": {
+        "text": "M150"
+    }
+},
+{
+    "model": "b11_1.bewertungsklasse",
+    "pk": 11,
+    "fields": {
+        "text": "M200"
+    }
+},
+{
+    "model": "b11_1.bewertungsklasse",
+    "pk": 12,
+    "fields": {
+        "text": "M210"
+    }
+},
+{
+    "model": "b11_1.bewertungsklasse",
+    "pk": 13,
+    "fields": {
+        "text": "M220"
+    }
+},
+{
+    "model": "b11_1.bewertungsklasse",
+    "pk": 14,
+    "fields": {
+        "text": "M230"
+    }
+},
+{
+    "model": "b11_1.bewertungsklasse",
+    "pk": 15,
+    "fields": {
+        "text": "M240"
+    }
+},
+{
+    "model": "b11_1.bewertungsklasse",
+    "pk": 16,
+    "fields": {
+        "text": "M250"
+    }
+},
+{
+    "model": "b11_1.bewertungsklasse",
+    "pk": 17,
+    "fields": {
+        "text": "M260"
+    }
+},
+{
+    "model": "b11_1.bewertungsklasse",
+    "pk": 18,
+    "fields": {
+        "text": "M290"
+    }
+},
+{
+    "model": "b11_1.bewertungsklasse",
+    "pk": 19,
+    "fields": {
+        "text": "M300"
+    }
+},
+{
+    "model": "b11_1.bewertungsklasse",
+    "pk": 20,
+    "fields": {
+        "text": "M310"
+    }
+},
+{
+    "model": "b11_1.bewertungsklasse",
+    "pk": 21,
+    "fields": {
+        "text": "M320"
+    }
+},
+{
+    "model": "b11_1.bewertungsklasse",
+    "pk": 22,
+    "fields": {
+        "text": "M330"
+    }
+},
+{
+    "model": "b11_1.bewertungsklasse",
+    "pk": 23,
+    "fields": {
+        "text": "M340"
+    }
+},
+{
+    "model": "b11_1.bewertungsklasse",
+    "pk": 24,
+    "fields": {
+        "text": "M400"
+    }
+},
+{
+    "model": "b11_1.bewertungsklasse",
+    "pk": 25,
+    "fields": {
+        "text": "M700"
+    }
+},
+{
+    "model": "b11_1.bewertungsklasse",
+    "pk": 26,
+    "fields": {
+        "text": "M710"
+    }
+},
+{
+    "model": "b11_1.bewertungsklasse",
+    "pk": 27,
+    "fields": {
+        "text": "M720"
+    }
+},
+{
+    "model": "b11_1.bewertungsklasse",
+    "pk": 28,
+    "fields": {
+        "text": "M800"
+    }
+},
+{
+    "model": "b11_1.bewertungsklasse",
+    "pk": 29,
+    "fields": {
+        "text": "M810"
+    }
+},
+{
+    "model": "b11_1.bewertungsklasse",
+    "pk": 30,
+    "fields": {
+        "text": "M900"
+    }
+},
+{
+    "model": "b11_1.bewertungsklasse",
+    "pk": 31,
+    "fields": {
+        "text": "M910"
+    }
+},
+{
+    "model": "b11_1.zuteilung",
+    "pk": 1,
+    "fields": {
+        "text": "BM"
+    }
+},
+{
+    "model": "b11_1.zuteilung",
+    "pk": 2,
+    "fields": {
+        "text": "TRP"
+    }
+},
+{
+    "model": "b11_1.zuteilung",
+    "pk": 3,
+    "fields": {
+        "text": "MKZ"
+    }
+},
+{
+    "model": "b11_1.zuteilung",
+    "pk": 4,
+    "fields": {
+        "text": "PRD"
+    }
+},
+{
+    "model": "b11_1.auspraegung",
+    "pk": 1,
+    "fields": {
+        "text": "01"
+    }
+},
+{
+    "model": "b11_1.auspraegung",
+    "pk": 2,
+    "fields": {
+        "text": "02"
+    }
+},
+{
+    "model": "b11_1.auspraegung",
+    "pk": 3,
+    "fields": {
+        "text": "03"
+    }
+},
+{
+    "model": "b11_1.auspraegung",
+    "pk": 4,
+    "fields": {
+        "text": "04"
+    }
+},
+{
+    "model": "b11_1.material",
+    "pk": 1,
+    "fields": {
+        "hersteller": "grIL_02",
+        "is_transferred": false,
+        "transfer_date": null,
+        "positions_nr": "90",
+        "kurztext_de": "IoXe5",
+        "kurztext_fr": "KKmEp",
+        "kurztext_en": "SweFl",
+        "grunddatentext_de_1_zeile": "BKpsA",
+        "grunddatentext_de_2_zeile": "Gk1NO",
+        "grunddatentext_fr_1_zeile": "fJU1w",
+        "grunddatentext_fr_2_zeile": "6LjEw",
+        "grunddatentext_en_1_zeile": "1uWdx",
+        "grunddatentext_en_2_zeile": "3MNyF",
+        "basismengeneinheit": 13,
+        "gewichtseinheit": "KG",
+        "nettogewicht": "81",
+        "groesse_abmessung": "68",
+        "ean_upc_code": "fcV0ApHJhIX4v",
+        "nato_stock_number": "AQ1TFUKYUMwPyK81",
+        "nsn_gruppe_klasse": "74",
+        "nato_versorgungs_nr": "82",
+        "herstellerteilenummer": "5bsE77gOBBuT",
+        "normbezeichnung": "An9ctdqCpzrmWVg8mk",
+        "gefahrgutkennzeichen": 3,
+        "bruttogewicht": "40",
+        "instandsetzbar": true,
+        "chargenpflicht": true,
+        "bestellmengeneinheit": "74",
+        "mindestbestellmenge": "10",
+        "lieferzeit": "71",
+        "einheit_l_b_h": "MM",
+        "laenge": "31",
+        "breite": "4",
+        "hoehe": "41",
+        "preis": "4",
+        "waehrung": "CH",
+        "preiseinheit": "39",
+        "lagerfaehigkeit": "94",
+        "exportkontrollauflage": false,
+        "cage_code": "oMjzE",
+        "hersteller_name": "PseV8Ns5oKmLYueXGvA9xUGH83jm2gDVqstcFGRN",
+        "hersteller_adresse": "fhLR4BHsO379wijgSCnlnIPBJ3pKgm4fQMpWfJPn",
+        "hersteller_plz": "q78sKtr7VPfd6lU6UncnYQPrxhfXFqEyD9tdSLYu",
+        "hersteller_ort": "Hv1xneSDd0o9wYJ3oY0Vy2hsv5zdTkoaH4pMxubF",
+        "revision": "qi4YNgaj6VI8nGl91aOP4Oyjj7FWLy",
+        "bemerkung": "VlmxIxVcPcPN7RghlL1u3BtSgafTpcE1Fzds8Pk6",
+        "begru": 4,
+        "materialart_grunddaten": 2,
+        "sparte": 9,
+        "produkthierarchie": "V3sC",
+        "materialzustandsverwaltung": 2,
+        "rueckfuehrungscode": 1,
+        "serialnummerprofil": 4,
+        "spare_part_class_code": 3,
+        "hersteller_nr_gp": "dvVZBwrQey",
+        "warengruppe": "760lWc2C3",
+        "uebersetzungsstatus": 2,
+        "endbevorratet": "JXqQr",
+        "revision_fremd": "mxOUp6sEUb",
+        "revision_eigen": "5Yah8STmVq",
+        "zertifiziert_fuer_flug": false,
+        "a_nummer": "eaLxYAp4sj",
+        "verteilung_an_psd": false,
+        "verteilung_an_ruag": false,
+        "werk_1": 3,
+        "werk_2": 3,
+        "werk_3": 3,
+        "werk_4": 1,
+        "allgemeine_positionstypengruppe": 38,
+        "verkaufsorg": "M100",
+        "vertriebsweg": 35,
+        "fuehrendes_material": "",
+        "auszeichnungsfeld": 1,
+        "fertigungssteuerer": 26,
+        "kennzeichen_komplexes_system": false,
+        "sonderablauf": 2,
+        "cpv_code": "09221000-4",
+        "temperaturbedingung": 5,
+        "bewertungsklasse": 25,
+        "systemmanager": "UyCQweATRg",
+        "kennziffer_bamf": "55G",
+        "mietrelevanz": false,
+        "next_higher_assembly": "7tjNDqm4t6",
+        "nachschubklasse": "rAdYhgPZ4v",
+        "verteilung_apm_kerda": false,
+        "verteilung_svsaa": false,
+        "verteilung_cheops": true,
+        "zuteilung": 2,
+        "auspraegung": 2
+    }
+},
+{
+    "model": "b11_1.material",
+    "pk": 2,
+    "fields": {
+        "hersteller": "grIL_02",
+        "is_transferred": true,
+        "transfer_date": null,
+        "positions_nr": "17",
+        "kurztext_de": "ShdJp",
+        "kurztext_fr": "brqGP",
+        "kurztext_en": "YqqrD",
+        "grunddatentext_de_1_zeile": "nFIgq",
+        "grunddatentext_de_2_zeile": "WiQwj",
+        "grunddatentext_fr_1_zeile": "AoZBD",
+        "grunddatentext_fr_2_zeile": "OwwyR",
+        "grunddatentext_en_1_zeile": "0RlmF",
+        "grunddatentext_en_2_zeile": "da7ep",
+        "basismengeneinheit": 6,
+        "gewichtseinheit": "KG",
+        "nettogewicht": "85",
+        "groesse_abmessung": "99",
+        "ean_upc_code": "iNn6jU1watru6",
+        "nato_stock_number": "RBfQhO6BIm9iixh3",
+        "nsn_gruppe_klasse": "19",
+        "nato_versorgungs_nr": "14",
+        "herstellerteilenummer": "X4kBYPUA4O0v",
+        "normbezeichnung": "aS9YwqebrFmAMDwqEZ",
+        "gefahrgutkennzeichen": 1,
+        "bruttogewicht": "25",
+        "instandsetzbar": true,
+        "chargenpflicht": false,
+        "bestellmengeneinheit": "97",
+        "mindestbestellmenge": "87",
+        "lieferzeit": "70",
+        "einheit_l_b_h": "MM",
+        "laenge": "50",
+        "breite": "38",
+        "hoehe": "3",
+        "preis": "10",
+        "waehrung": "CH",
+        "preiseinheit": "69",
+        "lagerfaehigkeit": "78",
+        "exportkontrollauflage": true,
+        "cage_code": "8Vwwd",
+        "hersteller_name": "Ff38DDfAF8MlvWfI8LWQYVLspe17ykHnADw6riTg",
+        "hersteller_adresse": "4YCMhx5annVcPR4kh5aTLdQ1dJ1nNaL8toeWloWc",
+        "hersteller_plz": "NWRtuyYOMZ5Y2HSBV3oJDeDhn9SQHt9pNieySypp",
+        "hersteller_ort": "SZCGpWqiGdCjFJYcDmcbFBipcJF9b2PheqODcM29",
+        "revision": "PVIfs1GrJ8u3OvSEI9BDwhN3q2P9Rk",
+        "bemerkung": "Un8EeFalJqbGaKM2a4APUJFdbPHkKhy9zaVztL1Y",
+        "begru": 5,
+        "materialart_grunddaten": 4,
+        "sparte": 7,
+        "produkthierarchie": "QVKY",
+        "materialzustandsverwaltung": 1,
+        "rueckfuehrungscode": 2,
+        "serialnummerprofil": 2,
+        "spare_part_class_code": 4,
+        "hersteller_nr_gp": "khlFBJ4TaD",
+        "warengruppe": "q1BfQMVCN",
+        "uebersetzungsstatus": 2,
+        "endbevorratet": "3Gr4f",
+        "revision_fremd": "aTUVYPAj7O",
+        "revision_eigen": "jes1a7jIJ8",
+        "zertifiziert_fuer_flug": true,
+        "a_nummer": "0fx16T3dMv",
+        "verteilung_an_psd": true,
+        "verteilung_an_ruag": true,
+        "werk_1": 3,
+        "werk_2": 1,
+        "werk_3": 1,
+        "werk_4": 3,
+        "allgemeine_positionstypengruppe": 27,
+        "verkaufsorg": "M100",
+        "vertriebsweg": 29,
+        "fuehrendes_material": "",
+        "auszeichnungsfeld": 2,
+        "fertigungssteuerer": 27,
+        "kennzeichen_komplexes_system": true,
+        "sonderablauf": 2,
+        "cpv_code": "09221000-4",
+        "temperaturbedingung": 1,
+        "bewertungsklasse": 28,
+        "systemmanager": "DKPItxEXCx",
+        "kennziffer_bamf": "55G",
+        "mietrelevanz": true,
+        "next_higher_assembly": "Ml7QCG92au",
+        "nachschubklasse": "55JMxREDUI",
+        "verteilung_apm_kerda": true,
+        "verteilung_svsaa": true,
+        "verteilung_cheops": false,
+        "zuteilung": 3,
+        "auspraegung": 4
+    }
+},
+{
+    "model": "b11_1.material",
+    "pk": 3,
+    "fields": {
+        "hersteller": "grIL_02",
+        "is_transferred": false,
+        "transfer_date": null,
+        "positions_nr": "66",
+        "kurztext_de": "vonUw",
+        "kurztext_fr": "dIlaj",
+        "kurztext_en": "L3gls",
+        "grunddatentext_de_1_zeile": "oNc2Q",
+        "grunddatentext_de_2_zeile": "NbOI1",
+        "grunddatentext_fr_1_zeile": "8IoWK",
+        "grunddatentext_fr_2_zeile": "wSo5Q",
+        "grunddatentext_en_1_zeile": "N3jLs",
+        "grunddatentext_en_2_zeile": "ayr1o",
+        "basismengeneinheit": 25,
+        "gewichtseinheit": "KG",
+        "nettogewicht": "11",
+        "groesse_abmessung": "91",
+        "ean_upc_code": "5Ucd5GqAnBM6j",
+        "nato_stock_number": "S4JtprJEmtkTXMYP",
+        "nsn_gruppe_klasse": "68",
+        "nato_versorgungs_nr": "82",
+        "herstellerteilenummer": "Z8QHJ2RVi2pF",
+        "normbezeichnung": "JWnkj6tIJKIbTvj9Fj",
+        "gefahrgutkennzeichen": 1,
+        "bruttogewicht": "80",
+        "instandsetzbar": true,
+        "chargenpflicht": false,
+        "bestellmengeneinheit": "28",
+        "mindestbestellmenge": "10",
+        "lieferzeit": "91",
+        "einheit_l_b_h": "MM",
+        "laenge": "30",
+        "breite": "30",
+        "hoehe": "73",
+        "preis": "64",
+        "waehrung": "CH",
+        "preiseinheit": "40",
+        "lagerfaehigkeit": "7",
+        "exportkontrollauflage": true,
+        "cage_code": "rqxtn",
+        "hersteller_name": "ewAMv5fsIF5Ep3o2pSDgmOamVxyGTKIrbxbGiE9K",
+        "hersteller_adresse": "GdFtZEneDURI3JbpF2e15Y3lDILKShNmbQJF4GFh",
+        "hersteller_plz": "G5k2TfIZUf2ZjmJBZfXiy4S3AAUj89fDFqLSUStd",
+        "hersteller_ort": "EbN7BdIt1l8rfr98NwKMHcqKG2mdZ1fKqjSA0kUz",
+        "revision": "EIqkaGkbVysrLhRVf9fdwd6Y2EGe7C",
+        "bemerkung": "NOdRMnQiNXlNYlW1RZvPeqRKZpUNPs62CQOIWfs3",
+        "begru": 1,
+        "materialart_grunddaten": 11,
+        "sparte": 4,
+        "produkthierarchie": "fUU5",
+        "materialzustandsverwaltung": 1,
+        "rueckfuehrungscode": 2,
+        "serialnummerprofil": 1,
+        "spare_part_class_code": 4,
+        "hersteller_nr_gp": "mOVmytLBpU",
+        "warengruppe": "5I4PMbskn",
+        "uebersetzungsstatus": 2,
+        "endbevorratet": "nNnQT",
+        "revision_fremd": "mf2Jty8BMV",
+        "revision_eigen": "DstJ4wZujO",
+        "zertifiziert_fuer_flug": false,
+        "a_nummer": "JTFT1jByW6",
+        "verteilung_an_psd": true,
+        "verteilung_an_ruag": true,
+        "werk_1": 3,
+        "werk_2": 1,
+        "werk_3": 2,
+        "werk_4": 3,
+        "allgemeine_positionstypengruppe": 40,
+        "verkaufsorg": "M100",
+        "vertriebsweg": 22,
+        "fuehrendes_material": "",
+        "auszeichnungsfeld": 2,
+        "fertigungssteuerer": 23,
+        "kennzeichen_komplexes_system": false,
+        "sonderablauf": 1,
+        "cpv_code": "09221000-4",
+        "temperaturbedingung": 2,
+        "bewertungsklasse": 26,
+        "systemmanager": "3Bk9WGg8YK",
+        "kennziffer_bamf": "55G",
+        "mietrelevanz": true,
+        "next_higher_assembly": "A7WhEcZ2f8",
+        "nachschubklasse": "ZconVoH2NF",
+        "verteilung_apm_kerda": true,
+        "verteilung_svsaa": true,
+        "verteilung_cheops": false,
+        "zuteilung": 4,
+        "auspraegung": 4
+    }
+},
+{
+    "model": "b11_1.material",
+    "pk": 4,
+    "fields": {
+        "hersteller": "grIL_02",
+        "is_transferred": false,
+        "transfer_date": null,
+        "positions_nr": "13",
+        "kurztext_de": "eBHSr",
+        "kurztext_fr": "9CUik",
+        "kurztext_en": "2fcIC",
+        "grunddatentext_de_1_zeile": "w5JUB",
+        "grunddatentext_de_2_zeile": "AcnWH",
+        "grunddatentext_fr_1_zeile": "M3VeI",
+        "grunddatentext_fr_2_zeile": "Ia8K4",
+        "grunddatentext_en_1_zeile": "S4ohT",
+        "grunddatentext_en_2_zeile": "qdjNJ",
+        "basismengeneinheit": 26,
+        "gewichtseinheit": "KG",
+        "nettogewicht": "48",
+        "groesse_abmessung": "46",
+        "ean_upc_code": "cw0zkfgVsfoSb",
+        "nato_stock_number": "fCf1x6BWp0LtDCpO",
+        "nsn_gruppe_klasse": "95",
+        "nato_versorgungs_nr": "73",
+        "herstellerteilenummer": "TeLFPcc1dXmK",
+        "normbezeichnung": "ehmwb1u0j04JIWtSIf",
+        "gefahrgutkennzeichen": 1,
+        "bruttogewicht": "76",
+        "instandsetzbar": true,
+        "chargenpflicht": true,
+        "bestellmengeneinheit": "31",
+        "mindestbestellmenge": "38",
+        "lieferzeit": "66",
+        "einheit_l_b_h": "MM",
+        "laenge": "73",
+        "breite": "25",
+        "hoehe": "96",
+        "preis": "58",
+        "waehrung": "CH",
+        "preiseinheit": "63",
+        "lagerfaehigkeit": "2",
+        "exportkontrollauflage": true,
+        "cage_code": "S69Ya",
+        "hersteller_name": "3497e7J1NWev6y2KdAW8gOksxlZa89IgTRkLgx76",
+        "hersteller_adresse": "VRG3CjBg8m45BRpvBpZNWi26V8C1Wy3TE6pOpgeV",
+        "hersteller_plz": "PfUuIPQ8cRZJd1dqXUt6dC7S5XMEbMVj49PYzLQ7",
+        "hersteller_ort": "s6loTJdB94ZYG9zVyxGnjSZ4DiTNWDgn6nCSOUHS",
+        "revision": "QyrSxYU9kkG0GtTA8Bo1PAu7ji8dnL",
+        "bemerkung": "DbwXiAYhw7DOAjPxChlGWe9LYxPqMIS5QGxNxHPU",
+        "begru": 7,
+        "materialart_grunddaten": 6,
+        "sparte": 4,
+        "produkthierarchie": "tulb",
+        "materialzustandsverwaltung": 2,
+        "rueckfuehrungscode": 1,
+        "serialnummerprofil": 3,
+        "spare_part_class_code": 3,
+        "hersteller_nr_gp": "vhowPMX3WD",
+        "warengruppe": "Z7L23FGMb",
+        "uebersetzungsstatus": 2,
+        "endbevorratet": "mpKzv",
+        "revision_fremd": "mmB8VMUEot",
+        "revision_eigen": "1yXZ2tVvmk",
+        "zertifiziert_fuer_flug": true,
+        "a_nummer": "fEGtvwE5Ne",
+        "verteilung_an_psd": false,
+        "verteilung_an_ruag": false,
+        "werk_1": 1,
+        "werk_2": 3,
+        "werk_3": 1,
+        "werk_4": 1,
+        "allgemeine_positionstypengruppe": 36,
+        "verkaufsorg": "M100",
+        "vertriebsweg": 29,
+        "fuehrendes_material": "",
+        "auszeichnungsfeld": 3,
+        "fertigungssteuerer": 6,
+        "kennzeichen_komplexes_system": true,
+        "sonderablauf": 2,
+        "cpv_code": "09221000-4",
+        "temperaturbedingung": 2,
+        "bewertungsklasse": 4,
+        "systemmanager": "0mMVYSeRfK",
+        "kennziffer_bamf": "55G",
+        "mietrelevanz": false,
+        "next_higher_assembly": "GyCTyxXmhi",
+        "nachschubklasse": "HtOPNzV3Yj",
+        "verteilung_apm_kerda": false,
+        "verteilung_svsaa": true,
+        "verteilung_cheops": true,
+        "zuteilung": 2,
+        "auspraegung": 4
+    }
+},
+{
+    "model": "b11_1.material",
+    "pk": 5,
+    "fields": {
+        "hersteller": "grIL_02",
+        "is_transferred": true,
+        "transfer_date": null,
+        "positions_nr": "19",
+        "kurztext_de": "KyMp5",
+        "kurztext_fr": "ZKyVs",
+        "kurztext_en": "VsFaP",
+        "grunddatentext_de_1_zeile": "ZZEhv",
+        "grunddatentext_de_2_zeile": "ywG63",
+        "grunddatentext_fr_1_zeile": "vzFoT",
+        "grunddatentext_fr_2_zeile": "7AFiC",
+        "grunddatentext_en_1_zeile": "W7UA4",
+        "grunddatentext_en_2_zeile": "u5OGx",
+        "basismengeneinheit": 21,
+        "gewichtseinheit": "KG",
+        "nettogewicht": "16",
+        "groesse_abmessung": "87",
+        "ean_upc_code": "WAKQVF1jp6xyV",
+        "nato_stock_number": "7j0O7WO77RdGBe9P",
+        "nsn_gruppe_klasse": "3",
+        "nato_versorgungs_nr": "60",
+        "herstellerteilenummer": "GwttMPZIDD9q",
+        "normbezeichnung": "YwWPQWlhbSdq6xKcgL",
+        "gefahrgutkennzeichen": 3,
+        "bruttogewicht": "27",
+        "instandsetzbar": true,
+        "chargenpflicht": false,
+        "bestellmengeneinheit": "1",
+        "mindestbestellmenge": "60",
+        "lieferzeit": "4",
+        "einheit_l_b_h": "MM",
+        "laenge": "16",
+        "breite": "7",
+        "hoehe": "4",
+        "preis": "99",
+        "waehrung": "CH",
+        "preiseinheit": "29",
+        "lagerfaehigkeit": "80",
+        "exportkontrollauflage": false,
+        "cage_code": "jot95",
+        "hersteller_name": "XYkD3FasWt8044niGGpRJdiBd8h3BRdLBvJi2alG",
+        "hersteller_adresse": "68AX65LvwCzhBc2fNnXaSXZ7zUrzxad3cK59XKTh",
+        "hersteller_plz": "jmh2rcarWx2MXl99YwKLjcqujbEJtfE2B5fJa51S",
+        "hersteller_ort": "CbBfBpJSmUsImT4JsSX1lhavop7n3GIMDIS3IaDD",
+        "revision": "MjlJIMNFxMmjl8E5YwLnC02IOnMOP2",
+        "bemerkung": "zFTjHsAe3s0Wxv3MJURD5KwuGf71G0afz4TZxUCR",
+        "begru": 2,
+        "materialart_grunddaten": 15,
+        "sparte": 6,
+        "produkthierarchie": "3hCD",
+        "materialzustandsverwaltung": 2,
+        "rueckfuehrungscode": 3,
+        "serialnummerprofil": 3,
+        "spare_part_class_code": 3,
+        "hersteller_nr_gp": "HdUtRrkmpa",
+        "warengruppe": "TFH5btyke",
+        "uebersetzungsstatus": 1,
+        "endbevorratet": "tKjup",
+        "revision_fremd": "12v2lfAG3V",
+        "revision_eigen": "Cmd8iqCKHD",
+        "zertifiziert_fuer_flug": true,
+        "a_nummer": "DfarEhkgyV",
+        "verteilung_an_psd": true,
+        "verteilung_an_ruag": true,
+        "werk_1": 4,
+        "werk_2": 2,
+        "werk_3": 1,
+        "werk_4": 1,
+        "allgemeine_positionstypengruppe": 23,
+        "verkaufsorg": "M100",
+        "vertriebsweg": 12,
+        "fuehrendes_material": "",
+        "auszeichnungsfeld": 2,
+        "fertigungssteuerer": 14,
+        "kennzeichen_komplexes_system": false,
+        "sonderablauf": 2,
+        "cpv_code": "09221000-4",
+        "temperaturbedingung": 1,
+        "bewertungsklasse": 3,
+        "systemmanager": "l4NkY7Mv1o",
+        "kennziffer_bamf": "55G",
+        "mietrelevanz": true,
+        "next_higher_assembly": "MH9wLnxSDw",
+        "nachschubklasse": "cNxwflGRdH",
+        "verteilung_apm_kerda": true,
+        "verteilung_svsaa": true,
+        "verteilung_cheops": true,
+        "zuteilung": 4,
+        "auspraegung": 2
+    }
+},
+{
+    "model": "b11_1.material",
+    "pk": 6,
+    "fields": {
+        "hersteller": "grIL_02",
+        "is_transferred": true,
+        "transfer_date": null,
+        "positions_nr": "69",
+        "kurztext_de": "1rZZA",
+        "kurztext_fr": "v3GMJ",
+        "kurztext_en": "8mLSc",
+        "grunddatentext_de_1_zeile": "1KTQg",
+        "grunddatentext_de_2_zeile": "sGrKt",
+        "grunddatentext_fr_1_zeile": "Fq9z1",
+        "grunddatentext_fr_2_zeile": "a6VcI",
+        "grunddatentext_en_1_zeile": "F05Z2",
+        "grunddatentext_en_2_zeile": "2fSGZ",
+        "basismengeneinheit": 20,
+        "gewichtseinheit": "KG",
+        "nettogewicht": "79",
+        "groesse_abmessung": "28",
+        "ean_upc_code": "vANybnXUFP4iC",
+        "nato_stock_number": "IeWIfzwGMDaMrPbq",
+        "nsn_gruppe_klasse": "47",
+        "nato_versorgungs_nr": "48",
+        "herstellerteilenummer": "7DSb46L2By1w",
+        "normbezeichnung": "cCOCnUp8heJxAHsLSj",
+        "gefahrgutkennzeichen": 3,
+        "bruttogewicht": "68",
+        "instandsetzbar": false,
+        "chargenpflicht": true,
+        "bestellmengeneinheit": "96",
+        "mindestbestellmenge": "1",
+        "lieferzeit": "38",
+        "einheit_l_b_h": "MM",
+        "laenge": "25",
+        "breite": "46",
+        "hoehe": "47",
+        "preis": "96",
+        "waehrung": "CH",
+        "preiseinheit": "30",
+        "lagerfaehigkeit": "68",
+        "exportkontrollauflage": true,
+        "cage_code": "nEGrQ",
+        "hersteller_name": "4hHESyRMg7m4tbRpzJJXGe4hPUJ2K9igA6W6lyqR",
+        "hersteller_adresse": "lrhLFz23CkWkdsbLuNKUF7Pn7tDbDbcDY5u343SL",
+        "hersteller_plz": "bNJqrpHbBNS8GuMISV2cW7qJsIbFvc2nLRDyXF7t",
+        "hersteller_ort": "o5u3vnl8BKTtzftvpweokeLdm4lqHzbshaoOIppc",
+        "revision": "CjePloVfC5VDp418F89oUlGvtPzVA2",
+        "bemerkung": "758imfQZxPFExjZpqO1Fd0oAdIT7p2CwbTvhtSPR",
+        "begru": 6,
+        "materialart_grunddaten": 6,
+        "sparte": 7,
+        "produkthierarchie": "6BRC",
+        "materialzustandsverwaltung": 1,
+        "rueckfuehrungscode": 2,
+        "serialnummerprofil": 4,
+        "spare_part_class_code": 2,
+        "hersteller_nr_gp": "CwxeliY9fI",
+        "warengruppe": "g9NAGsdA3",
+        "uebersetzungsstatus": 3,
+        "endbevorratet": "7knb3",
+        "revision_fremd": "5YdsR7WBZZ",
+        "revision_eigen": "cj9czqXSHI",
+        "zertifiziert_fuer_flug": true,
+        "a_nummer": "FJgwzJf9bo",
+        "verteilung_an_psd": true,
+        "verteilung_an_ruag": false,
+        "werk_1": 4,
+        "werk_2": 4,
+        "werk_3": 3,
+        "werk_4": 3,
+        "allgemeine_positionstypengruppe": 52,
+        "verkaufsorg": "M100",
+        "vertriebsweg": 26,
+        "fuehrendes_material": "",
+        "auszeichnungsfeld": 1,
+        "fertigungssteuerer": 35,
+        "kennzeichen_komplexes_system": true,
+        "sonderablauf": 2,
+        "cpv_code": "09221000-4",
+        "temperaturbedingung": 3,
+        "bewertungsklasse": 25,
+        "systemmanager": "BtCLQXiei8",
+        "kennziffer_bamf": "55G",
+        "mietrelevanz": false,
+        "next_higher_assembly": "MtUhvjCgTR",
+        "nachschubklasse": "RavdBK9er9",
+        "verteilung_apm_kerda": true,
+        "verteilung_svsaa": true,
+        "verteilung_cheops": true,
+        "zuteilung": 3,
+        "auspraegung": 2
+    }
+},
+{
+    "model": "b11_1.material",
+    "pk": 7,
+    "fields": {
+        "hersteller": "grIL_02",
+        "is_transferred": false,
+        "transfer_date": null,
+        "positions_nr": "4",
+        "kurztext_de": "iYqHU",
+        "kurztext_fr": "E5kSX",
+        "kurztext_en": "2ifIV",
+        "grunddatentext_de_1_zeile": "7CpOD",
+        "grunddatentext_de_2_zeile": "9Tl5b",
+        "grunddatentext_fr_1_zeile": "AVKh1",
+        "grunddatentext_fr_2_zeile": "vgBWQ",
+        "grunddatentext_en_1_zeile": "fvsv6",
+        "grunddatentext_en_2_zeile": "QEh7v",
+        "basismengeneinheit": 11,
+        "gewichtseinheit": "KG",
+        "nettogewicht": "84",
+        "groesse_abmessung": "24",
+        "ean_upc_code": "ivvoNSYfU5gv4",
+        "nato_stock_number": "hPfWR5jricAwbF7f",
+        "nsn_gruppe_klasse": "45",
+        "nato_versorgungs_nr": "100",
+        "herstellerteilenummer": "I6p5kgbDHfSq",
+        "normbezeichnung": "xAXUI5dyfgvA4WHDx9",
+        "gefahrgutkennzeichen": 2,
+        "bruttogewicht": "90",
+        "instandsetzbar": true,
+        "chargenpflicht": true,
+        "bestellmengeneinheit": "11",
+        "mindestbestellmenge": "55",
+        "lieferzeit": "1",
+        "einheit_l_b_h": "MM",
+        "laenge": "95",
+        "breite": "28",
+        "hoehe": "9",
+        "preis": "36",
+        "waehrung": "CH",
+        "preiseinheit": "65",
+        "lagerfaehigkeit": "72",
+        "exportkontrollauflage": false,
+        "cage_code": "cau6r",
+        "hersteller_name": "Y9J8xwMkeVivckquegKgOWSiCGCWWdhcpAh6R2p2",
+        "hersteller_adresse": "4ypgEnQuom27jrjtbyVekTYxGj9D5zFXXScDQ10W",
+        "hersteller_plz": "uRWpVBYRV9DhpFZyAKDnBURLNF7ogmqfINEw1YVE",
+        "hersteller_ort": "O9dO7S6la58vOMgLb5xFCDbqCywj3eHgTDKnjF3g",
+        "revision": "7qmDx2AcS8WkV1b5omknDPCVjpdKac",
+        "bemerkung": "uwdL2DeVxVg9cnWJFSS8IpBMI7mkRJ5eAQeUdsuE",
+        "begru": 6,
+        "materialart_grunddaten": 13,
+        "sparte": 5,
+        "produkthierarchie": "9if1",
+        "materialzustandsverwaltung": 1,
+        "rueckfuehrungscode": 3,
+        "serialnummerprofil": 3,
+        "spare_part_class_code": 3,
+        "hersteller_nr_gp": "l0TE26OU1p",
+        "warengruppe": "QEtc3KPJn",
+        "uebersetzungsstatus": 2,
+        "endbevorratet": "tZoLr",
+        "revision_fremd": "UauWD7EU9i",
+        "revision_eigen": "AJmjv5092E",
+        "zertifiziert_fuer_flug": true,
+        "a_nummer": "ZlbMGwjqqC",
+        "verteilung_an_psd": false,
+        "verteilung_an_ruag": true,
+        "werk_1": 2,
+        "werk_2": 3,
+        "werk_3": 4,
+        "werk_4": 3,
+        "allgemeine_positionstypengruppe": 44,
+        "verkaufsorg": "M100",
+        "vertriebsweg": 6,
+        "fuehrendes_material": "",
+        "auszeichnungsfeld": 3,
+        "fertigungssteuerer": 37,
+        "kennzeichen_komplexes_system": false,
+        "sonderablauf": 2,
+        "cpv_code": "09221000-4",
+        "temperaturbedingung": 1,
+        "bewertungsklasse": 31,
+        "systemmanager": "dujfQNvr2t",
+        "kennziffer_bamf": "55G",
+        "mietrelevanz": false,
+        "next_higher_assembly": "fBsXfodh9H",
+        "nachschubklasse": "p91q0KyRBe",
+        "verteilung_apm_kerda": true,
+        "verteilung_svsaa": true,
+        "verteilung_cheops": true,
+        "zuteilung": 3,
+        "auspraegung": 4
+    }
+},
+{
+    "model": "b11_1.material",
+    "pk": 8,
+    "fields": {
+        "hersteller": "grIL_02",
+        "is_transferred": false,
+        "transfer_date": null,
+        "positions_nr": "8",
+        "kurztext_de": "3rp05",
+        "kurztext_fr": "hqMYS",
+        "kurztext_en": "1b8nI",
+        "grunddatentext_de_1_zeile": "3blxa",
+        "grunddatentext_de_2_zeile": "3NL6d",
+        "grunddatentext_fr_1_zeile": "ByQmh",
+        "grunddatentext_fr_2_zeile": "XBSya",
+        "grunddatentext_en_1_zeile": "1lUyt",
+        "grunddatentext_en_2_zeile": "WZ3iE",
+        "basismengeneinheit": 26,
+        "gewichtseinheit": "KG",
+        "nettogewicht": "76",
+        "groesse_abmessung": "79",
+        "ean_upc_code": "ApYYztXlK92uJ",
+        "nato_stock_number": "Ko6PQxLwAILnSmK5",
+        "nsn_gruppe_klasse": "98",
+        "nato_versorgungs_nr": "47",
+        "herstellerteilenummer": "tXORkXRx4rJw",
+        "normbezeichnung": "KLCg1BmZmn3PoSmvPG",
+        "gefahrgutkennzeichen": 2,
+        "bruttogewicht": "18",
+        "instandsetzbar": true,
+        "chargenpflicht": false,
+        "bestellmengeneinheit": "8",
+        "mindestbestellmenge": "88",
+        "lieferzeit": "72",
+        "einheit_l_b_h": "MM",
+        "laenge": "91",
+        "breite": "44",
+        "hoehe": "31",
+        "preis": "55",
+        "waehrung": "CH",
+        "preiseinheit": "53",
+        "lagerfaehigkeit": "54",
+        "exportkontrollauflage": true,
+        "cage_code": "UjLvP",
+        "hersteller_name": "QdLJJEsj6yCA71yTdLZxkqUEZgoJkZorxF01CKqk",
+        "hersteller_adresse": "hqyZavBMcAarIpDcsXIC0IbckmqNQ7dNXTCO8NQW",
+        "hersteller_plz": "Eou6m4uXEpI42sTTBMZ0oUly4ZGFSR2f1QFA3MpE",
+        "hersteller_ort": "ELlDz8k6ksYTpgYNjNg6mGluw3eIt1jegYWUFBtW",
+        "revision": "dSVnbDitSewIE97Ow22B1nIC1VbriY",
+        "bemerkung": "BbOFd2iRhWydeE4DXNv7QrbrYU4ZxnD1fMLIO9Aa",
+        "begru": 3,
+        "materialart_grunddaten": 15,
+        "sparte": 6,
+        "produkthierarchie": "O3Me",
+        "materialzustandsverwaltung": 2,
+        "rueckfuehrungscode": 1,
+        "serialnummerprofil": 1,
+        "spare_part_class_code": 3,
+        "hersteller_nr_gp": "j3OrMGbV7U",
+        "warengruppe": "sE6u8QmwR",
+        "uebersetzungsstatus": 3,
+        "endbevorratet": "EyG4p",
+        "revision_fremd": "t76FkIaj25",
+        "revision_eigen": "ZfQ1p0XCAG",
+        "zertifiziert_fuer_flug": false,
+        "a_nummer": "sO4yr8TGRc",
+        "verteilung_an_psd": false,
+        "verteilung_an_ruag": true,
+        "werk_1": 1,
+        "werk_2": 3,
+        "werk_3": 1,
+        "werk_4": 2,
+        "allgemeine_positionstypengruppe": 44,
+        "verkaufsorg": "M100",
+        "vertriebsweg": 33,
+        "fuehrendes_material": "",
+        "auszeichnungsfeld": 3,
+        "fertigungssteuerer": 5,
+        "kennzeichen_komplexes_system": false,
+        "sonderablauf": 2,
+        "cpv_code": "09221000-4",
+        "temperaturbedingung": 4,
+        "bewertungsklasse": 21,
+        "systemmanager": "iRqO1ruH28",
+        "kennziffer_bamf": "55G",
+        "mietrelevanz": true,
+        "next_higher_assembly": "Yp12hfhuwO",
+        "nachschubklasse": "pQuZBtsrxL",
+        "verteilung_apm_kerda": false,
+        "verteilung_svsaa": true,
+        "verteilung_cheops": false,
+        "zuteilung": 3,
+        "auspraegung": 1
+    }
+},
+{
+    "model": "b11_1.material",
+    "pk": 9,
+    "fields": {
+        "hersteller": "grIL_02",
+        "is_transferred": false,
+        "transfer_date": null,
+        "positions_nr": "98",
+        "kurztext_de": "PSgjP",
+        "kurztext_fr": "U781o",
+        "kurztext_en": "yDBr8",
+        "grunddatentext_de_1_zeile": "TFdqb",
+        "grunddatentext_de_2_zeile": "xDDlf",
+        "grunddatentext_fr_1_zeile": "T03Nz",
+        "grunddatentext_fr_2_zeile": "cZ22p",
+        "grunddatentext_en_1_zeile": "HV6wt",
+        "grunddatentext_en_2_zeile": "ZmhWV",
+        "basismengeneinheit": 26,
+        "gewichtseinheit": "KG",
+        "nettogewicht": "2",
+        "groesse_abmessung": "75",
+        "ean_upc_code": "mttw373BCTyYp",
+        "nato_stock_number": "dJ5F9axEc3KoOp1T",
+        "nsn_gruppe_klasse": "83",
+        "nato_versorgungs_nr": "22",
+        "herstellerteilenummer": "O9vvQVxvcMDx",
+        "normbezeichnung": "dF65X0aWnvItngAmxw",
+        "gefahrgutkennzeichen": 3,
+        "bruttogewicht": "73",
+        "instandsetzbar": false,
+        "chargenpflicht": false,
+        "bestellmengeneinheit": "62",
+        "mindestbestellmenge": "76",
+        "lieferzeit": "76",
+        "einheit_l_b_h": "MM",
+        "laenge": "57",
+        "breite": "53",
+        "hoehe": "71",
+        "preis": "34",
+        "waehrung": "CH",
+        "preiseinheit": "5",
+        "lagerfaehigkeit": "25",
+        "exportkontrollauflage": false,
+        "cage_code": "7BwFf",
+        "hersteller_name": "Eg36LTet4OinvmeKreApST1ZS1f9kZoDw4XJgrVZ",
+        "hersteller_adresse": "9Idqua3bsf3O3I1yGR5jpa5TKwBhpPihnoaSGgKV",
+        "hersteller_plz": "RonrLWWxviGyncveFobgyYrTqiEnf1tsIhTATGyC",
+        "hersteller_ort": "WMuZUrZU3egir2CziZmCoBxHVGZ2wUpl1IYNWtyO",
+        "revision": "v81AgYxxxq8w8BOhubtIjDeRUE3r6d",
+        "bemerkung": "xwx6XtuYvu1NcM9XO2T4dDY8Rs88WqcbsJUS2Xkk",
+        "begru": 6,
+        "materialart_grunddaten": 12,
+        "sparte": 1,
+        "produkthierarchie": "KMlG",
+        "materialzustandsverwaltung": 2,
+        "rueckfuehrungscode": 2,
+        "serialnummerprofil": 3,
+        "spare_part_class_code": 4,
+        "hersteller_nr_gp": "NR56EX7CiX",
+        "warengruppe": "43016sYBo",
+        "uebersetzungsstatus": 3,
+        "endbevorratet": "O622D",
+        "revision_fremd": "gaTevYaDLY",
+        "revision_eigen": "26i5YtSu9g",
+        "zertifiziert_fuer_flug": false,
+        "a_nummer": "F8IpbeW8kW",
+        "verteilung_an_psd": false,
+        "verteilung_an_ruag": true,
+        "werk_1": 4,
+        "werk_2": 4,
+        "werk_3": 3,
+        "werk_4": 1,
+        "allgemeine_positionstypengruppe": 49,
+        "verkaufsorg": "M100",
+        "vertriebsweg": 20,
+        "fuehrendes_material": "",
+        "auszeichnungsfeld": 2,
+        "fertigungssteuerer": 35,
+        "kennzeichen_komplexes_system": false,
+        "sonderablauf": 2,
+        "cpv_code": "09221000-4",
+        "temperaturbedingung": 2,
+        "bewertungsklasse": 24,
+        "systemmanager": "VpeH1OonJx",
+        "kennziffer_bamf": "55G",
+        "mietrelevanz": true,
+        "next_higher_assembly": "WVWIu2R2w9",
+        "nachschubklasse": "y5ceILPIoG",
+        "verteilung_apm_kerda": false,
+        "verteilung_svsaa": false,
+        "verteilung_cheops": false,
+        "zuteilung": 4,
+        "auspraegung": 2
+    }
+},
+{
+    "model": "b11_1.material",
+    "pk": 10,
+    "fields": {
+        "hersteller": "grIL_02",
+        "is_transferred": false,
+        "transfer_date": null,
+        "positions_nr": "36",
+        "kurztext_de": "jZ7ED",
+        "kurztext_fr": "RWiPO",
+        "kurztext_en": "6SWZM",
+        "grunddatentext_de_1_zeile": "eufBL",
+        "grunddatentext_de_2_zeile": "jicQT",
+        "grunddatentext_fr_1_zeile": "wE8t1",
+        "grunddatentext_fr_2_zeile": "nauXp",
+        "grunddatentext_en_1_zeile": "FtP3y",
+        "grunddatentext_en_2_zeile": "ETbye",
+        "basismengeneinheit": 12,
+        "gewichtseinheit": "KG",
+        "nettogewicht": "44",
+        "groesse_abmessung": "56",
+        "ean_upc_code": "gmqksk265BZB3",
+        "nato_stock_number": "WELQZSwG5b5fj28U",
+        "nsn_gruppe_klasse": "58",
+        "nato_versorgungs_nr": "29",
+        "herstellerteilenummer": "i9B0eBrvCtCK",
+        "normbezeichnung": "UqU6iqlhqADf4ohos8",
+        "gefahrgutkennzeichen": 3,
+        "bruttogewicht": "93",
+        "instandsetzbar": true,
+        "chargenpflicht": false,
+        "bestellmengeneinheit": "35",
+        "mindestbestellmenge": "99",
+        "lieferzeit": "43",
+        "einheit_l_b_h": "MM",
+        "laenge": "39",
+        "breite": "55",
+        "hoehe": "14",
+        "preis": "86",
+        "waehrung": "CH",
+        "preiseinheit": "70",
+        "lagerfaehigkeit": "87",
+        "exportkontrollauflage": false,
+        "cage_code": "dEE3A",
+        "hersteller_name": "hZOMPxZZu4q4HeDZQY1ETiqfK472QPSQp1qeQfAt",
+        "hersteller_adresse": "Ys0rMbFqEVj59hou4bjd7JiVnuxaXkXi4mZTnHKc",
+        "hersteller_plz": "FVSNZEiu8tLrE3WBTmYU29nVeL0toE32kyTbKCuD",
+        "hersteller_ort": "9pHdl4ttOvHbtnVf85QUYgurrah8NiWm2EcsgQsl",
+        "revision": "vTEh3oiBKEIuhLFYwiLvF8hc1Krbzi",
+        "bemerkung": "xTumhkW3xhsMEwK8EeTbs0oeECQND5iKjg10eWwM",
+        "begru": 7,
+        "materialart_grunddaten": 8,
+        "sparte": 1,
+        "produkthierarchie": "Qw6n",
+        "materialzustandsverwaltung": 2,
+        "rueckfuehrungscode": 3,
+        "serialnummerprofil": 3,
+        "spare_part_class_code": 4,
+        "hersteller_nr_gp": "omqLCpxiCh",
+        "warengruppe": "G6WAZMul1",
+        "uebersetzungsstatus": 1,
+        "endbevorratet": "7yPMy",
+        "revision_fremd": "UJ6JrS39j3",
+        "revision_eigen": "anv9bw3bXz",
+        "zertifiziert_fuer_flug": true,
+        "a_nummer": "xTuIK9YCk5",
+        "verteilung_an_psd": false,
+        "verteilung_an_ruag": false,
+        "werk_1": 4,
+        "werk_2": 3,
+        "werk_3": 2,
+        "werk_4": 1,
+        "allgemeine_positionstypengruppe": 18,
+        "verkaufsorg": "M100",
+        "vertriebsweg": 23,
+        "fuehrendes_material": "",
+        "auszeichnungsfeld": 1,
+        "fertigungssteuerer": 31,
+        "kennzeichen_komplexes_system": true,
+        "sonderablauf": 1,
+        "cpv_code": "09221000-4",
+        "temperaturbedingung": 3,
+        "bewertungsklasse": 26,
+        "systemmanager": "VcvYsFgR9M",
+        "kennziffer_bamf": "55G",
+        "mietrelevanz": false,
+        "next_higher_assembly": "ylxdLBwyib",
+        "nachschubklasse": "9lEWJajBDS",
+        "verteilung_apm_kerda": true,
+        "verteilung_svsaa": false,
+        "verteilung_cheops": true,
+        "zuteilung": 2,
+        "auspraegung": 1
+    }
+}
+]
