@@ -268,6 +268,3 @@ class MaterialForm_SMDA(ModelForm):
 #'zuteilung'
 #'auspraegung'
         }
-
-class ExportForm(forms.Form):
-    export = forms.BooleanField(widget=forms.HiddenInput, initial=True)
