@@ -1,11 +1,11 @@
 {% extends "base_generic.html" %}
 
 {% block content %}
-    <h1>Modifier un matériel</h1>
+    <h1>Material aktualisieren</h1>
     <br/>
     {% if submitted %}
       <div class="alert alert-success" role="alert">
-          Le client a été modifié.
+          Das Material wurde aktualisiert
       </div>
     {% endif %}
 
@@ -22,8 +22,8 @@
             {% endif %}
         </p>
     {% endfor %}
-      <input type="submit" value="Enregistrer les modifications" class="btn btn-primary">
-      <input type=button value="Retour" class="btn btn-secondary" onClick="javascript:history.go(-1);">
+      <input type="submit" value="Änderungen speichern" class="btn btn-primary">
+      <input type=button value="Zurück" class="btn btn-secondary" onClick="javascript:history.go(-1);">
 </form>
    
 {% endblock %}

@@ -2,7 +2,7 @@
 
 <!-- templates/list_material.html -->
 {% block content %}
-<h1>Liste des matériels (vision IL)</h1>
+<h1>Materialliste (Hersteller)</h1>
 <br/>
 <form method="post" id="material-form">
     {% csrf_token %}
@@ -10,7 +10,7 @@
         <thead>
             <tr>
                 <th><input type="checkbox" id="select-all"></th>
-                <th>Open materials</th>
+                <th>Offes/Offenen Material/ien</th>
             </tr>
         </thead>
         <tbody>
@@ -23,14 +23,14 @@
         </tbody>
     </table>
     <br/>
-    <button type="submit" name="action" value="transfer" class="btn btn-primary action-button" disabled>Transfer</button>
-    <button type="submit" name="action" value="delete" class="btn btn-danger action-button" disabled>Delete</button>
+    <button type="submit" name="action" value="transfer" class="btn btn-primary action-button" disabled>Übermitteln</button>
+    <button type="submit" name="action" value="delete" class="btn btn-danger action-button" disabled>Löschen</button>
 </form>
 <br/>
     <table class="table table-striped">
         <thead>
             <tr>
-                <th>Transferred materials</th>
+                <th>Übermitteltes/n Material/ien</th>
             </tr>
         </thead>
         <tbody>

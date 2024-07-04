@@ -2,7 +2,7 @@
 
 <!-- templates/list_material.html -->
 {% block content %}
-<h1>Liste des matériels (vision GD)</h1>
+<h1>Materialliste (Grunddaten-Team)</h1>
 <br/>
 <form method="post" id="material-form">
     {% csrf_token %}
@@ -10,7 +10,7 @@
         <thead>
             <tr>
                 <th><input type="checkbox" id="select-all"></th>
-                <th>Material</th>
+                <th>Material/ien</th>
             </tr>
         </thead>
         <tbody>
@@ -23,9 +23,9 @@
         </tbody>
     </table>
     <br/>
-    <button type="submit" name="action" value="transfer" class="btn btn-primary action-button" disabled>Send back to producer</button>
-    <button type="submit" name="action" value="export" class="btn btn-primary action-button" disabled>Generate "SAP input"</button>
-    <button type="submit" name="action" value="delete" class="btn btn-danger action-button" disabled>Delete</button>
+    <button type="submit" name="action" value="transfer" class="btn btn-primary action-button" disabled>Material zurück zum Herstellen senden</button>
+    <button type="submit" name="action" value="export" class="btn btn-primary action-button" disabled>"SAP input" generieren</button>
+    <button type="submit" name="action" value="delete" class="btn btn-danger action-button" disabled>Löschen</button>
 </form>
 <br/>
 <hr><br/>
