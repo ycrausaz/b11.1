@@ -1,3 +1,3 @@
-/Library/PostgreSQL/14/bin/pg_dump -U b11-1_user -F c -b -v -f b11-1_data_`my_date`.dump b11-1
+python manage.py dumpdata --natural-foreign --exclude=auth.permission --exclude=contenttypes --indent=4 > b11_1/pgsql/backup_database_`my_date`.json
 
-/Library/PostgreSQL/14/bin/pg_restore -U b11-1_user -d b11-1 -v b11-1_data.dump
+python manage.py loaddata b11_1/pgsql/backup_database_20240704-112221_corrected.json
