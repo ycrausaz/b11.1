@@ -7,6 +7,7 @@ from django.db import connection
 from django.urls import reverse_lazy
 from django.forms import DateField
 from django.conf import settings
+from .models import Basismengeneinheit
 
 def readonly_field_style():
     styles_string = ' '
@@ -22,7 +23,59 @@ def readonly_field_style():
     # styles_string = ' '.join(styles_list)
     return styles_string
 
+class CustomBooleanChoiceField(forms.TypedChoiceField):
+    BOOLEAN_CHOICES = (
+        (None, '---'),
+        (True, 'Yes'),
+        (False, 'No'),
+    )
+
+    def __init__(self, required=False, default=None, *args, **kwargs):
+        kwargs['initial'] = default
+        super().__init__(
+            choices=self.BOOLEAN_CHOICES,
+            coerce=lambda x: x == 'True',
+            required=required,
+            empty_value=None,
+            *args,
+            **kwargs
+        )
+
+    def validate(self, value):
+        if self.required and (value in self.empty_values or value is None):
+            raise forms.ValidationError(self.error_messages['required'], code='required')
+        super().validate(value)
+
 class MaterialForm_IL(ModelForm):
+
+    BOOLEAN_CHOICES = (
+        (True, 'Yes'),
+        (False, 'No'),
+    )
+
+    positions_nr = forms.IntegerField(required=True)
+    kurztext_de = forms.CharField(required=True)
+    kurztext_fr = forms.CharField(required=True)
+    kurztext_en = forms.CharField(required=True)
+    grunddatentext_de_1_zeile = forms.CharField(required=True)
+    grunddatentext_fr_1_zeile = forms.CharField(required=True)
+    grunddatentext_en_1_zeile = forms.CharField(required=True)
+    basismengeneinheit = forms.ModelChoiceField(queryset=Basismengeneinheit.objects.all(), required=True)
+    bruttogewicht = forms.IntegerField(required=True)
+    herstellerteilenummer = forms.CharField(required=True)
+    instandsetzbar = CustomBooleanChoiceField(required=True)
+    chargenpflicht = CustomBooleanChoiceField(required=True)
+    lieferzeit = forms.IntegerField(required=True)
+    einheit_l_b_h = forms.CharField(required=True)
+    laenge = forms.CharField(required=True)
+    breite = forms.CharField(required=True)
+    hoehe = forms.CharField(required=True)
+    preis = forms.CharField(required=True)
+    preiseinheit = forms.CharField(required=True)
+    hersteller_name = forms.CharField(required=True)
+    hersteller_adresse = forms.CharField(required=True)
+    hersteller_plz = forms.CharField(required=True)
+    hersteller_ort = forms.CharField(required=True)
 
     class Meta:
         model = Material
