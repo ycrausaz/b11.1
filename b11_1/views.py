@@ -86,7 +86,7 @@ class AddMaterial_IL_View(grIL_GroupRequiredMixin, SuccessMessageMixin, CreateVi
     model = Material
     template_name = 'il/add_material_il.html'
     form_class = MaterialForm_IL
-    success_url = reverse_lazy('add-material-il')
+    success_url = reverse_lazy('list-material-il')
     success_message = "Le matériel a été ajouté avec succès."
 
     def form_valid(self, form):

@@ -259,9 +259,9 @@ class Material(models.Model):
 
     def __str__(self):
         if self.positions_nr is not None:
-            return str(self.positions_nr) + " - " + self.kurztext_de
+            return str(self.positions_nr) + " - " + self.kurztext_de + " (" + self.hersteller + ")"
         else:
-            return "<None> - " + self.kurztext_de
+            return "<None> - " + self.kurztext_de + " (" + self.hersteller + ")"
 
     class Meta:
         ordering = ["positions_nr"]
