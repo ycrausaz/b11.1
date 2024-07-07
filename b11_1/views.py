@@ -4,7 +4,7 @@ from django.views.generic import ListView, DetailView
 from django.views.generic.base import View
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from .models import Material
+from .models import Material, Zuteilung, Auspraegung
 from .forms import MaterialForm_IL, MaterialForm_GD, MaterialForm_SMDA
 from django.contrib.messages.views import SuccessMessageMixin
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
@@ -90,8 +90,20 @@ class AddMaterial_IL_View(grIL_GroupRequiredMixin, SuccessMessageMixin, CreateVi
     success_message = "Le matériel a été ajouté avec succès."
 
     def form_valid(self, form):
+        # Add the name of the 'hersteller'
         item = form.save(commit=False)
         item.hersteller = self.request.user.username
+        print("item.hersteller = " + item.hersteller)
+        item.gewichtseinheit = "KG"
+        print("item.gewichtseinheit = " + item.gewichtseinheit)
+        item.nsn_gruppe_klasse = "XXXXXXXXXX"
+        print("item.nsn_gruppe_klasse = " + item.nsn_gruppe_klasse)
+        item.nato_versorgungs_nr = "XXXXXXXXXX"
+        print("item.nato_versorgungs_nr = " + item.nato_versorgungs_nr)
+        item.einheit_l_b_h = "MM"
+        print("item.einheit_l_b_h = " + item.einheit_l_b_h)
+        item.waehrung = "CHF"
+        print("item.waehrung = " + item.waehrung)
         item.save()
         return super().form_valid(form)
 
@@ -151,6 +163,16 @@ class UpdateMaterial_GD_View(grGD_GroupRequiredMixin, SuccessMessageMixin, Updat
     success_url = reverse_lazy('list-material-gd')
     success_message = "Le matériel a été ajouté avec succès."
 
+    def form_valid(self, form):
+        item = form.save(commit=False)
+        if item.chargenpflicht == True:
+            item.materialzustandsverwaltung = "1"
+        elif item.chargenpflicht == False:
+            item.materialzustandsverwaltung = "2"
+        print("item.materialzustandsverwaltung = " + item.materialzustandsverwaltung)
+        item.save()
+        return super().form_valid(form)
+
 class ShowMaterial_GD_View(grGD_GroupRequiredMixin, SuccessMessageMixin, DetailView):
     model = Material
     template_name = 'gd/show_material_gd.html'
@@ -199,6 +221,28 @@ class UpdateMaterial_SMDA_View(grSMDA_GroupRequiredMixin, SuccessMessageMixin, U
     form_class = MaterialForm_SMDA
     success_url = reverse_lazy('list-material-smda')
     success_message = "Le matériel a été ajouté avec succès."
+
+    def form_valid(self, form):
+        item = form.save(commit=False)
+        if item.werk_1 == "0800":
+            item.verkaufsorg = "A100"
+        else:
+            item.verkaufsorg = "M100"
+        print("item.verkaufsorg = " + item.verkaufsorg)
+        print("item.zuteilung_id = " + str(item.zuteilung_id))
+        zuteilung = Zuteilung.objects.filter(id=item.zuteilung_id).first()
+        auspraegung = Auspraegung.objects.filter(id=item.auspraegung_id).first()
+        print("item.zuteilung = " + str(zuteilung.text))
+        if zuteilung.text == "MKZ" and auspraegung.text == "04":
+            form.add_error('auspraegung', "Die Ausprägung mit 'MKZ' muss '01', '02' oder '03' sein.")
+        if zuteilung.text == "PRD" and auspraegung.text == "04":
+            form.add_error('auspraegung', "Die Ausprägung mit 'PRD' muss '01', '02' oder '03' sein.")
+
+        if form.errors:
+            return self.form_invalid(form)
+
+        item.save()
+        return super().form_valid(form)
 
 class ShowMaterial_SMDA_View(grSMDA_GroupRequiredMixin, SuccessMessageMixin, DetailView):
     model = Material
