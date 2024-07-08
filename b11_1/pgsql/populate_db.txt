@@ -118,7 +118,7 @@ auspraegung_id, -- 77
 basismengeneinheit_id, -- 78
 begru_id, -- 79
 materialart_grunddaten_id, -- 80
-materialzustandsverwaltung_id, -- 81
+materialzustandsverwaltung, -- 81
 rueckfuehrungscode_id, -- 82
 serialnummerprofil_id, -- 83
 spare_part_class_code_id, -- 84
@@ -164,7 +164,7 @@ uebersetzungsstatus_id -- 86
 (select random_string(5)), -- cage_code, -- 36
 (select random_string(40)), -- hersteller_name, -- 37
 (select random_string(40)), -- hersteller_adresse, -- 38 
-(select random_string(40)), -- hersteller_plz, -- 39
+(select random_between(1000, 4000)), -- hersteller_plz, -- 39
 (select random_string(40)), -- hersteller_ort, -- 40
 (select random_string(30)), -- revision, -- 41
 (select random_string(40)), -- bemerkung, -- 42
@@ -206,7 +206,7 @@ uebersetzungsstatus_id -- 86
 (select id from b11_1_basismengeneinheit order by random() limit 1), -- basismengeneinheit_id, -- 78
 (select id from b11_1_begru order by random() limit 1), -- begru_id, -- 79
 (select id from b11_1_materialart order by random() limit 1), -- materialart_grunddaten_id, -- 80
-(select id from b11_1_materialzustandsverwaltung order by random() limit 1), -- materialzustandsverwaltung_id, -- 81
+(select random_between(1, 2)), -- materialzustandsverwaltung, -- 81
 (select id from b11_1_rueckfuehrungscode order by random() limit 1), -- rueckfuehrungscode_id, -- 82
 (select id from b11_1_serialnummerprofil order by random() limit 1), -- serialnummerprofil_id, -- 83
 (select id from b11_1_sparepartclasscode order by random() limit 1), -- spare_part_class_code_id, -- 84
