@@ -1,7 +1,7 @@
 # myapp/admin.py
 
 from django.contrib import admin
-from .models import Material, BEGRU, Basismengeneinheit, Materialart, Sparte, Materialzustandsverwaltung, Rueckfuehrungscode, Serialnummerprofil, SparePartClassCode, Uebersetzungsstatus
+from .models import Material, BEGRU, Basismengeneinheit, Materialart, Sparte, Rueckfuehrungscode, Serialnummerprofil, SparePartClassCode, Uebersetzungsstatus
 
 @admin.register(Material)
 class MaterialAdmin(admin.ModelAdmin):
@@ -25,11 +25,6 @@ class MaterialartAdmin(admin.ModelAdmin):
 
 @admin.register(Sparte)
 class SparteAdmin(admin.ModelAdmin):
-    list_display = ('text',)
-
-
-@admin.register(Materialzustandsverwaltung)
-class MaterialzustandsverwaltungAdmin(admin.ModelAdmin):
     list_display = ('text',)
 
 

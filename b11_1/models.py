@@ -30,13 +30,6 @@ class Sparte(models.Model):
         return self.text
 
 
-class Materialzustandsverwaltung(models.Model):
-    text = models.CharField(null=True, blank=True, max_length=40)
-
-    def __str__(self):
-        return self.text
-
-
 class Rueckfuehrungscode(models.Model):
     text = models.CharField(null=True, blank=True, max_length=40)
 
@@ -215,7 +208,7 @@ class Material(models.Model):
     materialart_grunddaten = models.ForeignKey(Materialart, null=True, blank=True, on_delete=models.DO_NOTHING, verbose_name="Materialart ")
     sparte = models.ForeignKey(Sparte, null=True, blank=True, on_delete=models.DO_NOTHING, verbose_name="Sparte ")
     produkthierarchie = models.CharField(null=True, blank=True)
-    materialzustandsverwaltung = models.ForeignKey(Materialzustandsverwaltung, null=True, blank=True, on_delete=models.DO_NOTHING, verbose_name="Materialzustandsverwaltung ")
+    materialzustandsverwaltung = models.CharField(null=True, blank=True)
     rueckfuehrungscode = models.ForeignKey(Rueckfuehrungscode, null=True, blank=True, on_delete=models.DO_NOTHING, verbose_name="Rückführungscode ")
     serialnummerprofil = models.ForeignKey(Serialnummerprofil, null=True, blank=True, on_delete=models.DO_NOTHING, verbose_name="Serialnummerprofil ")
     spare_part_class_code = models.ForeignKey(SparePartClassCode, null=True, blank=True, on_delete=models.DO_NOTHING, verbose_name="Spare Part Class Code ")
