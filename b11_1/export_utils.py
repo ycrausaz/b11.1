@@ -105,24 +105,24 @@ def export_to_excel(materials):
             # Add an empty sheet if no data was added
             pd.DataFrame().to_excel(writer, sheet_name='EmptySheet')
 
-        # Also write the selected materials to a new sheet
-        selected_df = pd.DataFrame(list(materials.values()))
-        if not selected_df.empty:
-            # Convert headers to capital letters
-            selected_df.columns = [col.upper() for col in selected_df.columns]
-            if 'SOURCE_ID' in selected_df.columns:
-                selected_df['SOURCE_ID'] = selected_df['SOURCE_ID'].astype(str).str.zfill(3)
-                selected_df = selected_df.sort_values(by='SOURCE_ID')
-            if 'MFRPN' in selected_df.columns:
-                selected_df['MFRPN'] = selected_df['MFRPN'].apply(lambda x: generate_random_string())
-            selected_df.to_excel(writer, sheet_name='Selected Materials', index=False)
+#        # Also write the selected materials to a new sheet
+#        selected_df = pd.DataFrame(list(materials.values()))
+#        if not selected_df.empty:
+#            # Convert headers to capital letters
+#            selected_df.columns = [col.upper() for col in selected_df.columns]
+#            if 'SOURCE_ID' in selected_df.columns:
+#                selected_df['SOURCE_ID'] = selected_df['SOURCE_ID'].astype(str).str.zfill(3)
+#                selected_df = selected_df.sort_values(by='SOURCE_ID')
+#            if 'MFRPN' in selected_df.columns:
+#                selected_df['MFRPN'] = selected_df['MFRPN'].apply(lambda x: generate_random_string())
+#            selected_df.to_excel(writer, sheet_name='Selected Materials', index=False)
 
     # Seek to the beginning of the stream
     output.seek(0)
 
     # Create the HttpResponse object with the appropriate Excel header
     response = HttpResponse(output, content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-    response['Content-Disposition'] = 'attachment; filename=database_views.xlsx'
+    response['Content-Disposition'] = 'attachment; filename=MDG_UPLOAD_' + datetime.today().strftime('%Y%m%d_%H%M%S') + '.xlsx'
 
     return response
 
