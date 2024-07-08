@@ -1,0 +1,525 @@
+-- Drop the view if it already exists to avoid conflicts
+DROP VIEW IF EXISTS MAKT_Beschreibung;
+
+-- Create the view
+CREATE VIEW MAKT_Beschreibung AS
+-- Select German text and label it with 'D'
+SELECT 
+  positions_nr AS source_id, 
+  'D' AS spras, 
+  kurztext_de AS maktx
+FROM b11_1_material
+WHERE is_transferred = 't'
+
+UNION ALL
+
+-- Select French text and label it with 'F'
+SELECT 
+  positions_nr AS source_id, 
+  'F' AS spras, 
+  kurztext_fr AS maktx
+FROM b11_1_material
+WHERE is_transferred = 't'
+
+UNION ALL
+
+-- Select English text and label it with 'E'
+SELECT 
+  positions_nr AS source_id, 
+  'E' AS spras, 
+  kurztext_en AS maktx
+FROM b11_1_material
+WHERE is_transferred = 't';
+
+-- After creating the view, you can query it as a regular table
+-- For example: SELECT * FROM MAKT_Beschreibung;
+
+DROP VIEW IF EXISTS MARA_Grunddaten;
+CREATE VIEW MARA_Grunddaten AS
+SELECT
+    a.positions_nr AS SOURCE_ID,
+    b.text AS MTART,
+    c.text AS MEINS,
+    a.herstellerteilenummer AS MFRPN,
+    a.hersteller_nr_gp AS MFRNR,
+    a.groesse_abmessung AS GROES,
+    a.nettogewicht AS NTGEW,
+    a.laenge AS LAENG,
+    a.breite AS BREIT,
+    a.hoehe AS HOEHE,
+    'MM' AS MEABM,
+    'KG' AS GEWEI,
+    d.text AS PROFL,
+    a.nato_versorgungs_nr AS NSNID,
+    a.ean_upc_code AS EAN11,
+    CASE WHEN a.ean_upc_code IS NOT NULL THEN 'HE' ELSE NULL END AS NUMTP,
+    e.text AS BEGRU,
+    a.normbezeichnung AS NORMT,
+    'M' AS MBRSH,
+    a.warengruppe AS MATKL,
+    '' AS BISMT,
+    a.bruttogewicht AS BRGEW,
+    a.bestellmengeneinheit AS BSTME,
+    f.text AS SPART,
+    a.chargenpflicht AS XCHPF,
+    'V1' AS MSTAE,
+    '' AS MTPOS_MARA,
+    CASE WHEN a.chargenpflicht = 'f' THEN '1' ELSE '2' END AS MCOND,
+    a.fuehrendes_material AS ZZFUEHR_MAT,
+    g.text AS ZZLABEL,
+    h.text AS RETDELC,
+    i.text AS ADSPC_SPC,
+    a.produkthierarchie AS PRDHA,
+    'UAM' AS HNDLCODE,
+    j.text AS TEMPB,
+    a.cpv_code AS ZZCPVCODE,
+    k.text AS ZZSONDERABLAUF,
+    a.lagerfaehigkeit AS "MARA-MHDHB",
+    '1' as "MARA-MHDRZ",
+    '2' as "MARA-IPRKZ"
+FROM b11_1_material a
+left join b11_1_materialart b on b.id = a.materialart_grunddaten_id
+left join b11_1_basismengeneinheit c on c.id = a.basismengeneinheit_id
+left join b11_1_gefahrgutkennzeichen d on d.id = a.gefahrgutkennzeichen_id
+left join b11_1_begru e on e.id = a.begru_id
+left join b11_1_sparte f on f.id = a.sparte_id
+left join b11_1_auszeichnungsfeld g on g.id = a.auszeichnungsfeld_id
+left join b11_1_rueckfuehrungscode h on h.id = a.rueckfuehrungscode_id
+left join b11_1_sparepartclasscode i on i.id = a.spare_part_class_code_id
+left join b11_1_temperaturbedingung j on j.id = a.temperaturbedingung_id
+left join b11_1_sonderablauf k on k.id = a.sonderablauf_id
+where a.is_transferred='t';
+-- Create a view to transform the original result set into the desired normalized format
+DROP VIEW IF EXISTS MARA_AUSP_Merkmale;
+CREATE VIEW MARA_AUSP_Merkmale AS
+WITH original_query AS (
+    SELECT
+        a.positions_nr AS source_id,
+        '001' AS klart,
+        a.a_nummer AS v_a_nummer,
+        a.revision_fremd AS v_revfremd,
+        a.revision_eigen AS v_reveigen,
+        a.systemmanager AS v_systemmanager,
+        b.text AS v_uebersetzung,
+        a.kennziffer_bamf AS v_kennziffer,
+        a.next_higher_assembly AS v_next_higher,
+        -- Convert boolean fields to 'J' or '' based on their value
+        CASE WHEN a.zertifiziert_fuer_flug = 't' THEN 'J' ELSE '' END AS v_zertflug,
+        CASE WHEN a.verteilung_apm_kerda = 't' THEN 'X' ELSE '' END AS v_apm,
+        CASE WHEN a.verteilung_cheops = 't' THEN 'X' ELSE '' END AS v_cheops,
+        CASE WHEN a.verteilung_svsaa = 't' THEN 'X' ELSE '' END AS v_svsaa
+    FROM b11_1_material a
+    LEFT JOIN b11_1_uebersetzungsstatus b ON b.id = a.uebersetzungsstatus_id
+    WHERE a.is_transferred = 't'
+)
+-- Generate the normalized format using UNION ALL for each field
+SELECT
+    source_id,
+    klart,
+    v_a_nummer AS atwrt,
+    'V_A_NUMMER' AS atnam
+FROM original_query
+UNION ALL
+SELECT
+    source_id,
+    klart,
+    v_revfremd AS atwrt,
+    'V_REVFREMD' AS atnam
+FROM original_query
+UNION ALL
+SELECT
+    source_id,
+    klart,
+    v_reveigen AS atwrt,
+    'V_REVEIGEN' AS atnam
+FROM original_query
+UNION ALL
+SELECT
+    source_id,
+    klart,
+    v_systemmanager AS atwrt,
+    'V_SYSTEMMANAGER' AS atnam
+FROM original_query
+UNION ALL
+SELECT
+    source_id,
+    klart,
+    v_uebersetzung AS atwrt,
+    'V_UEBERSETZUNG' AS atnam
+FROM original_query
+UNION ALL
+SELECT
+    source_id,
+    klart,
+    v_kennziffer AS atwrt,
+    'V_KENNZIFFER' AS atnam
+FROM original_query
+UNION ALL
+SELECT
+    source_id,
+    klart,
+    v_next_higher AS atwrt,
+    'V_NEXT_HIGHER' AS atnam
+FROM original_query
+UNION ALL
+SELECT
+    source_id,
+    klart,
+    v_zertflug AS atwrt,
+    'V_ZERTFLUG' AS atnam
+FROM original_query
+UNION ALL
+SELECT
+    source_id,
+    klart,
+    v_apm AS atwrt,
+    'V_APM' AS atnam
+FROM original_query
+UNION ALL
+SELECT
+    source_id,
+    klart,
+    v_cheops AS atwrt,
+    'V_CHEOPS' AS atnam
+FROM original_query
+UNION ALL
+SELECT
+    source_id,
+    klart,
+    v_svsaa AS atwrt,
+    'V_SVSAA' AS atnam
+FROM original_query
+ORDER BY source_id, atnam;
+
+-- Query the view to ensure it works as expected
+--SELECT * FROM MARA_AUSP_Merkmale;
+
+-- Create a view named "MARA_KSSK_Klassenzuordnung"
+DROP VIEW IF EXISTS MARA_KSSK_Klassenzuordnung;
+CREATE VIEW MARA_KSSK_Klassenzuordnung AS
+WITH source_data AS (
+    SELECT a.positions_nr AS source_id,
+           '001' AS klart
+    FROM b11_1_material a
+    WHERE a.is_transferred = 't'
+)
+SELECT source_id, 
+       klart, 
+       'V_VERTEILUNG_PSD' AS class
+FROM source_data
+UNION ALL
+SELECT source_id, 
+       klart, 
+       'V_ZUSATZDATEN' AS class
+FROM source_data
+UNION ALL
+SELECT source_id, 
+       klart, 
+       'V_AR_NUMMER' AS class
+FROM source_data
+UNION ALL
+SELECT source_id, 
+       klart, 
+       'V_VERTEILUNG' AS class
+FROM source_data
+UNION ALL
+SELECT source_id, 
+       klart, 
+       'V_BM_SBM' AS class
+FROM source_data;
+
+-- Now you can query the view just like a table
+-- Example query to get all rows from the view
+--SELECT * FROM MARA_KSSK_Klassenzuordnung;
+
+-- Drop the view if it already exists to avoid conflicts
+DROP VIEW IF EXISTS MARA_STXH_Grunddaten;
+
+-- Create the view
+CREATE VIEW MARA_STXH_Grunddaten AS
+-- Select German text and label it with 'D'
+SELECT 
+  positions_nr AS source_id, 
+  'MATERIAL' AS tdobject,
+  positions_nr AS TDNAME,
+  'GRUN' AS TDID,
+  'D' AS TDSPRAS
+FROM b11_1_material
+WHERE is_transferred = 't'
+
+UNION ALL
+
+-- Select French text and label it with 'F'
+SELECT 
+  positions_nr AS source_id, 
+  'MATERIAL' AS tdobject,
+  positions_nr AS TDNAME,
+  'GRUN' AS TDID,
+  'F' AS TDSPRAS
+FROM b11_1_material
+WHERE is_transferred = 't'
+
+UNION ALL
+
+-- Select English text and label it with 'E'
+SELECT 
+  positions_nr AS source_id, 
+  'MATERIAL' AS tdobject,
+  positions_nr AS TDNAME,
+  'GRUN' AS TDID,
+  'E' AS TDSPRAS
+FROM b11_1_material
+WHERE is_transferred = 't';
+
+-- After creating the view, you can query it as a regular table
+-- For example: SELECT * FROM MARA_STXH_Grunddaten;
+
+-- Drop the view if it already exists to avoid errors during creation
+DROP VIEW IF EXISTS MARA_STXL_Grunddaten;
+
+-- Create the new view with the required transformation
+CREATE VIEW MARA_STXL_Grunddaten AS
+SELECT 
+    source_id,
+    'MATERIAL' AS tdobject,
+    source_id AS tdname,
+    'GRUN' AS tdid,
+    tdspras,
+    line_counter,
+    tdformat,
+    text AS tdline
+FROM (
+    -- Select for German 1st line
+    SELECT 
+        positions_nr AS source_id,
+        'D' AS tdspras,
+        1 AS line_counter,
+        '' AS tdformat,
+        grunddatentext_de_1_zeile AS text
+    FROM b11_1_material
+    WHERE is_transferred = 't'
+
+    UNION ALL
+
+    -- Select for German 2nd line
+    SELECT 
+        positions_nr,
+        'D',
+        2,
+        '/' AS tdformat,
+        grunddatentext_de_2_zeile
+    FROM b11_1_material
+    WHERE is_transferred = 't'
+
+    UNION ALL
+
+    -- Select for French 1st line
+    SELECT 
+        positions_nr,
+        'F',
+        1,
+        '' AS tdformat,
+        grunddatentext_fr_1_zeile
+    FROM b11_1_material
+    WHERE is_transferred = 't'
+
+    UNION ALL
+
+    -- Select for French 2nd line
+    SELECT 
+        positions_nr,
+        'F',
+        2,
+        '/' AS tdformat,
+        grunddatentext_fr_2_zeile
+    FROM b11_1_material
+    WHERE is_transferred = 't'
+
+    UNION ALL
+
+    -- Select for English 1st line
+    SELECT 
+        positions_nr,
+        'E',
+        1,
+        '' AS tdformat,
+        grunddatentext_en_1_zeile
+    FROM b11_1_material
+    WHERE is_transferred = 't'
+
+    UNION ALL
+
+    -- Select for English 2nd line
+    SELECT 
+        positions_nr,
+        'E',
+        2,
+        '/' AS tdformat,
+        grunddatentext_en_2_zeile
+    FROM b11_1_material
+    WHERE is_transferred = 't'
+) AS MARA_STXL_Grunddaten
+ORDER BY source_id, tdspras, line_counter;
+
+-- Create a view named 'unpivoted_werks_view' that unpivots werk columns into rows
+DROP VIEW IF EXISTS MARC_Werksdaten;
+CREATE VIEW  MARC_Werksdaten AS
+WITH material_data AS (
+    -- CTE to get data from b11_1_material and related tables
+    SELECT 
+        a.positions_nr AS source_id, 
+        b.text AS werk_1, 
+        c.text AS werk_2, 
+        d.text AS werk_3, 
+        e.text AS werk_4, 
+        'ND' AS dismm
+    FROM 
+        b11_1_material a
+    LEFT JOIN 
+        b11_1_werk_1 b ON a.werk_1_id = b.id
+    LEFT JOIN 
+        b11_1_werk_2 c ON a.werk_2_id = c.id
+    LEFT JOIN 
+        b11_1_werk_3 d ON a.werk_3_id = d.id
+    LEFT JOIN 
+        b11_1_werk_4 e ON a.werk_4_id = e.id
+    WHERE is_transferred = 't'
+)
+-- Unpivot the werk columns into rows
+SELECT 
+    source_id, 
+    werk AS werks, 
+    dismm
+FROM (
+    SELECT 
+        source_id, 
+        werk_1 AS werk, 
+        dismm
+    FROM 
+        material_data
+    UNION ALL
+    SELECT 
+        source_id, 
+        werk_2 AS werk, 
+        dismm
+    FROM 
+        material_data
+    UNION ALL
+    SELECT 
+        source_id, 
+        werk_3 AS werk, 
+        dismm
+    FROM 
+        material_data
+    UNION ALL
+    SELECT 
+        source_id, 
+        werk_4 AS werk, 
+        dismm
+    FROM 
+        material_data
+) AS unpivoted_data
+ORDER BY 
+    source_id, 
+    werks;
+
+-- Create a view named 'unpivoted_werks_view' that unpivots werk columns into rows
+DROP VIEW IF EXISTS MBEW_Buchhaltung;
+CREATE VIEW  MBEW_Buchhaltung AS
+WITH material_data AS (
+    -- CTE to get data from b11_1_material and related tables
+    SELECT 
+        a.positions_nr AS source_id, 
+        b.text AS werk_1, 
+        c.text AS werk_2, 
+        d.text AS werk_3, 
+        e.text AS werk_4, 
+        a.preis AS VERPR,
+        a.preis AS STPRS,
+        a.preiseinheit AS PEINH,
+        f.text as BKLAS
+    FROM 
+        b11_1_material a
+    LEFT JOIN 
+        b11_1_werk_1 b ON a.werk_1_id = b.id
+    LEFT JOIN 
+        b11_1_werk_2 c ON a.werk_2_id = c.id
+    LEFT JOIN 
+        b11_1_werk_3 d ON a.werk_3_id = d.id
+    LEFT JOIN 
+        b11_1_werk_4 e ON a.werk_4_id = e.id
+    LEFT JOIN
+        b11_1_bewertungsklasse f on a.bewertungsklasse_id = f.id
+    WHERE is_transferred = 't'
+)
+-- Unpivot the werk columns into rows
+SELECT 
+    source_id, 
+    werk AS BWKEY, 
+    VERPR,
+    STPRS,
+    PEINH,
+    BKLAS
+FROM (
+    SELECT 
+        source_id, 
+        werk_1 AS werk, 
+        VERPR,
+        STPRS,
+        PEINH,
+        BKLAS
+        FROM 
+        material_data
+    UNION ALL
+    SELECT 
+        source_id, 
+        werk_2 AS werk, 
+        VERPR,
+        STPRS,
+        PEINH,
+        BKLAS
+    FROM 
+        material_data
+    UNION ALL
+    SELECT 
+        source_id, 
+        werk_3 AS werk, 
+        VERPR,
+        STPRS,
+        PEINH,
+        BKLAS
+    FROM 
+        material_data
+    UNION ALL
+    SELECT 
+        source_id, 
+        werk_4 AS werk, 
+        VERPR,
+        STPRS,
+        PEINH,
+        BKLAS
+    FROM 
+        material_data
+) AS unpivoted_data
+ORDER BY 
+    source_id, 
+    BWKEY;
+
+DROP VIEW IF EXISTS MLAN_Steuer;
+CREATE VIEW MLAN_Steuer AS
+SELECT
+    positions_nr AS SOURCE_ID,
+    'CH' AS ALAND
+FROM b11_1_material
+where is_transferred='t';
+DROP VIEW IF EXISTS MVKE_Verkaufsdaten;
+CREATE VIEW MVKE_Verkaufsdaten AS
+SELECT
+    a.positions_nr AS SOURCE_ID,
+    'M100' AS VKORG,
+    b.text AS VTWEG,
+    c.text AS MTPOS
+FROM b11_1_material a
+left join b11_1_vertriebsweg b on b.id = a.vertriebsweg_id
+left join b11_1_allgemeinepositionstypengruppe c on c.id = a.allgemeine_positionstypengruppe_id
+where a.is_transferred='t';

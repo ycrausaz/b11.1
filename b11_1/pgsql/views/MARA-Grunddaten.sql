@@ -11,8 +11,8 @@ SELECT
     a.laenge AS LAENG,
     a.breite AS BREIT,
     a.hoehe AS HOEHE,
-    a.einheit_l_b_h AS MEABM,
-    a.gewichtseinheit AS GEWEI,
+    'MM' AS MEABM,
+    'KG' AS GEWEI,
     d.text AS PROFL,
     a.nato_versorgungs_nr AS NSNID,
     a.ean_upc_code AS EAN11,
@@ -25,7 +25,7 @@ SELECT
     a.bruttogewicht AS BRGEW,
     a.bestellmengeneinheit AS BSTME,
     f.text AS SPART,
-    a.chargenpflicht AS XCHPF,
+    CASE WHEN a.chargenpflicht = 'f' then 'N' else 'X' END AS XCHPF,
     'V1' AS MSTAE,
     '' AS MTPOS_MARA,
     CASE WHEN a.chargenpflicht = 'f' THEN '1' ELSE '2' END AS MCOND,
@@ -38,7 +38,9 @@ SELECT
     j.text AS TEMPB,
     a.cpv_code AS ZZCPVCODE,
     k.text AS ZZSONDERABLAUF,
-    a.lagerfaehigkeit AS "MARA-MHDHB"
+    a.lagerfaehigkeit AS "MARA-MHDHB",
+    '1' as "MARA-MHDRZ",
+    '2' as "MARA-IPRKZ"
 FROM b11_1_material a
 left join b11_1_materialart b on b.id = a.materialart_grunddaten_id
 left join b11_1_basismengeneinheit c on c.id = a.basismengeneinheit_id

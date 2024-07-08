@@ -139,64 +139,61 @@ def drop_views_mara_ausp_merkmale(apps, schema_editor):
 # 3
 def create_views_mara_grunddaten(apps, schema_editor):
     view_sql = '''
-CREATE OR REPLACE VIEW public.mara_grunddaten
- AS
- SELECT a.positions_nr AS source_id,
-    b.text AS mtart,
-    c.text AS meins,
-    a.herstellerteilenummer AS mfrpn,
-    a.hersteller_nr_gp AS mfrnr,
-    a.groesse_abmessung AS groes,
-    a.nettogewicht AS ntgew,
-    a.laenge AS laeng,
-    a.breite AS breit,
-    a.hoehe,
-    a.einheit_l_b_h AS meabm,
-    a.gewichtseinheit AS gewei,
-    d.text AS profl,
-    a.nato_versorgungs_nr AS nsnid,
-    a.ean_upc_code AS ean11,
-        CASE
-            WHEN a.ean_upc_code IS NOT NULL THEN 'HE'::text
-            ELSE NULL::text
-        END AS numtp,
-    e.text AS begru,
-    a.normbezeichnung AS normt,
-    'M'::text AS mbrsh,
-    a.warengruppe AS matkl,
-    ''::text AS bismt,
-    a.bruttogewicht AS brgew,
-    a.bestellmengeneinheit AS bstme,
-    f.text AS spart,
-    a.chargenpflicht AS xchpf,
-    'V1'::text AS mstae,
-    ''::text AS mtpos_mara,
-        CASE
-            WHEN a.chargenpflicht = false THEN '1'::text
-            ELSE '2'::text
-        END AS mcond,
-    a.fuehrendes_material AS zzfuehr_mat,
-    g.text AS zzlabel,
-    h.text AS retdelc,
-    i.text AS adspc_spc,
-    a.produkthierarchie AS prdha,
-    'UAM'::text AS hndlcode,
-    j.text AS tempb,
-    a.cpv_code AS zzcpvcode,
-    k.text AS zzsonderablauf,
-    a.lagerfaehigkeit AS "MARA-MHDHB"
-   FROM b11_1_material a
-     LEFT JOIN b11_1_materialart b ON b.id = a.materialart_grunddaten_id
-     LEFT JOIN b11_1_basismengeneinheit c ON c.id = a.basismengeneinheit_id
-     LEFT JOIN b11_1_gefahrgutkennzeichen d ON d.id = a.gefahrgutkennzeichen_id
-     LEFT JOIN b11_1_begru e ON e.id = a.begru_id
-     LEFT JOIN b11_1_sparte f ON f.id = a.sparte_id
-     LEFT JOIN b11_1_auszeichnungsfeld g ON g.id = a.auszeichnungsfeld_id
-     LEFT JOIN b11_1_rueckfuehrungscode h ON h.id = a.rueckfuehrungscode_id
-     LEFT JOIN b11_1_sparepartclasscode i ON i.id = a.spare_part_class_code_id
-     LEFT JOIN b11_1_temperaturbedingung j ON j.id = a.temperaturbedingung_id
-     LEFT JOIN b11_1_sonderablauf k ON k.id = a.sonderablauf_id
-  WHERE a.is_transferred = true;
+DROP VIEW IF EXISTS MARA_Grunddaten;
+CREATE VIEW MARA_Grunddaten AS
+SELECT
+    a.positions_nr AS SOURCE_ID,
+    b.text AS MTART,
+    c.text AS MEINS,
+    a.herstellerteilenummer AS MFRPN,
+    a.hersteller_nr_gp AS MFRNR,
+    a.groesse_abmessung AS GROES,
+    a.nettogewicht AS NTGEW,
+    a.laenge AS LAENG,
+    a.breite AS BREIT,
+    a.hoehe AS HOEHE,
+    'MM' AS MEABM,
+    'KG' AS GEWEI,
+    d.text AS PROFL,
+    a.nato_versorgungs_nr AS NSNID,
+    a.ean_upc_code AS EAN11,
+    CASE WHEN a.ean_upc_code IS NOT NULL THEN 'HE' ELSE NULL END AS NUMTP,
+    e.text AS BEGRU,
+    a.normbezeichnung AS NORMT,
+    'M' AS MBRSH,
+    a.warengruppe AS MATKL,
+    '' AS BISMT,
+    a.bruttogewicht AS BRGEW,
+    a.bestellmengeneinheit AS BSTME,
+    f.text AS SPART,
+    CASE WHEN a.chargenpflicht = 'f' then 'N' else 'X' END AS XCHPF,
+    'V1' AS MSTAE,
+    '' AS MTPOS_MARA,
+    CASE WHEN a.chargenpflicht = 'f' THEN '1' ELSE '2' END AS MCOND,
+    a.fuehrendes_material AS ZZFUEHR_MAT,
+    g.text AS ZZLABEL,
+    h.text AS RETDELC,
+    i.text AS ADSPC_SPC,
+    a.produkthierarchie AS PRDHA,
+    'UAM' AS HNDLCODE,
+    j.text AS TEMPB,
+    a.cpv_code AS ZZCPVCODE,
+    k.text AS ZZSONDERABLAUF,
+    a.lagerfaehigkeit AS "MARA-MHDHB",
+    '1' as "MARA-MHDRZ",
+    '2' as "MARA-IPRKZ"
+FROM b11_1_material a
+left join b11_1_materialart b on b.id = a.materialart_grunddaten_id
+left join b11_1_basismengeneinheit c on c.id = a.basismengeneinheit_id
+left join b11_1_gefahrgutkennzeichen d on d.id = a.gefahrgutkennzeichen_id
+left join b11_1_begru e on e.id = a.begru_id
+left join b11_1_sparte f on f.id = a.sparte_id
+left join b11_1_auszeichnungsfeld g on g.id = a.auszeichnungsfeld_id
+left join b11_1_rueckfuehrungscode h on h.id = a.rueckfuehrungscode_id
+left join b11_1_sparepartclasscode i on i.id = a.spare_part_class_code_id
+left join b11_1_temperaturbedingung j on j.id = a.temperaturbedingung_id
+left join b11_1_sonderablauf k on k.id = a.sonderablauf_id
+where a.is_transferred='t';
         '''
     schema_editor.execute(view_sql)
 

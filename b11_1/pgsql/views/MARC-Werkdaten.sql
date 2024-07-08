@@ -1,6 +1,6 @@
 -- Create a view named 'unpivoted_werks_view' that unpivots werk columns into rows
-DROP VIEW IF EXISTS MARC_Werkdaten;
-CREATE VIEW  MARC_Werkdaten AS
+DROP VIEW IF EXISTS MARC_Werksdaten;
+CREATE VIEW  MARC_Werksdaten AS
 WITH material_data AS (
     -- CTE to get data from b11_1_material and related tables
     SELECT 
