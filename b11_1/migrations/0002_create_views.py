@@ -157,7 +157,7 @@ SELECT
     d.text AS PROFL,
     a.nato_versorgungs_nr AS NSNID,
     a.ean_upc_code AS EAN11,
-    CASE WHEN a.ean_upc_code = '' THEN '' ELSE 'HE' END AS NUMTP,
+    CASE WHEN a.ean_upc_code is null THEN '' ELSE 'HE' END AS NUMTP,
     e.text AS BEGRU,
     a.normbezeichnung AS NORMT,
     'M' AS MBRSH,
