@@ -1,5 +1,5 @@
 import pandas as pd
-from io import BytesIO  # Import BytesIO
+from io import BytesIO
 from django.http import HttpResponse
 from django.db import connections
 from django.utils.timezone import is_aware
@@ -8,13 +8,10 @@ import string
 from datetime import datetime
 from sqlalchemy import create_engine
 
-
-def export_to_excel(materials):
-    export_to_excel_type_1(materials)
-
 def make_timezone_naive(df):
     for col in df.select_dtypes(include=['datetime64[ns]']).columns:
         df[col] = df[col].apply(lambda x: x.replace(tzinfo=None) if pd.notnull(x) and is_aware(x) else x)
+    return df
 
 def generate_random_string(length=16):
     """
@@ -28,7 +25,6 @@ def generate_random_string(length=16):
     """
     letters = string.ascii_uppercase  # Use uppercase letters only
     return ''.join(random.choice(letters) for i in range(length))
-    return df
 
 def export_to_excel(materials):
     """
@@ -41,9 +37,12 @@ def export_to_excel(materials):
     Returns:
     HttpResponse: An HttpResponse with the Excel file for download.
     """
-#    try:
     # List of your database view names
-    views = ['MARA_Grunddaten', 'MARA_AUSP_Merkmale', 'MARA_KSSK_Klassenzuordnung', 'MARA_STXH_Grunddaten', 'MARA_STXL_Grunddaten', 'MARC_Werksdaten', 'MBEW_Buchhaltung', 'MLAN_Steuer', 'MVKE_Verkaufsdaten', 'MAKT_Beschreibung']
+    views = [
+        'MARA_Grunddaten', 'MARA_AUSP_Merkmale', 'MARA_KSSK_Klassenzuordnung',
+        'MARA_STXH_Grunddaten', 'MARA_STXL_Grunddaten', 'MARC_Werksdaten',
+        'MBEW_Buchhaltung', 'MLAN_Steuer', 'MVKE_Verkaufsdaten', 'MAKT_Beschreibung'
+    ]
 
     view_to_sheet = {
         'MARA_Grunddaten': 'MARA - Grunddaten',
@@ -68,8 +67,8 @@ def export_to_excel(materials):
     # Create a BytesIO buffer to hold the Excel data
     output = BytesIO()
 
-    # Create a Pandas Excel writer using openpyxl as the engine, writing to the BytesIO buffer
-    with pd.ExcelWriter(output, engine='openpyxl') as writer:
+    # Create a Pandas Excel writer using xlsxwriter as the engine, writing to the BytesIO buffer
+    with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
         sheet_added = False
         for view, sheet_name in view_to_sheet.items():
             try:
@@ -105,18 +104,6 @@ def export_to_excel(materials):
             # Add an empty sheet if no data was added
             pd.DataFrame().to_excel(writer, sheet_name='EmptySheet')
 
-#        # Also write the selected materials to a new sheet
-#        selected_df = pd.DataFrame(list(materials.values()))
-#        if not selected_df.empty:
-#            # Convert headers to capital letters
-#            selected_df.columns = [col.upper() for col in selected_df.columns]
-#            if 'SOURCE_ID' in selected_df.columns:
-#                selected_df['SOURCE_ID'] = selected_df['SOURCE_ID'].astype(str).str.zfill(3)
-#                selected_df = selected_df.sort_values(by='SOURCE_ID')
-#            if 'MFRPN' in selected_df.columns:
-#                selected_df['MFRPN'] = selected_df['MFRPN'].apply(lambda x: generate_random_string())
-#            selected_df.to_excel(writer, sheet_name='Selected Materials', index=False)
-
     # Seek to the beginning of the stream
     output.seek(0)
 
@@ -126,6 +113,3 @@ def export_to_excel(materials):
 
     return response
 
-#    except Exception as e:
-#        print(f"Error generating Excel file: {e}")
-#        return HttpResponse("An error occurred while generating the Excel file.", status=500)
