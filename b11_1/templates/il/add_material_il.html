@@ -15,22 +15,26 @@
     {% csrf_token %}
 
     {% for field in form %}
-        <div>
-            <label for="{{ field.id_for_label }}">
-                {{ field.label }}:
-                {% if field.field.required %}
-                    <span class="required">*</span>
+        {% if not field.is_hidden %}
+            <div>
+                <label for="{{ field.id_for_label }}">
+                    {{ field.label }}:
+                    {% if field.field.required %}
+                        <span class="required">*</span>
+                    {% endif %}
+                </label>
+                {{ field }}
+                {% if field.errors %}
+                    <div class="error">
+                        {% for error in field.errors %}
+                            <p>{{ error }}</p>
+                        {% endfor %}
+                    </div>
                 {% endif %}
-            </label>
-            {{ field }}
-            {% if field.errors %}
-                <div class="error">
-                    {% for error in field.errors %}
-                        <p>{{ error }}</p>
-                    {% endfor %}
-                </div>
-            {% endif %}
-        </div>
+            </div>
+        {% else %}
+            {{ field }}  <!-- Render hidden fields outside of the loop -->
+        {% endif %}
     {% endfor %}
 
     <input type="submit" value="Speichern" class="btn btn-secondary">

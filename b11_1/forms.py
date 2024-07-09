@@ -52,8 +52,8 @@ class MaterialForm_IL(ModelForm):
     groesse_abmessung = forms.IntegerField(required=False)
     ean_upc_code = forms.CharField(required=False)
     nato_stock_number = forms.CharField(required=False)
-    nsn_gruppe_klasse = forms.CharField(required=False)
-    nato_versorgungs_nr = forms.CharField(required=False)
+    nsn_gruppe_klasse = forms.CharField(widget=forms.HiddenInput(), required=False)
+    nato_versorgungs_nr = forms.CharField(widget=forms.HiddenInput(), required=False)
     herstellerteilenummer = forms.CharField(required=True)
     normbezeichnung = forms.CharField(required=False)
     gefahrgutkennzeichen = forms.CharField(required=False)
@@ -99,8 +99,8 @@ class MaterialForm_IL(ModelForm):
 #'groesse_abmessung'
 #'ean_upc_code'
 #'nato_stock_number'
-#'nsn_gruppe_klasse'
-#'nato_versorgungs_nr'
+#'nsn_gruppe_klasse':forms.TextInput(attrs={'readonly':True,'style':readonly_field_style()}),
+#'nato_versorgungs_nr':forms.TextInput(attrs={'readonly':True,'style':readonly_field_style()}),
 #'herstellerteilenummer'
 #'normbezeichnung'
 #'gefahrgutkennzeichen'
