@@ -22,6 +22,7 @@ from django.utils import timezone
 from django.db.models.functions import Cast
 from django.db.models import IntegerField
 from .export_utils import export_to_excel
+from django.contrib import messages
 import re
 from .mixins import FormValidMixin
 
@@ -31,6 +32,11 @@ def home(request):
    return redirect('list-material')
 
 class CustomLoginView(LoginView):
+    template_name = 'login_user.html'
+    def form_invalid(self, form):
+        messages.error(self.request, "Benutzername und/oder Passwort ungültig.")
+        return self.render_to_response(self.get_context_data(form=form))
+
     def form_valid(self, form):
         response = super().form_valid(form)
         if self.request.user.groups.filter(name='grIL').exists():
