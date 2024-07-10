@@ -21,6 +21,7 @@ from django.db.models.functions import Cast
 from django.db.models import IntegerField
 from .export_utils import export_to_excel
 import re
+from .mixins import FormValidMixin
 
 # Create your views here.
 
@@ -83,84 +84,19 @@ class ListMaterial_IL_View(grIL_GroupRequiredMixin, ListView):
 
         return redirect(reverse('list-material-il'))
 
-class AddMaterial_IL_View(grIL_GroupRequiredMixin, SuccessMessageMixin, CreateView):
+class AddMaterial_IL_View(FormValidMixin, grIL_GroupRequiredMixin, SuccessMessageMixin, CreateView):
     model = Material
     template_name = 'il/add_material_il.html'
     form_class = MaterialForm_IL
     success_url = reverse_lazy('list-material-il')
     success_message = "Le matériel a été ajouté avec succès."
 
-    def form_valid(self, form):
-        # Add the name of the 'hersteller'
-        item = form.save(commit=False)
-        item.hersteller = self.request.user.username
-        print("item.hersteller = " + item.hersteller)
-        item.gewichtseinheit = "KG"
-        print("item.gewichtseinheit = " + item.gewichtseinheit)
-        item.nsn_gruppe_klasse = "XXXXXXXXXX"
-        print("item.nsn_gruppe_klasse = " + item.nsn_gruppe_klasse)
-        item.nato_versorgungs_nr = "XXXXXXXXXX"
-        print("item.nato_versorgungs_nr = " + item.nato_versorgungs_nr)
-        item.einheit_l_b_h = "MM"
-        print("item.einheit_l_b_h = " + item.einheit_l_b_h)
-        item.waehrung = "CHF"
-        print("item.waehrung = " + item.waehrung)
-
-        pattern = re.compile("\d{4}-\d{2}-\d{3}-\d{4}")
-        print("item.nato_stock_number = " + item.nato_stock_number)
-        if len(item.nato_stock_number) > 0:
-            if not pattern.match(item.nato_stock_number):
-                form.add_error('nato_stock_number', "Der Feld 'Nato Stock Number' muss die folgende Formatierung haben: 'XXXX-XX-XXX-XXXX'.")
-
-        if form.errors:
-            return self.form_invalid(form)
-
-        item.save()
-        return super().form_valid(form)
-
-class UpdateMaterial_IL_View(grIL_GroupRequiredMixin, SuccessMessageMixin, UpdateView):
+class UpdateMaterial_IL_View(FormValidMixin, grIL_GroupRequiredMixin, SuccessMessageMixin, UpdateView):
     model = Material
     template_name = 'il/update_material_il.html'
     form_class = MaterialForm_IL
     success_url = reverse_lazy('list-material-il')
     success_message = "Le matériel a été ajouté avec succès."
-
-    def form_valid(self, form):
-        # Add the name of the 'hersteller'
-        item = form.save(commit=False)
-#        item.hersteller = self.request.user.username
-#        print("item.hersteller = " + item.hersteller)
-#        item.gewichtseinheit = "KG"
-#        print("item.gewichtseinheit = " + item.gewichtseinheit)
-#        item.nsn_gruppe_klasse = "XXXXXXXXXX"
-#        print("item.nsn_gruppe_klasse = " + item.nsn_gruppe_klasse)
-#        item.nato_versorgungs_nr = "XXXXXXXXXX"
-#        print("item.nato_versorgungs_nr = " + item.nato_versorgungs_nr)
-#        item.einheit_l_b_h = "MM"
-#        print("item.einheit_l_b_h = " + item.einheit_l_b_h)
-#        item.waehrung = "CHF"
-#        print("item.waehrung = " + item.waehrung)
-
-        pattern = r'^\d{4}-\d{2}-\d{3}-\d{4}$'
-        if len(item.nato_stock_number) > 0:
-            if not re.match(pattern, item.nato_stock_number):
-                form.add_error('nato_stock_number', "Der Feld 'Nato Stock Number' muss die folgende Formatierung haben: 'XXXX-XX-XXX-XXXX'.")
-
-        if form.errors:
-            return self.form_invalid(form)
-
-        pattern = r'^(\d{4})-\d{2}-\d{3}-\d{4}$'
-        match = re.match(pattern, item.nato_stock_number)
-        if match:
-            item.nsn_gruppe_klasse = match.group(1)
-
-        pattern = r'^\d{4}-(\d{2}-\d{3}-\d{4})$'
-        match = re.match(pattern, item.nato_stock_number)
-        if match:
-            item.nato_versorgungs_nr = match.group(1).replace('-', '')
-
-        item.save()
-        return super().form_valid(form)
 
 class ShowMaterial_IL_View(grIL_GroupRequiredMixin, SuccessMessageMixin, DetailView):
     model = Material
