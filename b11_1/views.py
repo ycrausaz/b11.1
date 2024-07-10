@@ -5,7 +5,9 @@ from django.views.generic.base import View
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from .models import Material, Zuteilung, Auspraegung
-from .forms import MaterialForm_IL, MaterialForm_GD, MaterialForm_SMDA
+from .forms_il import MaterialForm_IL
+from .forms_gd import MaterialForm_GD
+from .forms_smda import MaterialForm_SMDA
 from django.contrib.messages.views import SuccessMessageMixin
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
 from django.urls import reverse_lazy
