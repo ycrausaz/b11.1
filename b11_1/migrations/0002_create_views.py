@@ -345,45 +345,69 @@ def drop_views_mara_stxl_grunddaten(apps, schema_editor):
 # 7
 def create_views_marc_werksdaten(apps, schema_editor):
     view_sql = '''
-CREATE OR REPLACE VIEW public.marc_werksdaten
- AS
- WITH material_data AS (
-         SELECT a.positions_nr AS source_id,
-            b.text AS werk_1,
-            c.text AS werk_2,
-            d.text AS werk_3,
-            e.text AS werk_4,
-            'ND'::text AS dismm
-           FROM b11_1_material a
-             LEFT JOIN b11_1_werk_1 b ON a.werk_1_id = b.id
-             LEFT JOIN b11_1_werk_2 c ON a.werk_2_id = c.id
-             LEFT JOIN b11_1_werk_3 d ON a.werk_3_id = d.id
-             LEFT JOIN b11_1_werk_4 e ON a.werk_4_id = e.id
-          WHERE a.is_transferred = true
-        )
- SELECT unpivoted_data.source_id,
-    unpivoted_data.werk AS werks,
-    unpivoted_data.dismm
-   FROM ( SELECT material_data.source_id,
-            material_data.werk_1 AS werk,
-            material_data.dismm
-           FROM material_data
-        UNION ALL
-         SELECT material_data.source_id,
-            material_data.werk_2 AS werk,
-            material_data.dismm
-           FROM material_data
-        UNION ALL
-         SELECT material_data.source_id,
-            material_data.werk_3 AS werk,
-            material_data.dismm
-           FROM material_data
-        UNION ALL
-         SELECT material_data.source_id,
-            material_data.werk_4 AS werk,
-            material_data.dismm
-           FROM material_data) unpivoted_data
-  ORDER BY unpivoted_data.source_id, unpivoted_data.werk;
+DROP VIEW IF EXISTS MARC_Werksdaten;
+CREATE VIEW MARC_Werksdaten AS
+WITH material_data AS (
+    SELECT 
+        a.positions_nr AS source_id, 
+        b.text AS werk_1, 
+        c.text AS werk_2, 
+        d.text AS werk_3, 
+        e.text AS werk_4, 
+        'ND' AS dismm, 
+        a.orderbuchpflicht AS kordb
+    FROM 
+        b11_1_material a
+    LEFT JOIN 
+        b11_1_werk_1 b ON a.werk_1_id = b.id
+    LEFT JOIN 
+        b11_1_werk_2 c ON a.werk_2_id = c.id
+    LEFT JOIN 
+        b11_1_werk_3 d ON a.werk_3_id = d.id
+    LEFT JOIN 
+        b11_1_werk_4 e ON a.werk_4_id = e.id
+)
+SELECT 
+    source_id, 
+    werk AS werks, 
+    dismm,
+    kordb
+FROM (
+    SELECT 
+        source_id, 
+        werk_1 AS werk, 
+        dismm,
+        kordb
+    FROM 
+        material_data
+    UNION ALL
+    SELECT 
+        source_id, 
+        werk_2 AS werk, 
+        dismm,
+        kordb
+    FROM 
+        material_data
+    UNION ALL
+    SELECT 
+        source_id, 
+        werk_3 AS werk, 
+        dismm,
+        kordb
+    FROM 
+        material_data
+    UNION ALL
+    SELECT 
+        source_id, 
+        werk_4 AS werk, 
+        dismm,
+        kordb
+    FROM 
+        material_data
+) AS unpivoted_data
+ORDER BY 
+    source_id, 
+    werks;
         '''
     schema_editor.execute(view_sql)
 

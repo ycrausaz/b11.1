@@ -244,6 +244,7 @@ class Material(models.Model):
     mietrelevanz = models.BooleanField(null=True, blank=True)
     next_higher_assembly = models.CharField(null=True, blank=True, max_length=30)
     nachschubklasse = models.CharField(null=True, blank=True, max_length=30)
+    orderbuchpflicht = models.BooleanField(null=True, blank=True)
     verteilung_apm_kerda = models.BooleanField(null=True, blank=True)
     verteilung_svsaa = models.BooleanField(null=True, blank=True)
     verteilung_cheops = models.BooleanField(null=True, blank=True)
