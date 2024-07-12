@@ -4,6 +4,13 @@
 {% block content %}
 <h1>Materialliste (Hersteller)</h1>
 <br/>
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}" role="alert">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
 <form method="post" id="material-form">
     {% csrf_token %}
     <table class="table table-striped table-hover">
