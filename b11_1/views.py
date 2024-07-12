@@ -146,13 +146,6 @@ class ListMaterial_GD_View(grGD_GroupRequiredMixin, ListView):
 
         return redirect(reverse('list-material-gd'))
 
-class AddMaterial_GD_View(grGD_GroupRequiredMixin, SuccessMessageMixin, CreateView):
-    model = Material
-    template_name = 'gd/add_material_gd.html'
-    form_class = MaterialForm_GD
-    success_url = reverse_lazy('add-material-gd')
-    success_message = "Das Material wurde erfolgreich hinzugefügt."
-
 class UpdateMaterial_GD_View(grGD_GroupRequiredMixin, SuccessMessageMixin, UpdateView):
     model = Material
     template_name = 'gd/update_material_gd.html'
@@ -204,13 +197,6 @@ class ListMaterial_SMDA_View(grSMDA_GroupRequiredMixin, ListView):
                 return export_to_excel(selected_materials)
 
         return redirect(reverse('list-material-smda'))
-
-class AddMaterial_SMDA_View(grSMDA_GroupRequiredMixin, SuccessMessageMixin, CreateView):
-    model = Material
-    template_name = 'smda/add_material_smda.html'
-    form_class = MaterialForm_SMDA
-    success_url = reverse_lazy('add-material-smda')
-    success_message = "Das Material wurde erfolgreich hinzugefügt."
 
 class UpdateMaterial_SMDA_View(grSMDA_GroupRequiredMixin, SuccessMessageMixin, UpdateView):
     model = Material
