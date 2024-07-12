@@ -5,16 +5,14 @@
     <br/>
     {% if submitted %}
       <div class="alert alert-success" role="alert">
-          Le client a été modifié.
+          Das Material wurde aktualisiert
       </div>
     {% endif %}
 
-<form method="post">
+<form method="post" novalidate>
     {% csrf_token %}
-    {{ form.non_field_errors }}
 
-    {% for field in form %}
-        {% if not field.is_hidden %}
+        {% for field in form %}
             <div>
                 <label for="{{ field.id_for_label }}">
                     {{ field.label }}:
@@ -31,11 +29,7 @@
                     </div>
                 {% endif %}
             </div>
-        {% else %}
-            {{ field }}  <!-- Render hidden fields outside of the loop -->
-        {% endif %}
-    {% endfor %}
-
+        {% endfor %}
       <input type="submit" value="Änderungen speichern" class="btn btn-primary">
       <input type=button value="Zurück" class="btn btn-secondary" onClick="javascript:history.go(-1);">
 </form>
