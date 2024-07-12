@@ -25,8 +25,13 @@ from .export_utils import export_to_excel
 from django.contrib import messages
 import re
 from .mixins import FormValidMixin
+from django.template import RequestContext
 
-# Create your views here.
+
+def custom_permission_denied_view(request, exception=None):
+    response = render(request, '403.html')
+    response.status_code = 403
+    return response
 
 def home(request):
    return redirect('list-material')
@@ -97,14 +102,14 @@ class AddMaterial_IL_View(FormValidMixin, grIL_GroupRequiredMixin, SuccessMessag
     template_name = 'il/add_material_il.html'
     form_class = MaterialForm_IL
     success_url = reverse_lazy('list-material-il')
-    success_message = "Le matériel a été ajouté avec succès."
+    success_message = "Das Material wurde erfolgreich hinzugefügt."
 
 class UpdateMaterial_IL_View(FormValidMixin, grIL_GroupRequiredMixin, SuccessMessageMixin, UpdateView):
     model = Material
     template_name = 'il/update_material_il.html'
     form_class = MaterialForm_IL
     success_url = reverse_lazy('list-material-il')
-    success_message = "Le matériel a été ajouté avec succès."
+    success_message = "Das Material wurde erfolgreich aktualisiert."
 
 class ShowMaterial_IL_View(grIL_GroupRequiredMixin, SuccessMessageMixin, DetailView):
     model = Material
@@ -146,14 +151,14 @@ class AddMaterial_GD_View(grGD_GroupRequiredMixin, SuccessMessageMixin, CreateVi
     template_name = 'gd/add_material_gd.html'
     form_class = MaterialForm_GD
     success_url = reverse_lazy('add-material-gd')
-    success_message = "Le matériel a été ajouté avec succès."
+    success_message = "Das Material wurde erfolgreich hinzugefügt."
 
 class UpdateMaterial_GD_View(grGD_GroupRequiredMixin, SuccessMessageMixin, UpdateView):
     model = Material
     template_name = 'gd/update_material_gd.html'
     form_class = MaterialForm_GD
     success_url = reverse_lazy('list-material-gd')
-    success_message = "Le matériel a été ajouté avec succès."
+    success_message = "Das Material wurde erfolgreich aktualisiert."
 
     def form_valid(self, form):
         item = form.save(commit=False)
@@ -205,14 +210,14 @@ class AddMaterial_SMDA_View(grSMDA_GroupRequiredMixin, SuccessMessageMixin, Crea
     template_name = 'smda/add_material_smda.html'
     form_class = MaterialForm_SMDA
     success_url = reverse_lazy('add-material-smda')
-    success_message = "Le matériel a été ajouté avec succès."
+    success_message = "Das Material wurde erfolgreich hinzugefügt."
 
 class UpdateMaterial_SMDA_View(grSMDA_GroupRequiredMixin, SuccessMessageMixin, UpdateView):
     model = Material
     template_name = 'smda/update_material_smda.html'
     form_class = MaterialForm_SMDA
     success_url = reverse_lazy('list-material-smda')
-    success_message = "Le matériel a été ajouté avec succès."
+    success_message = "Das Material wurde erfolgreich aktualisiert."
 
     def form_valid(self, form):
         item = form.save(commit=False)

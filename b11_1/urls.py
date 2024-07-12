@@ -4,10 +4,10 @@ from django.urls import path
 from . import views
 from .views import CustomLoginView, UserLogout, ListMaterial_View, ListMaterial_IL_View, AddMaterial_IL_View, UpdateMaterial_IL_View, ShowMaterial_IL_View, ListMaterial_GD_View, AddMaterial_GD_View, UpdateMaterial_GD_View, ShowMaterial_GD_View, ListMaterial_SMDA_View, AddMaterial_SMDA_View, UpdateMaterial_SMDA_View, ShowMaterial_SMDA_View
 from django.contrib.auth.decorators import login_required
+from django.conf.urls import handler403
+from b11_1.views import custom_permission_denied_view
 
-# urlpatterns += [
-#     path('mgmt/', include('mgmt.urls')),
-# ]
+handler403 = custom_permission_denied_view
 
 urlpatterns = [
     path(r'', views.home, name='home'),
