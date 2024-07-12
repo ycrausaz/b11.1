@@ -38,6 +38,7 @@ $$ language 'plpgsql' STRICT;
 
 insert into b11_1_material (
 is_transferred,
+is_archived,
 positions_nr, -- 1
 kurztext_de, -- 2
 kurztext_fr, -- 3
@@ -125,6 +126,7 @@ spare_part_class_code_id, -- 84
 sparte_id, -- 85
 uebersetzungsstatus_id -- 86
 ) values (
+'f',
 'f',
 (select random_between(1, 100)), -- positions_nr, -- 1
 (select random_string(5)), -- kurztext_de, -- 2
