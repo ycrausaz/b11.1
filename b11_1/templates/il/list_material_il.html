@@ -43,7 +43,7 @@
         <tbody>
             {% for mat in list_material_il_transferred %}
                 <tr>
-                    <td>{{ mat.positions_nr }} {{ mat.kurztext_de }}</td>
+                    <td>{{ mat.positions_nr }} {{ mat.kurztext_de }} ({{ mat.transfer_date|date:"d.m.Y - H:i" }})</td>
                 </tr>
             {% endfor %}
         </tbody>

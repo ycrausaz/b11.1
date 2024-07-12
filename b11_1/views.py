@@ -90,8 +90,7 @@ class ListMaterial_IL_View(grIL_GroupRequiredMixin, ListView):
         if selected_material_ids and action:
             selected_materials = Material.objects.filter(id__in=selected_material_ids)
             if action == 'transfer':
-#                selected_materials.update(is_transferred=True, transfer_date=timezone.now())
-                selected_materials.update(is_transferred=True)
+                selected_materials.update(is_transferred=True, transfer_date=timezone.now())
             elif action == 'delete':
                 selected_materials.delete()
 
