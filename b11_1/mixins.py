@@ -2,6 +2,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.core.exceptions import PermissionDenied
 import re
 from django.http import HttpResponseRedirect
+from .models import Material, G_Partner
 
 class GroupRequiredMixin(UserPassesTestMixin):
     group_required = None
@@ -60,6 +61,21 @@ class FormValidMixin:
         if match:
             item.nato_versorgungs_nr = match.group(1).replace('-', '')
 
+        key = form.cleaned_data['cage_code']
+        print("key = " + key)
+
+        try:
+            lookup_record = G_Partner.objects.get(cage_code=key)
+            lookup_value = lookup_record.gp_nummer
+            print("lookup_value = " + lookup_value)
+        except G_Partner.DoesNotExist:
+            lookup_value = ""
+            print("No lookup")
+
         item.save()
+
+        item.hersteller_nr_gp = lookup_value
+        item.save()
+
         return super().form_valid(form)
 

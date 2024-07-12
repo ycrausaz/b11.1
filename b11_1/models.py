@@ -2,6 +2,13 @@ from django.db import models
 from django.contrib.auth.models import User
 
 
+class G_Partner(models.Model):
+    cage_code = models.CharField(null=True, blank=True, max_length=40)
+    gp_nummer = models.CharField(null=True, blank=True, max_length=40)
+    kreditor_nr = models.CharField(null=True, blank=True, max_length=40)
+    name = models.CharField(null=True, blank=True, max_length=40)
+
+
 class BEGRU(models.Model):
     text = models.CharField(null=True, blank=True, max_length=40)
 

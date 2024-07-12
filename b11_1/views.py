@@ -4,7 +4,7 @@ from django.views.generic import ListView, DetailView
 from django.views.generic.base import View
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from .models import Material, Zuteilung, Auspraegung
+from .models import Material, Zuteilung, Auspraegung, G_Partner
 from .forms_il import MaterialForm_IL
 from .forms_gd import MaterialForm_GD
 from .forms_smda import MaterialForm_SMDA
