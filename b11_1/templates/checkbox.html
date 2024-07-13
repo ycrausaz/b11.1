@@ -1,34 +1,35 @@
 <script>
     // Function to toggle button state for a given form
-    function toggleButtons(formClass) {
-        var checkboxes = document.getElementsByClassName(`material-checkbox-${formClass}`);
+    function toggleButtons(formId) {
+        var checkboxes = document.querySelectorAll(`.material-checkbox[data-form-id="${formId}"]`);
         var anyChecked = Array.from(checkboxes).some(checkbox => checkbox.checked);
-        var buttons = document.getElementsByClassName(`action-button-${formClass}`);
+        var buttons = document.querySelectorAll(`.action-button[data-form-id="${formId}"]`);
         for (var button of buttons) {
             button.disabled = !anyChecked;
         }
     }
 
     // Toggle all checkboxes for a given form when "select-all" checkbox is clicked
-    function selectAllToggle(formClass) {
-        var selectAll = document.getElementById(`select-all-${formClass}`);
-        var checkboxes = document.getElementsByClassName(`material-checkbox-${formClass}`);
-        var isChecked = selectAll.checked;
+    function selectAllToggle(event) {
+        var formId = event.target.getAttribute('data-form-id');
+        var checkboxes = document.querySelectorAll(`.material-checkbox[data-form-id="${formId}"]`);
+        var isChecked = event.target.checked;
         for (var checkbox of checkboxes) {
             checkbox.checked = isChecked;
         }
-        toggleButtons(formClass);
+        toggleButtons(formId);
     }
 
-    // Add onclick event to all checkboxes to toggle buttons independently
-    document.getElementById('select-all-1').onclick = function() { selectAllToggle(1); };
-    document.getElementById('select-all-2').onclick = function() { selectAllToggle(2); };
-
-    document.querySelectorAll('.material-checkbox-1').forEach(function(checkbox) {
-        checkbox.onclick = function() { toggleButtons(1); };
+    // Add event listeners to "select-all" checkboxes
+    document.querySelectorAll('.select-all').forEach(function(selectAllCheckbox) {
+        selectAllCheckbox.addEventListener('click', selectAllToggle);
     });
 
-    document.querySelectorAll('.material-checkbox-2').forEach(function(checkbox) {
-        checkbox.onclick = function() { toggleButtons(2); };
+    // Add onclick event to all material checkboxes to toggle buttons independently
+    document.querySelectorAll('.material-checkbox').forEach(function(checkbox) {
+        checkbox.addEventListener('click', function(event) {
+            var formId = event.target.getAttribute('data-form-id');
+            toggleButtons(formId);
+        });
     });
 </script>
