@@ -13,10 +13,13 @@
             Material
           </a>
           <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-            <li><a class="dropdown-item" href="{% url 'add-material-il' %}">Neues Material definieren</a></li>
-            <li><a class="dropdown-item" href="{% url 'list-material-il' %}">Materialliste</a></li>
-            {% if user|has_group:"grGD, grSMDA" %}
-                <li><a class="dropdown-item" href="{% url 'list-material-il' %}">Archiv</a></li>
+            {% if user|has_group:"grGD" %}
+                <li><a class="dropdown-item" href="{% url 'list-material-gd' %}">Materialliste</a></li>
+                <li><a class="dropdown-item" href="{% url 'list-material-archived-gd' %}">Archiv</a></li>
+            {% endif %}
+            {% if user|has_group:"grSMDA" %}
+                <li><a class="dropdown-item" href="{% url 'list-material-smda' %}">Materialliste</a></li>
+                <li><a class="dropdown-item" href="{% url 'list-material-archived-smda' %}">Archiv</a></li>
             {% endif %}
           </ul>
         </li>

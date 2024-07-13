@@ -76,7 +76,7 @@ class ListMaterial_IL_View(grIL_GroupRequiredMixin, ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         list_material_il_transferred = Material.objects.filter(is_transferred=True, hersteller=self.request.user, is_archived=False)
-        list_material_il = Material.objects.filter(is_transferred=False, hersteller=self.request.user)
+        list_material_il = Material.objects.filter(is_transferred=False, hersteller=self.request.user, is_archived=False)
 
         # Convert positions_nr to integers for sorting
         context['list_material_il_transferred'] = sorted(list_material_il_transferred, key=lambda x: int(x.positions_nr))
@@ -126,7 +126,7 @@ class ListMaterial_GD_View(grGD_GroupRequiredMixin, ListView):
         # Call the superclass method to get the base queryset
         qs = super().get_queryset(**kwargs)
         # Filter the queryset to exclude transferred items
-        qs = qs.filter(is_transferred=True)
+        qs = qs.filter(is_transferred=True, is_archived=False)
         # Cast 'positions_nr' to an IntegerField for proper numeric sorting
         qs = qs.annotate(positions_nr_int=Cast('positions_nr', IntegerField()))
         # Order by the cast integer field
@@ -146,6 +146,21 @@ class ListMaterial_GD_View(grGD_GroupRequiredMixin, ListView):
                 return export_to_excel(selected_materials)
 
         return redirect(reverse('list-material-gd'))
+
+class ListMaterialArchived_GD_View(grGD_GroupRequiredMixin, ListView):
+    model = Material
+    template_name = 'gd/list_material_archived_gd.html'
+    context_object_name = 'list_material_archived_gd'
+
+    def get_queryset(self, **kwargs):
+        # Call the superclass method to get the base queryset
+        qs = super().get_queryset(**kwargs)
+        # Filter the queryset to exclude transferred items
+        qs = qs.filter(is_transferred=True, is_archived=True)
+        # Cast 'positions_nr' to an IntegerField for proper numeric sorting
+        qs = qs.annotate(positions_nr_int=Cast('positions_nr', IntegerField()))
+        # Order by the cast integer field
+        return qs.order_by('positions_nr_int')
 
 class UpdateMaterial_GD_View(grGD_GroupRequiredMixin, SuccessMessageMixin, UpdateView):
     model = Material
@@ -178,7 +193,7 @@ class ListMaterial_SMDA_View(grSMDA_GroupRequiredMixin, ListView):
         # Call the superclass method to get the base queryset
         qs = super().get_queryset(**kwargs)
         # Filter the queryset to exclude transferred items
-        qs = qs.filter(is_transferred=True)
+        qs = qs.filter(is_transferred=True, is_archived=False)
         # Cast 'positions_nr' to an IntegerField for proper numeric sorting
         qs = qs.annotate(positions_nr_int=Cast('positions_nr', IntegerField()))
         # Order by the cast integer field
@@ -198,6 +213,21 @@ class ListMaterial_SMDA_View(grSMDA_GroupRequiredMixin, ListView):
                 return export_to_excel(selected_materials)
 
         return redirect(reverse('list-material-smda'))
+
+class ListMaterialArchived_SMDA_View(grSMDA_GroupRequiredMixin, ListView):
+    model = Material
+    template_name = 'smda/list_material_archived_smda.html'
+    context_object_name = 'list_material_archived_smda'
+
+    def get_queryset(self, **kwargs):
+        # Call the superclass method to get the base queryset
+        qs = super().get_queryset(**kwargs)
+        # Filter the queryset to exclude transferred items
+        qs = qs.filter(is_transferred=True, is_archived=True)
+        # Cast 'positions_nr' to an IntegerField for proper numeric sorting
+        qs = qs.annotate(positions_nr_int=Cast('positions_nr', IntegerField()))
+        # Order by the cast integer field
+        return qs.order_by('positions_nr_int')
 
 class UpdateMaterial_SMDA_View(grSMDA_GroupRequiredMixin, SuccessMessageMixin, UpdateView):
     model = Material
