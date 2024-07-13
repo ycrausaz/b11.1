@@ -97,7 +97,7 @@ class MaterialForm_SMDA(ModelForm):
 'materialart_grunddaten':ReadOnlyForeignKeyWidget(attrs={'readonly':True,'style':readonly_field_style()}),
 'sparte':ReadOnlyForeignKeyWidget(attrs={'readonly':True,'style':readonly_field_style()}),
 'produkthierarchie':forms.TextInput(attrs={'readonly':True,'style':readonly_field_style()}),
-'materialzustandsverwaltung':ReadOnlyForeignKeyWidget(attrs={'readonly':True,'style':readonly_field_style()}),
+'materialzustandsverwaltung':forms.TextInput(attrs={'readonly':True,'style':readonly_field_style()}),
 'rueckfuehrungscode':ReadOnlyForeignKeyWidget(attrs={'readonly':True,'style':readonly_field_style()}),
 'serialnummerprofil':ReadOnlyForeignKeyWidget(attrs={'readonly':True,'style':readonly_field_style()}),
 'spare_part_class_code':ReadOnlyForeignKeyWidget(attrs={'readonly':True,'style':readonly_field_style()}),
