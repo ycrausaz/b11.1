@@ -45,13 +45,10 @@ class CustomLoginView(LoginView):
     def form_valid(self, form):
         response = super().form_valid(form)
         if self.request.user.groups.filter(name='grIL').exists():
-            print("grIL")
             return redirect('list-material-il')
         elif self.request.user.groups.filter(name='grGD').exists():
-            print("grGS")
             return redirect('list-material-gd')
         elif self.request.user.groups.filter(name='grSMDA').exists():
-            print("grSMDA")
             return redirect('list-material-smda')
         return response
 
