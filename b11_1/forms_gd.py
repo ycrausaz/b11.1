@@ -79,7 +79,7 @@ class MaterialForm_GD(ModelForm):
 'hersteller_plz':forms.TextInput(attrs={'readonly':True,'style':readonly_field_style()}),
 'hersteller_ort':forms.TextInput(attrs={'readonly':True,'style':readonly_field_style()}),
 'revision':forms.TextInput(attrs={'readonly':True,'style':readonly_field_style()}),
-'bemerkung':forms.TextInput(attrs={'readonly':True,'style':readonly_field_style()}),
+'bemerkung': forms.Textarea(attrs={'class':'form-control','rows':5,'readonly':True,'style':readonly_field_style()}),
 # --- END IL
 # --- BEGIN SMDA
 'werk_1':ReadOnlyForeignKeyWidget(attrs={'readonly':True,'style':readonly_field_style()}),
