@@ -10,9 +10,9 @@ from django.conf import settings
 from .models import *
 from .widgets import ReadOnlyForeignKeyWidget
 from .utils import readonly_field_style
-from .forms import CustomBooleanChoiceField
+from .forms import CustomBooleanChoiceField, SplitterReadOnlyReadWriteFields
 
-class MaterialForm_GD(ModelForm):
+class MaterialForm_GD(ModelForm, SplitterReadOnlyReadWriteFields):
 
     begru = forms.ModelChoiceField(queryset=BEGRU.objects.all(), required=True)
     materialart_grunddaten = forms.ModelChoiceField(queryset=Materialart.objects.all(), required=True)

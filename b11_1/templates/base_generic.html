@@ -102,7 +102,7 @@ label.required::after {
 }
 
 table {
-    width: 50%;
+    width: 100%;
     border-collapse: collapse;
 }
 td {
@@ -114,6 +114,48 @@ td {
 }
 .required {
     color: red;
+}
+
+.table-container {
+    width: 80%;
+    height: 800px; /* Fixed height for the table */
+    display: flex;
+    border: 1px solid #ddd;
+}
+
+.column {
+    flex: 1; /* Each column takes equal space */
+    border-left: 1px solid #ddd;
+    border-right: 1px solid #ddd;
+    display: flex;
+    flex-direction: column;
+}
+
+.column:first-child {
+    border-left: none; /* Remove the left border for the first column */
+}
+
+.column:last-child {
+    border-right: none; /* Remove the right border for the last column */
+}
+
+.mytitle {
+    background-color: #aaa;
+    border-bottom: 1px solid #ddd;
+    padding: 10px;
+    text-align: center;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    font-size: 1.5em; /* Approximate size of h4 */
+    font-weight: bold;
+}
+
+.content {
+    flex: 1;
+    overflow-y: auto; /* Make the content scrollable if it exceeds the column height */
+    padding: 10px;
+    box-sizing: border-box;
 }
 
 </style>

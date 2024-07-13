@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scrollable Table Columns with Fixed Titles</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+        }
+
+        .table-container {
+            width: 80%;
+            height: 400px; /* Fixed height for the table */
+            display: flex;
+            border: 1px solid #ddd;
+        }
+
+        .column {
+            flex: 1; /* Each column takes equal space */
+            border-left: 1px solid #ddd;
+            border-right: 1px solid #ddd;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .column:first-child {
+            border-left: none; /* Remove the left border for the first column */
+        }
+
+        .column:last-child {
+            border-right: none; /* Remove the right border for the last column */
+        }
+
+        .title {
+            background-color: #aaa;
+            border-bottom: 1px solid #ddd;
+            padding: 10px;
+            text-align: center;
+            position: sticky;
+            top: 0;
+            z-index: 1;
+        }
+
+        .content {
+            flex: 1;
+            overflow-y: auto; /* Make the content scrollable if it exceeds the column height */
+            padding: 10px;
+            box-sizing: border-box;
+        }
+    </style>
+</head>
+<body>
+    <div class="table-container">
+        <div class="column">
+            <div class="title">Column 1 Title</div>
+            <div class="content">
+                <!-- Content for the first column -->
+                <p>This is the first column. Add enough content here to make it scrollable. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse sit amet turpis ac eros interdum fermentum. Integer tristique eros sit amet libero aliquam, ut dictum lorem aliquam. Sed non sapien justo. Ut posuere felis at erat cursus, ac dictum lacus bibendum. Donec vel urna eu tortor aliquam vehicula a in orci.</p>
+                <p>More content in the first column. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse sit amet turpis ac eros interdum fermentum. Integer tristique eros sit amet libero aliquam, ut dictum lorem aliquam. Sed non sapien justo. Ut posuere felis at erat cursus, ac dictum lacus bibendum. Donec vel urna eu tortor aliquam vehicula a in orci.</p>
+            </div>
+        </div>
+        <div class="column">
+            <div class="title">Column 2 Title</div>
+            <div class="content">
+                <!-- Content for the second column -->
+                <p>This is the second column. Add enough content here to make it scrollable. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse sit amet turpis ac eros interdum fermentum. Integer tristique eros sit amet libero aliquam, ut dictum lorem aliquam. Sed non sapien justo. Ut posuere felis at erat cursus, ac dictum lacus bibendum. Donec vel urna eu tortor aliquam vehicula a in orci.</p>
+                <p>More content in the second column. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse sit amet turpis ac eros interdum fermentum. Integer tristique eros sit amet libero aliquam, ut dictum lorem aliquam. Sed non sapien justo. Ut posuere felis at erat cursus, ac dictum lacus bibendum. Donec vel urna eu tortor aliquam vehicula a in orci. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse sit amet turpis ac eros interdum fermentum. Integer tristique eros sit amet libero aliquam, ut dictum lorem aliquam. Sed non sapien justo. Ut posuere felis at erat cursus, ac dictum lacus bibendum. Donec vel urna eu tortor aliquam vehicula a in orci.</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+

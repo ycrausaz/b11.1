@@ -12,8 +12,13 @@
 <form method="post" novalidate>
     {% csrf_token %}
 
+    <div class="table-container">
+        <div class="column">
+            <div class="mytitle">Daten zu pflegen</div>
+            <div class="content">
+
     <table>
-        {% for field in form %}
+        {% for field in form.get_normal_fields %}
             {% if not field.is_hidden %}
                 <tr>
                     <td>
@@ -41,8 +46,50 @@
         {% endfor %}
     </table>
 
+            </div>
+        </div>
+        <div class="column">
+            <div class="mytitle">Angaben</div>
+            <div class="content">
+
+    <table>
+        {% for field in form.get_readonly_fields %}
+            {% if not field.is_hidden %}
+                <tr>
+                    <td>
+                        <label for="{{ field.id_for_label }}">
+                            {{ field.label }}:
+                            {% if field.field.required %}
+                                <span class="required">*</span>
+                            {% endif %}
+                        </label>
+                    </td>
+                    <td>
+                        {{ field }}
+                        {% if field.errors %}
+                            <div class="error">
+                                {% for error in field.errors %}
+                                    <p>{{ error }}</p>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% else %}
+                {{ field }}  <!-- Render hidden fields outside of the table -->
+            {% endif %}
+        {% endfor %}
+    </table>
+
+            </div>
+        </div>
+    </div>
+
+    <br/>
+
     <input type="submit" value="Änderungen speichern" class="btn btn-primary">
     <input type="button" value="Zurück" class="btn btn-secondary" onClick="javascript:history.go(-1);">
 </form>
+
    
 {% endblock %}

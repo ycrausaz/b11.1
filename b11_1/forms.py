@@ -25,3 +25,13 @@ class CustomBooleanChoiceField(forms.TypedChoiceField):
             raise forms.ValidationError(self.error_messages['required'], code='required')
         super().validate(value)
 
+class SplitterReadOnlyReadWriteFields(forms.Form):
+    def get_readonly_fields(self):
+        for field in self:
+            if field.field.widget.attrs.get('readonly', False):
+                yield field
+
+    def get_normal_fields(self):
+        for field in self:
+            if not field.field.widget.attrs.get('readonly', False):
+                yield field

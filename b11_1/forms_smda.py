@@ -10,9 +10,9 @@ from django.conf import settings
 from .models import *
 from .widgets import ReadOnlyForeignKeyWidget
 from .utils import readonly_field_style
-from .forms import CustomBooleanChoiceField
+from .forms import CustomBooleanChoiceField, SplitterReadOnlyReadWriteFields
 
-class MaterialForm_SMDA(ModelForm):
+class MaterialForm_SMDA(ModelForm, SplitterReadOnlyReadWriteFields):
 
     werk_1 = forms.ModelChoiceField(queryset=Werk_1.objects.all(), required=True)
     werk_2 = forms.ModelChoiceField(queryset=Werk_2.objects.all(), required=False)
