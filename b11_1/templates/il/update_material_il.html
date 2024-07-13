@@ -12,26 +12,37 @@
 <form method="post" novalidate>
     {% csrf_token %}
 
+    <table>
         {% for field in form %}
-            <div>
-                <label for="{{ field.id_for_label }}">
-                    {{ field.label }}:
-                    {% if field.field.required %}
-                        <span class="required">*</span>
-                    {% endif %}
-                </label>
-                {{ field }}
-                {% if field.errors %}
-                    <div class="error">
-                        {% for error in field.errors %}
-                            <p>{{ error }}</p>
-                        {% endfor %}
-                    </div>
-                {% endif %}
-            </div>
+            {% if not field.is_hidden %}
+                <tr>
+                    <td>
+                        <label for="{{ field.id_for_label }}">
+                            {{ field.label }}:
+                            {% if field.field.required %}
+                                <span class="required">*</span>
+                            {% endif %}
+                        </label>
+                    </td>
+                    <td>
+                        {{ field }}
+                        {% if field.errors %}
+                            <div class="error">
+                                {% for error in field.errors %}
+                                    <p>{{ error }}</p>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% else %}
+                {{ field }}  <!-- Render hidden fields outside of the table -->
+            {% endif %}
         {% endfor %}
-      <input type="submit" value="Änderungen speichern" class="btn btn-primary">
-      <input type=button value="Zurück" class="btn btn-secondary" onClick="javascript:history.go(-1);">
+    </table>
+    
+    <input type="submit" value="Änderungen speichern" class="btn btn-primary">
+    <input type="button" value="Zurück" class="btn btn-secondary" onClick="javascript:history.go(-1);">
 </form>
    
 {% endblock %}
