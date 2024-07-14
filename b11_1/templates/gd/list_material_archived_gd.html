@@ -15,7 +15,7 @@
         <tbody>
             {% for mat in list_material_archived_gd %}
                 <tr>
-                    <td>{{ mat.id }} {{ mat.positions_nr }} <a href="{% url 'update-material-gd' mat.id %}">{{ mat.kurztext_de }}</a></td>
+                    <td>{{ mat.id }} {{ mat.positions_nr }} <a href="{% url 'show-material-gd' mat.id %}">{{ mat.kurztext_de }}</a></td>
                 </tr>
             {% endfor %}
         </tbody>

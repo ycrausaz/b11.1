@@ -53,7 +53,7 @@
             <div class="content">
 
     <table>
-        {% for field in form.get_readonly_fields %}
+        {% for field in form %}
             {% if not field.is_hidden %}
                 <tr>
                     <td>
@@ -65,18 +65,16 @@
                         </label>
                     </td>
                     <td>
-                        {{ field }}
-                        {% if field.errors %}
+                        {{ field.value|default_if_none:"" }}  <!-- Render field as plain text -->
+                        {% for error in field.errors %}
                             <div class="error">
-                                {% for error in field.errors %}
-                                    <p>{{ error }}</p>
-                                {% endfor %}
+                                <p>{{ error }}</p>
                             </div>
-                        {% endif %}
+                        {% endfor %}
                     </td>
                 </tr>
             {% else %}
-                {{ field }}  <!-- Render hidden fields outside of the table -->
+                {{ field }}  <!-- Render hidden fields normally -->
             {% endif %}
         {% endfor %}
     </table>
