@@ -4,13 +4,20 @@
 {% block content %}
 <h1>Materialliste (Grunddaten-Team)</h1>
 <br/>
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}" role="alert">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
 <form method="post" id="material-form-1">
     {% csrf_token %}
     <table class="table table-striped table-hover">
         <thead>
             <tr>
                 <th><input type="checkbox" class="select-all" data-form-id="1"></th>
-                <th>Material/ien ({{ list_material_gd|length }})</th>
+                <th>Offenes/e Material/ien ({{ list_material_gd|length }})</th>
             </tr>
         </thead>
         <tbody>
@@ -25,9 +32,35 @@
     <br/>
     <button type="submit" name="action" value="transfer" class="btn btn-primary action-button" data-form-id="1" disabled>Material zurück zum Herstellen senden</button>
     <button type="submit" name="action" value="export" class="btn btn-primary action-button" data-form-id="1" disabled>"SAP input" generieren</button>
+    <button type="submit" name="action" value="archive" class="btn btn-danger action-button" data-form-id="1" disabled>Archivieren</button>
     <button type="submit" name="action" value="delete" class="btn btn-danger action-button" data-form-id="1" disabled>Löschen</button>
 </form>
+
 <br/>
+
+<form method="post" id="material-form-1">
+    {% csrf_token %}
+    <table class="table table-striped table-hover">
+        <thead>
+            <tr>
+                <th><input type="checkbox" class="select-all" data-form-id="1"></th>
+                <th>Archivierte/s Material/ien ({{ list_material_archived_gd|length }})</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for mat in list_material_archived_gd %}
+                <tr>
+                    <td><input type="checkbox" name="selected_materials" value="{{ mat.id }}" class="material-checkbox" data-form-id="1"></td>
+                    <td>{{ mat.id }} {{ mat.positions_nr }} <a href="{% url 'show-material-gd' mat.id %}">{{ mat.kurztext_de }}</a></td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <br/>
+    <button type="submit" name="action" value="delete" class="btn btn-danger action-button" data-form-id="1" disabled>Löschen</button>
+</form>
+
+
 <hr><br/>
 
 {% include 'checkbox.html' %}

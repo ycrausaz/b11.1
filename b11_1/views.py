@@ -68,7 +68,6 @@ class ListMaterial_View(ListView):
 class ListMaterial_IL_View(grIL_GroupRequiredMixin, ListView):
     model = Material
     template_name = 'il/list_material_il.html'
-    context_object_name = 'list_material_il'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -117,7 +116,6 @@ class ShowMaterial_IL_View(grIL_GroupRequiredMixin, SuccessMessageMixin, DetailV
 class ListMaterial_GD_View(grGD_GroupRequiredMixin, ListView):
     model = Material
     template_name = 'gd/list_material_gd.html'
-    context_object_name = 'list_material_gd'
 
     def get_queryset(self, **kwargs):
         # Call the superclass method to get the base queryset
@@ -129,6 +127,16 @@ class ListMaterial_GD_View(grGD_GroupRequiredMixin, ListView):
         # Order by the cast integer field
         return qs.order_by('positions_nr_int')
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        list_material_archived_gd = Material.objects.filter(is_transferred=True, is_archived=True)
+        list_material_gd = Material.objects.filter(is_transferred=True, is_archived=False)
+
+        # Convert positions_nr to integers for sorting
+        context['list_material_archived_gd'] = sorted(list_material_archived_gd, key=lambda x: int(x.positions_nr))
+        context['list_material_gd'] = sorted(list_material_gd, key=lambda x: int(x.positions_nr))
+        return context
+
     def post(self, request, *args, **kwargs):
         selected_material_ids = request.POST.getlist('selected_materials')
         action = request.POST.get('action')
@@ -137,6 +145,8 @@ class ListMaterial_GD_View(grGD_GroupRequiredMixin, ListView):
             selected_materials = Material.objects.filter(id__in=selected_material_ids)
             if action == 'transfer':
                 selected_materials.update(is_transferred=False, transfer_date=timezone.now())
+            elif action == 'archive':
+                selected_materials.update(is_archived=True)
             elif action == 'delete':
                 selected_materials.delete()
             elif action == 'export':
