@@ -113,3 +113,10 @@ class MaterialForm_GD(ModelForm, SplitterReadOnlyReadWriteFields):
 # --- END SMDA
         }
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        tooltips = HelpTooltip.objects.all()
+        for field_name, field in self.fields.items():
+            tooltip = tooltips.filter(field_name=field_name).first()
+            if tooltip:
+                field.help_text = tooltip.content

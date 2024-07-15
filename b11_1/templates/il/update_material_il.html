@@ -1,5 +1,5 @@
 {% extends "base_generic.html" %}
-
+{% load help_tags %}
 {% block content %}
     <h1>Material aktualisieren</h1>
     <br/>
@@ -8,21 +8,19 @@
           Das Material wurde aktualisiert
       </div>
     {% endif %}
-
 <form method="post" novalidate>
     {% csrf_token %}
-
     <table>
         {% for field in form %}
             {% if not field.is_hidden %}
                 <tr>
                     <td>
-                        <label for="{{ field.id_for_label }}">
-                            {{ field.label }}:
+                        {% with label_with_tooltip=field|add_tooltip %}
+                            {{ label_with_tooltip|safe }}:
                             {% if field.field.required %}
                                 <span class="required">*</span>
                             {% endif %}
-                        </label>
+                        {% endwith %}
                     </td>
                     <td>
                         {{ field }}
@@ -40,8 +38,7 @@
             {% endif %}
         {% endfor %}
     </table>
-
-    </br>
+    <br/>
     
     <input type="submit" value="Änderungen speichern" class="btn btn-primary">
     <input type="button" value="Zurück" class="btn btn-secondary" onClick="javascript:history.go(-1);">

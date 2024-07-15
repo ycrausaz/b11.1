@@ -51,9 +51,11 @@
 
 {{ form.media }}
 
-    <script>
-
-    </script>
+<script>
+    $(function () {
+        $('[data-toggle="tooltip"]').tooltip();
+    });
+</script>
 
 <style>
 .select2-container--bootstrap-5 .select2--small.select2-selection {

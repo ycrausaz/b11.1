@@ -113,3 +113,11 @@ class MaterialForm_SMDA(ModelForm, SplitterReadOnlyReadWriteFields):
 'verteilung_an_ruag':forms.TextInput(attrs={'readonly':True,'style':readonly_field_style()}),
 # --- END GD
         }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        tooltips = HelpTooltip.objects.all()
+        for field_name, field in self.fields.items():
+            tooltip = tooltips.filter(field_name=field_name).first()
+            if tooltip:
+                field.help_text = tooltip.content
