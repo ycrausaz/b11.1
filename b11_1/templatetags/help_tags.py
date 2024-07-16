@@ -9,4 +9,4 @@ def add_tooltip(field):
     tooltip = HelpTooltip.objects.filter(field_name=field.name).first()
     if tooltip:
         return mark_safe(f'<label for="{field.id_for_label}" data-toggle="tooltip" title="{tooltip.content}">{field.label}</label>')
-    return field.label_tag()
+    return field.label
