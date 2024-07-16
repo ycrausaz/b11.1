@@ -147,6 +147,8 @@ class ListMaterial_GD_View(grGD_GroupRequiredMixin, ListView):
                 selected_materials.update(is_transferred=False, transfer_date=timezone.now())
             elif action == 'archive':
                 selected_materials.update(is_archived=True)
+            elif action == 'unarchive':
+                selected_materials.update(is_archived=False)
             elif action == 'delete':
                 selected_materials.delete()
             elif action == 'export':
@@ -228,6 +230,10 @@ class ListMaterial_SMDA_View(grSMDA_GroupRequiredMixin, ListView):
             selected_materials = Material.objects.filter(id__in=selected_material_ids)
             if action == 'transfer':
                 selected_materials.update(is_transferred=False, transfer_date=timezone.now())
+            elif action == 'archive':
+                selected_materials.update(is_archived=True)
+            elif action == 'unarchive':
+                selected_materials.update(is_archived=False)
             elif action == 'delete':
                 selected_materials.delete()
             elif action == 'export':
