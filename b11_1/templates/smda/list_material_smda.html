@@ -24,7 +24,7 @@
             {% for mat in list_material_smda %}
                 <tr>
                     <td><input type="checkbox" name="selected_materials" value="{{ mat.id }}" class="material-checkbox" data-form-id="1"></td>
-                    <td>{{ mat.id }} {{ mat.positions_nr }} <a href="{% url 'update-material-gd' mat.id %}">{{ mat.kurztext_de }}</a></td>
+                    <td>{{ mat.id }} {{ mat.positions_nr }} <a href="{% url 'update-material-smda' mat.id %}">{{ mat.kurztext_de }}</a></td>
                 </tr>
             {% endfor %}
         </tbody>
@@ -51,7 +51,7 @@
             {% for mat in list_material_archived_smda %}
                 <tr>
                     <td><input type="checkbox" name="selected_materials" value="{{ mat.id }}" class="material-checkbox" data-form-id="1"></td>
-                    <td>{{ mat.id }} {{ mat.positions_nr }} <a href="{% url 'show-material-gd' mat.id %}">{{ mat.kurztext_de }}</a></td>
+                    <td>{{ mat.id }} {{ mat.positions_nr }} <a href="{% url 'show-material-smda' mat.id %}">{{ mat.kurztext_de }}</a></td>
                 </tr>
             {% endfor %}
         </tbody>
