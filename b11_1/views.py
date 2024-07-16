@@ -199,7 +199,6 @@ class ShowMaterial_GD_View(grGD_GroupRequiredMixin, SuccessMessageMixin, DetailV
 class ListMaterial_SMDA_View(grSMDA_GroupRequiredMixin, ListView):
     model = Material
     template_name = 'smda/list_material_smda.html'
-    context_object_name = 'list_material_smda'
 
     def get_queryset(self, **kwargs):
         # Call the superclass method to get the base queryset
@@ -210,6 +209,16 @@ class ListMaterial_SMDA_View(grSMDA_GroupRequiredMixin, ListView):
         qs = qs.annotate(positions_nr_int=Cast('positions_nr', IntegerField()))
         # Order by the cast integer field
         return qs.order_by('positions_nr_int')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        list_material_archived_smda = Material.objects.filter(is_transferred=True, is_archived=True)
+        list_material_smda = Material.objects.filter(is_transferred=True, is_archived=False)
+
+        # Convert positions_nr to integers for sorting
+        context['list_material_archived_smda'] = sorted(list_material_archived_smda, key=lambda x: int(x.positions_nr))
+        context['list_material_smda'] = sorted(list_material_smda, key=lambda x: int(x.positions_nr))
+        return context
 
     def post(self, request, *args, **kwargs):
         selected_material_ids = request.POST.getlist('selected_materials')
