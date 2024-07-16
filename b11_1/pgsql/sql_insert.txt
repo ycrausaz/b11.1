@@ -1,4 +1,6 @@
 insert into b11_1_material (
+hersteller,
+is_archived,
 is_transferred,
 positions_nr,
 kurztext_de,
@@ -80,6 +82,8 @@ verteilung_cheops,
 zuteilung_id,
 auspraegung_id
 ) values (
+'grIL_01',
+'f',
 't',
 1,
 'Kurztext DE XYZ',
@@ -162,6 +166,8 @@ Null,
 3
 );
 insert into b11_1_material (
+hersteller,
+is_archived,
 is_transferred,
 positions_nr,
 kurztext_de,
@@ -243,6 +249,8 @@ verteilung_cheops,
 zuteilung_id,
 auspraegung_id
 ) values (
+'grIL_02',
+'f',
 't',
 2,
 'Kurztext DE 2',
@@ -325,6 +333,8 @@ Null,
 2
 );
 insert into b11_1_material (
+hersteller,
+is_archived,
 is_transferred,
 positions_nr,
 kurztext_de,
@@ -406,6 +416,8 @@ verteilung_cheops,
 zuteilung_id,
 auspraegung_id
 ) values (
+'grIL_03',
+'f',
 't',
 3,
 'Kurztext DE 3',
@@ -488,6 +500,8 @@ Null,
 4
 );
 insert into b11_1_material (
+hersteller,
+is_archived,
 is_transferred,
 positions_nr,
 kurztext_de,
@@ -569,6 +583,8 @@ verteilung_cheops,
 zuteilung_id,
 auspraegung_id
 ) values (
+'grIL_01',
+'f',
 't',
 4,
 'asdfasdfasdfasdf',

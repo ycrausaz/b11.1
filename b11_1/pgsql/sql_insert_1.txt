@@ -1,4 +1,6 @@
 insert into b11_1_material (
+hersteller,
+is_archived,
 is_transferred,
 positions_nr,
 kurztext_de,
@@ -80,6 +82,8 @@ verteilung_cheops,
 zuteilung_id,
 auspraegung_id
 ) values (
+'grIL_01',
+'f',
 't',
 1,
 'Kurztext DE XYZ',
