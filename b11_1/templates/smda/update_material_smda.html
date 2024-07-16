@@ -1,5 +1,5 @@
 {% extends "base_generic.html" %}
-
+{% load help_tags %}
 {% block content %}
     <h1>Material aktualisieren</h1>
     <br/>
@@ -22,12 +22,12 @@
             {% if not field.is_hidden %}
                 <tr>
                     <td>
-                        <label for="{{ field.id_for_label }}">
-                            {{ field.label }}:
+                        {% with label_with_tooltip=field|add_tooltip %}
+                            {{ label_with_tooltip|safe }}:
                             {% if field.field.required %}
                                 <span class="required">*</span>
                             {% endif %}
-                        </label>
+                        {% endwith %}
                     </td>
                     <td>
                         {{ field }}
