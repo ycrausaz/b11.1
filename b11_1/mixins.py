@@ -34,14 +34,19 @@ class FormValidMixin:
         print("item.hersteller = " + item.hersteller)
         item.gewichtseinheit = "KG"
         print("item.gewichtseinheit = " + item.gewichtseinheit)
-        item.nsn_gruppe_klasse = "XXXXXXXXXX"
-        print("item.nsn_gruppe_klasse = " + item.nsn_gruppe_klasse)
-        item.nato_versorgungs_nr = "XXXXXXXXXX"
-        print("item.nato_versorgungs_nr = " + item.nato_versorgungs_nr)
+#        item.nsn_gruppe_klasse = "XXXXXXXXXX"
+#        print("item.nsn_gruppe_klasse = " + item.nsn_gruppe_klasse)
+#        item.nato_versorgungs_nr = "XXXXXXXXXX"
+#        print("item.nato_versorgungs_nr = " + item.nato_versorgungs_nr)
         item.einheit_l_b_h = "MM"
         print("item.einheit_l_b_h = " + item.einheit_l_b_h)
         item.waehrung = "CHF"
         print("item.waehrung = " + item.waehrung)
+        if item.chargenpflicht == True:
+            item.materialzustandsverwaltung = "2"
+        elif item.chargenpflicht == False:
+            item.materialzustandsverwaltung = "1"
+        print("item.materialzustandsverwaltung = " + item.materialzustandsverwaltung)
 
         pattern = r'^\d{4}-\d{2}-\d{3}-\d{4}$'
         if len(item.nato_stock_number) > 0:

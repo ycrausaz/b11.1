@@ -178,16 +178,6 @@ class UpdateMaterial_GD_View(grGD_GroupRequiredMixin, SuccessMessageMixin, Updat
     success_url = reverse_lazy('list-material-gd')
     success_message = "Das Material wurde erfolgreich aktualisiert."
 
-    def form_valid(self, form):
-        item = form.save(commit=False)
-        if item.chargenpflicht == True:
-            item.materialzustandsverwaltung = "1"
-        elif item.chargenpflicht == False:
-            item.materialzustandsverwaltung = "2"
-        print("item.materialzustandsverwaltung = " + item.materialzustandsverwaltung)
-        item.save()
-        return super().form_valid(form)
-
 class ShowMaterial_GD_View(grGD_GroupRequiredMixin, SuccessMessageMixin, DetailView):
     model = Material
     template_name = 'gd/show_material_gd.html'
