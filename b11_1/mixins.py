@@ -77,8 +77,6 @@ class FormValidMixin:
             lookup_value = ""
             print("No lookup")
 
-        item.save()
-
         item.hersteller_nr_gp = lookup_value
         item.save()
 
