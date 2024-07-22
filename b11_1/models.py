@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     is_first_login = models.BooleanField(default=True)
-    failed_login_attempts = models.IntegerField(default=0)  # Track failed login attempts
+    failed_login_attempts = models.IntegerField(default=0)  # Add this line
 
     def __str__(self):
         return self.user.username

@@ -7,6 +7,7 @@ from django.contrib.auth.decorators import login_required
 from django.conf.urls import handler403
 from b11_1.views import custom_permission_denied_view
 from django.contrib.auth.views import PasswordChangeDoneView, PasswordResetView, PasswordResetConfirmView, PasswordResetCompleteView
+from django.contrib.auth import views as auth_views
 
 handler403 = custom_permission_denied_view
 
@@ -17,6 +18,7 @@ urlpatterns = [
     path('password_change/', CustomPasswordChangeView.as_view(), name='password_change'),
     path('password_change/done/', PasswordChangeDoneView.as_view(), name='password_change_done'),
     path('password_reset/', PasswordResetView.as_view(), name='password_reset'),
+    path('password_reset/done/', auth_views.PasswordResetDoneView.as_view(), name='password_reset_done'),
     path('reset/<uidb64>/<token>/', PasswordResetConfirmView.as_view(), name='password_reset_confirm'),
     path('reset/done/', PasswordResetCompleteView.as_view(), name='password_reset_complete'),
     path('list_material', login_required(ListMaterial_View.as_view()), name='list-material'),

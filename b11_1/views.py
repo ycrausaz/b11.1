@@ -28,7 +28,18 @@ from .mixins import FormValidMixin
 from django.template import RequestContext
 from .forms import CustomPasswordChangeForm
 from b11_1.models import Profile
+from django.contrib.auth.models import User
+from django.core.exceptions import ObjectDoesNotExist
+from django.contrib.auth.views import LoginView
+from django.contrib.sites.shortcuts import get_current_site
+from django.utils.http import urlsafe_base64_encode
+from django.utils.encoding import force_bytes
+from django.contrib.auth.tokens import default_token_generator
+from django.core.mail import send_mail
+from django.conf import settings
+import logging
 
+logger = logging.getLogger(__name__)
 
 def custom_permission_denied_view(request, exception=None):
     response = render(request, '403.html')
@@ -40,14 +51,47 @@ def home(request):
 
 class CustomLoginView(LoginView):
     template_name = 'login_user.html'
-
     def form_invalid(self, form):
-        messages.error(self.request, "Benutzername und/oder Passwort ungültig.")
+        username = form.cleaned_data.get('username')
+        try:
+            user = User.objects.get(username=username)
+            profile = user.profile
+            profile.failed_login_attempts += 1
+            profile.save()
+
+            if profile.failed_login_attempts >= 3:
+                current_site = get_current_site(self.request)
+                mail_subject = 'Reset your password'
+                uid = urlsafe_base64_encode(force_bytes(user.pk))
+                token = default_token_generator.make_token(user)
+                reset_link = reverse('password_reset_confirm', kwargs={'uidb64': uid, 'token': token})
+                reset_url = f'http://{current_site.domain}{reset_link}'
+                message = f'It seems you have failed to login 3 times. Please reset your password using the following link:\n{reset_url}'
+                send_mail(mail_subject, message, settings.DEFAULT_FROM_EMAIL, [user.email])
+                logger.info(f'Password reset email sent to user: {username}')
+                
+                messages.warning(
+                    self.request,
+                    "You have entered an incorrect password 3 times. "
+                    "A password reset link has been sent to your email."
+                )
+                
+                # Reset the failed login attempts after sending the email
+                profile.failed_login_attempts = 0
+                profile.save()
+            else:
+                messages.error(self.request, "Benutzername und/oder Passwort ungültig.")
+        except User.DoesNotExist:
+            messages.error(self.request, "Benutzername und/oder Passwort ungültig.")
+        
         return self.render_to_response(self.get_context_data(form=form))
 
     def form_valid(self, form):
+        print("form_valid")
         response = super().form_valid(form)
         profile, created = Profile.objects.get_or_create(user=self.request.user)
+        profile.failed_login_attempts = 0  # Reset failed attempts on successful login
+        profile.save()
         if profile.is_first_login:
             return redirect('password_change')
         if self.request.user.groups.filter(name='grIL').exists():
