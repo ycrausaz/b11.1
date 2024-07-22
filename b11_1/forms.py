@@ -1,6 +1,14 @@
 from django import forms
 from .widgets import ReadOnlyForeignKeyWidget
 from .utils import readonly_field_style
+from django.contrib.auth.forms import PasswordChangeForm
+from django.contrib.auth.password_validation import validate_password
+
+class CustomPasswordChangeForm(PasswordChangeForm):
+    def clean_new_password1(self):
+        password = self.cleaned_data.get('new_password1')
+        validate_password(password, self.user)
+        return password
 
 class CustomBooleanChoiceField(forms.TypedChoiceField):
     BOOLEAN_CHOICES = (

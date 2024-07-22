@@ -1,4 +1,4 @@
-from django.contrib.auth.views import LoginView
+from django.contrib.auth.views import LoginView, PasswordChangeView
 from django.shortcuts import render, redirect
 from django.views.generic import ListView, DetailView
 from django.views.generic.base import View
@@ -26,6 +26,8 @@ from django.contrib import messages
 import re
 from .mixins import FormValidMixin
 from django.template import RequestContext
+from .forms import CustomPasswordChangeForm
+from b11_1.models import Profile
 
 
 def custom_permission_denied_view(request, exception=None):
@@ -38,12 +40,16 @@ def home(request):
 
 class CustomLoginView(LoginView):
     template_name = 'login_user.html'
+
     def form_invalid(self, form):
         messages.error(self.request, "Benutzername und/oder Passwort ungültig.")
         return self.render_to_response(self.get_context_data(form=form))
 
     def form_valid(self, form):
         response = super().form_valid(form)
+        profile, created = Profile.objects.get_or_create(user=self.request.user)
+        if profile.is_first_login:
+            return redirect('password_change')
         if self.request.user.groups.filter(name='grIL').exists():
             return redirect('list-material-il')
         elif self.request.user.groups.filter(name='grGD').exists():
@@ -53,7 +59,19 @@ class CustomLoginView(LoginView):
         return response
 
     def get(self, request, *args, **kwargs):
-        return render(request, 'login_user.html', {}) 
+        return render(request, 'login_user.html', {})
+
+class CustomPasswordChangeView(PasswordChangeView):
+    form_class = CustomPasswordChangeForm
+    success_url = reverse_lazy('password_change_done')
+    template_name = 'password_change.html'
+
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        user = form.save()
+        user.profile.is_first_login = False
+        user.profile.save()
+        return response
 
 class UserLogout(View):
     def get(self, request, *args, **kwargs):

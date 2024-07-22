@@ -2,6 +2,15 @@ from django.db import models
 from django.contrib.auth.models import User
 
 
+class Profile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    is_first_login = models.BooleanField(default=True)
+    failed_login_attempts = models.IntegerField(default=0)  # Track failed login attempts
+
+    def __str__(self):
+        return self.user.username
+
+
 class HelpTooltip(models.Model):
     field_name = models.CharField(max_length=100, unique=True)
     content = models.TextField()
