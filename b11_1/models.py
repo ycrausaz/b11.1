@@ -1,3 +1,5 @@
+# b11_1/models.py
+
 from django.db import models
 from django.contrib.auth.models import User
 
@@ -10,6 +12,9 @@ class Profile(models.Model):
     def __str__(self):
         return self.user.username
 
+    class Meta:
+        app_label = 'b11_1'
+
 
 class HelpTooltip(models.Model):
     field_name = models.CharField(max_length=100, unique=True)
@@ -18,12 +23,18 @@ class HelpTooltip(models.Model):
     def __str__(self):
         return f"Help for {self.field_name}"
 
+    class Meta:
+        app_label = 'b11_1'
+
 
 class G_Partner(models.Model):
     cage_code = models.CharField(null=True, blank=True, max_length=40)
     gp_nummer = models.CharField(null=True, blank=True, max_length=40)
     kreditor_nr = models.CharField(null=True, blank=True, max_length=40)
     name = models.CharField(null=True, blank=True, max_length=40)
+
+    class Meta:
+        app_label = 'b11_1'
 
 
 class BEGRU(models.Model):
@@ -32,12 +43,18 @@ class BEGRU(models.Model):
     def __str__(self):
         return self.text
 
+    class Meta:
+        app_label = 'b11_1'
+
 
 class Basismengeneinheit(models.Model):
     text = models.CharField(null=True, blank=True, max_length=40)
 
     def __str__(self):
         return self.text
+
+    class Meta:
+        app_label = 'b11_1'
 
 
 class Materialart(models.Model):
@@ -46,12 +63,18 @@ class Materialart(models.Model):
     def __str__(self):
         return self.text
 
+    class Meta:
+        app_label = 'b11_1'
+
 
 class Sparte(models.Model):
     text = models.CharField(null=True, blank=True, max_length=40)
 
     def __str__(self):
         return self.text
+
+    class Meta:
+        app_label = 'b11_1'
 
 
 class Rueckfuehrungscode(models.Model):
@@ -60,12 +83,18 @@ class Rueckfuehrungscode(models.Model):
     def __str__(self):
         return self.text
 
+    class Meta:
+        app_label = 'b11_1'
+
 
 class Serialnummerprofil(models.Model):
     text = models.CharField(null=True, blank=True, max_length=40)
 
     def __str__(self):
         return self.text
+
+    class Meta:
+        app_label = 'b11_1'
 
 
 class SparePartClassCode(models.Model):
@@ -74,12 +103,18 @@ class SparePartClassCode(models.Model):
     def __str__(self):
         return self.text
 
+    class Meta:
+        app_label = 'b11_1'
+
 
 class Uebersetzungsstatus(models.Model):
     text = models.CharField(null=True, blank=True, max_length=40)
 
     def __str__(self):
         return self.text
+
+    class Meta:
+        app_label = 'b11_1'
 
 
 class Gefahrgutkennzeichen(models.Model):
@@ -88,12 +123,18 @@ class Gefahrgutkennzeichen(models.Model):
     def __str__(self):
         return self.text
 
+    class Meta:
+        app_label = 'b11_1'
+
 
 class Werk_1(models.Model):
     text = models.CharField(null=True, blank=True, max_length=40)
 
     def __str__(self):
         return self.text
+
+    class Meta:
+        app_label = 'b11_1'
 
 
 class Werk_2(models.Model):
@@ -102,12 +143,18 @@ class Werk_2(models.Model):
     def __str__(self):
         return self.text
 
+    class Meta:
+        app_label = 'b11_1'
+
 
 class Werk_3(models.Model):
     text = models.CharField(null=True, blank=True, max_length=40)
 
     def __str__(self):
         return self.text
+
+    class Meta:
+        app_label = 'b11_1'
 
 
 class Werk_4(models.Model):
@@ -116,12 +163,18 @@ class Werk_4(models.Model):
     def __str__(self):
         return self.text
 
+    class Meta:
+        app_label = 'b11_1'
+
 
 class AllgemeinePositionstypengruppe(models.Model):
     text = models.CharField(null=True, blank=True, max_length=40)
 
     def __str__(self):
         return self.text
+
+    class Meta:
+        app_label = 'b11_1'
 
 
 class Vertriebsweg(models.Model):
@@ -130,12 +183,18 @@ class Vertriebsweg(models.Model):
     def __str__(self):
         return self.text
 
+    class Meta:
+        app_label = 'b11_1'
+
 
 class Auszeichnungsfeld(models.Model):
     text = models.CharField(null=True, blank=True, max_length=40)
 
     def __str__(self):
         return self.text
+
+    class Meta:
+        app_label = 'b11_1'
 
 
 class Fertigungssteuerer(models.Model):
@@ -144,12 +203,18 @@ class Fertigungssteuerer(models.Model):
     def __str__(self):
         return self.text
 
+    class Meta:
+        app_label = 'b11_1'
+
 
 class Sonderablauf(models.Model):
     text = models.CharField(null=True, blank=True, max_length=40)
 
     def __str__(self):
         return self.text
+
+    class Meta:
+        app_label = 'b11_1'
 
 
 class Temperaturbedingung(models.Model):
@@ -158,12 +223,18 @@ class Temperaturbedingung(models.Model):
     def __str__(self):
         return self.text
 
+    class Meta:
+        app_label = 'b11_1'
+
 
 class Bewertungsklasse(models.Model):
     text = models.CharField(null=True, blank=True, max_length=40)
 
     def __str__(self):
         return self.text
+
+    class Meta:
+        app_label = 'b11_1'
 
 
 class Zuteilung(models.Model):
@@ -172,12 +243,18 @@ class Zuteilung(models.Model):
     def __str__(self):
         return self.text
 
+    class Meta:
+        app_label = 'b11_1'
+
 
 class Auspraegung(models.Model):
     text = models.CharField(null=True, blank=True, max_length=40)
 
     def __str__(self):
         return self.text
+
+    class Meta:
+        app_label = 'b11_1'
 
 
 class Material(models.Model):
@@ -284,4 +361,5 @@ class Material(models.Model):
 
     class Meta:
         ordering = ["positions_nr"]
+        app_label = 'b11_1'
 

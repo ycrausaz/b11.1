@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'b11_1',
+    'logs',
 ]
 
 MIDDLEWARE = [
@@ -85,8 +86,18 @@ DATABASES = {
         'PASSWORD': 'b11-1_user',
         'HOST': '127.0.0.1',
         'PORT': '5432',
-    }
+    },
+    'logs_db':{ 
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'b11-1-log',
+        'USER': 'b11-1_user',
+        'PASSWORD': 'b11-1_user',
+        'HOST': '127.0.0.1',
+        'PORT': '5432',
+    },
 }
+
+DATABASE_ROUTERS = ['logs.db_router.LogsDbRouter']
 
 
 # Password validation
@@ -145,13 +156,25 @@ DEFAULT_FROM_EMAIL = 'yann.crausaz@gmail.com'
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '{levelname} {asctime} {module} {process:d} {thread:d} {message}',
+            'style': '{',
+        },
+    },
     'handlers': {
         'console': {
+            'level': 'INFO',
             'class': 'logging.StreamHandler',
+        },
+        'db': {
+            'level': 'INFO',
+            'class': 'logs.handlers.DatabaseLogHandler',
+            'formatter': 'verbose',
         },
     },
     'root': {
-        'handlers': ['console'],
+        'handlers': ['console', 'db'],
         'level': 'INFO',
     },
 }
