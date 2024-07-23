@@ -1,3 +1,0 @@
-python manage.py makemigrations logs
-python manage.py migrate logs --database=logs_db
-python manage.py migrate
