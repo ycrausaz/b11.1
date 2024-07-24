@@ -88,10 +88,26 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+-- Create the function to return a random value from a predefined list
+CREATE OR REPLACE FUNCTION random_hersteller()
+RETURNS TEXT AS $$
+DECLARE
+    choices TEXT[] := '{grIL_01, grIL_02, grIL_03}';
+    selected_value TEXT;
+BEGIN
+    -- Select a random value from the choices array
+    selected_value := choices[1 + FLOOR(RANDOM() * ARRAY_LENGTH(choices, 1))];
+
+    -- Return the selected value
+    RETURN selected_value;
+END;
+$$ LANGUAGE plpgsql;
+
 
 insert into b11_1_material (
 is_transferred,
 is_archived,
+hersteller,
 positions_nr, -- 1
 kurztext_de, -- 2
 kurztext_fr, -- 3
@@ -181,6 +197,7 @@ uebersetzungsstatus_id -- 86
 ) values (
 'f',
 'f',
+(select random_hersteller()),
 (select random_between(1, 100)), -- positions_nr, -- 1
 (select random_string(5)), -- kurztext_de, -- 2
 (select random_string(5)), -- kurztext_fr, -- 3
