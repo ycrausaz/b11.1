@@ -17,7 +17,7 @@
 
     <div class="form-group">
       <label for="username">Benutzername</label>
-      <input type="text" class="form-control" name="username" style="width: 300px;">
+      <input type="text" class="form-control" name="username" style="width: 300px;" id="focusField">
     </div>
     <div class="form-group">
       <label for="password">Passwort</label>
@@ -26,5 +26,11 @@
     
     <input type="submit" value="Login" class="btn btn-secondary">
 </form>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    document.getElementById("focusField").focus();
+});
+</script>
 
 {% endblock %}
