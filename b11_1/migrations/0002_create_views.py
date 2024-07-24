@@ -366,6 +366,7 @@ WITH material_data AS (
         b11_1_werk_3 d ON a.werk_3_id = d.id
     LEFT JOIN 
         b11_1_werk_4 e ON a.werk_4_id = e.id
+    WHERE a.is_transferred = 't'
 )
 SELECT 
     source_id, 
