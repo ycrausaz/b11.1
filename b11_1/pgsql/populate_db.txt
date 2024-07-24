@@ -1,39 +1,92 @@
-Create or replace function random_string(length integer) returns text as
+-- Create or replace the random_string function
+CREATE OR REPLACE FUNCTION random_string(length INTEGER)
+RETURNS TEXT AS
 $$
-declare
-  chars text[] := '{0,1,2,3,4,5,6,7,8,9,A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z,a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y,z}';
-  result text := '';
-  i integer := 0;
-begin
-  if length < 0 then
-    raise exception 'Given length cannot be less than 0';
-  end if;
-  for i in 1..length loop
-    result := result || chars[1+random()*(array_length(chars, 1)-1)];
-  end loop;
-  return result;
-end;
-$$ language plpgsql;
+DECLARE
+    chars TEXT[] := '{0,1,2,3,4,5,6,7,8,9,A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z,a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y,z}';
+    result TEXT := '';
+    i INTEGER := 0;
+BEGIN
+    -- Check if the given length is less than 0 and raise an exception if so
+    IF length < 0 THEN
+        RAISE EXCEPTION 'Given length cannot be less than 0';
+    END IF;
 
-CREATE OR REPLACE FUNCTION random_between(low INT ,high INT) 
-   RETURNS INT AS
+    -- Loop through the given length to concatenate random characters
+    FOR i IN 1..length LOOP
+        result := result || chars[1 + FLOOR(RANDOM() * (ARRAY_LENGTH(chars, 1) - 1))];
+    END LOOP;
+
+    -- Return the generated random string
+    RETURN result;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Create or replace the random_between function
+CREATE OR REPLACE FUNCTION random_between(low INT, high INT)
+RETURNS INT AS
 $$
 BEGIN
-   RETURN floor(random()* (high-low + 1) + low);
+    -- Return a random integer between the given low and high values (inclusive)
+    RETURN FLOOR(RANDOM() * (high - low + 1) + low);
 END;
-$$ language 'plpgsql' STRICT;
+$$ LANGUAGE plpgsql STRICT;
 
---insert into b11_1_material (
---positions_nr, 
---kurztext_de, 
---kurztext_fr, 
---kurztext_en
---) values (
---(select random_string(5)), 
---(select random_string(10)), 
---(select random_string(4)), 
---(select text from b11_1_begru order by random() limit 1)
---);
+-- Create the function to generate the random string for "Nato Stock Number"
+CREATE OR REPLACE FUNCTION random_nato_stock_number()
+RETURNS TEXT AS $$
+DECLARE
+    random_string TEXT;
+BEGIN
+    -- Concatenate random digits and hyphens to form the required pattern
+    random_string :=
+        (FLOOR(RANDOM() * 10)::INT::TEXT || FLOOR(RANDOM() * 10)::INT::TEXT ||
+        FLOOR(RANDOM() * 10)::INT::TEXT || FLOOR(RANDOM() * 10)::INT::TEXT || '-' ||
+        FLOOR(RANDOM() * 10)::INT::TEXT || FLOOR(RANDOM() * 10)::INT::TEXT || '-' ||
+        FLOOR(RANDOM() * 10)::INT::TEXT || FLOOR(RANDOM() * 10)::INT::TEXT ||
+        FLOOR(RANDOM() * 10)::INT::TEXT || '-' ||
+        FLOOR(RANDOM() * 10)::INT::TEXT || FLOOR(RANDOM() * 10)::INT::TEXT ||
+        FLOOR(RANDOM() * 10)::INT::TEXT || FLOOR(RANDOM() * 10)::INT::TEXT)::TEXT;
+
+    -- Return the generated random string
+    RETURN random_string;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Create the function to generate the random string for "NSN Gruppe / Klasse"
+CREATE OR REPLACE FUNCTION random_nsn_gruppe_klasse()
+RETURNS TEXT AS $$
+DECLARE
+    random_string TEXT;
+BEGIN
+    -- Concatenate random digits and hyphens to form the required pattern
+    random_string :=
+        (FLOOR(RANDOM() * 10)::INT::TEXT || FLOOR(RANDOM() * 10)::INT::TEXT ||
+        FLOOR(RANDOM() * 10)::INT::TEXT || FLOOR(RANDOM() * 10)::INT::TEXT)::TEXT;
+
+    -- Return the generated random string
+    RETURN random_string;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Create the function to generate the random string for "Nato Versorgungs-Nr."
+CREATE OR REPLACE FUNCTION random_nato_versorgungs_nr()
+RETURNS TEXT AS $$
+DECLARE
+    random_string TEXT;
+BEGIN
+    -- Concatenate random digits and hyphens to form the required pattern
+    random_string :=
+        (FLOOR(RANDOM() * 10)::INT::TEXT || FLOOR(RANDOM() * 10)::INT::TEXT ||
+        FLOOR(RANDOM() * 10)::INT::TEXT || FLOOR(RANDOM() * 10)::INT::TEXT ||
+        FLOOR(RANDOM() * 10)::INT::TEXT ||
+        FLOOR(RANDOM() * 10)::INT::TEXT || FLOOR(RANDOM() * 10)::INT::TEXT ||
+        FLOOR(RANDOM() * 10)::INT::TEXT || FLOOR(RANDOM() * 10)::INT::TEXT)::TEXT;
+
+    -- Return the generated random string
+    RETURN random_string;
+END;
+$$ LANGUAGE plpgsql;
 
 
 insert into b11_1_material (
@@ -50,7 +103,7 @@ grunddatentext_fr_2_zeile, -- 8
 grunddatentext_en_1_zeile, -- 9
 grunddatentext_en_2_zeile, -- 10
 bruttogewicht, -- 11
-gewichtseinheit, -- 12 
+gewichtseinheit, -- 12
 nettogewicht, -- 13
 groesse_abmessung, -- 14
 ean_upc_code, -- 15
@@ -60,12 +113,12 @@ nato_versorgungs_nr, -- 18
 herstellerteilenummer, -- 19
 normbezeichnung, -- 20
 gefahrgutkennzeichen_id, -- 21
-instandsetzbar, -- 22 
+instandsetzbar, -- 22
 chargenpflicht, -- 23
 bestellmengeneinheit, -- 24
 mindestbestellmenge, -- 25
 lieferzeit, -- 26
-einheit_l_b_h, -- 27 
+einheit_l_b_h, -- 27
 laenge, -- 28
 breite, -- 29
 hoehe, -- 30
@@ -76,7 +129,7 @@ lagerfaehigkeit, -- 34
 exportkontrollauflage, -- 35
 cage_code, -- 36
 hersteller_name, -- 37
-hersteller_adresse, -- 38 
+hersteller_adresse, -- 38
 hersteller_plz, -- 39
 hersteller_ort, -- 40
 revision, -- 41
@@ -139,22 +192,22 @@ uebersetzungsstatus_id -- 86
 (select random_string(5)), -- grunddatentext_en_1_zeile, -- 9
 (select random_string(5)), -- grunddatentext_en_2_zeile, -- 10
 (select random_between(1, 100)), -- bruttogewicht, -- 11
-'KG', -- gewichtseinheit, -- 12 
+'KG', -- gewichtseinheit, -- 12
 (select random_between(1, 100)), -- nettogewicht, -- 13
 (select random_between(1, 100)), -- groesse_abmessung, -- 14
 (select random_string(13)), -- ean_upc_code, -- 15
-(select random_string(16)), -- nato_stock_number, -- 16
-(select random_between(1, 100)), -- nsn_gruppe_klasse, -- 17
-(select random_between(1, 100)), -- nato_versorgungs_nr, -- 18
+(select random_nato_stock_number()), -- nato_stock_number, -- 16
+(select random_nsn_gruppe_klasse()), -- nsn_gruppe_klasse, -- 17
+(select random_nato_versorgungs_nr()), -- nato_versorgungs_nr, -- 18
 (select random_string(12)), -- herstellerteilenummer, -- 19
 (select random_string(18)), -- normbezeichnung, -- 20
 (select id from b11_1_gefahrgutkennzeichen order by random() limit 1), -- gefahrgutkennzeichen, -- 21
-(select random()::int::boolean), -- instandsetzbar, -- 22 
+(select random()::int::boolean), -- instandsetzbar, -- 22
 (select random()::int::boolean), -- chargenpflicht, -- 23
 (select random_between(1, 100)), -- bestellmengeneinheit, -- 24
 (select random_between(1, 100)), -- mindestbestellmenge, -- 25
 (select random_between(1, 100)), -- lieferzeit, -- 26
-'MM', -- einheit_l_b_h, -- 27 
+'MM', -- einheit_l_b_h, -- 27
 (select random_between(1, 100)), -- laenge, -- 28
 (select random_between(1, 100)), -- breite, -- 29
 (select random_between(1, 100)), -- hoehe, -- 30
@@ -165,7 +218,7 @@ uebersetzungsstatus_id -- 86
 (select random()::int::boolean), -- exportkontrollauflage, -- 35
 (select random_string(5)), -- cage_code, -- 36
 (select random_string(40)), -- hersteller_name, -- 37
-(select random_string(40)), -- hersteller_adresse, -- 38 
+(select random_string(40)), -- hersteller_adresse, -- 38
 (select random_between(1000, 4000)), -- hersteller_plz, -- 39
 (select random_string(40)), -- hersteller_ort, -- 40
 (select random_string(30)), -- revision, -- 41
