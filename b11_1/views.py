@@ -49,7 +49,7 @@ def custom_permission_denied_view(request, exception=None):
     return response
 
 def home(request):
-   return redirect('list-material')
+   return redirect('list_material')
 
 class CustomLoginView(LoginView):
     template_name = 'login_user.html'
@@ -98,11 +98,11 @@ class CustomLoginView(LoginView):
         if profile.is_first_login:
             return redirect('password_change')
         if self.request.user.groups.filter(name='grIL').exists():
-            return redirect('list-material-il')
+            return redirect('list_material_il')
         elif self.request.user.groups.filter(name='grGD').exists():
-            return redirect('list-material-gd')
+            return redirect('list_material_gd')
         elif self.request.user.groups.filter(name='grSMDA').exists():
-            return redirect('list-material-smda')
+            return redirect('list_material_smda')
         return response
 
     def get(self, request, *args, **kwargs):
@@ -110,12 +110,16 @@ class CustomLoginView(LoginView):
 
 class CustomPasswordChangeView(PasswordChangeView):
     form_class = CustomPasswordChangeForm
-    success_url = reverse_lazy('password-change-done')
+    success_url = reverse_lazy('password_change_done')
     template_name = 'password_change.html'
 
     def form_valid(self, form):
         messages.success(self.request, "Your password has been changed successfully.")
-        return super().form_valid(form)
+        response = super().form_valid(form)
+        user = form.save()
+        user.profile.is_first_login = False
+        user.profile.save()
+        return response
 
     def form_invalid(self, form):
         # Capture specific validation errors and display them in the message
@@ -126,7 +130,7 @@ class CustomPasswordChangeView(PasswordChangeView):
 
 class CustomPasswordResetConfirmView(PasswordResetConfirmView):
     form_class = CustomPasswordResetForm
-    success_url = reverse_lazy('login-user')
+    success_url = reverse_lazy('login_user')
     template_name = 'password_reset_confirm.html'
 
     def form_valid(self, form):
@@ -142,7 +146,7 @@ class CustomPasswordResetConfirmView(PasswordResetConfirmView):
 class UserLogout(View):
     def get(self, request, *args, **kwargs):
         logout(request)
-        return redirect('login-user')
+        return redirect('login_user')
 
 class ListMaterial_View(ListView):
     model = Material
@@ -176,20 +180,20 @@ class ListMaterial_IL_View(grIL_GroupRequiredMixin, ListView):
             elif action == 'archive':
                 selected_materials.update(is_archived=True)
 
-        return redirect(reverse('list-material-il'))
+        return redirect(reverse('list_material_il'))
 
 class AddMaterial_IL_View(FormValidMixin, grIL_GroupRequiredMixin, SuccessMessageMixin, CreateView):
     model = Material
     template_name = 'il/add_material_il.html'
     form_class = MaterialForm_IL
-    success_url = reverse_lazy('list-material-il')
+    success_url = reverse_lazy('list_material_il')
     success_message = "Das Material wurde erfolgreich hinzugefügt."
 
 class UpdateMaterial_IL_View(FormValidMixin, grIL_GroupRequiredMixin, SuccessMessageMixin, UpdateView):
     model = Material
     template_name = 'il/update_material_il.html'
     form_class = MaterialForm_IL
-    success_url = reverse_lazy('list-material-il')
+    success_url = reverse_lazy('list_material_il')
     success_message = "Das Material wurde erfolgreich aktualisiert."
 
 class ShowMaterial_IL_View(grIL_GroupRequiredMixin, SuccessMessageMixin, DetailView):
@@ -238,7 +242,7 @@ class ListMaterial_GD_View(grGD_GroupRequiredMixin, ListView):
             elif action == 'export':
                 return export_to_excel(selected_materials)
 
-        return redirect(reverse('list-material-gd'))
+        return redirect(reverse('list_material_gd'))
 
 class ListMaterialArchived_GD_View(grGD_GroupRequiredMixin, ListView):
     model = Material
@@ -259,7 +263,7 @@ class UpdateMaterial_GD_View(grGD_GroupRequiredMixin, SuccessMessageMixin, Updat
     model = Material
     template_name = 'gd/update_material_gd.html'
     form_class = MaterialForm_GD
-    success_url = reverse_lazy('list-material-gd')
+    success_url = reverse_lazy('list_material_gd')
     success_message = "Das Material wurde erfolgreich aktualisiert."
 
 class ShowMaterial_GD_View(grGD_GroupRequiredMixin, SuccessMessageMixin, DetailView):
@@ -313,7 +317,7 @@ class ListMaterial_SMDA_View(grSMDA_GroupRequiredMixin, ListView):
             elif action == 'export':
                 return export_to_excel(selected_materials)
 
-        return redirect(reverse('list-material-smda'))
+        return redirect(reverse('list_material_smda'))
 
 class ListMaterialArchived_SMDA_View(grSMDA_GroupRequiredMixin, ListView):
     model = Material
@@ -334,7 +338,7 @@ class UpdateMaterial_SMDA_View(grSMDA_GroupRequiredMixin, SuccessMessageMixin, U
     model = Material
     template_name = 'smda/update_material_smda.html'
     form_class = MaterialForm_SMDA
-    success_url = reverse_lazy('list-material-smda')
+    success_url = reverse_lazy('list_material_smda')
     success_message = "Das Material wurde erfolgreich aktualisiert."
 
     def form_valid(self, form):

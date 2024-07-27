@@ -4,7 +4,7 @@
   <div class="container-fluid">
 
 {% if user|has_group:"grIL" %}
-    <div class="navbar-brand">LBA - Beilage 11.1</div>
+    <div class="navbar-brand">LBA - Beilage 11.1 (für {{ user }})</div>
 {% endif %}
 
 {% if user|has_group:"grGD" %}
@@ -27,8 +27,8 @@
             Material
           </a>
           <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                <li><a class="dropdown-item" href="{% url 'list-material-il' %}">Materialliste</a></li>
-                <li><a class="dropdown-item" href="{% url 'add-material-il' %}">Neues Material definieren</a></li>
+                <li><a class="dropdown-item" href="{% url 'list_material_il' %}">Materialliste</a></li>
+                <li><a class="dropdown-item" href="{% url 'add_material_il' %}">Neues Material definieren</a></li>
           </ul>
         </li>
 <li class="nav-item dropdown">
@@ -36,10 +36,13 @@
             Account
           </a>
           <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                <li><a class="dropdown-item" href="{% url 'password-change' %}">Passwort ändern</a></li>
-                <li><a class="dropdown-item" href="{% url 'logout-user' %}">Logout</a></li>
+                <li><a class="dropdown-item" href="{% url 'password_change' %}">Passwort ändern</a></li>
+                <li><a class="dropdown-item" href="{% url 'logout_user' %}">Logout</a></li>
           </ul>
         </li>
+<!--        <li>
+            <a class="nav-link" href="{% url 'logout_user' %}">Logout</a>
+        </li>-->
       </ul>
     </div>
 {% endif %}
@@ -47,8 +50,17 @@
 {% if user|has_group:"grGD" %}
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+<!--        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Material
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <li><a class="dropdown-item" href="{% url 'list-material-gd' %}">Materialliste</a></li>
+                <li><a class="dropdown-item" href="{% url 'list-material-archived-gd' %}">Archiv</a></li>
+          </ul>
+        </li>-->
         <li>
-            <a class="nav-link" href="{% url 'logout-user' %}">Logout</a>
+            <a class="nav-link" href="{% url 'logout_user' %}">Logout</a>
         </li>
       </ul>
     </div>
@@ -57,6 +69,15 @@
 {% if user|has_group:"grSMDA" %}
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+<!--        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Material
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <li><a class="dropdown-item" href="{% url 'list-material-smda' %}">Materialliste</a></li>
+                <li><a class="dropdown-item" href="{% url 'list-material-archived-smda' %}">Archiv</a></li>
+          </ul>
+        </li>-->
         <li>
             <a class="nav-link" href="{% url 'logout-user' %}">Logout</a>
         </li>
