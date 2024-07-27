@@ -114,14 +114,14 @@ class CustomPasswordChangeView(PasswordChangeView):
     template_name = 'password_change.html'
 
     def form_valid(self, form):
-        response = super().form_valid(form)
-        user = form.save()
-        user.profile.is_first_login = False
-        user.profile.save()
-        return response
+        messages.success(self.request, "Your password has been changed successfully.")
+        return super().form_valid(form)
 
     def form_invalid(self, form):
-        messages.error(self.request, "asdfasdfasdf")
+        # Capture specific validation errors and display them in the message
+        for field, errors in form.errors.items():
+            for error in errors:
+                messages.error(self.request, error)
         return super().form_invalid(form)
 
 class CustomPasswordResetConfirmView(PasswordResetConfirmView):

@@ -7,6 +7,7 @@ from django.contrib.auth.decorators import login_required
 from django.conf.urls import handler403
 from b11_1.views import custom_permission_denied_view
 from django.contrib.auth.views import PasswordResetView, PasswordResetConfirmView, PasswordResetCompleteView
+from django.views.generic import TemplateView
 from django.contrib.auth import views as auth_views
 
 handler403 = custom_permission_denied_view
@@ -16,6 +17,7 @@ urlpatterns = [
     path('login_user', CustomLoginView.as_view(), name='login-user'),
     path('logout_user', UserLogout.as_view(), name='logout-user'),
     path('password_change', CustomPasswordChangeView.as_view(), name='password_change'),
+    path('password_change_done', TemplateView.as_view(template_name='password_change_done.html'), name='password_change_done'),
     path('password_reset', PasswordResetView.as_view(), name='password_reset'),
     path('reset/<uidb64>/<token>', CustomPasswordResetConfirmView.as_view(), name='password_reset_confirm'),
     path('reset/done', PasswordResetCompleteView.as_view(), name='password_reset_complete'),

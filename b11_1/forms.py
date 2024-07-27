@@ -16,10 +16,14 @@ class CustomPasswordResetForm(SetPasswordForm):
         return password2
 
 class CustomPasswordChangeForm(PasswordChangeForm):
-    def clean_new_password1(self):
-        password = self.cleaned_data.get('new_password1')
-        validate_password(password, self.user)
-        return password
+    def clean_new_password2(self):
+        password2 = self.cleaned_data.get('new_password2')
+        user = self.user
+        try:
+            validate_password(password2, user)
+        except forms.ValidationError as error:
+            self.add_error('new_password2', error)
+        return password2
 
 class CustomBooleanChoiceField(forms.TypedChoiceField):
     BOOLEAN_CHOICES = (
