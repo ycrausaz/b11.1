@@ -27,10 +27,12 @@ import re
 from .mixins import FormValidMixin
 from django.template import RequestContext
 from .forms import CustomPasswordChangeForm
+from .forms import CustomPasswordResetForm
 from b11_1.models import Profile
 from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.views import LoginView
+from django.contrib.auth.views import PasswordResetConfirmView
 from django.contrib.sites.shortcuts import get_current_site
 from django.utils.http import urlsafe_base64_encode
 from django.utils.encoding import force_bytes
@@ -51,6 +53,7 @@ def home(request):
 
 class CustomLoginView(LoginView):
     template_name = 'login_user.html'
+    
     def form_invalid(self, form):
         username = form.cleaned_data.get('username')
         try:
@@ -64,11 +67,12 @@ class CustomLoginView(LoginView):
                 mail_subject = 'Reset your password'
                 uid = urlsafe_base64_encode(force_bytes(user.pk))
                 token = default_token_generator.make_token(user)
-                reset_link = reverse('password_reset_confirm', kwargs={'uidb64': uid, 'token': token})
+                reset_link = reverse('password_reset_confirm', kwargs={'uidb64': uid, 'token': token})      
                 reset_url = f'http://{current_site.domain}{reset_link}'
                 message = f'It seems you have failed to login 3 times. Please reset your password using the following link:\n{reset_url}'
                 send_mail(mail_subject, message, settings.DEFAULT_FROM_EMAIL, [user.email])
                 logger.info(f'Password reset email sent to user: {username}')
+                logger.info(message)
                 
                 messages.warning(
                     self.request,
@@ -76,7 +80,6 @@ class CustomLoginView(LoginView):
                     "A password reset link has been sent to your email."
                 )
                 
-                # Reset the failed login attempts after sending the email
                 profile.failed_login_attempts = 0
                 profile.save()
             else:
@@ -116,6 +119,25 @@ class CustomPasswordChangeView(PasswordChangeView):
         user.profile.is_first_login = False
         user.profile.save()
         return response
+
+    def form_invalid(self, form):
+        messages.error(self.request, "asdfasdfasdf")
+        return super().form_invalid(form)
+
+class CustomPasswordResetConfirmView(PasswordResetConfirmView):
+    form_class = CustomPasswordResetForm
+    success_url = reverse_lazy('login-user')
+    template_name = 'password_reset_confirm.html'
+
+    def form_valid(self, form):
+        messages.success(self.request, "Your password has been reset successfully. You can now log in with your new password.")
+        return super().form_valid(form)
+
+    def form_invalid(self, form):
+        for field, errors in form.errors.items():
+            for error in errors:
+                messages.error(self.request, error)
+        return super().form_invalid(form)
 
 class UserLogout(View):
     def get(self, request, *args, **kwargs):

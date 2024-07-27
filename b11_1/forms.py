@@ -3,6 +3,17 @@ from .widgets import ReadOnlyForeignKeyWidget
 from .utils import readonly_field_style
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.password_validation import validate_password
+from django.contrib.auth.forms import SetPasswordForm
+
+class CustomPasswordResetForm(SetPasswordForm):
+    def clean_new_password2(self):
+        password2 = self.cleaned_data.get('new_password2')
+        user = self.user
+        try:
+            validate_password(password2, user)
+        except forms.ValidationError as error:
+            self.add_error('new_password2', error)
+        return password2
 
 class CustomPasswordChangeForm(PasswordChangeForm):
     def clean_new_password1(self):
