@@ -24,7 +24,7 @@
             {% for mat in list_material_gd %}
                 <tr>
                     <td><input type="checkbox" name="selected_materials" value="{{ mat.id }}" class="material-checkbox" data-form-id="1"></td>
-                    <td>{{ mat.positions_nr }} <a href="{% url 'update-material-gd' mat.id %}">{{ mat.kurztext_de }}</a> ({{ mat.hersteller }})</td>
+                    <td>{{ mat.positions_nr }} <a href="{% url 'update_material_gd' mat.id %}">{{ mat.kurztext_de }}</a> ({{ mat.hersteller }})</td>
                 </tr>
             {% endfor %}
         </tbody>
@@ -51,7 +51,7 @@
             {% for mat in list_material_archived_gd %}
                 <tr>
                     <td><input type="checkbox" name="selected_materials" value="{{ mat.id }}" class="material-checkbox" data-form-id="1"></td>
-                    <td>{{ mat.positions_nr }} <a href="{% url 'show-material-gd' mat.id %}">{{ mat.kurztext_de }}</a> ({{ mat.hersteller }})</td>
+                    <td>{{ mat.positions_nr }} <a href="{% url 'show_material_gd' mat.id %}">{{ mat.kurztext_de }}</a> ({{ mat.hersteller }})</td>
                 </tr>
             {% endfor %}
         </tbody>
