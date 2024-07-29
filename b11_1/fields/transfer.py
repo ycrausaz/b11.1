@@ -17,7 +17,7 @@ def concatenate_columns(input_file, output_file):
     result_df = pd.DataFrame(concatenated_data, columns=['Concatenated Data'])
 
     # Write the resulting DataFrame to a new Excel file
-    result_df.to_excel(output_file, index=False)
+    result_df.to_excel(output_file, index=False, header=False)
 
 def main():
     # Setup argument parser
