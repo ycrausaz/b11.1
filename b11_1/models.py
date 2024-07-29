@@ -294,7 +294,7 @@ class Material(models.Model):
     laenge = models.IntegerField(null=True, blank=True)
     breite = models.IntegerField(null=True, blank=True)
     hoehe = models.IntegerField(null=True, blank=True)
-    preis = models.IntegerField(null=True, blank=True)
+    preis = models.FloatField(null=True, blank=True)
     waehrung = models.CharField(null=True, blank=True)
     preiseinheit = models.IntegerField(null=True, blank=True)
     lagerfaehigkeit = models.IntegerField(null=True, blank=True)
