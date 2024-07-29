@@ -110,7 +110,7 @@ class CustomLoginView(LoginView):
 
 class CustomPasswordChangeView(PasswordChangeView):
     form_class = CustomPasswordChangeForm
-    success_url = reverse_lazy('password_change_done')
+    success_url = reverse_lazy('login_user')
     template_name = 'password_change.html'
 
     def form_valid(self, form):
