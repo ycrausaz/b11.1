@@ -516,6 +516,88 @@ CREATE OR REPLACE VIEW public.mvke_verkaufsdaten
 def drop_views_mvke_verkaufsdaten(apps, schema_editor):
     schema_editor.execute('DROP VIEW IF EXISTS mvke_verkaufsdaten;')
 
+# 11
+def create_views_ckmlcr_material_ledger_preise(apps, schema_editor):
+    view_sql = '''
+CREATE OR REPLACE VIEW public.ckmlcr_material_ledger_preise
+ AS
+ WITH material_data AS (
+         SELECT a.positions_nr AS source_id,
+            b.text AS werk_1,
+            c.text AS werk_2,
+            d.text AS werk_3,
+            e.text AS werk_4,
+            a.preis AS pvprs,
+            a.preis AS stprs,
+            a.preiseinheit AS peinh,
+            '10'::text AS curtp,
+            'CHF'::text AS waers,
+            a.preissteuerung_id AS vprsv
+           FROM b11_1_material a
+             LEFT JOIN b11_1_werk_1 b ON a.werk_1_id = b.id
+             LEFT JOIN b11_1_werk_2 c ON a.werk_2_id = c.id
+             LEFT JOIN b11_1_werk_3 d ON a.werk_3_id = d.id
+             LEFT JOIN b11_1_werk_4 e ON a.werk_4_id = e.id
+             LEFT JOIN b11_1_bewertungsklasse f ON a.bewertungsklasse_id = f.id
+          WHERE a.is_transferred = true
+        )
+ SELECT unpivoted_data.source_id,
+    unpivoted_data.werk AS bwkey,
+    unpivoted_data.pvprs,
+    unpivoted_data.stprs,
+    unpivoted_data.peinh,
+    unpivoted_data.curtp,
+    unpivoted_data.waers,
+    unpivoted_data.vprsv
+   FROM ( SELECT material_data.source_id,
+            material_data.werk_1 AS werk,
+            material_data.pvprs,
+            material_data.stprs,
+            material_data.peinh,
+            material_data.curtp,
+            material_data.waers,
+            material_data.vprsv
+           FROM material_data
+        UNION ALL
+         SELECT material_data.source_id,
+            material_data.werk_2 AS werk,
+            material_data.pvprs,
+            material_data.stprs,
+            material_data.peinh,
+            material_data.curtp,
+            material_data.waers,
+            material_data.vprsv
+           FROM material_data
+        UNION ALL
+         SELECT material_data.source_id,
+            material_data.werk_3 AS werk,
+            material_data.pvprs,
+            material_data.stprs,
+            material_data.peinh,
+            material_data.curtp,
+            material_data.waers,
+            material_data.vprsv
+           FROM material_data
+        UNION ALL
+         SELECT material_data.source_id,
+            material_data.werk_4 AS werk,
+            material_data.pvprs,
+            material_data.stprs,
+            material_data.peinh,
+            material_data.curtp,
+            material_data.waers,
+            material_data.vprsv
+           FROM material_data) unpivoted_data
+  ORDER BY unpivoted_data.source_id, unpivoted_data.werk;
+
+ALTER TABLE public.ckmlcr_material_ledger_preise
+    OWNER TO postgres;
+        '''
+    schema_editor.execute(view_sql)
+
+def drop_views_ckmlcr_material_ledger_preise(apps, schema_editor):
+    schema_editor.execute('DROP VIEW IF EXISTS ckmlcr_material_ledger_preise;')
+
 
 class Migration(migrations.Migration):
 
@@ -544,5 +626,7 @@ class Migration(migrations.Migration):
         migrations.RunPython(create_views_mlan_steuer, reverse_code=drop_views_mlan_steuer),
 # 10
         migrations.RunPython(create_views_mvke_verkaufsdaten, reverse_code=drop_views_mvke_verkaufsdaten),
+# 11
+        migrations.RunPython(create_views_ckmlcr_material_ledger_preise, reverse_code=drop_views_ckmlcr_material_ledger_preise),
     ]
 

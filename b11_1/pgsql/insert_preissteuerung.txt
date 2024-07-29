@@ -1,0 +1,1 @@
+insert into "b11_1_preissteuerung" (text) values ('V'), ('S');

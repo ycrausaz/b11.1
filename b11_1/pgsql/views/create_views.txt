@@ -1,3 +1,97 @@
+-- Create a view named 'unpivoted_werks_view' that unpivots werk columns into rows
+DROP VIEW IF EXISTS CKMLCR_Material_Ledger_Preise;
+CREATE VIEW  CKMLCR_Material_Ledger_Preise AS
+WITH material_data AS (
+    -- CTE to get data from b11_1_material and related tables
+    SELECT 
+        a.positions_nr AS source_id, 
+        b.text AS werk_1, 
+        c.text AS werk_2, 
+        d.text AS werk_3, 
+        e.text AS werk_4, 
+        a.preis AS PVPRS,
+        a.preis AS STPRS,
+        a.preiseinheit AS PEINH,
+        '10' AS CURTP,
+        'CHF' AS WAERS,
+        a.preissteuerung_id AS VPRSV
+    FROM 
+        b11_1_material a
+    LEFT JOIN 
+        b11_1_werk_1 b ON a.werk_1_id = b.id
+    LEFT JOIN 
+        b11_1_werk_2 c ON a.werk_2_id = c.id
+    LEFT JOIN 
+        b11_1_werk_3 d ON a.werk_3_id = d.id
+    LEFT JOIN 
+        b11_1_werk_4 e ON a.werk_4_id = e.id
+    LEFT JOIN
+        b11_1_bewertungsklasse f on a.bewertungsklasse_id = f.id
+    WHERE is_transferred = 't'
+)
+-- Unpivot the werk columns into rows
+SELECT 
+    source_id, 
+    werk AS BWKEY, 
+    PVPRS,
+    STPRS,
+    PEINH,
+    CURTP,
+    WAERS,
+    VPRSV
+FROM (
+    SELECT 
+        source_id, 
+        werk_1 AS werk, 
+        PVPRS,
+        STPRS,
+        PEINH,
+        CURTP,
+        WAERS,
+        VPRSV
+        FROM 
+        material_data
+    UNION ALL
+    SELECT 
+        source_id, 
+        werk_2 AS werk, 
+        PVPRS,
+        STPRS,
+        PEINH,
+        CURTP,
+        WAERS,
+        VPRSV
+    FROM 
+        material_data
+    UNION ALL
+    SELECT 
+        source_id, 
+        werk_3 AS werk, 
+        PVPRS,
+        STPRS,
+        PEINH,
+        CURTP,
+        WAERS,
+        VPRSV
+    FROM 
+        material_data
+    UNION ALL
+    SELECT 
+        source_id, 
+        werk_4 AS werk, 
+        PVPRS,
+        STPRS,
+        PEINH,
+        CURTP,
+        WAERS,
+        VPRSV
+    FROM 
+        material_data
+) AS unpivoted_data
+ORDER BY 
+    source_id, 
+    BWKEY;
+
 -- Drop the view if it already exists to avoid conflicts
 DROP VIEW IF EXISTS MAKT_Beschreibung;
 
@@ -52,7 +146,7 @@ SELECT
     d.text AS PROFL,
     a.nato_versorgungs_nr AS NSNID,
     a.ean_upc_code AS EAN11,
-    CASE WHEN a.ean_upc_code IS NOT NULL THEN 'HE' ELSE NULL END AS NUMTP,
+    CASE WHEN a.ean_upc_code is null THEN '' ELSE 'HE' END AS NUMTP,
     e.text AS BEGRU,
     a.normbezeichnung AS NORMT,
     'M' AS MBRSH,
@@ -61,7 +155,7 @@ SELECT
     a.bruttogewicht AS BRGEW,
     a.bestellmengeneinheit AS BSTME,
     f.text AS SPART,
-    a.chargenpflicht AS XCHPF,
+    CASE WHEN a.chargenpflicht = 'f' then 'N' else 'X' END AS XCHPF,
     'V1' AS MSTAE,
     '' AS MTPOS_MARA,
     CASE WHEN a.chargenpflicht = 'f' THEN '1' ELSE '2' END AS MCOND,
@@ -363,7 +457,7 @@ ORDER BY source_id, tdspras, line_counter;
 
 -- Create a view named 'unpivoted_werks_view' that unpivots werk columns into rows
 DROP VIEW IF EXISTS MARC_Werksdaten;
-CREATE VIEW  MARC_Werksdaten AS
+CREATE VIEW MARC_Werksdaten AS
 WITH material_data AS (
     -- CTE to get data from b11_1_material and related tables
     SELECT 
@@ -372,7 +466,8 @@ WITH material_data AS (
         c.text AS werk_2, 
         d.text AS werk_3, 
         e.text AS werk_4, 
-        'ND' AS dismm
+        'ND' AS dismm, 
+        a.orderbuchpflicht AS kordb
     FROM 
         b11_1_material a
     LEFT JOIN 
@@ -383,46 +478,50 @@ WITH material_data AS (
         b11_1_werk_3 d ON a.werk_3_id = d.id
     LEFT JOIN 
         b11_1_werk_4 e ON a.werk_4_id = e.id
-    WHERE is_transferred = 't'
+    WHERE a.is_transferred = 't'
 )
 -- Unpivot the werk columns into rows
 SELECT 
     source_id, 
     werk AS werks, 
-    dismm
+    dismm,
+    kordb
 FROM (
     SELECT 
         source_id, 
         werk_1 AS werk, 
-        dismm
+        dismm,
+        kordb
     FROM 
         material_data
     UNION ALL
     SELECT 
         source_id, 
         werk_2 AS werk, 
-        dismm
+        dismm,
+        kordb
     FROM 
         material_data
     UNION ALL
     SELECT 
         source_id, 
         werk_3 AS werk, 
-        dismm
+        dismm,
+        kordb
     FROM 
         material_data
     UNION ALL
     SELECT 
         source_id, 
         werk_4 AS werk, 
-        dismm
+        dismm,
+        kordb
     FROM 
         material_data
 ) AS unpivoted_data
 ORDER BY 
     source_id, 
     werks;
-
 -- Create a view named 'unpivoted_werks_view' that unpivots werk columns into rows
 DROP VIEW IF EXISTS MBEW_Buchhaltung;
 CREATE VIEW  MBEW_Buchhaltung AS

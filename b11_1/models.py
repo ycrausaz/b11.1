@@ -257,6 +257,16 @@ class Auspraegung(models.Model):
         app_label = 'b11_1'
 
 
+class Preissteuerung(models.Model):
+    text = models.CharField(null=True, blank=True, max_length=40)
+
+    def __str__(self):
+        return self.text
+
+    class Meta:
+        app_label = 'b11_1'
+
+
 class Material(models.Model):
     hersteller = models.CharField(null=True, blank=True)
     is_transferred = models.BooleanField(null=True, blank=False, default=False)
@@ -352,6 +362,8 @@ class Material(models.Model):
     verteilung_cheops = models.BooleanField(null=True, blank=True)
     zuteilung = models.ForeignKey(Zuteilung, null=True, blank=True, on_delete=models.DO_NOTHING, verbose_name="Zuteilung ")
     auspraegung = models.ForeignKey(Auspraegung, null=True, blank=True, on_delete=models.DO_NOTHING, verbose_name="Ausprägung ")
+    preissteuerung = models.ForeignKey(Preissteuerung, null=True, blank=True, on_delete=models.DO_NOTHING, verbose_name="Preissteuerung ")
+    preisermittlung = models.CharField(null=True, blank=True, max_length=30)
 
     def __str__(self):
         if self.positions_nr is not None:

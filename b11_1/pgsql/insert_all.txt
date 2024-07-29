@@ -10,6 +10,7 @@ delete from b11_1_g_partner;
 \copy b11_1_g_partner from '/Users/yann/Prog/Python/LBA/b11_1/fields/g-partner.csv' delimiter ',' csv header;
 insert into "b11_1_gefahrgutkennzeichen" (text) values ('V01'),('V02'),('V03');
 insert into "b11_1_materialart" (text) values ('V001'),('V002'),('V003'),('V005'),('V006'),('V007'),('V008'),('V009'),('V010'),('V011'),('V012'),('V013'),('V014'),('V015'),('V016'),('V017'),('V099');
+insert into "b11_1_preissteuerung" (text) values ('V'), ('S');
 insert into "b11_1_rueckfuehrungscode" (text) values ('R'),('N'),('V');
 insert into "b11_1_serialnummerprofil" (text) values ('ZM01'),('ZM02'),('ZM03'),('ZM05');
 insert into "b11_1_sonderablauf" (text) values ('M'), ('N');
@@ -23,5 +24,3 @@ insert into "b11_1_werk_2" (text) values ('0420'),('0430'),('0440'),('0800');
 insert into "b11_1_werk_3" (text) values ('0420'),('0430'),('0440'),('0800');
 insert into "b11_1_werk_4" (text) values ('0420'),('0430'),('0440'),('0800');
 insert into "b11_1_zuteilung" (text) values ('BM'), ('TRP'), ('MKZ'), ('PRD');
-
-\copy b11_1_helptooltip (field_name, content) FROM '/Users/yann/Prog/Python/LBA/b11_1/pgsql/help.csv' WITH (FORMAT csv, DELIMITER '|', QUOTE '"', ESCAPE '"', HEADER);
