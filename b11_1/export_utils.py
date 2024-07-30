@@ -41,20 +41,22 @@ def export_to_excel(materials):
     views = [
         'MARA_Grunddaten', 'MARA_AUSP_Merkmale', 'MARA_KSSK_Klassenzuordnung',
         'MARA_STXH_Grunddaten', 'MARA_STXL_Grunddaten', 'MARC_Werksdaten',
-        'MBEW_Buchhaltung', 'MLAN_Steuer', 'MVKE_Verkaufsdaten', 'MAKT_Beschreibung'
+        'MBEW_Buchhaltung', 'MLAN_Steuer', 'MVKE_Verkaufsdaten', 'MAKT_Beschreibung',
+        'CKMLCR_material_ledger_preise'
     ]
 
     view_to_sheet = {
         'MARA_Grunddaten': 'MARA - Grunddaten',
         'MAKT_Beschreibung': 'MAKT - Beschreibung',
-        'MARA_AUSP_Merkmale': 'MARA_AUSP - Merkmale',
-        'MARA_KSSK_Klassenzuordnung': 'MARA_KSSK - Klassenzuordnung',
         'MARA_STXH_Grunddaten': 'MARA_STXH - Grunddaten. Text Al',
         'MARA_STXL_Grunddaten': 'MARA_STXL - Grunddaten. Text',
+        'MARA_KSSK_Klassenzuordnung': 'MARA_KSSK - Klassenzuordnung',
+        'MARA_AUSP_Merkmale': 'MARA_AUSP - Merkmale',
+        'MVKE_Verkaufsdaten': 'MVKE - Verkaufsdaten',
+        'MLAN_Steuer': 'MLAN - Steuer',
         'MARC_Werksdaten': 'MARC - Werksdaten',
         'MBEW_Buchhaltung': 'MBEW - Buchhaltung',
-        'MLAN_Steuer': 'MLAN - Steuer',
-        'MVKE_Verkaufsdaten': 'MVKE - Verkaufsdaten',
+        'CKMLCR_material_ledger_preise': 'CKMLCR - Material-Ledger-Preise',
     }
 
     # Get the database connection settings from Django
@@ -92,6 +94,8 @@ def export_to_excel(materials):
                 if view == 'MARC_Werksdaten' and 'WERKS' in df.columns:
                     df = df.dropna(subset=['WERKS'])
                 elif view == 'MBEW_Buchhaltung' and 'BWKEY' in df.columns:
+                    df = df.dropna(subset=['BWKEY'])
+                elif view == 'CKMLCR_material_ledger_preise' and 'BWKEY' in df.columns:
                     df = df.dropna(subset=['BWKEY'])
 
                 # Write the DataFrame to a specific sheet, including headers
