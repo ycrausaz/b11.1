@@ -14,7 +14,7 @@ WITH material_data AS (
         a.preiseinheit AS PEINH,
         '10' AS CURTP,
         'CHF' AS WAERS,
-        a.preissteuerung_id AS VPRSV
+        f.text AS VPRSV
     FROM 
         b11_1_material a
     LEFT JOIN 
@@ -26,7 +26,7 @@ WITH material_data AS (
     LEFT JOIN 
         b11_1_werk_4 e ON a.werk_4_id = e.id
     LEFT JOIN
-        b11_1_bewertungsklasse f on a.bewertungsklasse_id = f.id
+        b11_1_preissteuerung f on a.preissteuerung_id = f.id
     WHERE is_transferred = 't'
 )
 -- Unpivot the werk columns into rows

@@ -532,13 +532,13 @@ CREATE OR REPLACE VIEW public.ckmlcr_material_ledger_preise
             a.preiseinheit AS peinh,
             '10'::text AS curtp,
             'CHF'::text AS waers,
-            a.preissteuerung_id AS vprsv
+            f.text AS vprsv
            FROM b11_1_material a
              LEFT JOIN b11_1_werk_1 b ON a.werk_1_id = b.id
              LEFT JOIN b11_1_werk_2 c ON a.werk_2_id = c.id
              LEFT JOIN b11_1_werk_3 d ON a.werk_3_id = d.id
              LEFT JOIN b11_1_werk_4 e ON a.werk_4_id = e.id
-             LEFT JOIN b11_1_bewertungsklasse f ON a.bewertungsklasse_id = f.id
+             LEFT JOIN b11_1_preissteuerung f on a.preissteuerung_id = f.id
           WHERE a.is_transferred = true
         )
  SELECT unpivoted_data.source_id,
