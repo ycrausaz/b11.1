@@ -43,22 +43,22 @@
     <table class="table table-striped table-hover">
         <thead>
             <tr>
-                <th><input type="checkbox" class="select-all" data-form-id="1"></th>
+                <th><input type="checkbox" class="select-all" data-form-id="2"></th>
                 <th>Archivierte/s Material/ien ({{ list_material_archived_gd|length }})</th>
             </tr>
         </thead>
         <tbody>
             {% for mat in list_material_archived_gd %}
                 <tr>
-                    <td><input type="checkbox" name="selected_materials" value="{{ mat.id }}" class="material-checkbox" data-form-id="1"></td>
+                    <td><input type="checkbox" name="selected_materials" value="{{ mat.id }}" class="material-checkbox" data-form-id="2"></td>
                     <td>{{ mat.positions_nr }} <a href="{% url 'show_material_gd' mat.id %}">{{ mat.kurztext_de }}</a> ({{ mat.hersteller }})</td>
                 </tr>
             {% endfor %}
         </tbody>
     </table>
     <br/>
-    <button type="submit" name="action" value="unarchive" class="btn btn-danger action-button" data-form-id="1" disabled>Unarchivieren</button>
-    <button type="submit" name="action" value="delete" class="btn btn-danger action-button" data-form-id="1" disabled>Löschen</button>
+    <button type="submit" name="action" value="unarchive" class="btn btn-danger action-button" data-form-id="2" disabled>Unarchivieren</button>
+    <button type="submit" name="action" value="delete" class="btn btn-danger action-button" data-form-id="2" disabled>Löschen</button>
 </form>
 
 
