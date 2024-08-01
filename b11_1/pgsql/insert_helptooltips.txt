@@ -1,0 +1,1 @@
+\copy b11_1_helptooltip (field_name, content) FROM '/Users/yann/Prog/Python/LBA/b11_1/pgsql/help.csv' WITH (FORMAT csv, DELIMITER '|', QUOTE '"', ESCAPE '"', HEADER);

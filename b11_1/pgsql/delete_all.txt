@@ -21,3 +21,4 @@ delete from "b11_1_werk_3";
 delete from "b11_1_werk_4";
 delete from "b11_1_zuteilung";
 delete from "b11_1_preissteuerung";
+delete from "b11_1_helptooltip";
