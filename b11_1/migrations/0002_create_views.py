@@ -589,9 +589,6 @@ CREATE OR REPLACE VIEW public.ckmlcr_material_ledger_preise
             material_data.vprsv
            FROM material_data) unpivoted_data
   ORDER BY unpivoted_data.source_id, unpivoted_data.werk;
-
-ALTER TABLE public.ckmlcr_material_ledger_preise
-    OWNER TO postgres;
         '''
     schema_editor.execute(view_sql)
 
