@@ -55,20 +55,8 @@ class UebersetzungsstatusAdmin(admin.ModelAdmin):
 class GefahrgutkennzeichenAdmin(admin.ModelAdmin):
     list_display = ('text',)
 
-@admin.register(Werk_1)
-class Werk_1Admin(admin.ModelAdmin):
-    list_display = ('text',)
-
-@admin.register(Werk_2)
-class Werk_2Admin(admin.ModelAdmin):
-    list_display = ('text',)
-
-@admin.register(Werk_3)
-class Werk_3Admin(admin.ModelAdmin):
-    list_display = ('text',)
-
-@admin.register(Werk_4)
-class Werk_4Admin(admin.ModelAdmin):
+@admin.register(Werk)
+class WerkAdmin(admin.ModelAdmin):
     list_display = ('text',)
 
 @admin.register(AllgemeinePositionstypengruppe)

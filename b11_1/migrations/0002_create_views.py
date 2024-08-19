@@ -4,7 +4,7 @@ from django.db import connection
 # 1
 def create_views_makt_beschreibung(apps, schema_editor):
     view_sql = '''
-CREATE OR REPLACE VIEW public.makt_beschreibung
+CREATE OR REPLACE VIEW makt_beschreibung
  AS
  SELECT b11_1_material.positions_nr AS source_id,
     'D'::text AS spras,
@@ -32,7 +32,7 @@ def drop_views_makt_beschreibung(apps, schema_editor):
 # 2
 def create_views_mara_ausp_merkmale(apps, schema_editor):
     view_sql = '''
-CREATE OR REPLACE VIEW public.mara_ausp_merkmale
+CREATE OR REPLACE VIEW mara_ausp_merkmale
  AS
  WITH original_query AS (
          SELECT a.positions_nr AS source_id,
@@ -139,61 +139,69 @@ def drop_views_mara_ausp_merkmale(apps, schema_editor):
 # 3
 def create_views_mara_grunddaten(apps, schema_editor):
     view_sql = '''
-DROP VIEW IF EXISTS MARA_Grunddaten;
-CREATE VIEW MARA_Grunddaten AS
-SELECT
-    a.positions_nr AS SOURCE_ID,
-    b.text AS MTART,
-    c.text AS MEINS,
-    a.herstellerteilenummer AS MFRPN,
-    a.hersteller_nr_gp AS MFRNR,
-    a.groesse_abmessung AS GROES,
-    a.nettogewicht AS NTGEW,
-    a.laenge AS LAENG,
-    a.breite AS BREIT,
-    a.hoehe AS HOEHE,
-    'MM' AS MEABM,
-    'KG' AS GEWEI,
-    d.text AS PROFL,
-    a.nato_versorgungs_nr AS NSNID,
-    a.ean_upc_code AS EAN11,
-    CASE WHEN a.ean_upc_code is null THEN '' ELSE 'HE' END AS NUMTP,
-    e.text AS BEGRU,
-    a.normbezeichnung AS NORMT,
-    'M' AS MBRSH,
-    a.warengruppe AS MATKL,
-    '' AS BISMT,
-    a.bruttogewicht AS BRGEW,
-    a.bestellmengeneinheit AS BSTME,
-    f.text AS SPART,
-    CASE WHEN a.chargenpflicht = 'f' then 'N' else 'X' END AS XCHPF,
-    'V1' AS MSTAE,
-    '' AS MTPOS_MARA,
-    CASE WHEN a.chargenpflicht = 'f' THEN '1' ELSE '2' END AS MCOND,
-    a.fuehrendes_material AS ZZFUEHR_MAT,
-    g.text AS ZZLABEL,
-    h.text AS RETDELC,
-    i.text AS ADSPC_SPC,
-    a.produkthierarchie AS PRDHA,
-    'UAM' AS HNDLCODE,
-    j.text AS TEMPB,
-    a.cpv_code AS ZZCPVCODE,
-    k.text AS ZZSONDERABLAUF,
+CREATE OR REPLACE VIEW mara_grunddaten
+ AS
+ SELECT a.positions_nr AS source_id,
+    b.text AS mtart,
+    c.text AS meins,
+    a.herstellerteilenummer AS mfrpn,
+    a.hersteller_nr_gp AS mfrnr,
+    a.groesse_abmessung AS groes,
+    a.nettogewicht AS ntgew,
+    a.laenge AS laeng,
+    a.breite AS breit,
+    a.hoehe,
+    'MM'::text AS meabm,
+    'KG'::text AS gewei,
+    d.text AS profl,
+    a.nato_versorgungs_nr AS nsnid,
+    a.ean_upc_code AS ean11,
+        CASE
+            WHEN a.ean_upc_code IS NULL THEN ''::text
+            ELSE 'HE'::text
+        END AS numtp,
+    e.text AS begru,
+    a.normbezeichnung AS normt,
+    'M'::text AS mbrsh,
+    a.warengruppe AS matkl,
+    ''::text AS bismt,
+    a.bruttogewicht AS brgew,
+    a.bestellmengeneinheit AS bstme,
+    f.text AS spart,
+        CASE
+            WHEN a.chargenpflicht = false THEN 'N'::text
+            ELSE 'X'::text
+        END AS xchpf,
+    'V1'::text AS mstae,
+    ''::text AS mtpos_mara,
+        CASE
+            WHEN a.chargenpflicht = false THEN '1'::text
+            ELSE '2'::text
+        END AS mcond,
+    a.fuehrendes_material AS zzfuehr_mat,
+    g.text AS zzlabel,
+    h.text AS retdelc,
+    i.text AS adspc_spc,
+    a.produkthierarchie AS prdha,
+    'UAM'::text AS hndlcode,
+    j.text AS tempb,
+    a.cpv_code AS zzcpvcode,
+    k.text AS zzsonderablauf,
     a.lagerfaehigkeit AS "MARA-MHDHB",
-    '1' as "MARA-MHDRZ",
-    '2' as "MARA-IPRKZ"
-FROM b11_1_material a
-left join b11_1_materialart b on b.id = a.materialart_grunddaten_id
-left join b11_1_basismengeneinheit c on c.id = a.basismengeneinheit_id
-left join b11_1_gefahrgutkennzeichen d on d.id = a.gefahrgutkennzeichen_id
-left join b11_1_begru e on e.id = a.begru_id
-left join b11_1_sparte f on f.id = a.sparte_id
-left join b11_1_auszeichnungsfeld g on g.id = a.auszeichnungsfeld_id
-left join b11_1_rueckfuehrungscode h on h.id = a.rueckfuehrungscode_id
-left join b11_1_sparepartclasscode i on i.id = a.spare_part_class_code_id
-left join b11_1_temperaturbedingung j on j.id = a.temperaturbedingung_id
-left join b11_1_sonderablauf k on k.id = a.sonderablauf_id
-where a.is_transferred='t';
+    '1'::text AS "MARA-MHDRZ",
+    '2'::text AS "MARA-IPRKZ"
+   FROM b11_1_material a
+     LEFT JOIN b11_1_materialart b ON b.id = a.materialart_grunddaten_id
+     LEFT JOIN b11_1_basismengeneinheit c ON c.id = a.basismengeneinheit_id
+     LEFT JOIN b11_1_gefahrgutkennzeichen d ON d.id = a.gefahrgutkennzeichen_id
+     LEFT JOIN b11_1_begru e ON e.id = a.begru_id
+     LEFT JOIN b11_1_sparte f ON f.id = a.sparte_id
+     LEFT JOIN b11_1_auszeichnungsfeld g ON g.id = a.auszeichnungsfeld_id
+     LEFT JOIN b11_1_rueckfuehrungscode h ON h.id = a.rueckfuehrungscode_id
+     LEFT JOIN b11_1_sparepartclasscode i ON i.id = a.spare_part_class_code_id
+     LEFT JOIN b11_1_temperaturbedingung j ON j.id = a.temperaturbedingung_id
+     LEFT JOIN b11_1_sonderablauf k ON k.id = a.sonderablauf_id
+  WHERE a.is_transferred = true;
         '''
     schema_editor.execute(view_sql)
 
@@ -203,7 +211,7 @@ def drop_views_mara_grunddaten(apps, schema_editor):
 # 4
 def create_views_mara_kssk_klassenzuordnung(apps, schema_editor):
     view_sql = '''
-CREATE OR REPLACE VIEW public.mara_kssk_klassenzuordnung
+CREATE OR REPLACE VIEW mara_kssk_klassenzuordnung
  AS
  WITH source_data AS (
          SELECT a.positions_nr AS source_id,
@@ -244,7 +252,7 @@ def drop_views_mara_kssk_klassenzuordnung(apps, schema_editor):
 # 5
 def create_views_mara_stxh_grunddaten(apps, schema_editor):
     view_sql = '''
-CREATE OR REPLACE VIEW public.mara_stxh_grunddaten
+CREATE OR REPLACE VIEW mara_stxh_grunddaten
  AS
  SELECT b11_1_material.positions_nr AS source_id,
     'MATERIAL'::text AS tdobject,
@@ -278,7 +286,7 @@ def drop_views_mara_stxh_grunddaten(apps, schema_editor):
 # 6
 def create_views_mara_stxl_grunddaten(apps, schema_editor):
     view_sql = '''
-CREATE OR REPLACE VIEW public.mara_stxl_grunddaten
+CREATE OR REPLACE VIEW mara_stxl_grunddaten
  AS
  SELECT mara_stxl_grunddaten.source_id,
     'MATERIAL'::text AS tdobject,
@@ -345,70 +353,16 @@ def drop_views_mara_stxl_grunddaten(apps, schema_editor):
 # 7
 def create_views_marc_werksdaten(apps, schema_editor):
     view_sql = '''
-DROP VIEW IF EXISTS MARC_Werksdaten;
-CREATE VIEW MARC_Werksdaten AS
-WITH material_data AS (
-    SELECT 
-        a.positions_nr AS source_id, 
-        b.text AS werk_1, 
-        c.text AS werk_2, 
-        d.text AS werk_3, 
-        e.text AS werk_4, 
-        'ND' AS dismm, 
-        a.orderbuchpflicht AS kordb
-    FROM 
-        b11_1_material a
-    LEFT JOIN 
-        b11_1_werk_1 b ON a.werk_1_id = b.id
-    LEFT JOIN 
-        b11_1_werk_2 c ON a.werk_2_id = c.id
-    LEFT JOIN 
-        b11_1_werk_3 d ON a.werk_3_id = d.id
-    LEFT JOIN 
-        b11_1_werk_4 e ON a.werk_4_id = e.id
-    WHERE a.is_transferred = 't'
-)
-SELECT 
-    source_id, 
-    werk AS werks, 
-    dismm,
-    kordb
-FROM (
-    SELECT 
-        source_id, 
-        werk_1 AS werk, 
-        dismm,
-        kordb
-    FROM 
-        material_data
-    UNION ALL
-    SELECT 
-        source_id, 
-        werk_2 AS werk, 
-        dismm,
-        kordb
-    FROM 
-        material_data
-    UNION ALL
-    SELECT 
-        source_id, 
-        werk_3 AS werk, 
-        dismm,
-        kordb
-    FROM 
-        material_data
-    UNION ALL
-    SELECT 
-        source_id, 
-        werk_4 AS werk, 
-        dismm,
-        kordb
-    FROM 
-        material_data
-) AS unpivoted_data
-ORDER BY 
-    source_id, 
-    werks;
+CREATE OR REPLACE VIEW marc_werksdaten
+ AS
+ SELECT a.positions_nr AS source_id,
+    b.text AS werk,
+    'ND'::text AS dismm,
+    a.orderbuchpflicht AS kordb
+   FROM b11_1_material a
+     LEFT JOIN b11_1_werk b ON a.werk_id = b.id
+  WHERE a.is_transferred = true
+  ORDER BY a.positions_nr, b.text;
         '''
     schema_editor.execute(view_sql)
 
@@ -418,64 +372,19 @@ def drop_views_marc_werksdaten(apps, schema_editor):
 # 8
 def create_views_mbew_buchhaltung(apps, schema_editor):
     view_sql = '''
-CREATE OR REPLACE VIEW public.mbew_buchhaltung
+CREATE OR REPLACE VIEW mbew_buchhaltung
  AS
- WITH material_data AS (
-         SELECT a.positions_nr AS source_id,
-            b.text AS werk_1,
-            c.text AS werk_2,
-            d.text AS werk_3,
-            e.text AS werk_4,
-            a.preis AS verpr,
-            a.preis AS stprs,
-            a.preiseinheit AS peinh,
-            f.text AS bklas
-           FROM b11_1_material a
-             LEFT JOIN b11_1_werk_1 b ON a.werk_1_id = b.id
-             LEFT JOIN b11_1_werk_2 c ON a.werk_2_id = c.id
-             LEFT JOIN b11_1_werk_3 d ON a.werk_3_id = d.id
-             LEFT JOIN b11_1_werk_4 e ON a.werk_4_id = e.id
-             LEFT JOIN b11_1_bewertungsklasse f ON a.bewertungsklasse_id = f.id
-          WHERE a.is_transferred = true
-        )
- SELECT unpivoted_data.source_id,
-    unpivoted_data.werk AS bwkey,
-    unpivoted_data.verpr,
-    unpivoted_data.stprs,
-    unpivoted_data.peinh,
-    unpivoted_data.bklas
-   FROM ( SELECT material_data.source_id,
-            material_data.werk_1 AS werk,
-            material_data.verpr,
-            material_data.stprs,
-            material_data.peinh,
-            material_data.bklas
-           FROM material_data
-        UNION ALL
-         SELECT material_data.source_id,
-            material_data.werk_2 AS werk,
-            material_data.verpr,
-            material_data.stprs,
-            material_data.peinh,
-            material_data.bklas
-           FROM material_data
-        UNION ALL
-         SELECT material_data.source_id,
-            material_data.werk_3 AS werk,
-            material_data.verpr,
-            material_data.stprs,
-            material_data.peinh,
-            material_data.bklas
-           FROM material_data
-        UNION ALL
-         SELECT material_data.source_id,
-            material_data.werk_4 AS werk,
-            material_data.verpr,
-            material_data.stprs,
-            material_data.peinh,
-            material_data.bklas
-           FROM material_data) unpivoted_data
-  ORDER BY unpivoted_data.source_id, unpivoted_data.werk;
+ SELECT a.positions_nr AS source_id,
+    b.text AS bwkey,
+    a.preis AS verpr,
+    a.preis AS stprs,
+    a.preiseinheit AS peinh,
+    f.text AS bklas
+   FROM b11_1_material a
+     LEFT JOIN b11_1_werk b ON a.werk_id = b.id
+     LEFT JOIN b11_1_bewertungsklasse f ON a.bewertungsklasse_id = f.id
+  WHERE a.is_transferred = true
+  ORDER BY a.positions_nr, b.text;
         '''
     schema_editor.execute(view_sql)
 
@@ -485,7 +394,7 @@ def drop_views_mbew_buchhaltung(apps, schema_editor):
 # 9
 def create_views_mlan_steuer(apps, schema_editor):
     view_sql = '''
-CREATE OR REPLACE VIEW public.mlan_steuer
+CREATE OR REPLACE VIEW mlan_steuer
  AS
  SELECT b11_1_material.positions_nr AS source_id,
     'CH'::text AS aland
@@ -500,7 +409,7 @@ def drop_views_mlan_steuer(apps, schema_editor):
 # 10
 def create_views_mvke_verkaufsdaten(apps, schema_editor):
     view_sql = '''
-CREATE OR REPLACE VIEW public.mvke_verkaufsdaten
+CREATE OR REPLACE VIEW mvke_verkaufsdaten
  AS
  SELECT a.positions_nr AS source_id,
     'M100'::text AS vkorg,
@@ -519,76 +428,21 @@ def drop_views_mvke_verkaufsdaten(apps, schema_editor):
 # 11
 def create_views_ckmlcr_material_ledger_preise(apps, schema_editor):
     view_sql = '''
-CREATE OR REPLACE VIEW public.ckmlcr_material_ledger_preise
+CREATE OR REPLACE VIEW ckmlcr_material_ledger_preise
  AS
- WITH material_data AS (
-         SELECT a.positions_nr AS source_id,
-            b.text AS werk_1,
-            c.text AS werk_2,
-            d.text AS werk_3,
-            e.text AS werk_4,
-            a.preis AS pvprs,
-            a.preis AS stprs,
-            a.preiseinheit AS peinh,
-            '10'::text AS curtp,
-            'CHF'::text AS waers,
-            f.text AS vprsv
-           FROM b11_1_material a
-             LEFT JOIN b11_1_werk_1 b ON a.werk_1_id = b.id
-             LEFT JOIN b11_1_werk_2 c ON a.werk_2_id = c.id
-             LEFT JOIN b11_1_werk_3 d ON a.werk_3_id = d.id
-             LEFT JOIN b11_1_werk_4 e ON a.werk_4_id = e.id
-             LEFT JOIN b11_1_preissteuerung f on a.preissteuerung_id = f.id
-          WHERE a.is_transferred = true
-        )
- SELECT unpivoted_data.source_id,
-    unpivoted_data.werk AS bwkey,
-    unpivoted_data.pvprs,
-    unpivoted_data.stprs,
-    unpivoted_data.peinh,
-    unpivoted_data.curtp,
-    unpivoted_data.waers,
-    unpivoted_data.vprsv
-   FROM ( SELECT material_data.source_id,
-            material_data.werk_1 AS werk,
-            material_data.pvprs,
-            material_data.stprs,
-            material_data.peinh,
-            material_data.curtp,
-            material_data.waers,
-            material_data.vprsv
-           FROM material_data
-        UNION ALL
-         SELECT material_data.source_id,
-            material_data.werk_2 AS werk,
-            material_data.pvprs,
-            material_data.stprs,
-            material_data.peinh,
-            material_data.curtp,
-            material_data.waers,
-            material_data.vprsv
-           FROM material_data
-        UNION ALL
-         SELECT material_data.source_id,
-            material_data.werk_3 AS werk,
-            material_data.pvprs,
-            material_data.stprs,
-            material_data.peinh,
-            material_data.curtp,
-            material_data.waers,
-            material_data.vprsv
-           FROM material_data
-        UNION ALL
-         SELECT material_data.source_id,
-            material_data.werk_4 AS werk,
-            material_data.pvprs,
-            material_data.stprs,
-            material_data.peinh,
-            material_data.curtp,
-            material_data.waers,
-            material_data.vprsv
-           FROM material_data) unpivoted_data
-  ORDER BY unpivoted_data.source_id, unpivoted_data.werk;
+ SELECT a.positions_nr AS source_id,
+    b.text AS bwkey,
+    a.preis AS pvprs,
+    a.preis AS stprs,
+    a.preiseinheit AS peinh,
+    '10'::text AS curtp,
+    'CHF'::text AS waers,
+    f.text AS vprsv
+   FROM b11_1_material a
+     LEFT JOIN b11_1_werk b ON a.werk_id = b.id
+     LEFT JOIN b11_1_preissteuerung f ON a.preissteuerung_id = f.id
+  WHERE a.is_transferred = true
+  ORDER BY a.positions_nr, b.text;
         '''
     schema_editor.execute(view_sql)
 

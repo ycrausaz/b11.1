@@ -20,8 +20,5 @@ insert into "b11_1_sparte" (text) values ('V0'),('V1'),('V2'),('V3'),('V4'),('V5
 insert into "b11_1_temperaturbedingung" (text) values ('00'), ('01'), ('02'), ('03'), ('04');
 insert into "b11_1_uebersetzungsstatus" (text) values ('P'),('U'),('N');
 insert into "b11_1_vertriebsweg" (text) values ('A1'), ('A2'), ('A3'), ('A4'), ('A5'), ('A6'), ('I1'), ('M1'), ('MP'), ('O1'), ('P1'), ('S1'), ('S2'), ('S3'), ('S4'), ('S5'), ('S7'), ('S8'), ('S9'), ('SM'), ('T1'), ('TA'), ('TB'), ('TC'), ('TD'), ('TE'), ('TL'), ('TM'), ('TO'), ('TQ'), ('TV'), ('TZ'), ('U1'), ('U2'), ('V0');
-insert into "b11_1_werk_1" (text) values ('0420'),('0430'),('0440'),('0800');
-insert into "b11_1_werk_2" (text) values ('0420'),('0430'),('0440'),('0800');
-insert into "b11_1_werk_3" (text) values ('0420'),('0430'),('0440'),('0800');
-insert into "b11_1_werk_4" (text) values ('0420'),('0430'),('0440'),('0800');
+insert into "b11_1_werk" (text) values ('0420'),('0430'),('0440'),('0800');
 insert into "b11_1_zuteilung" (text) values ('BM'), ('TRP'), ('MKZ'), ('PRD');

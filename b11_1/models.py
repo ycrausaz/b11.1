@@ -127,37 +127,7 @@ class Gefahrgutkennzeichen(models.Model):
         app_label = 'b11_1'
 
 
-class Werk_1(models.Model):
-    text = models.CharField(null=True, blank=True, max_length=40)
-
-    def __str__(self):
-        return self.text
-
-    class Meta:
-        app_label = 'b11_1'
-
-
-class Werk_2(models.Model):
-    text = models.CharField(null=True, blank=True, max_length=40)
-
-    def __str__(self):
-        return self.text
-
-    class Meta:
-        app_label = 'b11_1'
-
-
-class Werk_3(models.Model):
-    text = models.CharField(null=True, blank=True, max_length=40)
-
-    def __str__(self):
-        return self.text
-
-    class Meta:
-        app_label = 'b11_1'
-
-
-class Werk_4(models.Model):
+class Werk(models.Model):
     text = models.CharField(null=True, blank=True, max_length=40)
 
     def __str__(self):
@@ -334,10 +304,7 @@ class Material(models.Model):
     a_nummer = models.CharField(null=True, blank=True)
     verteilung_an_psd = models.BooleanField(null=True, blank=True)
     verteilung_an_ruag = models.BooleanField(null=True, blank=True)
-    werk_1 = models.ForeignKey(Werk_1, null=True, blank=True, on_delete=models.DO_NOTHING, verbose_name="Werk (1) ")
-    werk_2 = models.ForeignKey(Werk_2, null=True, blank=True, on_delete=models.DO_NOTHING, verbose_name="Werk (2) ")
-    werk_3 = models.ForeignKey(Werk_3, null=True, blank=True, on_delete=models.DO_NOTHING, verbose_name="Werk (3) ")
-    werk_4 = models.ForeignKey(Werk_4, null=True, blank=True, on_delete=models.DO_NOTHING, verbose_name="Werk (4) ")
+    werk = models.ForeignKey(Werk, null=True, blank=True, on_delete=models.DO_NOTHING, verbose_name="Werk ")
     allgemeine_positionstypengruppe = models.ForeignKey(AllgemeinePositionstypengruppe, null=True, blank=True, on_delete=models.DO_NOTHING, verbose_name="Allgemeine Positionstypengruppe ")
     verkaufsorg = models.CharField(null=True, blank=True)
     vertriebsweg = models.ForeignKey(Vertriebsweg, null=True, blank=True, on_delete=models.DO_NOTHING, verbose_name="Vertriebsweg ")

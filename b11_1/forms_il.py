@@ -54,7 +54,7 @@ class MaterialForm_IL(ModelForm):
     hersteller_plz = forms.IntegerField(required=True)
     hersteller_ort = forms.CharField(required=True)
     revision = forms.CharField(required=False)
-    bemerkung = forms.CharField(widget=forms.Textarea(attrs={'class': 'form-control', 'rows': 5}), required=True)
+    bemerkung = forms.CharField(widget=forms.Textarea(attrs={'class': 'form-control', 'rows': 5}), required=False)
 
     class Meta:
         model = Material
