@@ -1,3 +1,1 @@
-delete from b11_1_g_partner;
-
-\copy b11_1_g_partner from '/Users/yann/Prog/Python/LBA/b11_1/fields/g-partner.csv' delimiter ',' csv header;
+\copy b11_1_g_partner from 'b11_1/fields/g-partner.csv' delimiter ',' csv header;

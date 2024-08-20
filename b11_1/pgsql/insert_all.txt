@@ -5,11 +5,9 @@ insert into "b11_1_basismengeneinheit" (text) values ('ST'),('M'),('KG'),('PAA')
 insert into "b11_1_begru" (text) values ('3000'), ('4000'), ('5000'), ('6000'), ('7000'), ('8000'), ('9000');
 insert into "b11_1_bewertungsklasse" (text) values ('A000'), ('A100'), ('M100'), ('M110'), ('M120'), ('M130'), ('M131'), ('M140'), ('M141'), ('M150'), ('M200'), ('M210'), ('M220'), ('M230'), ('M240'), ('M250'), ('M260'), ('M290'), ('M300'), ('M310'), ('M320'), ('M330'), ('M340'), ('M400'), ('M700'), ('M710'), ('M720'), ('M800'), ('M810'), ('M900'), ('M910');
 insert into "b11_1_fertigungssteuerer" (text) values ('S04'), ('T01'), ('T02'), ('T03'), ('T04'), ('T05'), ('T06'), ('T07'), ('T08'), ('T09'), ('T10'), ('T11'), ('T12'), ('T13'), ('T14'), ('TP3'), ('TP4'), ('TP5'), ('TP6'), ('TP7'), ('U01'), ('U02'), ('U03'), ('U04'), ('U05'), ('U06'), ('U07'), ('U08'), ('U09'), ('URD'), ('T15'), ('T16'), ('T17'), ('T18'), ('T8A'), ('TP1'), ('TP2'), ('TW1');
-delete from b11_1_g_partner;
-
-\copy b11_1_g_partner from '/Users/yann/Prog/Python/LBA/b11_1/fields/g-partner.csv' delimiter ',' csv header;
+\copy b11_1_g_partner from 'b11_1/fields/g-partner.csv' delimiter ',' csv header;
 insert into "b11_1_gefahrgutkennzeichen" (text) values ('V01'),('V02'),('V03');
-\copy b11_1_helptooltip (field_name, content) FROM '/Users/yann/Prog/Python/LBA/b11_1/pgsql/help.csv' WITH (FORMAT csv, DELIMITER '|', QUOTE '"', ESCAPE '"', HEADER);
+\copy b11_1_helptooltip (field_name, content) FROM 'b11_1/pgsql/help.csv' WITH (FORMAT csv, DELIMITER '|', QUOTE '"', ESCAPE '"', HEADER);
 insert into "b11_1_materialart" (text) values ('V001'),('V002'),('V003'),('V005'),('V006'),('V007'),('V008'),('V009'),('V010'),('V011'),('V012'),('V013'),('V014'),('V015'),('V016'),('V017'),('V099');
 insert into "b11_1_preissteuerung" (text) values ('V'), ('S');
 insert into "b11_1_rueckfuehrungscode" (text) values ('R'),('N'),('V');
