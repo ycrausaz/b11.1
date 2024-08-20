@@ -26,3 +26,4 @@ typing_extensions==4.10.0
 tzdata==2024.1
 whitenoise==6.6.0
 XlsxWriter==3.2.0
+divio-cli==4.0.2
