@@ -2,7 +2,7 @@ from django.views.i18n import JavaScriptCatalog
 from django.urls import include
 from django.urls import path
 from . import views
-from .views import CustomLoginView, UserLogout, CustomPasswordChangeView, CustomPasswordResetConfirmView, ListMaterial_View, ListMaterial_IL_View, AddMaterial_IL_View, UpdateMaterial_IL_View, ShowMaterial_IL_View, ListMaterial_GD_View, ListMaterialArchived_GD_View, UpdateMaterial_GD_View, ShowMaterial_GD_View, ListMaterial_SMDA_View, ListMaterialArchived_SMDA_View, UpdateMaterial_SMDA_View, ShowMaterial_SMDA_View
+from .views import CustomLoginView, UserLogout, CustomPasswordChangeView, CustomPasswordResetConfirmView, ListMaterial_IL_View, AddMaterial_IL_View, UpdateMaterial_IL_View, ShowMaterial_IL_View, ListMaterial_GD_View, ListMaterialArchived_GD_View, UpdateMaterial_GD_View, ShowMaterial_GD_View, ListMaterial_SMDA_View, ListMaterialArchived_SMDA_View, UpdateMaterial_SMDA_View, ShowMaterial_SMDA_View
 from django.contrib.auth.decorators import login_required
 from django.conf.urls import handler403
 from b11_1.views import custom_permission_denied_view
@@ -21,7 +21,7 @@ urlpatterns = [
     path('password_reset', PasswordResetView.as_view(), name='password_reset'),
     path('reset/<uidb64>/<token>', CustomPasswordResetConfirmView.as_view(), name='password_reset_confirm'),
     path('reset/done', PasswordResetCompleteView.as_view(), name='password_reset_complete'),
-    path('list_material', login_required(ListMaterial_View.as_view()), name='list_material'),
+#    path('list_material', login_required(ListMaterial_View.as_view()), name='list_material'),
 
     path('list_material_il', login_required(ListMaterial_IL_View.as_view()), name='list_material_il'),
     path('add_material_il', login_required(AddMaterial_IL_View.as_view()), name='add_material_il'),

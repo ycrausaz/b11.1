@@ -49,7 +49,7 @@ def custom_permission_denied_view(request, exception=None):
     return response
 
 def home(request):
-   return redirect('list_material')
+   return redirect('login_user')
 
 class CustomLoginView(LoginView):
     template_name = 'login_user.html'
@@ -147,11 +147,6 @@ class UserLogout(View):
     def get(self, request, *args, **kwargs):
         logout(request)
         return redirect('login_user')
-
-class ListMaterial_View(ListView):
-    model = Material
-    template_name = 'list_material.html'
-    context_object_name = 'list_material'
 
 class ListMaterial_IL_View(grIL_GroupRequiredMixin, ListView):
     model = Material
