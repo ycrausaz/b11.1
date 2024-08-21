@@ -21,7 +21,6 @@ urlpatterns = [
     path('password_reset', PasswordResetView.as_view(), name='password_reset'),
     path('reset/<uidb64>/<token>', CustomPasswordResetConfirmView.as_view(), name='password_reset_confirm'),
     path('reset/done', PasswordResetCompleteView.as_view(), name='password_reset_complete'),
-#    path('list_material', login_required(ListMaterial_View.as_view()), name='list_material'),
 
     path('list_material_il', login_required(ListMaterial_IL_View.as_view()), name='list_material_il'),
     path('add_material_il', login_required(AddMaterial_IL_View.as_view()), name='add_material_il'),
