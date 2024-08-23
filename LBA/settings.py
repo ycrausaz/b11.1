@@ -66,13 +66,13 @@ IN_DOCKER = os.environ.get('IN_DOCKER', False)
 if IN_DOCKER:
     # Docker database configuration
     default_db_url = f'postgres://{os.environ.get("B11_1_USER")}:{os.environ.get("B11_1_PASSWORD")}@db:{os.environ.get("DB_PORT")}/{os.environ.get("B11_1_DB")}'
-    print (default_db_url)
-    logs_db_url = f'postgres://{os.environ.get("LOGS_B11_1_USER")}:{os.environ.get("LOGS_B11_1_PASSWORD")}@db_logs:{os.environ.get("LOGS_DB_PORT")}/{os.environ.get("LOGS_B11_1_DB")}'
-    print (logs_db_url)
+#    print (default_db_url)
+#    logs_db_url = f'postgres://{os.environ.get("LOGS_B11_1_USER")}:{os.environ.get("LOGS_B11_1_PASSWORD")}@db_logs:{os.environ.get("LOGS_DB_PORT")}/{os.environ.get("LOGS_B11_1_DB")}'
+#    print (logs_db_url)
 
     DATABASES = {
         'default': dj_database_url.parse(default_db_url, conn_max_age=600),
-        'logs_db': dj_database_url.parse(logs_db_url, conn_max_age=600),
+ #       'logs_db': dj_database_url.parse(logs_db_url, conn_max_age=600),
     }
 
     # Add SSL configuration
