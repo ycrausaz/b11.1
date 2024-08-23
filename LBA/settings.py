@@ -23,7 +23,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'b11_1',
-    'logs',
     'bootstrap_datepicker_plus',
     'pwa',
 ]
@@ -95,17 +94,7 @@ else:
             'HOST': 'localhost',
             'PORT': '5432',
         },
-        'logs_db': {
-            'ENGINE': 'django.db.backends.postgresql',
-            'NAME': 'b11-1-log',
-            'USER': 'b11-1_user',
-            'PASSWORD': 'b11-1_user',
-            'HOST': 'localhost',
-            'PORT': '5432',
-        }
     }
-
-DATABASE_ROUTERS = ['logs.db_router.LogsDbRouter']
 
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
@@ -141,32 +130,6 @@ EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER', 'yann.crausaz@gmail.com')
 EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', '')
 DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL', 'yann.crausaz@gmail.com')
 
-# Logging configuration
-LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'formatters': {
-        'verbose': {
-            'format': '{levelname} {asctime} {module} {process:d} {thread:d} {message}',
-            'style': '{',
-        },
-    },
-    'handlers': {
-        'console': {
-            'level': 'INFO',
-            'class': 'logging.StreamHandler',
-        },
-        'db': {
-            'level': 'INFO',
-            'class': 'logs.handlers.DatabaseLogHandler',
-            'formatter': 'verbose',
-        },
-    },
-    'root': {
-        'handlers': ['console', 'db'],
-        'level': 'INFO',
-    },
-}
 
 # Django PWA configuration
 PWA_APP_NAME = 'LBA'
