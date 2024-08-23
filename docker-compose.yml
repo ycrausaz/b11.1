@@ -1,7 +1,6 @@
 services:
   web:
     build: .
-    image: lba-sym-beilage-11-1-demo:latest
     command: >
       sh -c "python manage.py wait_for_db &&
              python manage.py migrate &&
