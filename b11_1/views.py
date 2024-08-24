@@ -153,6 +153,10 @@ class ListMaterial_IL_View(grIL_GroupRequiredMixin, ListView):
     template_name = 'il/list_material_il.html'
 
     def get_context_data(self, **kwargs):
+#        logger.info("This is an info message")
+#        logger.error("This is an error message")
+#        logger.warning("This is a warning message")
+#        logger.critical("This is a critical message")
         context = super().get_context_data(**kwargs)
         list_material_il_transferred = Material.objects.filter(is_transferred=True, hersteller=self.request.user, is_archived=False)
         list_material_il = Material.objects.filter(is_transferred=False, hersteller=self.request.user, is_archived=False)
