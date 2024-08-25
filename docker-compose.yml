@@ -21,7 +21,6 @@ services:
       - IN_DOCKER=True
     depends_on:
       - db
-      - db_logs
 
   db:
     image: postgres:14
@@ -40,24 +39,6 @@ services:
       -c ssl_key_file=/var/lib/postgresql/ssl/server.key
     ports:
       - "5433:5432"
-
-  db_logs:
-    image: postgres:14
-    volumes:
-      - postgres_logs_data:/var/lib/postgresql/data/
-      - ./ssl:/var/lib/postgresql/ssl/
-    env_file:
-      - .env
-    environment:
-      - POSTGRES_DB=${LOGS_B11_1_DB}
-      - POSTGRES_USER=${LOGS_B11_1_USER}
-      - POSTGRES_PASSWORD=${LOGS_B11_1_PASSWORD}
-    command: >
-      -c ssl=on
-      -c ssl_cert_file=/var/lib/postgresql/ssl/server.crt
-      -c ssl_key_file=/var/lib/postgresql/ssl/server.key
-    ports:
-      - "5434:5432"
 
 volumes:
   postgres_data:

@@ -11,8 +11,9 @@ SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-nuz3!gby)s_=^-%#(fqi+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DEBUG', 'True') == 'True'
 
-#ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '').split(',')
-ALLOWED_HOSTS=['localhost','127.0.0.1','lba-sym-beilage-111-stage.eu.aldryn.io']
+ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '').split(',')
+if len(ALLOWED_HOSTS) == 1 and len(ALLOWED_HOSTS[0]) == 0:
+    ALLOWED_HOSTS=['localhost','127.0.0.1','192.168.1.2']
 CSRF_TRUSTED_ORIGINS = [f"https://{host}" for host in ALLOWED_HOSTS if host != 'localhost' and host != '127.0.0.1']
 
 # Application definition
