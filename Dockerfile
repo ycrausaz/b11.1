@@ -1,33 +1,35 @@
-# Use an official Python runtime as a parent image
-FROM python:3.12.3-slim
+FROM python:3.12
 
-# Set the working directory in the container
+# Set environment variables for Python
+ENV PYTHONUNBUFFERED=1 \
+    PYTHONDONTWRITEBYTECODE=1
+
+# Set the working directory to /app
 WORKDIR /app
 
-# Copy the requirements file into the container at /app
-COPY requirements.txt /app/
+# Install system dependencies
+RUN apt-get update && \
+    apt-get install -y postgresql-client libpq-dev postgresql-contrib
 
-# Install any needed packages specified in requirements.txt
-RUN pip install --no-cache-dir -r requirements.txt
+# Copy only the requirements.in and .env.local files into the container
+COPY requirements.in /app/
 
-# Install psycopg2 dependencies
-RUN apt-get update && apt-get install -y libpq-dev gcc
+# Install pip-tools
+RUN pip install --upgrade pip && \
+    pip install pip-tools
 
-# Install the postresql client to populate the database
-RUN apt-get update && apt-get install -y postgresql-client
+# Compile requirements.in to requirements.txt and install pip requirements
+RUN pip-compile requirements.in && \
+    pip install --no-cache-dir -r requirements.txt
 
-# Copy the entire application directory into the container at /app
+# Copy the rest of the project files into the container
 COPY . /app/
 
-# Create the directory for static files
-RUN mkdir -p /app/staticfiles
-
-# Collect static files
+# Run collectstatic to gather static files
 RUN python manage.py collectstatic --noinput
 
-# Expose port 8000
-EXPOSE 8000
+# Make port 80 available to the world outside this container
+EXPOSE 80
 
-# Start the Django server
-#CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
-CMD ["gunicorn", "LBA.wsgi:application", "--bind", "0.0.0.0:8000"]
+# Define the command to run your application
+CMD ["gunicorn", "LBA.wsgi:application", "--bind", "0.0.0.0:80"]

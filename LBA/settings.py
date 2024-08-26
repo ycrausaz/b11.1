@@ -11,10 +11,13 @@ SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-nuz3!gby)s_=^-%#(fqi+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DEBUG', 'True') == 'True'
 
-ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '').split(',')
-if len(ALLOWED_HOSTS) == 1 and len(ALLOWED_HOSTS[0]) == 0:
-    ALLOWED_HOSTS=['localhost','127.0.0.1','192.168.1.2']
-CSRF_TRUSTED_ORIGINS = [f"https://{host}" for host in ALLOWED_HOSTS if host != 'localhost' and host != '127.0.0.1']
+#ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '').split(',')
+#if len(ALLOWED_HOSTS) == 1 and len(ALLOWED_HOSTS[0]) == 0:
+#    ALLOWED_HOSTS=['localhost','127.0.0.1','192.168.1.2']
+#CSRF_TRUSTED_ORIGINS = [f"https://{host}" for host in ALLOWED_HOSTS if host != 'localhost' and host != '127.0.0.1']
+
+ALLOWED_HOSTS = ["*"]
+CSRF_TRUSTED_ORIGINS=["https://*.aldryn.io"]
 
 # Application definition
 INSTALLED_APPS = [
@@ -26,7 +29,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'b11_1',
     'bootstrap_datepicker_plus',
-    'pwa',
+#    'pwa',
 ]
 
 MIDDLEWARE = [
@@ -62,29 +65,28 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'LBA.wsgi.application'
 
-IN_DOCKER = os.environ.get('IN_DOCKER', False)
+#IN_DOCKER = os.environ.get('IN_DOCKER', False)
 
 # Database
-if IN_DOCKER:
-    # Docker database configuration
-    default_db_url = f'postgres://{os.environ.get("B11_1_USER")}:{os.environ.get("B11_1_PASSWORD")}@db:{os.environ.get("DB_PORT")}/{os.environ.get("B11_1_DB")}'
-#    print (default_db_url)
-#    logs_db_url = f'postgres://{os.environ.get("LOGS_B11_1_USER")}:{os.environ.get("LOGS_B11_1_PASSWORD")}@db_logs:{os.environ.get("LOGS_DB_PORT")}/{os.environ.get("LOGS_B11_1_DB")}'
-#    print (logs_db_url)
+if "DATABASE_URL" in os.environ:
+#    # Docker database configuration
+#    default_db_url = f'postgres://{os.environ.get("B11_1_USER")}:{os.environ.get("B11_1_PASSWORD")}@{os.environ.get("DB_HOST")}:{os.environ.get("DB_PORT")}/{os.environ.get("B11_1_DB")}'
+#    print("default_db_url = ", default_db_url)
+#
+#    DATABASES = {
+#        'default': dj_database_url.parse(default_db_url, conn_max_age=600),
+#    }
 
-    DATABASES = {
-        'default': dj_database_url.parse(default_db_url, conn_max_age=600),
- #       'logs_db': dj_database_url.parse(logs_db_url, conn_max_age=600),
-    }
+    DATABASES = {'default': dj_database_url.config(conn_max_age=500)}
 
     # Add SSL configuration
-    for db in DATABASES.values():
-        db['OPTIONS'] = {
-            'sslmode': 'require',
-            'sslcert': '/app/ssl/server.crt',
-            'sslkey': '/app/ssl/server.key',
-            'sslrootcert': '/app/ssl/server.crt',
-        }
+#    for db in DATABASES.values():
+#        db['OPTIONS'] = {
+#            'sslmode': 'require',
+#            'sslcert': '/app/ssl/server.crt',
+#            'sslkey': '/app/ssl/server.key',
+#            'sslrootcert': '/app/ssl/server.crt',
+#        }
 else:
     # Local development database configuration
     DATABASES = {

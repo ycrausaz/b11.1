@@ -1,46 +1,39 @@
+# The docker-compose.yml file is __only__ used for local development.
+# This means that changes to this file will not affect cloud deployments in any way.
+# Read more at https://docs.divio.com/reference/docker-docker-compose/
 services:
   web:
     build: .
+    ports:
+      - "8000:80"
+    volumes:
+      - ".:/app:rw"
+      - "./data:/data:rw"
+    environment:
+      DATABASE_URL: postgres://postgres@database_default:5432/db
+      DEBUG: 'True'
+    links:
+      - "database_default"
+    # The following command is used to start the local development server.
+    # Removing this line will mimic the deployment behaviour on Divio Cloud.
+#    command: python manage.py runserver 0.0.0.0:80
     command: >
-      sh -c "python manage.py wait_for_db &&
-             python manage.py migrate &&
+      sh -c "python manage.py migrate &&
              python manage.py loaddata b11_1/pgsql/backup_users_and_groups.json &&
              python manage.py create_user_profiles &&
              python manage.py populate_db &&
              python manage.py populate_db_data &&
-             python manage.py runserver 0.0.0.0:8000"
-    volumes:
-      - .:/app
-      - static_volume:/app/staticfiles
-      - ./ssl:/app/ssl
-    ports:
-      - "8000:8000"
-    env_file:
-      - .env
-    environment:
-      - IN_DOCKER=True
-    depends_on:
-      - db
+             python manage.py runserver 0.0.0.0:80"
 
-  db:
-    image: postgres:14
-    volumes:
-      - postgres_data:/var/lib/postgresql/data/
-      - ./ssl:/var/lib/postgresql/ssl/
-    env_file:
-      - .env
+  database_default:
+    image: postgres:15.7-alpine
     environment:
-      - POSTGRES_DB=${B11_1_DB}
-      - POSTGRES_USER=${B11_1_USER}
-      - POSTGRES_PASSWORD=${B11_1_PASSWORD}
-    command: >
-      -c ssl=on
-      -c ssl_cert_file=/var/lib/postgresql/ssl/server.crt
-      -c ssl_key_file=/var/lib/postgresql/ssl/server.key
-    ports:
-      - "5433:5432"
+      POSTGRES_DB: "db"
+      POSTGRES_HOST_AUTH_METHOD: "trust"
+      SERVICE_MANAGER: "fsm-postgres"
+    volumes:
+      - ".:/app:rw"
+      - "database-default:/var/lib/postgresql/data/"
 
 volumes:
-  postgres_data:
-  postgres_logs_data:
-  static_volume:
+  database-default:
