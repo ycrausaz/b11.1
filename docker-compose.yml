@@ -17,12 +17,15 @@ services:
     # The following command is used to start the local development server.
     # Removing this line will mimic the deployment behaviour on Divio Cloud.
 #    command: python manage.py runserver 0.0.0.0:80
+#    command: >
+#      sh -c "python manage.py migrate &&
+#             python manage.py loaddata b11_1/pgsql/backup_users_and_groups.json &&
+#             python manage.py create_user_profiles &&
+#             python manage.py populate_db &&
+#             python manage.py populate_db_data &&
+#             python manage.py runserver 0.0.0.0:80"
     command: >
       sh -c "python manage.py migrate &&
-             python manage.py loaddata b11_1/pgsql/backup_users_and_groups.json &&
-             python manage.py create_user_profiles &&
-             python manage.py populate_db &&
-             python manage.py populate_db_data &&
              python manage.py runserver 0.0.0.0:80"
 
   database_default:
