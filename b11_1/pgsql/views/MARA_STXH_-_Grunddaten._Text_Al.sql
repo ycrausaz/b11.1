@@ -1,43 +1,26 @@
--- Drop the view if it already exists to avoid conflicts
-DROP VIEW IF EXISTS MARA_STXH_Grunddaten;
-
--- Create the view
-CREATE VIEW MARA_STXH_Grunddaten AS
--- Select German text and label it with 'D'
-SELECT 
-  positions_nr AS source_id, 
-  'MATERIAL' AS tdobject,
-  positions_nr AS TDNAME,
-  'GRUN' AS TDID,
-  'D' AS TDSPRAS
-FROM b11_1_material
-WHERE is_transferred = 't'
-
+CREATE OR REPLACE VIEW public.mara_stxh_grunddaten
+ AS
+ SELECT b11_1_material.positions_nr AS source_id,
+    'MATERIAL'::text AS tdobject,
+    b11_1_material.positions_nr AS tdname,
+    'GRUN'::text AS tdid,
+    'D'::text AS tdspras
+   FROM b11_1_material
+  WHERE b11_1_material.is_transferred = true
 UNION ALL
-
--- Select French text and label it with 'F'
-SELECT 
-  positions_nr AS source_id, 
-  'MATERIAL' AS tdobject,
-  positions_nr AS TDNAME,
-  'GRUN' AS TDID,
-  'F' AS TDSPRAS
-FROM b11_1_material
-WHERE is_transferred = 't'
-
+ SELECT b11_1_material.positions_nr AS source_id,
+    'MATERIAL'::text AS tdobject,
+    b11_1_material.positions_nr AS tdname,
+    'GRUN'::text AS tdid,
+    'F'::text AS tdspras
+   FROM b11_1_material
+  WHERE b11_1_material.is_transferred = true
 UNION ALL
-
--- Select English text and label it with 'E'
-SELECT 
-  positions_nr AS source_id, 
-  'MATERIAL' AS tdobject,
-  positions_nr AS TDNAME,
-  'GRUN' AS TDID,
-  'E' AS TDSPRAS
-FROM b11_1_material
-WHERE is_transferred = 't'
-ORDER BY source_id;
-
--- After creating the view, you can query it as a regular table
--- For example: SELECT * FROM MARA_STXH_Grunddaten;
-
+ SELECT b11_1_material.positions_nr AS source_id,
+    'MATERIAL'::text AS tdobject,
+    b11_1_material.positions_nr AS tdname,
+    'GRUN'::text AS tdid,
+    'E'::text AS tdspras
+   FROM b11_1_material
+  WHERE b11_1_material.is_transferred = true
+  ORDER BY 1;

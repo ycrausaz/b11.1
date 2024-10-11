@@ -1,17 +1,19 @@
-DROP VIEW IF EXISTS MBEW_Buchhaltung;
-CREATE VIEW MBEW_Buchhaltung
+CREATE OR REPLACE VIEW public.mbew_buchhaltung
  AS
  SELECT a.positions_nr AS source_id,
     b.text AS bwkey,
-    c.text as vprsv,
+    c.text AS vprsv,
     a.preis AS verpr,
     a.preis AS stprs,
     a.preiseinheit AS peinh,
     f.text AS bklas,
-    CASE WHEN c.text is null THEN '' ELSE '2' END as mlast
+        CASE
+            WHEN c.text IS NULL THEN ''::text
+            ELSE '2'::text
+        END AS mlast
    FROM b11_1_material a
      LEFT JOIN b11_1_werkzuordnung_1 b ON a.werkzuordnung_1_id = b.id
      LEFT JOIN b11_1_bewertungsklasse f ON a.bewertungsklasse_id = f.id
-     LEFT JOIN b11_1_preissteuerung c on a.preissteuerung_id = c.id
+     LEFT JOIN b11_1_preissteuerung c ON a.preissteuerung_id = c.id
   WHERE a.is_transferred = true
   ORDER BY a.positions_nr, b.text;

@@ -1,8 +1,7 @@
-DROP VIEW IF EXISTS MLAN_Steuer;
-CREATE VIEW MLAN_Steuer AS
-SELECT
-    positions_nr AS SOURCE_ID,
-    'CH' AS ALAND
-FROM b11_1_material
-where is_transferred='t'
-order by source_id;
+CREATE OR REPLACE VIEW public.mlan_steuer
+ AS
+ SELECT b11_1_material.positions_nr AS source_id,
+    'CH'::text AS aland
+   FROM b11_1_material
+  WHERE b11_1_material.is_transferred = true
+  ORDER BY b11_1_material.positions_nr;

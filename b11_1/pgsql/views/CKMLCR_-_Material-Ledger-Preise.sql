@@ -1,6 +1,4 @@
--- Create a view named 'unpivoted_werks_view' that unpivots werk columns into rows
-DROP VIEW IF EXISTS CKMLCR_Material_Ledger_Preise;
-CREATE VIEW CKMLCR_Material_Ledger_Preise
+CREATE OR REPLACE VIEW public.ckmlcr_material_ledger_preise
  AS
  SELECT a.positions_nr AS source_id,
     b.text AS bwkey,

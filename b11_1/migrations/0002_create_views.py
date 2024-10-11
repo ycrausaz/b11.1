@@ -4,7 +4,7 @@ from django.db import connection
 # 1
 def create_views_makt_beschreibung(apps, schema_editor):
     view_sql = '''
-CREATE OR REPLACE VIEW makt_beschreibung
+CREATE OR REPLACE VIEW public.makt_beschreibung
  AS
  SELECT b11_1_material.positions_nr AS source_id,
     'D'::text AS spras,
@@ -22,7 +22,8 @@ UNION ALL
     'E'::text AS spras,
     b11_1_material.kurztext_en AS maktx
    FROM b11_1_material
-  WHERE b11_1_material.is_transferred = true;
+  WHERE b11_1_material.is_transferred = true
+  ORDER BY 1;
         '''
     schema_editor.execute(view_sql)
 
@@ -32,7 +33,7 @@ def drop_views_makt_beschreibung(apps, schema_editor):
 # 2
 def create_views_mara_ausp_merkmale(apps, schema_editor):
     view_sql = '''
-CREATE OR REPLACE VIEW mara_ausp_merkmale
+CREATE OR REPLACE VIEW public.mara_ausp_merkmale
  AS
  WITH original_query AS (
          SELECT a.positions_nr AS source_id,
@@ -59,7 +60,12 @@ CREATE OR REPLACE VIEW mara_ausp_merkmale
                 CASE
                     WHEN a.verteilung_svsaa = true THEN 'X'::text
                     ELSE ''::text
-                END AS v_svsaa
+                END AS v_svsaa,
+            a.preis AS v_bewertungspreis,
+            a.waehrung AS v_waehrung,
+            a.preiseinheit AS v_preiseinheit,
+            to_char(CURRENT_DATE::timestamp with time zone, 'DD.MM.YYYY'::text) AS v_gueltigab,
+            a.lagerfaehigkeit AS v_lagerfaehigkeit
            FROM b11_1_material a
              LEFT JOIN b11_1_uebersetzungsstatus b ON b.id = a.uebersetzungsstatus_id
           WHERE a.is_transferred = true
@@ -129,6 +135,36 @@ UNION ALL
     original_query.v_svsaa AS atwrt,
     'V_SVSAA'::text AS atnam
    FROM original_query
+UNION ALL
+ SELECT original_query.source_id,
+    original_query.klart,
+    original_query.v_bewertungspreis::character varying AS atwrt,
+    'V_BEWERTUNGSPREIS'::text AS atnam
+   FROM original_query
+UNION ALL
+ SELECT original_query.source_id,
+    original_query.klart,
+    original_query.v_waehrung AS atwrt,
+    'V_WAEHRUNG'::text AS atnam
+   FROM original_query
+UNION ALL
+ SELECT original_query.source_id,
+    original_query.klart,
+    original_query.v_preiseinheit::character varying AS atwrt,
+    'V_PREISEINHEIT'::text AS atnam
+   FROM original_query
+UNION ALL
+ SELECT original_query.source_id,
+    original_query.klart,
+    original_query.v_gueltigab::character varying AS atwrt,
+    'V_GUELTIGAB'::text AS atnam
+   FROM original_query
+UNION ALL
+ SELECT original_query.source_id,
+    original_query.klart,
+    original_query.v_lagerfaehigkeit::character varying AS atwrt,
+    'V_LAGERFAEHIGKEIT'::text AS atnam
+   FROM original_query
   ORDER BY 1, 4;
         '''
     schema_editor.execute(view_sql)
@@ -139,7 +175,7 @@ def drop_views_mara_ausp_merkmale(apps, schema_editor):
 # 3
 def create_views_mara_grunddaten(apps, schema_editor):
     view_sql = '''
-CREATE OR REPLACE VIEW mara_grunddaten
+CREATE OR REPLACE VIEW public.mara_grunddaten
  AS
  SELECT a.positions_nr AS source_id,
     b.text AS mtart,
@@ -185,7 +221,6 @@ CREATE OR REPLACE VIEW mara_grunddaten
     a.produkthierarchie AS prdha,
     'UAM'::text AS hndlcode,
     j.text AS tempb,
-    a.cpv_code AS zzcpvcode,
     k.text AS zzsonderablauf,
     a.lagerfaehigkeit AS "MARA-MHDHB",
     '1'::text AS "MARA-MHDRZ",
@@ -211,7 +246,7 @@ def drop_views_mara_grunddaten(apps, schema_editor):
 # 4
 def create_views_mara_kssk_klassenzuordnung(apps, schema_editor):
     view_sql = '''
-CREATE OR REPLACE VIEW mara_kssk_klassenzuordnung
+CREATE OR REPLACE VIEW public.mara_kssk_klassenzuordnung
  AS
  WITH source_data AS (
          SELECT a.positions_nr AS source_id,
@@ -222,6 +257,11 @@ CREATE OR REPLACE VIEW mara_kssk_klassenzuordnung
  SELECT source_data.source_id,
     source_data.klart,
     'V_VERTEILUNG_PSD'::text AS class
+   FROM source_data
+UNION ALL
+ SELECT source_data.source_id,
+    source_data.klart,
+    'V_VERTEILUNG_RUAG'::text AS class
    FROM source_data
 UNION ALL
  SELECT source_data.source_id,
@@ -242,7 +282,8 @@ UNION ALL
  SELECT source_data.source_id,
     source_data.klart,
     'V_BM_SBM'::text AS class
-   FROM source_data;
+   FROM source_data
+  ORDER BY 1;
         '''
     schema_editor.execute(view_sql)
 
@@ -252,7 +293,7 @@ def drop_views_mara_kssk_klassenzuordnung(apps, schema_editor):
 # 5
 def create_views_mara_stxh_grunddaten(apps, schema_editor):
     view_sql = '''
-CREATE OR REPLACE VIEW mara_stxh_grunddaten
+CREATE OR REPLACE VIEW public.mara_stxh_grunddaten
  AS
  SELECT b11_1_material.positions_nr AS source_id,
     'MATERIAL'::text AS tdobject,
@@ -276,7 +317,8 @@ UNION ALL
     'GRUN'::text AS tdid,
     'E'::text AS tdspras
    FROM b11_1_material
-  WHERE b11_1_material.is_transferred = true;
+  WHERE b11_1_material.is_transferred = true
+  ORDER BY 1;
         '''
     schema_editor.execute(view_sql)
 
@@ -286,7 +328,7 @@ def drop_views_mara_stxh_grunddaten(apps, schema_editor):
 # 6
 def create_views_mara_stxl_grunddaten(apps, schema_editor):
     view_sql = '''
-CREATE OR REPLACE VIEW mara_stxl_grunddaten
+CREATE OR REPLACE VIEW public.mara_stxl_grunddaten
  AS
  SELECT mara_stxl_grunddaten.source_id,
     'MATERIAL'::text AS tdobject,
@@ -353,14 +395,17 @@ def drop_views_mara_stxl_grunddaten(apps, schema_editor):
 # 7
 def create_views_marc_werksdaten(apps, schema_editor):
     view_sql = '''
-CREATE OR REPLACE VIEW marc_werksdaten
+CREATE OR REPLACE VIEW public.marc_werksdaten
  AS
  SELECT a.positions_nr AS source_id,
+    a.lieferzeit AS plifz,
     b.text AS werk,
     'ND'::text AS dismm,
+    a.fertigungssteuerer_id AS fevor,
     a.orderbuchpflicht AS kordb
    FROM b11_1_material a
-     LEFT JOIN b11_1_werk b ON a.werk_id = b.id
+     LEFT JOIN b11_1_werkzuordnung_1 b ON a.werkzuordnung_1_id = b.id
+     LEFT JOIN b11_1_fertigungssteuerer c ON a.fertigungssteuerer_id = c.id
   WHERE a.is_transferred = true
   ORDER BY a.positions_nr, b.text;
         '''
@@ -372,17 +417,23 @@ def drop_views_marc_werksdaten(apps, schema_editor):
 # 8
 def create_views_mbew_buchhaltung(apps, schema_editor):
     view_sql = '''
-CREATE OR REPLACE VIEW mbew_buchhaltung
+CREATE OR REPLACE VIEW public.mbew_buchhaltung
  AS
  SELECT a.positions_nr AS source_id,
     b.text AS bwkey,
+    c.text AS vprsv,
     a.preis AS verpr,
     a.preis AS stprs,
     a.preiseinheit AS peinh,
-    f.text AS bklas
+    f.text AS bklas,
+        CASE
+            WHEN c.text IS NULL THEN ''::text
+            ELSE '2'::text
+        END AS mlast
    FROM b11_1_material a
-     LEFT JOIN b11_1_werk b ON a.werk_id = b.id
+     LEFT JOIN b11_1_werkzuordnung_1 b ON a.werkzuordnung_1_id = b.id
      LEFT JOIN b11_1_bewertungsklasse f ON a.bewertungsklasse_id = f.id
+     LEFT JOIN b11_1_preissteuerung c ON a.preissteuerung_id = c.id
   WHERE a.is_transferred = true
   ORDER BY a.positions_nr, b.text;
         '''
@@ -394,12 +445,13 @@ def drop_views_mbew_buchhaltung(apps, schema_editor):
 # 9
 def create_views_mlan_steuer(apps, schema_editor):
     view_sql = '''
-CREATE OR REPLACE VIEW mlan_steuer
+CREATE OR REPLACE VIEW public.mlan_steuer
  AS
  SELECT b11_1_material.positions_nr AS source_id,
     'CH'::text AS aland
    FROM b11_1_material
-  WHERE b11_1_material.is_transferred = true;
+  WHERE b11_1_material.is_transferred = true
+  ORDER BY b11_1_material.positions_nr;
         '''
     schema_editor.execute(view_sql)
 
@@ -409,7 +461,7 @@ def drop_views_mlan_steuer(apps, schema_editor):
 # 10
 def create_views_mvke_verkaufsdaten(apps, schema_editor):
     view_sql = '''
-CREATE OR REPLACE VIEW mvke_verkaufsdaten
+CREATE OR REPLACE VIEW public.mvke_verkaufsdaten
  AS
  SELECT a.positions_nr AS source_id,
     'M100'::text AS vkorg,
@@ -418,7 +470,8 @@ CREATE OR REPLACE VIEW mvke_verkaufsdaten
    FROM b11_1_material a
      LEFT JOIN b11_1_vertriebsweg b ON b.id = a.vertriebsweg_id
      LEFT JOIN b11_1_allgemeinepositionstypengruppe c ON c.id = a.allgemeine_positionstypengruppe_id
-  WHERE a.is_transferred = true;
+  WHERE a.is_transferred = true
+  ORDER BY a.positions_nr;
         '''
     schema_editor.execute(view_sql)
 
@@ -428,18 +481,18 @@ def drop_views_mvke_verkaufsdaten(apps, schema_editor):
 # 11
 def create_views_ckmlcr_material_ledger_preise(apps, schema_editor):
     view_sql = '''
-CREATE OR REPLACE VIEW ckmlcr_material_ledger_preise
+CREATE OR REPLACE VIEW public.ckmlcr_material_ledger_preise
  AS
  SELECT a.positions_nr AS source_id,
     b.text AS bwkey,
-    a.preis AS pvprs,
-    a.preis AS stprs,
-    a.preiseinheit AS peinh,
     '10'::text AS curtp,
-    'CHF'::text AS waers,
-    f.text AS vprsv
+    a.preiseinheit AS peinh,
+    f.text AS vprsv,
+    a.preis AS stprs,
+    a.preis AS pvprs,
+    'CHF'::text AS waers
    FROM b11_1_material a
-     LEFT JOIN b11_1_werk b ON a.werk_id = b.id
+     LEFT JOIN b11_1_werkzuordnung_1 b ON a.werkzuordnung_1_id = b.id
      LEFT JOIN b11_1_preissteuerung f ON a.preissteuerung_id = f.id
   WHERE a.is_transferred = true
   ORDER BY a.positions_nr, b.text;
