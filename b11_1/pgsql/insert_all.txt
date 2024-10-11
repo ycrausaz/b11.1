@@ -7683,6 +7683,7 @@ insert into "b11_1_g_partner" ("cage_code","gp_nummer","kreditor_nr","name") val
 insert into "b11_1_gefahrgutkennzeichen" (text) values ('V01'),('V02'),('V03');
 \copy b11_1_helptooltip (field_name, content) FROM 'b11_1/pgsql/help.csv' WITH (FORMAT csv, DELIMITER '|', QUOTE '"', ESCAPE '"', HEADER);
 insert into "b11_1_materialart" (text) values ('V001'),('V002'),('V003'),('V005'),('V006'),('V007'),('V008'),('V009'),('V010'),('V011'),('V012'),('V013'),('V014'),('V015'),('V016'),('V017'),('V099');
+insert into "b11_1_materialeinstufungnachzuva" (text) values ('SSB'),('HSB'),('ESB'),('UAM');
 insert into "b11_1_preissteuerung" (text) values ('V'), ('S');
 insert into "b11_1_rueckfuehrungscode" (text) values ('R'),('N'),('V');
 insert into "b11_1_serialnummerprofil" (text) values ('ZM01'),('ZM02'),('ZM03'),('ZM05');
@@ -7692,5 +7693,8 @@ insert into "b11_1_sparte" (text) values ('V0'),('V1'),('V2'),('V3'),('V4'),('V5
 insert into "b11_1_temperaturbedingung" (text) values ('00'), ('01'), ('02'), ('03'), ('04');
 insert into "b11_1_uebersetzungsstatus" (text) values ('P'),('U'),('N');
 insert into "b11_1_vertriebsweg" (text) values ('A1'), ('A2'), ('A3'), ('A4'), ('A5'), ('A6'), ('I1'), ('M1'), ('MP'), ('O1'), ('P1'), ('S1'), ('S2'), ('S3'), ('S4'), ('S5'), ('S7'), ('S8'), ('S9'), ('SM'), ('T1'), ('TA'), ('TB'), ('TC'), ('TD'), ('TE'), ('TL'), ('TM'), ('TO'), ('TQ'), ('TV'), ('TZ'), ('U1'), ('U2'), ('V0');
-insert into "b11_1_werk" (text) values ('0420'),('0430'),('0440'),('0800');
+insert into "b11_1_werkzuordnung_1" (text) values ('0420'),('0430'),('0440'),('0800');
+insert into "b11_1_werkzuordnung_2" (text) values ('0420'),('0430'),('0440'),('0800');
+insert into "b11_1_werkzuordnung_3" (text) values ('0420'),('0430'),('0440'),('0800');
+insert into "b11_1_werkzuordnung_4" (text) values ('0420'),('0430'),('0440'),('0800');
 insert into "b11_1_zuteilung" (text) values ('BM'), ('TRP'), ('MKZ'), ('PRD');

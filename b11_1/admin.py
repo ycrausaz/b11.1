@@ -55,8 +55,20 @@ class UebersetzungsstatusAdmin(admin.ModelAdmin):
 class GefahrgutkennzeichenAdmin(admin.ModelAdmin):
     list_display = ('text',)
 
-@admin.register(Werk)
-class WerkAdmin(admin.ModelAdmin):
+@admin.register(Werkzuordnung_1)
+class Werkzuordnung_1Admin(admin.ModelAdmin):
+    list_display = ('text',)
+
+@admin.register(Werkzuordnung_2)
+class Werkzuordnung_2Admin(admin.ModelAdmin):
+    list_display = ('text',)
+
+@admin.register(Werkzuordnung_3)
+class Werkzuordnung_3Admin(admin.ModelAdmin):
+    list_display = ('text',)
+
+@admin.register(Werkzuordnung_4)
+class Werkzuordnung_4Admin(admin.ModelAdmin):
     list_display = ('text',)
 
 @admin.register(AllgemeinePositionstypengruppe)
@@ -99,3 +111,6 @@ class AuspraegungAdmin(admin.ModelAdmin):
 class PreissteuerungAdmin(admin.ModelAdmin):
     list_display = ('text',)
 
+@admin.register(MaterialeinstufungNachZUVA)
+class MaterialeinstufungNachZUVAAdmin(admin.ModelAdmin):
+    list_display = ('text',)

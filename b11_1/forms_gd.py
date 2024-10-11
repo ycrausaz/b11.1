@@ -33,7 +33,7 @@ class MaterialForm_GD(ModelForm, SplitterReadOnlyReadWriteFields):
 
     class Meta:
         model = Material
-        fields = ['positions_nr', 'hersteller', 'kurztext_de', 'kurztext_fr', 'kurztext_en', 'grunddatentext_de_1_zeile', 'grunddatentext_de_2_zeile', 'grunddatentext_fr_1_zeile', 'grunddatentext_fr_2_zeile', 'grunddatentext_en_1_zeile', 'grunddatentext_en_2_zeile', 'basismengeneinheit', 'bruttogewicht', 'gewichtseinheit', 'nettogewicht', 'groesse_abmessung', 'ean_upc_code', 'nato_stock_number', 'nsn_gruppe_klasse', 'nato_versorgungs_nr', 'herstellerteilenummer', 'normbezeichnung', 'gefahrgutkennzeichen', 'bruttogewicht', 'instandsetzbar', 'chargenpflicht', 'bestellmengeneinheit', 'mindestbestellmenge', 'lieferzeit', 'einheit_l_b_h', 'laenge', 'breite', 'hoehe', 'preis', 'preiseinheit', 'lagerfaehigkeit', 'exportkontrollauflage', 'cage_code', 'hersteller_name', 'hersteller_adresse', 'hersteller_plz', 'hersteller_ort', 'revision', 'bemerkung', 'begru', 'materialart_grunddaten', 'sparte', 'produkthierarchie', 'rueckfuehrungscode', 'serialnummerprofil', 'hersteller_nr_gp', 'warengruppe', 'uebersetzungsstatus', 'endbevorratet', 'revision_fremd', 'revision_eigen', 'zertifiziert_fuer_flug', 'a_nummer', 'verteilung_an_psd', 'verteilung_an_ruag', 'werk', 'allgemeine_positionstypengruppe', 'verkaufsorg', 'vertriebsweg', 'allgemeine_positionstypengruppe', 'fuehrendes_material', 'auszeichnungsfeld', 'cpv_code', 'spare_part_class_code', 'fertigungssteuerer', 'cpv_code', 'kennzeichen_komplexes_system', 'sonderablauf', 'cpv_code', 'temperaturbedingung', 'bewertungsklasse', 'systemmanager', 'kennziffer_bamf', 'mietrelevanz', 'next_higher_assembly', 'nachschubklasse', 'orderbuchpflicht', 'verteilung_apm_kerda', 'verteilung_svsaa', 'verteilung_cheops', 'zuteilung', 'auspraegung']
+        fields = ['positions_nr', 'hersteller', 'kurztext_de', 'kurztext_fr', 'kurztext_en', 'grunddatentext_de_1_zeile', 'grunddatentext_de_2_zeile', 'grunddatentext_fr_1_zeile', 'grunddatentext_fr_2_zeile', 'grunddatentext_en_1_zeile', 'grunddatentext_en_2_zeile', 'basismengeneinheit', 'bruttogewicht', 'gewichtseinheit', 'nettogewicht', 'groesse_abmessung', 'ean_upc_code', 'nato_stock_number', 'nsn_gruppe_klasse', 'nato_versorgungs_nr', 'herstellerteilenummer', 'normbezeichnung', 'gefahrgutkennzeichen', 'bruttogewicht', 'instandsetzbar', 'chargenpflicht', 'bestellmengeneinheit', 'mindestbestellmenge', 'lieferzeit', 'einheit_l_b_h', 'laenge', 'breite', 'hoehe', 'preis', 'preiseinheit', 'lagerfaehigkeit', 'exportkontrollauflage', 'cage_code', 'hersteller_name', 'hersteller_adresse', 'hersteller_plz', 'hersteller_ort', 'revision', 'bemerkung', 'begru', 'materialart_grunddaten', 'sparte', 'produkthierarchie', 'rueckfuehrungscode', 'serialnummerprofil', 'hersteller_nr_gp', 'warengruppe', 'uebersetzungsstatus', 'endbevorratet', 'revision_fremd', 'revision_eigen', 'zertifiziert_fuer_flug', 'a_nummer', 'verteilung_an_psd', 'verteilung_an_ruag', 'werkzuordnung_1', 'werkzuordnung_2', 'werkzuordnung_3', 'werkzuordnung_4','allgemeine_positionstypengruppe', 'verkaufsorg', 'vertriebsweg', 'allgemeine_positionstypengruppe', 'fuehrendes_material', 'auszeichnungsfeld', 'spare_part_class_code', 'fertigungssteuerer', 'kennzeichen_komplexes_system', 'sonderablauf', 'temperaturbedingung', 'bewertungsklasse', 'systemmanager', 'kennziffer_bamf', 'mietrelevanz', 'next_higher_assembly', 'nachschubklasse', 'orderbuchpflicht', 'verteilung_apm_kerda', 'verteilung_svsaa', 'verteilung_cheops', 'zuteilung', 'auspraegung']
         widgets = {
 # --- BEGIN IL
 'positions_nr':forms.TextInput(attrs={'readonly':True,'style':readonly_field_style()}),
@@ -82,14 +82,16 @@ class MaterialForm_GD(ModelForm, SplitterReadOnlyReadWriteFields):
 'bemerkung': forms.Textarea(attrs={'class':'form-control','rows':5,'readonly':True,'style':readonly_field_style()}),
 # --- END IL
 # --- BEGIN SMDA
-'werk':ReadOnlyForeignKeyWidget(attrs={'readonly':True,'style':readonly_field_style()}),
+'werkzuordnung_1':ReadOnlyForeignKeyWidget(attrs={'readonly':True,'style':readonly_field_style()}),
+'werkzuordnung_2':ReadOnlyForeignKeyWidget(attrs={'readonly':True,'style':readonly_field_style()}),
+'werkzuordnung_3':ReadOnlyForeignKeyWidget(attrs={'readonly':True,'style':readonly_field_style()}),
+'werkzuordnung_4':ReadOnlyForeignKeyWidget(attrs={'readonly':True,'style':readonly_field_style()}),
 'allgemeine_positionstypengruppe':ReadOnlyForeignKeyWidget(attrs={'readonly':True,'style':readonly_field_style()}),
 'verkaufsorg':forms.TextInput(attrs={'readonly':True,'style':readonly_field_style()}),
 'vertriebsweg':ReadOnlyForeignKeyWidget(attrs={'readonly':True,'style':readonly_field_style()}),
 'allgemeine_positionstypengruppe':ReadOnlyForeignKeyWidget(attrs={'readonly':True,'style':readonly_field_style()}),
 'fuehrendes_material':forms.TextInput(attrs={'readonly':True,'style':readonly_field_style()}),
 'auszeichnungsfeld':ReadOnlyForeignKeyWidget(attrs={'readonly':True,'style':readonly_field_style()}),
-'cpv_code':forms.TextInput(attrs={'readonly':True,'style':readonly_field_style()}),
 'spare_part_class_code':ReadOnlyForeignKeyWidget(attrs={'readonly':True,'style':readonly_field_style()}),
 'fertigungssteuerer':ReadOnlyForeignKeyWidget(attrs={'readonly':True,'style':readonly_field_style()}),
 'kennzeichen_komplexes_system':forms.TextInput(attrs={'readonly':True,'style':readonly_field_style()}),

@@ -342,7 +342,7 @@ class UpdateMaterial_SMDA_View(grSMDA_GroupRequiredMixin, SuccessMessageMixin, U
 
     def form_valid(self, form):
         item = form.save(commit=False)
-        if item.werk == "0800":
+        if item.werkzuordnung_1 == "0800":
             item.verkaufsorg = "A100"
         else:
             item.verkaufsorg = "M100"

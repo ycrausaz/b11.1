@@ -1,1 +1,4 @@
-insert into "b11_1_werk" (text) values ('0420'),('0430'),('0440'),('0800');
+insert into "b11_1_werkzuordnung_1" (text) values ('0420'),('0430'),('0440'),('0800');
+insert into "b11_1_werkzuordnung_2" (text) values ('0420'),('0430'),('0440'),('0800');
+insert into "b11_1_werkzuordnung_3" (text) values ('0420'),('0430'),('0440'),('0800');
+insert into "b11_1_werkzuordnung_4" (text) values ('0420'),('0430'),('0440'),('0800');

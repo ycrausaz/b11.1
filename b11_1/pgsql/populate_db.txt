@@ -160,13 +160,16 @@ zertifiziert_fuer_flug, -- 49
 a_nummer, -- 50
 verteilung_an_psd, -- 51
 verteilung_an_ruag, -- 52
-werk_id, -- 53
+werkzuordnung_1_id, -- 53
+werkzuordnung_2_id, -- 54
+werkzuordnung_3_id, -- 55
+werkzuordnung_4_id, -- 56
 allgemeine_positionstypengruppe_id, -- 57
 verkaufsorg, -- 58
 vertriebsweg_id, -- 59
 fuehrendes_material, -- 60
 auszeichnungsfeld_id, -- 61
-cpv_code, -- 62
+materialeinstufung_nach_zuva_id, -- 62
 fertigungssteuerer_id, -- 63
 kennzeichen_komplexes_system, -- 64
 sonderablauf_id, -- 65
@@ -247,13 +250,16 @@ uebersetzungsstatus_id -- 86
 (select random_string(10)), -- a_nummer, -- 50
 (select random()::int::boolean), -- verteilung_an_psd, -- 51
 (select random()::int::boolean), -- verteilung_an_ruag, -- 52
-(select id from b11_1_werk order by random() limit 1), -- werk, -- 53
+(select id from b11_1_werkzuordnung_1 order by random() limit 1), -- werk, -- 53
+(select id from b11_1_werkzuordnung_2 order by random() limit 1), -- werk, -- 54
+(select id from b11_1_werkzuordnung_3 order by random() limit 1), -- werk, -- 55
+(select id from b11_1_werkzuordnung_4 order by random() limit 1), -- werk, -- 56
 (select id from b11_1_allgemeinepositionstypengruppe order by random() limit 1), -- allgemeine_positionstypengruppe, -- 57
 'M100', -- verkaufsorg, -- 58
 (select id from b11_1_vertriebsweg order by random() limit 1), -- vertriebsweg, -- 59
 '', -- fuehrendes_material, -- 60
 (select id from b11_1_auszeichnungsfeld order by random() limit 1), -- auszeichnungsfeld, -- 61
-'09221000-4', -- cpv_code, -- 62
+(select id from b11_1_materialeinstufungnachzuva order by random() limit 1), -- materialeinstufungnachzuva -- 62
 (select id from b11_1_fertigungssteuerer order by random() limit 1), -- fertigungssteuerer, -- 63
 (select random()::int::boolean), -- kennzeichen_komplexes_system, -- 64
 (select id from b11_1_sonderablauf order by random() limit 1), -- sonderablauf, -- 65

@@ -127,7 +127,37 @@ class Gefahrgutkennzeichen(models.Model):
         app_label = 'b11_1'
 
 
-class Werk(models.Model):
+class Werkzuordnung_1(models.Model):
+    text = models.CharField(null=True, blank=True, max_length=40)
+
+    def __str__(self):
+        return self.text
+
+    class Meta:
+        app_label = 'b11_1'
+
+
+class Werkzuordnung_2(models.Model):
+    text = models.CharField(null=True, blank=True, max_length=40)
+
+    def __str__(self):
+        return self.text
+
+    class Meta:
+        app_label = 'b11_1'
+
+
+class Werkzuordnung_3(models.Model):
+    text = models.CharField(null=True, blank=True, max_length=40)
+
+    def __str__(self):
+        return self.text
+
+    class Meta:
+        app_label = 'b11_1'
+
+
+class Werkzuordnung_4(models.Model):
     text = models.CharField(null=True, blank=True, max_length=40)
 
     def __str__(self):
@@ -237,6 +267,16 @@ class Preissteuerung(models.Model):
         app_label = 'b11_1'
 
 
+class MaterialeinstufungNachZUVA(models.Model):
+    text = models.CharField(null=True, blank=True, max_length=40)
+
+    def __str__(self):
+        return self.text
+
+    class Meta:
+        app_label = 'b11_1'
+
+
 class Material(models.Model):
     hersteller = models.CharField(null=True, blank=True, max_length=40)
     is_transferred = models.BooleanField(null=True, blank=False, default=False)
@@ -304,18 +344,18 @@ class Material(models.Model):
     a_nummer = models.CharField(null=True, blank=True, max_length=40)
     verteilung_an_psd = models.BooleanField(null=True, blank=True)
     verteilung_an_ruag = models.BooleanField(null=True, blank=True)
-    werk = models.ForeignKey(Werk, null=True, blank=True, on_delete=models.DO_NOTHING, verbose_name="Werk ")
+    werkzuordnung_1 = models.ForeignKey(Werkzuordnung_1, null=True, blank=True, on_delete=models.DO_NOTHING, verbose_name="Werkzuordnung ")
+    werkzuordnung_2 = models.ForeignKey(Werkzuordnung_2, null=True, blank=True, on_delete=models.DO_NOTHING, verbose_name="Werkzuordnung (2) ")
+    werkzuordnung_3 = models.ForeignKey(Werkzuordnung_3, null=True, blank=True, on_delete=models.DO_NOTHING, verbose_name="Werkzuordnung (3) ")
+    werkzuordnung_4 = models.ForeignKey(Werkzuordnung_4, null=True, blank=True, on_delete=models.DO_NOTHING, verbose_name="Werkzuordnung (4) ")
     allgemeine_positionstypengruppe = models.ForeignKey(AllgemeinePositionstypengruppe, null=True, blank=True, on_delete=models.DO_NOTHING, verbose_name="Allgemeine Positionstypengruppe ")
     verkaufsorg = models.CharField(null=True, blank=True, max_length=40)
     vertriebsweg = models.ForeignKey(Vertriebsweg, null=True, blank=True, on_delete=models.DO_NOTHING, verbose_name="Vertriebsweg ")
     fuehrendes_material = models.CharField(null=True, blank=True, max_length=40)
     auszeichnungsfeld = models.ForeignKey(Auszeichnungsfeld, null=True, blank=True, on_delete=models.DO_NOTHING, verbose_name="Auszeichungsfeld ")
-    cpv_code = models.CharField(null=True, blank=True, max_length=40)
     fertigungssteuerer = models.ForeignKey(Fertigungssteuerer, null=True, blank=True, on_delete=models.DO_NOTHING, verbose_name="Fertigungssteuerer ")
-    cpv_code = models.CharField(null=True, blank=True, max_length=40)
     kennzeichen_komplexes_system = models.BooleanField(null=True, blank=True)
     sonderablauf = models.ForeignKey(Sonderablauf, null=True, blank=True, on_delete=models.DO_NOTHING, verbose_name="Sonderablauf ")
-    cpv_code = models.CharField(null=True, blank=True, max_length=40)
     temperaturbedingung = models.ForeignKey(Temperaturbedingung, null=True, blank=True, on_delete=models.DO_NOTHING, verbose_name="Temperaturbedingung ")
     bewertungsklasse = models.ForeignKey(Bewertungsklasse, null=True, blank=True, on_delete=models.DO_NOTHING, verbose_name="Bewertungsklasse ")
     systemmanager = models.CharField(null=True, blank=True, max_length=30)
@@ -323,6 +363,7 @@ class Material(models.Model):
     mietrelevanz = models.BooleanField(null=True, blank=True)
     next_higher_assembly = models.CharField(null=True, blank=True, max_length=30)
     nachschubklasse = models.CharField(null=True, blank=True, max_length=30)
+    materialeinstufung_nach_zuva = models.ForeignKey(MaterialeinstufungNachZUVA, null=True, blank=True, on_delete=models.DO_NOTHING, verbose_name="Materialeinstufung nach ZUVA ")
     orderbuchpflicht = models.BooleanField(null=True, blank=True)
     verteilung_apm_kerda = models.BooleanField(null=True, blank=True)
     verteilung_svsaa = models.BooleanField(null=True, blank=True)
