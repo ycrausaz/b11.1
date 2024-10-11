@@ -193,9 +193,11 @@ rueckfuehrungscode_id, -- 82
 serialnummerprofil_id, -- 83
 spare_part_class_code_id, -- 84
 sparte_id, -- 85
-uebersetzungsstatus_id -- 86
+uebersetzungsstatus_id, -- 86
+orderbuchpflicht, -- 87
+preissteuerung_id -- 88
 ) values (
-'f',
+'t',
 'f',
 (select random_hersteller()),
 (select random_between(1, 100)), -- positions_nr, -- 1
@@ -229,7 +231,7 @@ uebersetzungsstatus_id -- 86
 (select random_between(1, 100)), -- breite, -- 29
 (select random_between(1, 100)), -- hoehe, -- 30
 (select random_between(1, 100)), -- preis, -- 31
-'CH', -- waehrung, -- 32
+'CHF', -- waehrung, -- 32
 (select random_between(1, 100)), -- preiseinheit, -- 33
 (select random_between(1, 100)), -- lagerfaehigkeit, -- 34
 (select random()::int::boolean), -- exportkontrollauflage, -- 35
@@ -283,5 +285,7 @@ uebersetzungsstatus_id -- 86
 (select id from b11_1_serialnummerprofil order by random() limit 1), -- serialnummerprofil_id, -- 83
 (select id from b11_1_sparepartclasscode order by random() limit 1), -- spare_part_class_code_id, -- 84
 (select id from b11_1_sparte order by random() limit 1), -- sparte_id, -- 85
-(select id from b11_1_uebersetzungsstatus order by random() limit 1) -- uebersetzungsstatus_id -- 86
+(select id from b11_1_uebersetzungsstatus order by random() limit 1), -- uebersetzungsstatus_id -- 86
+(select random()::int::boolean), -- orderbuchpflicht -- 87
+(select id from b11_1_preissteuerung order by random() limit 1) -- preissteuerung -- 88
 )
