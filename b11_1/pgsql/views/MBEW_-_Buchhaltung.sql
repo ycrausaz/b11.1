@@ -1,6 +1,7 @@
-CREATE OR REPLACE VIEW public.mbew_buchhaltung
+CREATE OR REPLACE VIEW mbew_buchhaltung
  AS
- SELECT a.positions_nr AS source_id,
+ SELECT a.id AS tmp_id,
+    a.positions_nr AS source_id,
     b.text AS bwkey,
     c.text AS vprsv,
     a.preis AS verpr,

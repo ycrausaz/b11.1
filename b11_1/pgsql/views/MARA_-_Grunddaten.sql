@@ -1,6 +1,7 @@
-CREATE OR REPLACE VIEW public.mara_grunddaten
+CREATE OR REPLACE VIEW mara_grunddaten
  AS
- SELECT a.positions_nr AS source_id,
+ SELECT a.id AS tmp_id,
+    a.positions_nr AS source_id,
     b.text AS mtart,
     c.text AS meins,
     a.herstellerteilenummer AS mfrpn,

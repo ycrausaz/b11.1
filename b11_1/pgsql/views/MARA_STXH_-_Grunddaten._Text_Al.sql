@@ -1,6 +1,7 @@
-CREATE OR REPLACE VIEW public.mara_stxh_grunddaten
+CREATE OR REPLACE VIEW mara_stxh_grunddaten
  AS
- SELECT b11_1_material.positions_nr AS source_id,
+ SELECT b11_1_material.id AS tmp_id,
+    b11_1_material.positions_nr AS source_id,
     'MATERIAL'::text AS tdobject,
     b11_1_material.positions_nr AS tdname,
     'GRUN'::text AS tdid,
@@ -8,7 +9,8 @@ CREATE OR REPLACE VIEW public.mara_stxh_grunddaten
    FROM b11_1_material
   WHERE b11_1_material.is_transferred = true
 UNION ALL
- SELECT b11_1_material.positions_nr AS source_id,
+ SELECT b11_1_material.id AS tmp_id,
+    b11_1_material.positions_nr AS source_id,
     'MATERIAL'::text AS tdobject,
     b11_1_material.positions_nr AS tdname,
     'GRUN'::text AS tdid,
@@ -16,7 +18,8 @@ UNION ALL
    FROM b11_1_material
   WHERE b11_1_material.is_transferred = true
 UNION ALL
- SELECT b11_1_material.positions_nr AS source_id,
+ SELECT b11_1_material.id AS tmp_id,
+    b11_1_material.positions_nr AS source_id,
     'MATERIAL'::text AS tdobject,
     b11_1_material.positions_nr AS tdname,
     'GRUN'::text AS tdid,

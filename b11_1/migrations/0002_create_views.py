@@ -4,21 +4,24 @@ from django.db import connection
 # 1
 def create_views_makt_beschreibung(apps, schema_editor):
     view_sql = '''
-CREATE OR REPLACE VIEW public.makt_beschreibung
+CREATE OR REPLACE VIEW makt_beschreibung
  AS
- SELECT b11_1_material.positions_nr AS source_id,
+ SELECT b11_1_material.id AS tmp_id,
+    b11_1_material.positions_nr AS source_id,
     'D'::text AS spras,
     b11_1_material.kurztext_de AS maktx
    FROM b11_1_material
   WHERE b11_1_material.is_transferred = true
 UNION ALL
- SELECT b11_1_material.positions_nr AS source_id,
+ SELECT b11_1_material.id AS tmp_id,
+    b11_1_material.positions_nr AS source_id,
     'F'::text AS spras,
     b11_1_material.kurztext_fr AS maktx
    FROM b11_1_material
   WHERE b11_1_material.is_transferred = true
 UNION ALL
- SELECT b11_1_material.positions_nr AS source_id,
+ SELECT b11_1_material.id AS tmp_id,
+    b11_1_material.positions_nr AS source_id,
     'E'::text AS spras,
     b11_1_material.kurztext_en AS maktx
    FROM b11_1_material
@@ -33,10 +36,11 @@ def drop_views_makt_beschreibung(apps, schema_editor):
 # 2
 def create_views_mara_ausp_merkmale(apps, schema_editor):
     view_sql = '''
-CREATE OR REPLACE VIEW public.mara_ausp_merkmale
+CREATE OR REPLACE VIEW mara_ausp_merkmale
  AS
  WITH original_query AS (
-         SELECT a.positions_nr AS source_id,
+         SELECT a.id AS tmp_id,
+            a.positions_nr AS source_id,
             '001'::text AS klart,
             a.a_nummer AS v_a_nummer,
             a.revision_fremd AS v_revfremd,
@@ -70,97 +74,113 @@ CREATE OR REPLACE VIEW public.mara_ausp_merkmale
              LEFT JOIN b11_1_uebersetzungsstatus b ON b.id = a.uebersetzungsstatus_id
           WHERE a.is_transferred = true
         )
- SELECT original_query.source_id,
+ SELECT original_query.tmp_id,
+    original_query.source_id,
     original_query.klart,
     original_query.v_a_nummer AS atwrt,
     'V_A_NUMMER'::text AS atnam
    FROM original_query
 UNION ALL
- SELECT original_query.source_id,
+ SELECT original_query.tmp_id,
+    original_query.source_id,
     original_query.klart,
     original_query.v_revfremd AS atwrt,
     'V_REVFREMD'::text AS atnam
    FROM original_query
 UNION ALL
- SELECT original_query.source_id,
+ SELECT original_query.tmp_id,
+    original_query.source_id,
     original_query.klart,
     original_query.v_reveigen AS atwrt,
     'V_REVEIGEN'::text AS atnam
    FROM original_query
 UNION ALL
- SELECT original_query.source_id,
+ SELECT original_query.tmp_id,
+    original_query.source_id,
     original_query.klart,
     original_query.v_systemmanager AS atwrt,
     'V_SYSTEMMANAGER'::text AS atnam
    FROM original_query
 UNION ALL
- SELECT original_query.source_id,
+ SELECT original_query.tmp_id,
+    original_query.source_id,
     original_query.klart,
     original_query.v_uebersetzung AS atwrt,
     'V_UEBERSETZUNG'::text AS atnam
    FROM original_query
 UNION ALL
- SELECT original_query.source_id,
+ SELECT original_query.tmp_id,
+    original_query.source_id,
     original_query.klart,
     original_query.v_kennziffer AS atwrt,
     'V_KENNZIFFER'::text AS atnam
    FROM original_query
 UNION ALL
- SELECT original_query.source_id,
+ SELECT original_query.tmp_id,
+    original_query.source_id,
     original_query.klart,
     original_query.v_next_higher AS atwrt,
     'V_NEXT_HIGHER'::text AS atnam
    FROM original_query
 UNION ALL
- SELECT original_query.source_id,
+ SELECT original_query.tmp_id,
+    original_query.source_id,
     original_query.klart,
     original_query.v_zertflug AS atwrt,
     'V_ZERTFLUG'::text AS atnam
    FROM original_query
 UNION ALL
- SELECT original_query.source_id,
+ SELECT original_query.tmp_id,
+    original_query.source_id,
     original_query.klart,
     original_query.v_apm AS atwrt,
     'V_APM'::text AS atnam
    FROM original_query
 UNION ALL
- SELECT original_query.source_id,
+ SELECT original_query.tmp_id,
+    original_query.source_id,
     original_query.klart,
     original_query.v_cheops AS atwrt,
     'V_CHEOPS'::text AS atnam
    FROM original_query
 UNION ALL
- SELECT original_query.source_id,
+ SELECT original_query.tmp_id,
+    original_query.source_id,
     original_query.klart,
     original_query.v_svsaa AS atwrt,
     'V_SVSAA'::text AS atnam
    FROM original_query
 UNION ALL
- SELECT original_query.source_id,
+ SELECT original_query.tmp_id,
+    original_query.source_id,
     original_query.klart,
     original_query.v_bewertungspreis::character varying AS atwrt,
     'V_BEWERTUNGSPREIS'::text AS atnam
    FROM original_query
 UNION ALL
- SELECT original_query.source_id,
+ SELECT original_query.tmp_id,
+    original_query.source_id,
     original_query.klart,
     original_query.v_waehrung AS atwrt,
     'V_WAEHRUNG'::text AS atnam
    FROM original_query
 UNION ALL
- SELECT original_query.source_id,
+ SELECT original_query.tmp_id,
+    original_query.source_id,
     original_query.klart,
     original_query.v_preiseinheit::character varying AS atwrt,
     'V_PREISEINHEIT'::text AS atnam
    FROM original_query
 UNION ALL
- SELECT original_query.source_id,
+ SELECT original_query.tmp_id,
+    original_query.source_id,
     original_query.klart,
     original_query.v_gueltigab::character varying AS atwrt,
     'V_GUELTIGAB'::text AS atnam
    FROM original_query
 UNION ALL
- SELECT original_query.source_id,
+ SELECT original_query.tmp_id,
+    original_query.source_id,
     original_query.klart,
     original_query.v_lagerfaehigkeit::character varying AS atwrt,
     'V_LAGERFAEHIGKEIT'::text AS atnam
@@ -175,9 +195,10 @@ def drop_views_mara_ausp_merkmale(apps, schema_editor):
 # 3
 def create_views_mara_grunddaten(apps, schema_editor):
     view_sql = '''
-CREATE OR REPLACE VIEW public.mara_grunddaten
+CREATE OR REPLACE VIEW mara_grunddaten
  AS
- SELECT a.positions_nr AS source_id,
+ SELECT a.id AS tmp_id,
+    a.positions_nr AS source_id,
     b.text AS mtart,
     c.text AS meins,
     a.herstellerteilenummer AS mfrpn,
@@ -246,40 +267,47 @@ def drop_views_mara_grunddaten(apps, schema_editor):
 # 4
 def create_views_mara_kssk_klassenzuordnung(apps, schema_editor):
     view_sql = '''
-CREATE OR REPLACE VIEW public.mara_kssk_klassenzuordnung
+CREATE OR REPLACE VIEW mara_kssk_klassenzuordnung
  AS
  WITH source_data AS (
-         SELECT a.positions_nr AS source_id,
+         SELECT a.id AS tmp_id,
+            a.positions_nr AS source_id,
             '001'::text AS klart
            FROM b11_1_material a
           WHERE a.is_transferred = true
         )
- SELECT source_data.source_id,
+ SELECT source_data.tmp_id,
+    source_data.source_id,
     source_data.klart,
     'V_VERTEILUNG_PSD'::text AS class
    FROM source_data
 UNION ALL
- SELECT source_data.source_id,
+ SELECT source_data.tmp_id,
+    source_data.source_id,
     source_data.klart,
     'V_VERTEILUNG_RUAG'::text AS class
    FROM source_data
 UNION ALL
- SELECT source_data.source_id,
+ SELECT source_data.tmp_id,
+    source_data.source_id,
     source_data.klart,
     'V_ZUSATZDATEN'::text AS class
    FROM source_data
 UNION ALL
- SELECT source_data.source_id,
+ SELECT source_data.tmp_id,
+    source_data.source_id,
     source_data.klart,
     'V_AR_NUMMER'::text AS class
    FROM source_data
 UNION ALL
- SELECT source_data.source_id,
+ SELECT source_data.tmp_id,
+    source_data.source_id,
     source_data.klart,
     'V_VERTEILUNG'::text AS class
    FROM source_data
 UNION ALL
- SELECT source_data.source_id,
+ SELECT source_data.tmp_id,
+    source_data.source_id,
     source_data.klart,
     'V_BM_SBM'::text AS class
    FROM source_data
@@ -293,9 +321,10 @@ def drop_views_mara_kssk_klassenzuordnung(apps, schema_editor):
 # 5
 def create_views_mara_stxh_grunddaten(apps, schema_editor):
     view_sql = '''
-CREATE OR REPLACE VIEW public.mara_stxh_grunddaten
+CREATE OR REPLACE VIEW mara_stxh_grunddaten
  AS
- SELECT b11_1_material.positions_nr AS source_id,
+ SELECT b11_1_material.id AS tmp_id,
+    b11_1_material.positions_nr AS source_id,
     'MATERIAL'::text AS tdobject,
     b11_1_material.positions_nr AS tdname,
     'GRUN'::text AS tdid,
@@ -303,7 +332,8 @@ CREATE OR REPLACE VIEW public.mara_stxh_grunddaten
    FROM b11_1_material
   WHERE b11_1_material.is_transferred = true
 UNION ALL
- SELECT b11_1_material.positions_nr AS source_id,
+ SELECT b11_1_material.id AS tmp_id,
+    b11_1_material.positions_nr AS source_id,
     'MATERIAL'::text AS tdobject,
     b11_1_material.positions_nr AS tdname,
     'GRUN'::text AS tdid,
@@ -311,7 +341,8 @@ UNION ALL
    FROM b11_1_material
   WHERE b11_1_material.is_transferred = true
 UNION ALL
- SELECT b11_1_material.positions_nr AS source_id,
+ SELECT b11_1_material.id AS tmp_id,
+    b11_1_material.positions_nr AS source_id,
     'MATERIAL'::text AS tdobject,
     b11_1_material.positions_nr AS tdname,
     'GRUN'::text AS tdid,
@@ -328,9 +359,10 @@ def drop_views_mara_stxh_grunddaten(apps, schema_editor):
 # 6
 def create_views_mara_stxl_grunddaten(apps, schema_editor):
     view_sql = '''
-CREATE OR REPLACE VIEW public.mara_stxl_grunddaten
+CREATE OR REPLACE VIEW mara_stxl_grunddaten
  AS
- SELECT mara_stxl_grunddaten.source_id,
+ SELECT mara_stxl_grunddaten.tmp_id,
+    mara_stxl_grunddaten.source_id,
     'MATERIAL'::text AS tdobject,
     mara_stxl_grunddaten.source_id AS tdname,
     'GRUN'::text AS tdid,
@@ -338,7 +370,8 @@ CREATE OR REPLACE VIEW public.mara_stxl_grunddaten
     mara_stxl_grunddaten.line_counter,
     mara_stxl_grunddaten.tdformat,
     mara_stxl_grunddaten.text AS tdline
-   FROM ( SELECT b11_1_material.positions_nr AS source_id,
+   FROM ( SELECT b11_1_material.id AS tmp_id,
+            b11_1_material.positions_nr AS source_id,
             'D'::text AS tdspras,
             1 AS line_counter,
             ''::text AS tdformat,
@@ -346,40 +379,45 @@ CREATE OR REPLACE VIEW public.mara_stxl_grunddaten
            FROM b11_1_material
           WHERE b11_1_material.is_transferred = true
         UNION ALL
-         SELECT b11_1_material.positions_nr,
-            'D'::text,
+         SELECT b11_1_material.id AS tmp_id,
+            b11_1_material.positions_nr,
+            'D'::text AS text,
             2,
             '/'::text AS tdformat,
             b11_1_material.grunddatentext_de_2_zeile
            FROM b11_1_material
           WHERE b11_1_material.is_transferred = true
         UNION ALL
-         SELECT b11_1_material.positions_nr,
-            'F'::text,
+         SELECT b11_1_material.id AS tmp_id,
+            b11_1_material.positions_nr,
+            'F'::text AS text,
             1,
             ''::text AS tdformat,
             b11_1_material.grunddatentext_fr_1_zeile
            FROM b11_1_material
           WHERE b11_1_material.is_transferred = true
         UNION ALL
-         SELECT b11_1_material.positions_nr,
-            'F'::text,
+         SELECT b11_1_material.id AS tmp_id,
+            b11_1_material.positions_nr,
+            'F'::text AS text,
             2,
             '/'::text AS tdformat,
             b11_1_material.grunddatentext_fr_2_zeile
            FROM b11_1_material
           WHERE b11_1_material.is_transferred = true
         UNION ALL
-         SELECT b11_1_material.positions_nr,
-            'E'::text,
+         SELECT b11_1_material.id AS tmp_id,
+            b11_1_material.positions_nr,
+            'E'::text AS text,
             1,
             ''::text AS tdformat,
             b11_1_material.grunddatentext_en_1_zeile
            FROM b11_1_material
           WHERE b11_1_material.is_transferred = true
         UNION ALL
-         SELECT b11_1_material.positions_nr,
-            'E'::text,
+         SELECT b11_1_material.id AS tmp_id,
+            b11_1_material.positions_nr,
+            'E'::text AS text,
             2,
             '/'::text AS tdformat,
             b11_1_material.grunddatentext_en_2_zeile
@@ -395,9 +433,10 @@ def drop_views_mara_stxl_grunddaten(apps, schema_editor):
 # 7
 def create_views_marc_werksdaten(apps, schema_editor):
     view_sql = '''
-CREATE OR REPLACE VIEW public.marc_werksdaten
+CREATE OR REPLACE VIEW marc_werksdaten
  AS
- SELECT a.positions_nr AS source_id,
+ SELECT a.id AS tmp_id,
+    a.positions_nr AS source_id,
     a.lieferzeit AS plifz,
     b.text AS werk,
     'ND'::text AS dismm,
@@ -417,9 +456,10 @@ def drop_views_marc_werksdaten(apps, schema_editor):
 # 8
 def create_views_mbew_buchhaltung(apps, schema_editor):
     view_sql = '''
-CREATE OR REPLACE VIEW public.mbew_buchhaltung
+CREATE OR REPLACE VIEW mbew_buchhaltung
  AS
- SELECT a.positions_nr AS source_id,
+ SELECT a.id AS tmp_id,
+    a.positions_nr AS source_id,
     b.text AS bwkey,
     c.text AS vprsv,
     a.preis AS verpr,
@@ -445,9 +485,10 @@ def drop_views_mbew_buchhaltung(apps, schema_editor):
 # 9
 def create_views_mlan_steuer(apps, schema_editor):
     view_sql = '''
-CREATE OR REPLACE VIEW public.mlan_steuer
+CREATE OR REPLACE VIEW mlan_steuer
  AS
- SELECT b11_1_material.positions_nr AS source_id,
+ SELECT b11_1_material.id AS tmp_id,
+    b11_1_material.positions_nr AS source_id,
     'CH'::text AS aland
    FROM b11_1_material
   WHERE b11_1_material.is_transferred = true
@@ -461,9 +502,10 @@ def drop_views_mlan_steuer(apps, schema_editor):
 # 10
 def create_views_mvke_verkaufsdaten(apps, schema_editor):
     view_sql = '''
-CREATE OR REPLACE VIEW public.mvke_verkaufsdaten
+CREATE OR REPLACE VIEW mvke_verkaufsdaten
  AS
- SELECT a.positions_nr AS source_id,
+ SELECT a.id AS tmp_id,
+    a.positions_nr AS source_id,
     'M100'::text AS vkorg,
     b.text AS vtweg,
     c.text AS mtpos
@@ -481,9 +523,10 @@ def drop_views_mvke_verkaufsdaten(apps, schema_editor):
 # 11
 def create_views_ckmlcr_material_ledger_preise(apps, schema_editor):
     view_sql = '''
-CREATE OR REPLACE VIEW public.ckmlcr_material_ledger_preise
+CREATE OR REPLACE VIEW ckmlcr_material_ledger_preise
  AS
- SELECT a.positions_nr AS source_id,
+ SELECT a.id AS tmp_id,
+    a.positions_nr AS source_id,
     b.text AS bwkey,
     '10'::text AS curtp,
     a.preiseinheit AS peinh,

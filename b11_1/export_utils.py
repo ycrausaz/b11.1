@@ -69,17 +69,30 @@ def export_to_excel(materials):
     # Create a BytesIO buffer to hold the Excel data
     output = BytesIO()
 
+    # Extract the IDs (or other relevant values) from the 'materials' parameter
+    material_ids = list(materials.values_list('id', flat=True))
+
     # Create a Pandas Excel writer using xlsxwriter as the engine, writing to the BytesIO buffer
     with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
         sheet_added = False
         for view, sheet_name in view_to_sheet.items():
             try:
-                # Query all data from the view
-                query = f'SELECT * FROM {view}'
+
+                # Dynamically construct the query based on the 'material_ids'
+                if material_ids:
+                    id_conditions = ' OR '.join([f"tmp_id = {material_id}" for material_id in material_ids])
+                    query = f"SELECT * FROM {view} WHERE {id_conditions}"
+                else:
+                    query = f"SELECT * FROM {view}"
+
                 df = pd.read_sql_query(query, engine)
 
                 # Convert headers to capital letters
                 df.columns = [col.upper() for col in df.columns]
+
+                # Drop the 'tmp_id' column if it exists
+                if 'TMP_ID' in df.columns:
+                    df = df.drop(columns=['TMP_ID'])
 
                 # Pad 'SOURCE_ID' column values to 3 digits with leading zeros and sort by 'SOURCE_ID'
                 if 'SOURCE_ID' in df.columns:

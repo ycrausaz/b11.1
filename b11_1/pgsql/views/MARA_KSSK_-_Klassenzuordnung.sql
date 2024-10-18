@@ -1,37 +1,44 @@
-CREATE OR REPLACE VIEW public.mara_kssk_klassenzuordnung
+CREATE OR REPLACE VIEW mara_kssk_klassenzuordnung
  AS
  WITH source_data AS (
-         SELECT a.positions_nr AS source_id,
+         SELECT a.id AS tmp_id,
+            a.positions_nr AS source_id,
             '001'::text AS klart
            FROM b11_1_material a
           WHERE a.is_transferred = true
         )
- SELECT source_data.source_id,
+ SELECT source_data.tmp_id,
+    source_data.source_id,
     source_data.klart,
     'V_VERTEILUNG_PSD'::text AS class
    FROM source_data
 UNION ALL
- SELECT source_data.source_id,
+ SELECT source_data.tmp_id,
+    source_data.source_id,
     source_data.klart,
     'V_VERTEILUNG_RUAG'::text AS class
    FROM source_data
 UNION ALL
- SELECT source_data.source_id,
+ SELECT source_data.tmp_id,
+    source_data.source_id,
     source_data.klart,
     'V_ZUSATZDATEN'::text AS class
    FROM source_data
 UNION ALL
- SELECT source_data.source_id,
+ SELECT source_data.tmp_id,
+    source_data.source_id,
     source_data.klart,
     'V_AR_NUMMER'::text AS class
    FROM source_data
 UNION ALL
- SELECT source_data.source_id,
+ SELECT source_data.tmp_id,
+    source_data.source_id,
     source_data.klart,
     'V_VERTEILUNG'::text AS class
    FROM source_data
 UNION ALL
- SELECT source_data.source_id,
+ SELECT source_data.tmp_id,
+    source_data.source_id,
     source_data.klart,
     'V_BM_SBM'::text AS class
    FROM source_data

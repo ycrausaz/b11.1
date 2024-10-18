@@ -1,6 +1,7 @@
-CREATE OR REPLACE VIEW public.marc_werksdaten
+CREATE OR REPLACE VIEW marc_werksdaten
  AS
- SELECT a.positions_nr AS source_id,
+ SELECT a.id AS tmp_id,
+    a.positions_nr AS source_id,
     a.lieferzeit AS plifz,
     b.text AS werk,
     'ND'::text AS dismm,

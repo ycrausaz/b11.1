@@ -21,6 +21,9 @@ SELECT setval(pg_get_serial_sequence('"b11_1_sparte"','id'), coalesce(max("id"),
 SELECT setval(pg_get_serial_sequence('"b11_1_temperaturbedingung"','id'), coalesce(max("id"), 1), max("id") IS NOT null) FROM "b11_1_temperaturbedingung";
 SELECT setval(pg_get_serial_sequence('"b11_1_uebersetzungsstatus"','id'), coalesce(max("id"), 1), max("id") IS NOT null) FROM "b11_1_uebersetzungsstatus";
 SELECT setval(pg_get_serial_sequence('"b11_1_vertriebsweg"','id'), coalesce(max("id"), 1), max("id") IS NOT null) FROM "b11_1_vertriebsweg";
-SELECT setval(pg_get_serial_sequence('"b11_1_werk"','id'), coalesce(max("id"), 1), max("id") IS NOT null) FROM "b11_1_werk";
+SELECT setval(pg_get_serial_sequence('"b11_1_werkzuordnung_1"','id'), coalesce(max("id"), 1), max("id") IS NOT null) FROM "b11_1_werkzuordnung_1";
+SELECT setval(pg_get_serial_sequence('"b11_1_werkzuordnung_2"','id'), coalesce(max("id"), 1), max("id") IS NOT null) FROM "b11_1_werkzuordnung_2";
+SELECT setval(pg_get_serial_sequence('"b11_1_werkzuordnung_3"','id'), coalesce(max("id"), 1), max("id") IS NOT null) FROM "b11_1_werkzuordnung_3";
+SELECT setval(pg_get_serial_sequence('"b11_1_werkzuordnung_4"','id'), coalesce(max("id"), 1), max("id") IS NOT null) FROM "b11_1_werkzuordnung_4";
 SELECT setval(pg_get_serial_sequence('"b11_1_zuteilung"','id'), coalesce(max("id"), 1), max("id") IS NOT null) FROM "b11_1_zuteilung";
 COMMIT;

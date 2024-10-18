@@ -1,6 +1,7 @@
-CREATE OR REPLACE VIEW public.ckmlcr_material_ledger_preise
+CREATE OR REPLACE VIEW ckmlcr_material_ledger_preise
  AS
- SELECT a.positions_nr AS source_id,
+ SELECT a.id AS tmp_id,
+    a.positions_nr AS source_id,
     b.text AS bwkey,
     '10'::text AS curtp,
     a.preiseinheit AS peinh,

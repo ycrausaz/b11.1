@@ -1,6 +1,7 @@
-CREATE OR REPLACE VIEW public.mvke_verkaufsdaten
+CREATE OR REPLACE VIEW mvke_verkaufsdaten
  AS
- SELECT a.positions_nr AS source_id,
+ SELECT a.id AS tmp_id,
+    a.positions_nr AS source_id,
     'M100'::text AS vkorg,
     b.text AS vtweg,
     c.text AS mtpos

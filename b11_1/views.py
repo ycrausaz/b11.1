@@ -90,7 +90,6 @@ class CustomLoginView(LoginView):
         return self.render_to_response(self.get_context_data(form=form))
 
     def form_valid(self, form):
-        print("form_valid")
         response = super().form_valid(form)
         profile, created = Profile.objects.get_or_create(user=self.request.user)
         profile.failed_login_attempts = 0  # Reset failed attempts on successful login

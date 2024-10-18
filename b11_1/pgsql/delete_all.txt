@@ -24,3 +24,4 @@ delete from "b11_1_werkzuordnung_3";
 delete from "b11_1_werkzuordnung_4";
 delete from "b11_1_zuteilung";
 delete from "b11_1_materialeinstufungnachzuva";
+delete from "b11_1_material";
