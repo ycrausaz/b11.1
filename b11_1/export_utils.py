@@ -61,7 +61,7 @@ def export_to_excel(materials):
 
     # Get the database connection settings from Django
     db_settings = connections.databases['default']
-    db_url = f"postgresql+psycopg2://{db_settings['USER']}:{db_settings['PASSWORD']}@{db_settings['HOST']}:{db_settings['PORT']}/{db_settings['NAME']}"
+    db_url = f"postgresql+psycopg://{db_settings['USER']}:{db_settings['PASSWORD']}@{db_settings['HOST']}:{db_settings['PORT']}/{db_settings['NAME']}"
 
     # Create a SQLAlchemy engine
     engine = create_engine(db_url)

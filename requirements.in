@@ -9,3 +9,4 @@ django-bootstrap-datepicker-plus==5.0.5
 divio-cli==4.0.2
 pandas==2.2.1
 SQLAlchemy==2.0.31
+xlsxwriter
