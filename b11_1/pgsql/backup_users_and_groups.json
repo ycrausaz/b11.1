@@ -3,8 +3,8 @@
   "model": "auth.user",
   "pk": 1,
   "fields": {
-    "password": "pbkdf2_sha256$720000$Drk81ampJsId02wg70YKYo$mhxHlGOu8JSYtTY8KSk7i7YDkOnqFBQfnqJ2QUsFZb0=",
-    "last_login": "2024-06-26T18:04:12.427Z",
+    "password": "pbkdf2_sha256$870000$D5auU0g7hBxxv8ve2ggWzS$izaqEkN009x92D+sRUbZjWqli4F+VRNkRNHKOfhFr/g=",
+    "last_login": "2024-10-19T20:47:45.778Z",
     "is_superuser": true,
     "username": "yann",
     "first_name": "",
@@ -81,8 +81,8 @@
   "model": "auth.user",
   "pk": 5,
   "fields": {
-    "password": "pbkdf2_sha256$720000$2Q6SWsOLmyTQk0Lu09Lgeg$T5yL0mMRxBN7Y4MUxadXr67M8kPhb9tlUYBr85Fdkis=",
-    "last_login": "2024-06-26T17:45:04.401Z",
+    "password": "pbkdf2_sha256$870000$gGS8M9LJ2DlzaocAMelXag$unCpqjffio1cx15wRhTOeaDFmgvg/qCQozKwucMVfHE=",
+    "last_login": "2024-10-18T17:54:33.504Z",
     "is_superuser": false,
     "username": "grGD_01",
     "first_name": "",
@@ -198,6 +198,126 @@
   }
 },
 {
+  "model": "auth.user",
+  "pk": 11,
+  "fields": {
+    "password": "pbkdf2_sha256$870000$jffcIpxUcxfLgvdU3kTlWB$J9y3AjPCO/owXgrp1nyHVGWv3R0mEwc2DGEt72LnC8Q=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "grLBA_01",
+    "first_name": "",
+    "last_name": "",
+    "email": "",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2024-10-19T20:50:15Z",
+    "groups": [
+      4
+    ],
+    "user_permissions": []
+  }
+},
+{
+  "model": "auth.user",
+  "pk": 12,
+  "fields": {
+    "password": "pbkdf2_sha256$870000$hbHj2SERT9pnIcewXO3QgN$7xLBXqcp/E1N5TgQd5c5lr7wN/da86oEEdVXF8Cjs4s=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "grLBA_02",
+    "first_name": "",
+    "last_name": "",
+    "email": "",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2024-10-19T20:50:48Z",
+    "groups": [
+      4
+    ],
+    "user_permissions": []
+  }
+},
+{
+  "model": "auth.user",
+  "pk": 13,
+  "fields": {
+    "password": "pbkdf2_sha256$870000$nEVpc80bAKo2Ngz7D3OwQJ$kFO38pSpLS3iIuX8CwpUOE0hrAc0n8HdL/Dv5OOm344=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "grLBA_03",
+    "first_name": "",
+    "last_name": "",
+    "email": "",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2024-10-19T20:51:09Z",
+    "groups": [
+      4
+    ],
+    "user_permissions": []
+  }
+},
+{
+  "model": "auth.user",
+  "pk": 14,
+  "fields": {
+    "password": "pbkdf2_sha256$870000$RshoMh3AJQaohBBywZwCCb$nFC7OI/cP1tFRiK4q10+duqVyeCh9FwP8AuKCsShYp8=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "grAr_01",
+    "first_name": "",
+    "last_name": "",
+    "email": "",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2024-10-19T20:51:33Z",
+    "groups": [
+      5
+    ],
+    "user_permissions": []
+  }
+},
+{
+  "model": "auth.user",
+  "pk": 15,
+  "fields": {
+    "password": "pbkdf2_sha256$870000$SrTz5MUebHQ3IyuqU4tZF9$fJULjrDEMD+4/yYyUJlKzrdXmPxSVHntqPcmVnmvOAU=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "grAr_02",
+    "first_name": "",
+    "last_name": "",
+    "email": "",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2024-10-19T20:51:52Z",
+    "groups": [
+      5
+    ],
+    "user_permissions": []
+  }
+},
+{
+  "model": "auth.user",
+  "pk": 16,
+  "fields": {
+    "password": "pbkdf2_sha256$870000$gPDsz58IgwFauG13VhSUli$/k4FtJnn5+0SKAun5UH9jVt5AVRqrmQWBhCYdi4acRY=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "grAr_03",
+    "first_name": "",
+    "last_name": "",
+    "email": "",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2024-10-19T20:52:09Z",
+    "groups": [
+      5
+    ],
+    "user_permissions": []
+  }
+},
+{
   "model": "auth.group",
   "pk": 1,
   "fields": {
@@ -218,6 +338,22 @@
   "pk": 3,
   "fields": {
     "name": "grSMDA",
+    "permissions": []
+  }
+},
+{
+  "model": "auth.group",
+  "pk": 4,
+  "fields": {
+    "name": "grLBA",
+    "permissions": []
+  }
+},
+{
+  "model": "auth.group",
+  "pk": 5,
+  "fields": {
+    "name": "grAr",
     "permissions": []
   }
 }
