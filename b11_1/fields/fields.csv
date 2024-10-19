@@ -69,7 +69,6 @@ Verkaufsorg.;TRUE;Text;
 Vertriebsweg;TRUE;Text;
 Führendes Material;FALSE;Text;"""NNNN.NNNN"""
 Auszeichnungsfeld;FALSE;Text;"""NNNNNNNN-N"""
-CPV-Code;TRUE;Text;"NNNNNNNN-N"""
 Fertigungssteuerer;FALSE;Text;
 Kennzeichen komplexes System;FALSE;Text;
 Sonderablauf;FALSE;Text;
