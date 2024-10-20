@@ -4,7 +4,7 @@
   "pk": 1,
   "fields": {
     "password": "pbkdf2_sha256$870000$D5auU0g7hBxxv8ve2ggWzS$izaqEkN009x92D+sRUbZjWqli4F+VRNkRNHKOfhFr/g=",
-    "last_login": "2024-10-19T20:47:45.778Z",
+    "last_login": "2024-10-20T08:03:47.494Z",
     "is_superuser": true,
     "username": "yann",
     "first_name": "",
@@ -82,7 +82,7 @@
   "pk": 5,
   "fields": {
     "password": "pbkdf2_sha256$870000$gGS8M9LJ2DlzaocAMelXag$unCpqjffio1cx15wRhTOeaDFmgvg/qCQozKwucMVfHE=",
-    "last_login": "2024-10-18T17:54:33.504Z",
+    "last_login": "2024-10-19T21:06:03.786Z",
     "is_superuser": false,
     "username": "grGD_01",
     "first_name": "",
@@ -318,6 +318,66 @@
   }
 },
 {
+  "model": "auth.user",
+  "pk": 17,
+  "fields": {
+    "password": "pbkdf2_sha256$870000$hu8KiMb7VaPzL2HMX5cohR$bl2+tf/rgvLlzv1iHaPwIwxJ/NQazpjj3KJiqoqUG0U=",
+    "last_login": "2024-10-20T13:02:54.213Z",
+    "is_superuser": false,
+    "username": "grAdmin_01",
+    "first_name": "",
+    "last_name": "",
+    "email": "",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2024-10-20T08:04:29Z",
+    "groups": [
+      6
+    ],
+    "user_permissions": []
+  }
+},
+{
+  "model": "auth.user",
+  "pk": 18,
+  "fields": {
+    "password": "pbkdf2_sha256$870000$ZPcLeW3ohOS0EunnwOZyQE$gsZ9lHJ/3W/bQVBd4hAcTfOSOSVE5a6Oxj9E4Dhrsig=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "grAdmin_02",
+    "first_name": "",
+    "last_name": "",
+    "email": "",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2024-10-20T08:04:48Z",
+    "groups": [
+      6
+    ],
+    "user_permissions": []
+  }
+},
+{
+  "model": "auth.user",
+  "pk": 19,
+  "fields": {
+    "password": "pbkdf2_sha256$870000$FGSidhECjKHCaIrm9HTWfl$V5uS8Whk5DbY+JWyQ+g5x9mmOs4pGBIaAwSkYb+P7Q0=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "grAdmin_03",
+    "first_name": "",
+    "last_name": "",
+    "email": "",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2024-10-20T08:05:06Z",
+    "groups": [
+      6
+    ],
+    "user_permissions": []
+  }
+},
+{
   "model": "auth.group",
   "pk": 1,
   "fields": {
@@ -354,6 +414,14 @@
   "pk": 5,
   "fields": {
     "name": "grAr",
+    "permissions": []
+  }
+},
+{
+  "model": "auth.group",
+  "pk": 6,
+  "fields": {
+    "name": "grAdmin",
     "permissions": []
   }
 }
