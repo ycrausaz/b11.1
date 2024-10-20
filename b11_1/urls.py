@@ -2,7 +2,7 @@ from django.views.i18n import JavaScriptCatalog
 from django.urls import include
 from django.urls import path
 from . import views
-from .views import CustomLoginView, UserLogout, CustomPasswordChangeView, CustomPasswordResetConfirmView, ListMaterial_IL_View, AddMaterial_IL_View, UpdateMaterial_IL_View, ShowMaterial_IL_View, ListMaterial_GD_View, ListMaterialArchived_GD_View, UpdateMaterial_GD_View, ShowMaterial_GD_View, ListMaterial_SMDA_View, ListMaterialArchived_SMDA_View, UpdateMaterial_SMDA_View, ShowMaterial_SMDA_View
+from .views import CustomLoginView, UserLogout, CustomPasswordChangeView, CustomPasswordResetConfirmView, ListMaterial_IL_View, AddMaterial_IL_View, UpdateMaterial_IL_View, ShowMaterial_IL_View, ListMaterial_GD_View, ListMaterialArchived_GD_View, UpdateMaterial_GD_View, ShowMaterial_GD_View, ListMaterial_SMDA_View, ListMaterialArchived_SMDA_View, UpdateMaterial_SMDA_View, ShowMaterial_SMDA_View, Admin_View
 from django.contrib.auth.decorators import login_required
 from django.conf.urls import handler403
 from b11_1.views import custom_permission_denied_view
@@ -14,6 +14,7 @@ handler403 = custom_permission_denied_view
 
 urlpatterns = [
     path(r'', views.home, name='home'),
+    path('admin', Admin_View.as_view(), name='admin'),
     path('login_user', CustomLoginView.as_view(), name='login_user'),
     path('logout_user', UserLogout.as_view(), name='logout_user'),
     path('password_change', CustomPasswordChangeView.as_view(), name='password_change'),

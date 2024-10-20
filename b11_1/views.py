@@ -11,7 +11,7 @@ from .forms_smda import MaterialForm_SMDA
 from django.contrib.messages.views import SuccessMessageMixin
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
 from django.urls import reverse_lazy
-from .mixins import grIL_GroupRequiredMixin, grGD_GroupRequiredMixin, grSMDA_GroupRequiredMixin
+from .mixins import grIL_GroupRequiredMixin, grGD_GroupRequiredMixin, grSMDA_GroupRequiredMixin, grAdmin_GroupRequiredMixin
 import pandas as pd
 from django.shortcuts import render
 from django.http import HttpResponse
@@ -28,7 +28,7 @@ from .mixins import FormValidMixin
 from django.template import RequestContext
 from .forms import CustomPasswordChangeForm
 from .forms import CustomPasswordResetForm
-from b11_1.models import Profile
+from b11_1.models import Profile, Material
 from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.views import LoginView
@@ -102,6 +102,8 @@ class CustomLoginView(LoginView):
             return redirect('list_material_gd')
         elif self.request.user.groups.filter(name='grSMDA').exists():
             return redirect('list_material_smda')
+        elif self.request.user.groups.filter(name='grAdmin').exists():
+            return redirect('admin')
         return response
 
     def get(self, request, *args, **kwargs):
@@ -371,3 +373,14 @@ class ShowMaterial_SMDA_View(grSMDA_GroupRequiredMixin, SuccessMessageMixin, Det
         context['form'] = self.form_class(instance=self.object)
         return context    
 
+class Admin_View(grAdmin_GroupRequiredMixin, View):
+    model = Material
+    template = 'admin.html'
+
+    def get(self, request, *args, **kwargs):
+        materials = Material.objects.all()
+        nb_mat = materials.count()
+        context = {
+            'nb_mat': nb_mat,
+        }
+        return render(request, 'admin.html', context)

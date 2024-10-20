@@ -22,6 +22,9 @@ class grGD_GroupRequiredMixin(GroupRequiredMixin):
 class grSMDA_GroupRequiredMixin(GroupRequiredMixin):
     group_required = 'grSMDA'
 
+class grAdmin_GroupRequiredMixin(GroupRequiredMixin):
+    group_required = 'grAdmin'
+
 class FormValidMixin:
     """
     Mixin to handle the common form_valid logic for CreateView and UpdateView.
