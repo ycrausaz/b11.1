@@ -177,10 +177,16 @@ class ListMaterial_IL_View(grIL_GroupRequiredMixin, ListView):
             selected_materials = Material.objects.filter(id__in=selected_material_ids)
             if action == 'transfer':
                 selected_materials.update(is_transferred=True, transfer_date=timezone.now())
+                for material in selected_materials:
+                    logger.info("Material '" + material.kurztext_de + "' durch '" + request.user.username + "' übermittelt.")
             elif action == 'delete':
+                for material in selected_materials:
+                    logger.info("Material '" + material.kurztext_de + "' durch '" + request.user.username + "' gelöscht.")
                 selected_materials.delete()
             elif action == 'archive':
                 selected_materials.update(is_archived=True)
+                for material in selected_materials:
+                    logger.info("Material '" + material.kurztext_de + "' durch '" + request.user.username + "' archiviert.")
 
         return redirect(reverse('list_material_il'))
 
@@ -235,13 +241,23 @@ class ListMaterial_GD_View(grGD_GroupRequiredMixin, ListView):
             selected_materials = Material.objects.filter(id__in=selected_material_ids)
             if action == 'transfer':
                 selected_materials.update(is_transferred=False, transfer_date=timezone.now())
+                for material in selected_materials:
+                    logger.info("Material '" + material.kurztext_de + "' durch '" + request.user.username + "' übermittelt.")
             elif action == 'archive':
                 selected_materials.update(is_archived=True)
+                for material in selected_materials:
+                    logger.info("Material '" + material.kurztext_de + "' durch '" + request.user.username + "' archiviert.")
             elif action == 'unarchive':
                 selected_materials.update(is_archived=False)
+                for material in selected_materials:
+                    logger.info("Material '" + material.kurztext_de + "' durch '" + request.user.username + "' unarchiviert.")
             elif action == 'delete':
+                for material in selected_materials:
+                    logger.info("Material '" + material.kurztext_de + "' durch '" + request.user.username + "' gelöscht.")
                 selected_materials.delete()
             elif action == 'export':
+                for material in selected_materials:
+                    logger.info("Material '" + material.kurztext_de + "' durch '" + request.user.username + "' exportiert.")
                 return export_to_excel(selected_materials)
 
         return redirect(reverse('list_material_gd'))
@@ -310,13 +326,23 @@ class ListMaterial_SMDA_View(grSMDA_GroupRequiredMixin, ListView):
             selected_materials = Material.objects.filter(id__in=selected_material_ids)
             if action == 'transfer':
                 selected_materials.update(is_transferred=False, transfer_date=timezone.now())
+                for material in selected_materials:
+                    logger.info("Material '" + material.kurztext_de + "' durch '" + request.user.username + "' übermittelt.")
             elif action == 'archive':
                 selected_materials.update(is_archived=True)
+                for material in selected_materials:
+                    logger.info("Material '" + material.kurztext_de + "' durch '" + request.user.username + "' archiviert.")
             elif action == 'unarchive':
                 selected_materials.update(is_archived=False)
+                for material in selected_materials:
+                    logger.info("Material '" + material.kurztext_de + "' durch '" + request.user.username + "' unarchiviert.")
             elif action == 'delete':
+                for material in selected_materials:
+                    logger.info("Material '" + material.kurztext_de + "' durch '" + request.user.username + "' gelöscht.")
                 selected_materials.delete()
             elif action == 'export':
+                for material in selected_materials:
+                    logger.info("Material '" + material.kurztext_de + "' durch '" + request.user.username + "' exportiert.")
                 return export_to_excel(selected_materials)
 
         return redirect(reverse('list_material_smda'))
