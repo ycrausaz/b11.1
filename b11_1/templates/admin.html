@@ -2,6 +2,32 @@
 
 {% block content %}
 
-Nb of materials: {{ nb_mat }}
+    <h2>Log Entries</h2>
+    {% if log_entries %}
+        <table class="table table-striped table-hover">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>ID</th>
+                    <th>Timestamp</th>
+                    <th>Level</th>
+                    <th>Message</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for entry in log_entries %}
+                    <tr>
+                        <td>{{ forloop.counter }} / {{ nb_log_entries }} </td>
+                        <td>{{ entry.id }}</td>
+                        <td>{{ entry.timestamp|date:'d.m.Y - H:i:s' }}</td>
+                        <td>{{ entry.level }}</td>
+                        <td>{{ entry.message }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No log entries available.</p>
+    {% endif %}
 
 {% endblock %}

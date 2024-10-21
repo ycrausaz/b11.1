@@ -1,5 +1,6 @@
 from django.contrib.auth.views import LoginView, PasswordChangeView
 from django.shortcuts import render, redirect
+from django.core.paginator import Paginator
 from django.views.generic import ListView, DetailView
 from django.views.generic.base import View
 from django.contrib.auth import authenticate, login, logout
@@ -17,6 +18,7 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from django.views import View
 from django.db import connections
+from django.db import connection
 from django.urls import reverse
 from django.utils import timezone
 from django.db.models.functions import Cast
@@ -373,14 +375,31 @@ class ShowMaterial_SMDA_View(grSMDA_GroupRequiredMixin, SuccessMessageMixin, Det
         context['form'] = self.form_class(instance=self.object)
         return context    
 
-class Admin_View(grAdmin_GroupRequiredMixin, View):
-    model = Material
-    template = 'admin.html'
+class Admin_View(ListView):
+    template_name = 'admin.html'
 
     def get(self, request, *args, **kwargs):
-        materials = Material.objects.all()
-        nb_mat = materials.count()
-        context = {
-            'nb_mat': nb_mat,
+        with connection.cursor() as cursor:
+            # First query: Get the number of materials
+            cursor.execute("SELECT COUNT(*) FROM b11_1_material")
+            nb_materials = cursor.fetchone()[0]
+
+            # Second query: Get all log entries
+            cursor.execute("SELECT * FROM b11_1_log_entries ORDER BY timestamp DESC")
+            rows = cursor.fetchall()
+
+            # Get column names from cursor description
+            columns = [col[0] for col in cursor.description]
+
+            # Convert rows to a list of dictionaries
+            log_entries = [dict(zip(columns, row)) for row in rows]
+            nb_log_entries = len(log_entries)
+
+        # Context data to pass to the template
+        context = { 
+            'nb_materials': nb_materials,
+            'nb_log_entries': nb_log_entries,
+            'log_entries': log_entries,
         }
-        return render(request, 'admin.html', context)
+        return render(request, self.template_name, context)
+
