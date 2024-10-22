@@ -26,7 +26,7 @@ def generate_random_string(length=16):
     letters = string.ascii_uppercase  # Use uppercase letters only
     return ''.join(random.choice(letters) for i in range(length))
 
-def export_to_excel(materials):
+def export_to_excel(materials, export_type):
     """
     Exports the provided materials to an Excel file with multiple sheets,
     each corresponding to a database view.
