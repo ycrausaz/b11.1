@@ -304,7 +304,6 @@ class Material(models.Model):
     herstellerteilenummer = models.CharField(null=True, blank=True, max_length=40)
     normbezeichnung = models.CharField(null=True, blank=True, max_length=18)
     gefahrgutkennzeichen = models.ForeignKey(Gefahrgutkennzeichen, null=True, blank=True, on_delete=models.DO_NOTHING, verbose_name="Gefahrgutkennzeichen ")
-    bruttogewicht = models.CharField(null=True, blank=True, max_length=40)
     instandsetzbar = models.BooleanField(null=True, blank=True)
     chargenpflicht = models.BooleanField(null=True, blank=True)
     bestellmengeneinheit = models.IntegerField(null=True, blank=True)
