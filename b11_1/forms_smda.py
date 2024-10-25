@@ -22,7 +22,6 @@ class MaterialForm_SMDA(ModelForm, SplitterReadOnlyReadWriteFields):
     vertriebsweg = forms.ModelChoiceField(queryset=Vertriebsweg.objects.all(), required=True)
     fuehrendes_material = forms.CharField(required=False)
     auszeichnungsfeld = forms.ModelChoiceField(queryset=Auszeichnungsfeld.objects.all(), required=False)
-    spare_part_class_code = forms.ModelChoiceField(queryset=SparePartClassCode.objects.all(), required=True)
     fertigungssteuerer = forms.ModelChoiceField(queryset=Fertigungssteuerer.objects.all(), required=True)
     kennzeichen_komplexes_system = CustomBooleanChoiceField(required=False)
     sonderablauf = forms.ModelChoiceField(queryset=Sonderablauf.objects.all(), required=False)
