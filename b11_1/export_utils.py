@@ -59,6 +59,13 @@ def export_to_excel(materials, export_type):
         'CKMLCR_material_ledger_preise': 'CKMLCR - Material-Ledger-Preise',
     }
 
+    # Conditionally remove sheets based on the 'export_type' value
+    if export_type == 'RUAG':
+        # Remove specified sheets for 'RUAG'
+        sheets_to_remove = ['MVKE_Verkaufsdaten', 'MBEW_Buchhaltung', 'MLAN_Steuer', 'MARC_Werksdaten', 'CKMLCR_material_ledger_preise']
+        for sheet in sheets_to_remove:
+            view_to_sheet.pop(sheet, None)  # Remove the sheet if it exists
+
     # Get the database connection settings from Django
     db_settings = connections.databases['default']
     db_url = f"postgresql+psycopg://{db_settings['USER']}:{db_settings['PASSWORD']}@{db_settings['HOST']}:{db_settings['PORT']}/{db_settings['NAME']}"
