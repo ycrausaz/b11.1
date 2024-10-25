@@ -26,7 +26,7 @@ from django.db.models import IntegerField
 from .export_utils import export_to_excel
 from django.contrib import messages
 import re
-from .mixins import FormValidMixin
+from .mixins import FormValidMixin_IL, FormValidMixin_GD, FormValidMixin_SMDA
 from django.template import RequestContext
 from .forms import CustomPasswordChangeForm
 from .forms import CustomPasswordResetForm
@@ -190,14 +190,14 @@ class ListMaterial_IL_View(grIL_GroupRequiredMixin, ListView):
 
         return redirect(reverse('list_material_il'))
 
-class AddMaterial_IL_View(FormValidMixin, grIL_GroupRequiredMixin, SuccessMessageMixin, CreateView):
+class AddMaterial_IL_View(FormValidMixin_IL, grIL_GroupRequiredMixin, SuccessMessageMixin, CreateView):
     model = Material
     template_name = 'il/add_material_il.html'
     form_class = MaterialForm_IL
     success_url = reverse_lazy('list_material_il')
     success_message = "Das Material wurde erfolgreich hinzugefügt."
 
-class UpdateMaterial_IL_View(FormValidMixin, grIL_GroupRequiredMixin, SuccessMessageMixin, UpdateView):
+class UpdateMaterial_IL_View(FormValidMixin_IL, grIL_GroupRequiredMixin, SuccessMessageMixin, UpdateView):
     model = Material
     template_name = 'il/update_material_il.html'
     form_class = MaterialForm_IL
@@ -279,7 +279,7 @@ class ListMaterialArchived_GD_View(grGD_GroupRequiredMixin, ListView):
         # Order by the cast integer field
         return qs.order_by('positions_nr_int')
 
-class UpdateMaterial_GD_View(grGD_GroupRequiredMixin, SuccessMessageMixin, UpdateView):
+class UpdateMaterial_GD_View(FormValidMixin_GD, grGD_GroupRequiredMixin, SuccessMessageMixin, UpdateView):
     model = Material
     template_name = 'gd/update_material_gd.html'
     form_class = MaterialForm_GD
@@ -364,34 +364,12 @@ class ListMaterialArchived_SMDA_View(grSMDA_GroupRequiredMixin, ListView):
         # Order by the cast integer field
         return qs.order_by('positions_nr_int')
 
-class UpdateMaterial_SMDA_View(grSMDA_GroupRequiredMixin, SuccessMessageMixin, UpdateView):
+class UpdateMaterial_SMDA_View(FormValidMixin_SMDA, grSMDA_GroupRequiredMixin, SuccessMessageMixin, UpdateView):
     model = Material
     template_name = 'smda/update_material_smda.html'
     form_class = MaterialForm_SMDA
     success_url = reverse_lazy('list_material_smda')
     success_message = "Das Material wurde erfolgreich aktualisiert."
-
-    def form_valid(self, form):
-        item = form.save(commit=False)
-        if item.werkzuordnung_1 == "0800":
-            item.verkaufsorg = "A100"
-        else:
-            item.verkaufsorg = "M100"
-        print("item.verkaufsorg = " + item.verkaufsorg)
-        print("item.zuteilung_id = " + str(item.zuteilung_id))
-        zuteilung = Zuteilung.objects.filter(id=item.zuteilung_id).first()
-        auspraegung = Auspraegung.objects.filter(id=item.auspraegung_id).first()
-        print("item.zuteilung = " + str(zuteilung.text))
-        if zuteilung.text == "MKZ" and auspraegung.text == "04":
-            form.add_error('auspraegung', "Die Ausprägung mit 'MKZ' muss '01', '02' oder '03' sein.")
-        if zuteilung.text == "PRD" and auspraegung.text == "04":
-            form.add_error('auspraegung', "Die Ausprägung mit 'PRD' muss '01', '02' oder '03' sein.")
-
-        if form.errors:
-            return self.form_invalid(form)
-
-        item.save()
-        return super().form_valid(form)
 
 class ShowMaterial_SMDA_View(grSMDA_GroupRequiredMixin, SuccessMessageMixin, DetailView):
     model = Material
