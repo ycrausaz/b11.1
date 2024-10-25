@@ -30,6 +30,9 @@ class FormValidMixin_IL:
     Mixin to handle the common form_valid logic for CreateView and UpdateView.
     """
 
+    def form_invalid(self, form):
+        form.add_error(None, "Es gibt einen oder mehreren Fehler im Formular.")
+
     def form_valid(self, form):
         # Add the name of the 'hersteller'
         item = form.save(commit=False)
@@ -86,10 +89,14 @@ class FormValidMixin_IL:
 
         return super().form_valid(form)
 
-class FormValidMixin_SMDA:
+class FormValidMixin_GD:
     """
     Mixin to handle the common form_valid logic for CreateView and UpdateView.
     """
+
+    def form_invalid(self, form):
+        form.add_error(None, "Es gibt einen oder mehreren Fehler im Formular.")
+        return super().form_invalid(form)
 
     def form_valid(self, form):
         item = form.save(commit=False)
@@ -97,17 +104,6 @@ class FormValidMixin_SMDA:
             item.verkaufsorg = "A100"
         else:
             item.verkaufsorg = "M100"
-
-        print("item.zuteilung_id = " + str(item.zuteilung_id))
-        zuteilung = Zuteilung.objects.filter(id=item.zuteilung_id).first()
-        print("zuteilung = " + str(zuteilung))
-        print("item.auspraegung_id = " + str(item.auspraegung_id))
-        auspraegung = Auspraegung.objects.filter(id=item.auspraegung_id).first()
-        print("auspraegung = " + str(auspraegung))
-        if zuteilung.text == "MKZ" and auspraegung.text == "04":
-            form.add_error('auspraegung', "Die Ausprägung mit 'MKZ' muss '01', '02' oder '03' sein.")
-        if zuteilung.text == "PRD" and auspraegung.text == "04":
-            form.add_error('auspraegung', "Die Ausprägung mit 'PRD' muss '01', '02' oder '03' sein.")
 
         print("item.chargenpflicht = " + str(item.chargenpflicht))
         if item.chargenpflicht == 'N':
@@ -122,10 +118,14 @@ class FormValidMixin_SMDA:
         item.save()
         return super().form_valid(form)
 
-class FormValidMixin_GD:
+class FormValidMixin_SMDA:
     """
     Mixin to handle the common form_valid logic for CreateView and UpdateView.
     """
+
+    def form_invalid(self, form):
+        form.add_error(None, "Es gibt einen oder mehreren Fehler im Formular.")
+        return super().form_invalid(form)
 
     def form_valid(self, form):
         item = form.save(commit=False)
@@ -134,6 +134,12 @@ class FormValidMixin_GD:
         else:
             item.verkaufsorg = "M100"
 
+        print("item.zuteilung_id = " + str(item.zuteilung_id))
+        zuteilung = Zuteilung.objects.filter(id=item.zuteilung_id).first()
+        print("zuteilung = " + str(zuteilung))
+        print("item.auspraegung_id = " + str(item.auspraegung_id))
+        auspraegung = Auspraegung.objects.filter(id=item.auspraegung_id).first()
+        print("auspraegung = " + str(auspraegung))
         if zuteilung.text == "MKZ" and auspraegung.text == "04":
             form.add_error('auspraegung', "Die Ausprägung mit 'MKZ' muss '01', '02' oder '03' sein.")
         if zuteilung.text == "PRD" and auspraegung.text == "04":

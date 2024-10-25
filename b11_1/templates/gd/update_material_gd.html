@@ -3,11 +3,14 @@
 {% block content %}
     <h1>Material aktualisieren</h1>
     <br/>
-    {% if submitted %}
-      <div class="alert alert-success" role="alert">
-          Das Material wurde aktualisiert
-      </div>
-    {% endif %}
+
+      {% if form.non_field_errors %}
+        {% for nfe in form.non_field_errors %}
+            <div class="alert alert-error" role="alert">
+                {{ nfe }}
+            </div>
+        {% endfor %}
+      {% endif %}
 
 <form method="post" novalidate>
     {% csrf_token %}
