@@ -27,13 +27,13 @@ class MaterialForm_GD(ModelForm, SplitterReadOnlyReadWriteFields):
     grunddatentext_en_2_zeile = forms.CharField(required=False)
     basismengeneinheit = forms.ModelChoiceField(queryset=Basismengeneinheit.objects.all(), required=True)
     bruttogewicht = forms.IntegerField(required=True)
-#    gewichtseinheit
+    #gewichtseinheit
     nettogewicht = forms.IntegerField(required=False)
     groesse_abmessung = forms.IntegerField(required=False)
     ean_upc_code = forms.CharField(required=False)
     nato_stock_number = forms.CharField(required=False)
-#    nsn_gruppe_klasse
-#    nato_versorgungs_nr
+    #nsn_gruppe_klasse
+    #nato_versorgungs_nr
     herstellerteilenummer = forms.CharField(required=True)
     normbezeichnung = forms.CharField(required=False)
     gefahrgutkennzeichen = forms.ModelChoiceField(queryset=Gefahrgutkennzeichen.objects.all(), required=False)
@@ -42,12 +42,12 @@ class MaterialForm_GD(ModelForm, SplitterReadOnlyReadWriteFields):
     bestellmengeneinheit = forms.IntegerField(required=False)
     mindestbestellmenge = forms.IntegerField(required=False)
     lieferzeit = forms.IntegerField(required=True)
-#    einheit_l_b_h
+    #einheit_l_b_h
     laenge = forms.IntegerField(required=True)
     breite = forms.IntegerField(required=True)
     hoehe = forms.IntegerField(required=True)
     preis = forms.IntegerField(required=True)
-#    waehrung
+    #waehrung
     preiseinheit = forms.IntegerField(required=True)
     lagerfaehigkeit = forms.IntegerField(required=True)
     exportkontrollauflage = CustomBooleanChoiceField(required=False)
@@ -69,14 +69,14 @@ class MaterialForm_GD(ModelForm, SplitterReadOnlyReadWriteFields):
     revision_eigen = forms.CharField(required=False)
     zertifiziert_fuer_flug = CustomBooleanChoiceField(required=False)
     verteilung_an_ruag = CustomBooleanChoiceField(required=False)
-#    revision_fremd
+    #revision_fremd
     a_nummer = forms.CharField(required=False)
     materialart_grunddaten = forms.ModelChoiceField(queryset=Materialart.objects.all(), required=True)
     produkthierarchie = forms.CharField(required=True)
     rueckfuehrungscode = forms.ModelChoiceField(queryset=Rueckfuehrungscode.objects.all(), required=False)
     serialnummerprofil = forms.ModelChoiceField(queryset=Serialnummerprofil.objects.all(), required=True)
     endbevorratet = forms.CharField(required=False)
-#    materialzustandsverwaltung
+    #materialzustandsverwaltung
     # End GD
     # Start SMDA
     werkzuordnung_1 = forms.ModelChoiceField(queryset=Werkzuordnung_1.objects.all(), required=True)
@@ -98,11 +98,11 @@ class MaterialForm_GD(ModelForm, SplitterReadOnlyReadWriteFields):
     verteilung_cheops = CustomBooleanChoiceField(required=False)
     zuteilung = forms.ModelChoiceField(queryset=Zuteilung.objects.all(), required=True)
     auspraegung = forms.ModelChoiceField(queryset=Auspraegung.objects.all(), required=True)
-#    verkaufsorg
-#    vertriebsweg
-#    auszeichnungsfeld
-#    preissteuerung
-#    preisermittlung
+    #verkaufsorg
+    #vertriebsweg
+    #auszeichnungsfeld
+    #preissteuerung
+    #preisermittlung
     bewertungsklasse = forms.ModelChoiceField(queryset=Bewertungsklasse.objects.all(), required=True)
     fuehrendes_material = forms.CharField(required=False)
     kennzeichen_komplexes_system = CustomBooleanChoiceField(required=False)
