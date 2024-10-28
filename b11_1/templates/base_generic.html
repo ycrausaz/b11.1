@@ -37,8 +37,11 @@
 {{ form.media }}
 
 <script>
-    $(function () {
-        $('[data-toggle="tooltip"]').tooltip();
+    document.addEventListener('DOMContentLoaded', function () {
+        const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+        tooltipTriggerList.forEach(function (tooltipTriggerEl) {
+            new bootstrap.Tooltip(tooltipTriggerEl);
+        });
     });
 </script>
 
@@ -155,7 +158,7 @@ td {
     box-sizing: border-box;
 }
 
-    label[data-toggle="tooltip"] {
+    label[data-bs-toggle="tooltip"] {
         cursor: help;
         border-bottom: 1px dotted #007bff;
     }
