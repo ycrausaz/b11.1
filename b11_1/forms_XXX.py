@@ -80,9 +80,9 @@ class MaterialForm_GD(ModelForm, SplitterReadOnlyReadWriteFields):
     # End GD
     # Start SMDA
     werkzuordnung_1 = forms.ModelChoiceField(queryset=Werkzuordnung_1.objects.all(), required=True)
-    werkzuordnung_2 = forms.ModelChoiceField(queryset=Werkzuordnung_2.objects.all(), required=True)
-    werkzuordnung_3 = forms.ModelChoiceField(queryset=Werkzuordnung_3.objects.all(), required=True)
-    werkzuordnung_4 = forms.ModelChoiceField(queryset=Werkzuordnung_4.objects.all(), required=True)
+    werkzuordnung_2 = forms.ModelChoiceField(queryset=Werkzuordnung_2.objects.all(), required=False)
+    werkzuordnung_3 = forms.ModelChoiceField(queryset=Werkzuordnung_3.objects.all(), required=False)
+    werkzuordnung_4 = forms.ModelChoiceField(queryset=Werkzuordnung_4.objects.all(), required=False)
     allgemeine_positionstypengruppe = forms.ModelChoiceField(queryset=AllgemeinePositionstypengruppe.objects.all(), required=True)
     spare_part_class_code = forms.ModelChoiceField(queryset=SparePartClassCode.objects.all(), required=True)
     fertigungssteuerer = forms.ModelChoiceField(queryset=Fertigungssteuerer.objects.all(), required=True)
