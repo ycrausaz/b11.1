@@ -38,16 +38,13 @@ class FormValidMixin_IL:
         item = form.save(commit=False)
         item.hersteller = self.request.user.username
         print("item.hersteller = " + item.hersteller)
+
         item.gewichtseinheit = "KG"
         print("item.gewichtseinheit = " + item.gewichtseinheit)
-#        item.nsn_gruppe_klasse = "XXXXXXXXXX"
-#        print("item.nsn_gruppe_klasse = " + item.nsn_gruppe_klasse)
-#        item.nato_versorgungs_nr = "XXXXXXXXXX"
-#        print("item.nato_versorgungs_nr = " + item.nato_versorgungs_nr)
+
         item.einheit_l_b_h = "MM"
         print("item.einheit_l_b_h = " + item.einheit_l_b_h)
-        item.waehrung = "CHF"
-        print("item.waehrung = " + item.waehrung)
+
         if item.chargenpflicht == True:
             item.materialzustandsverwaltung = "2"
         elif item.chargenpflicht == False:
@@ -58,7 +55,6 @@ class FormValidMixin_IL:
         if len(item.nato_stock_number) > 0:
             if not re.match(pattern, item.nato_stock_number):
                 form.add_error('nato_stock_number', "Der Feld 'Nato Stock Number' muss die folgende Formatierung haben: 'XXXX-XX-XXX-XXXX'.")
-
         pattern = r'^(\d{4})-\d{2}-\d{3}-\d{4}$'
         match = re.match(pattern, item.nato_stock_number)
         if match:
@@ -68,10 +64,8 @@ class FormValidMixin_IL:
         match = re.match(pattern, item.nato_stock_number)
         if match:
             item.nato_versorgungs_nr = match.group(1).replace('-', '')
-
         key = form.cleaned_data['cage_code']
         print("key = " + key)
-
         try:
             lookup_record = G_Partner.objects.get(cage_code=key)
             lookup_value = lookup_record.gp_nummer
@@ -79,8 +73,11 @@ class FormValidMixin_IL:
         except G_Partner.DoesNotExist:
             lookup_value = ""
             print("No lookup")
-
         item.hersteller_nr_gp = lookup_value
+        print("item.hersteller_nr_gp = " + item.hersteller_nr_gp)
+
+        item.waehrung = "CHF"
+        print("item.waehrung = " + item.waehrung)
 
         if form.errors:
             return self.form_invalid(form)
