@@ -97,12 +97,7 @@ class FormValidMixin_GD:
 
     def form_valid(self, form):
         item = form.save(commit=False)
-        if item.werkzuordnung_1 == "0800":
-            item.verkaufsorg = "A100"
-        else:
-            item.verkaufsorg = "M100"
 
-        print("item.chargenpflicht = " + str(item.chargenpflicht))
         if item.chargenpflicht == 'N':
             item.materialzustandsverwaltung = 1
         elif item.chargenpflicht == 'X':
