@@ -103,6 +103,19 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+CREATE OR REPLACE FUNCTION random_s_or_v()
+RETURNS CHAR AS $$
+BEGIN
+    -- Use the random() function to generate a random number between 0 and 1.
+    -- If the number is less than 0.5, return 'S'; else, return 'V'.
+    IF random() < 0.5 THEN
+        RETURN 'S';
+    ELSE
+        RETURN 'V';
+    END IF;
+END;
+$$ LANGUAGE plpgsql;
+
 
 insert into b11_1_material (
 is_transferred,
@@ -166,9 +179,9 @@ werkzuordnung_3_id, -- 55
 werkzuordnung_4_id, -- 56
 allgemeine_positionstypengruppe_id, -- 57
 verkaufsorg, -- 58
-vertriebsweg_id, -- 59
+vertriebsweg, -- 59
 fuehrendes_material, -- 60
-auszeichnungsfeld_id, -- 61
+auszeichnungsfeld, -- 61
 materialeinstufung_nach_zuva_id, -- 62
 fertigungssteuerer_id, -- 63
 kennzeichen_komplexes_system, -- 64
@@ -195,7 +208,7 @@ spare_part_class_code_id, -- 84
 sparte_id, -- 85
 uebersetzungsstatus_id, -- 86
 orderbuchpflicht, -- 87
-preissteuerung_id -- 88
+preissteuerung -- 88
 ) values (
 't',
 'f',
@@ -258,9 +271,9 @@ preissteuerung_id -- 88
 (select id from b11_1_werkzuordnung_4 order by random() limit 1), -- werk, -- 56
 (select id from b11_1_allgemeinepositionstypengruppe order by random() limit 1), -- allgemeine_positionstypengruppe, -- 57
 'M100', -- verkaufsorg, -- 58
-(select id from b11_1_vertriebsweg order by random() limit 1), -- vertriebsweg, -- 59
+'V0', -- vertriebsweg, -- 59
 '', -- fuehrendes_material, -- 60
-(select id from b11_1_auszeichnungsfeld order by random() limit 1), -- auszeichnungsfeld, -- 61
+(select random()::int::boolean), -- auszeichnungsfeld, -- 61
 (select id from b11_1_materialeinstufungnachzuva order by random() limit 1), -- materialeinstufungnachzuva -- 62
 (select id from b11_1_fertigungssteuerer order by random() limit 1), -- fertigungssteuerer, -- 63
 (select random()::int::boolean), -- kennzeichen_komplexes_system, -- 64
@@ -287,5 +300,5 @@ preissteuerung_id -- 88
 (select id from b11_1_sparte order by random() limit 1), -- sparte_id, -- 85
 (select id from b11_1_uebersetzungsstatus order by random() limit 1), -- uebersetzungsstatus_id -- 86
 (select random()::int::boolean), -- orderbuchpflicht -- 87
-(select id from b11_1_preissteuerung order by random() limit 1) -- preissteuerung -- 88
+(select random_s_or_v()) -- preissteuerung -- 88
 )

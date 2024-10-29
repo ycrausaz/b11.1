@@ -3,6 +3,7 @@ from django.core.exceptions import PermissionDenied
 import re
 from django.http import HttpResponseRedirect
 from .models import Material, Zuteilung, Auspraegung, G_Partner
+from pprint import pprint
 
 class GroupRequiredMixin(UserPassesTestMixin):
     group_required = None
@@ -125,6 +126,45 @@ class FormValidMixin_SMDA:
             item.verkaufsorg = "A100"
         else:
             item.verkaufsorg = "M100"
+        print("item.verkaufsorg = " + item.verkaufsorg)
+
+        item.vertriebsweg = "V0"
+        print("item.vertriebsweg = " + item.vertriebsweg)
+
+        if item.verteilung_apm_kerda == True:
+            item.auszeichnungsfeld = "R"
+        print("item.auszeichnungsfeld = " + item.auszeichnungsfeld)
+
+#        print("self = " + str(self))
+#        print("item = " + str(item))
+#        print("item.id = " + str(item.id))
+#        print("item.materialart_grunddaten_id = " + str(item.materialart_grunddaten_id))
+#        base_obj = Material.objects.filter(id=item.id)
+#        print("base_obj = " + str(base_obj))
+#
+#        field_names = [field.name for field in Material._meta.get_fields()]
+#        materials_data = []
+#        for obj in base_obj:
+#            field_value_dict = {}
+#            for field in field_names:
+#                # Use getattr to get the value of the field from the object
+#                value = getattr(obj, field, None)
+#                field_value_dict[field] = value
+#            materials_data.append(field_value_dict)
+#
+#        pprint(materials_data)
+#
+#
+#        print("base_obj.materialart_grunddaten_id = " + str(base_obj.materialart_grunddaten_id))
+        item.preissteuerung = "<< TBD >>"
+        print("item.preissteuerung = " + item.preissteuerung)
+
+        item.preisermittlung = "<< TBD >>"
+        print("item.preisermittlung = " + item.preisermittlung)
+
+
+
+
 
         print("item.zuteilung_id = " + str(item.zuteilung_id))
         zuteilung = Zuteilung.objects.filter(id=item.zuteilung_id).first()
@@ -136,13 +176,6 @@ class FormValidMixin_SMDA:
             form.add_error('auspraegung', "Die Ausprägung mit 'MKZ' muss '01', '02' oder '03' sein.")
         if zuteilung.text == "PRD" and auspraegung.text == "04":
             form.add_error('auspraegung', "Die Ausprägung mit 'PRD' muss '01', '02' oder '03' sein.")
-
-        print("item.chargenpflicht = " + str(item.chargenpflicht))
-        if item.chargenpflicht == 'N':
-            item.materialzustandsverwaltung = 1
-        elif item.chargenpflicht == 'X':
-            item.materialzustandsverwaltung = 2
-        print("item.materialzustandsverwaltung = " + str(item.materialzustandsverwaltung))
 
         if form.errors:
             return self.form_invalid(form)

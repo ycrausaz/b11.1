@@ -5,13 +5,12 @@ CREATE OR REPLACE VIEW ckmlcr_material_ledger_preise
     b.text AS bwkey,
     '10'::text AS curtp,
     a.preiseinheit AS peinh,
-    f.text AS vprsv,
+    a.preissteuerung AS vprsv,
     a.preis AS stprs,
     a.preis AS pvprs,
     'CHF'::text AS waers
    FROM b11_1_material a
      LEFT JOIN b11_1_werkzuordnung_1 b ON a.werkzuordnung_1_id = b.id
-     LEFT JOIN b11_1_preissteuerung f ON a.preissteuerung_id = f.id
   WHERE a.is_transferred = true
   ORDER BY a.positions_nr, b.text;
 CREATE OR REPLACE VIEW makt_beschreibung
@@ -78,7 +77,7 @@ CREATE OR REPLACE VIEW mara_grunddaten
             ELSE '2'::text
         END AS mcond,
     a.fuehrendes_material AS zzfuehr_mat,
-    g.text AS zzlabel,
+    a.auszeichnungsfeld AS zzlabel,
     h.text AS retdelc,
     i.text AS adspc_spc,
     a.produkthierarchie AS prdha,
@@ -94,7 +93,6 @@ CREATE OR REPLACE VIEW mara_grunddaten
      LEFT JOIN b11_1_gefahrgutkennzeichen d ON d.id = a.gefahrgutkennzeichen_id
      LEFT JOIN b11_1_begru e ON e.id = a.begru_id
      LEFT JOIN b11_1_sparte f ON f.id = a.sparte_id
-     LEFT JOIN b11_1_auszeichnungsfeld g ON g.id = a.auszeichnungsfeld_id
      LEFT JOIN b11_1_rueckfuehrungscode h ON h.id = a.rueckfuehrungscode_id
      LEFT JOIN b11_1_sparepartclasscode i ON i.id = a.spare_part_class_code_id
      LEFT JOIN b11_1_temperaturbedingung j ON j.id = a.temperaturbedingung_id
@@ -408,19 +406,18 @@ CREATE OR REPLACE VIEW mbew_buchhaltung
  SELECT a.id AS tmp_id,
     a.positions_nr AS source_id,
     b.text AS bwkey,
-    c.text AS vprsv,
+    a.auszeichnungsfeld AS vprsv,
     a.preis AS verpr,
     a.preis AS stprs,
     a.preiseinheit AS peinh,
     f.text AS bklas,
         CASE
-            WHEN c.text IS NULL THEN ''::text
+            WHEN a.auszeichnungsfeld IS NULL THEN ''::text
             ELSE '2'::text
         END AS mlast
    FROM b11_1_material a
      LEFT JOIN b11_1_werkzuordnung_1 b ON a.werkzuordnung_1_id = b.id
      LEFT JOIN b11_1_bewertungsklasse f ON a.bewertungsklasse_id = f.id
-     LEFT JOIN b11_1_preissteuerung c ON a.preissteuerung_id = c.id
   WHERE a.is_transferred = true
   ORDER BY a.positions_nr, b.text;
 CREATE OR REPLACE VIEW mlan_steuer
@@ -436,10 +433,9 @@ CREATE OR REPLACE VIEW mvke_verkaufsdaten
  SELECT a.id AS tmp_id,
     a.positions_nr AS source_id,
     'M100'::text AS vkorg,
-    b.text AS vtweg,
+    a.vertriebsweg AS vtweg,
     c.text AS mtpos
    FROM b11_1_material a
-     LEFT JOIN b11_1_vertriebsweg b ON b.id = a.vertriebsweg_id
      LEFT JOIN b11_1_allgemeinepositionstypengruppe c ON c.id = a.allgemeine_positionstypengruppe_id
   WHERE a.is_transferred = true
   ORDER BY a.positions_nr;

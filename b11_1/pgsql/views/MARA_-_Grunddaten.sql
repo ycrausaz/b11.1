@@ -39,7 +39,7 @@ CREATE OR REPLACE VIEW mara_grunddaten
             ELSE '2'::text
         END AS mcond,
     a.fuehrendes_material AS zzfuehr_mat,
-    g.text AS zzlabel,
+    a.auszeichnungsfeld AS zzlabel,
     h.text AS retdelc,
     i.text AS adspc_spc,
     a.produkthierarchie AS prdha,
@@ -55,7 +55,6 @@ CREATE OR REPLACE VIEW mara_grunddaten
      LEFT JOIN b11_1_gefahrgutkennzeichen d ON d.id = a.gefahrgutkennzeichen_id
      LEFT JOIN b11_1_begru e ON e.id = a.begru_id
      LEFT JOIN b11_1_sparte f ON f.id = a.sparte_id
-     LEFT JOIN b11_1_auszeichnungsfeld g ON g.id = a.auszeichnungsfeld_id
      LEFT JOIN b11_1_rueckfuehrungscode h ON h.id = a.rueckfuehrungscode_id
      LEFT JOIN b11_1_sparepartclasscode i ON i.id = a.spare_part_class_code_id
      LEFT JOIN b11_1_temperaturbedingung j ON j.id = a.temperaturbedingung_id

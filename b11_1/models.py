@@ -177,24 +177,24 @@ class AllgemeinePositionstypengruppe(models.Model):
         app_label = 'b11_1'
 
 
-class Vertriebsweg(models.Model):
-    text = models.CharField(null=True, blank=True, max_length=40)
+#class Vertriebsweg(models.Model):
+#    text = models.CharField(null=True, blank=True, max_length=40)
+#
+#    def __str__(self):
+#        return self.text
+#
+#    class Meta:
+#        app_label = 'b11_1'
 
-    def __str__(self):
-        return self.text
 
-    class Meta:
-        app_label = 'b11_1'
-
-
-class Auszeichnungsfeld(models.Model):
-    text = models.CharField(null=True, blank=True, max_length=40)
-
-    def __str__(self):
-        return self.text
-
-    class Meta:
-        app_label = 'b11_1'
+#class Auszeichnungsfeld(models.Model):
+#    text = models.CharField(null=True, blank=True, max_length=40)
+#
+#    def __str__(self):
+#        return self.text
+#
+#    class Meta:
+#        app_label = 'b11_1'
 
 
 class Fertigungssteuerer(models.Model):
@@ -257,14 +257,14 @@ class Auspraegung(models.Model):
         app_label = 'b11_1'
 
 
-class Preissteuerung(models.Model):
-    text = models.CharField(null=True, blank=True, max_length=40)
-
-    def __str__(self):
-        return self.text
-
-    class Meta:
-        app_label = 'b11_1'
+#class Preissteuerung(models.Model):
+#    text = models.CharField(null=True, blank=True, max_length=40)
+#
+#    def __str__(self):
+#        return self.text
+#
+#    class Meta:
+#        app_label = 'b11_1'
 
 
 class MaterialeinstufungNachZUVA(models.Model):
@@ -349,9 +349,11 @@ class Material(models.Model):
     werkzuordnung_4 = models.ForeignKey(Werkzuordnung_4, null=True, blank=True, on_delete=models.DO_NOTHING, verbose_name="Werkzuordnung (4) ")
     allgemeine_positionstypengruppe = models.ForeignKey(AllgemeinePositionstypengruppe, null=True, blank=True, on_delete=models.DO_NOTHING, verbose_name="Allgemeine Positionstypengruppe ")
     verkaufsorg = models.CharField(null=True, blank=True, max_length=40)
-    vertriebsweg = models.ForeignKey(Vertriebsweg, null=True, blank=True, on_delete=models.DO_NOTHING, verbose_name="Vertriebsweg ")
+#    vertriebsweg = models.ForeignKey(Vertriebsweg, null=True, blank=True, on_delete=models.DO_NOTHING, verbose_name="Vertriebsweg ")
+    vertriebsweg = models.CharField(null=True, blank=True, max_length=40)
     fuehrendes_material = models.CharField(null=True, blank=True, max_length=40)
-    auszeichnungsfeld = models.ForeignKey(Auszeichnungsfeld, null=True, blank=True, on_delete=models.DO_NOTHING, verbose_name="Auszeichungsfeld ")
+#    auszeichnungsfeld = models.ForeignKey(Auszeichnungsfeld, null=True, blank=True, on_delete=models.DO_NOTHING, verbose_name="Auszeichungsfeld ")
+    auszeichnungsfeld = models.CharField(null=True, blank=True, max_length=40)
     fertigungssteuerer = models.ForeignKey(Fertigungssteuerer, null=True, blank=True, on_delete=models.DO_NOTHING, verbose_name="Fertigungssteuerer ")
     kennzeichen_komplexes_system = models.BooleanField(null=True, blank=True)
     sonderablauf = models.ForeignKey(Sonderablauf, null=True, blank=True, on_delete=models.DO_NOTHING, verbose_name="Sonderablauf ")
@@ -369,7 +371,8 @@ class Material(models.Model):
     verteilung_cheops = models.BooleanField(null=True, blank=True)
     zuteilung = models.ForeignKey(Zuteilung, null=True, blank=True, on_delete=models.DO_NOTHING, verbose_name="Zuteilung ")
     auspraegung = models.ForeignKey(Auspraegung, null=True, blank=True, on_delete=models.DO_NOTHING, verbose_name="Ausprägung ")
-    preissteuerung = models.ForeignKey(Preissteuerung, null=True, blank=True, on_delete=models.DO_NOTHING, verbose_name="Preissteuerung ")
+#    preissteuerung = models.ForeignKey(Preissteuerung, null=True, blank=True, on_delete=models.DO_NOTHING, verbose_name="Preissteuerung ")
+    preissteuerung = models.CharField(null=True, blank=True, max_length=40)
     preisermittlung = models.CharField(null=True, blank=True, max_length=30)
 
     def __str__(self):

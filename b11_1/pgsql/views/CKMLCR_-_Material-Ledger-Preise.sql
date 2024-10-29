@@ -5,12 +5,11 @@ CREATE OR REPLACE VIEW ckmlcr_material_ledger_preise
     b.text AS bwkey,
     '10'::text AS curtp,
     a.preiseinheit AS peinh,
-    f.text AS vprsv,
+    a.preissteuerung AS vprsv,
     a.preis AS stprs,
     a.preis AS pvprs,
     'CHF'::text AS waers
    FROM b11_1_material a
      LEFT JOIN b11_1_werkzuordnung_1 b ON a.werkzuordnung_1_id = b.id
-     LEFT JOIN b11_1_preissteuerung f ON a.preissteuerung_id = f.id
   WHERE a.is_transferred = true
   ORDER BY a.positions_nr, b.text;

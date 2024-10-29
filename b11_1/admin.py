@@ -75,13 +75,13 @@ class Werkzuordnung_4Admin(admin.ModelAdmin):
 class AllgemeinePositionstypengruppeAdmin(admin.ModelAdmin):
     list_display = ('text',)
 
-@admin.register(Vertriebsweg)
-class VertriebswegAdmin(admin.ModelAdmin):
-    list_display = ('text',)
+#@admin.register(Vertriebsweg)
+#class VertriebswegAdmin(admin.ModelAdmin):
+#    list_display = ('text',)
 
-@admin.register(Auszeichnungsfeld)
-class AuszeichnungsfeldAdmin(admin.ModelAdmin):
-    list_display = ('text',)
+#@admin.register(Auszeichnungsfeld)
+#class AuszeichnungsfeldAdmin(admin.ModelAdmin):
+#    list_display = ('text',)
 
 @admin.register(Fertigungssteuerer)
 class FertigungssteuererAdmin(admin.ModelAdmin):
@@ -107,9 +107,9 @@ class ZuteilungAdmin(admin.ModelAdmin):
 class AuspraegungAdmin(admin.ModelAdmin):
     list_display = ('text',)
 
-@admin.register(Preissteuerung)
-class PreissteuerungAdmin(admin.ModelAdmin):
-    list_display = ('text',)
+#@admin.register(Preissteuerung)
+#class PreissteuerungAdmin(admin.ModelAdmin):
+#    list_display = ('text',)
 
 @admin.register(MaterialeinstufungNachZUVA)
 class MaterialeinstufungNachZUVAAdmin(admin.ModelAdmin):
