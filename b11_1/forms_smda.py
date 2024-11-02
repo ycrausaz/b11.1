@@ -11,13 +11,13 @@ from .models import *
 from .widgets import ReadOnlyForeignKeyWidget
 from .utils import readonly_field_style
 from .forms import CustomBooleanChoiceField, SplitterReadOnlyReadWriteFields, BaseTemplateForm
-from .editable_fields_config import EDITABLE_FIELDS_SMDA
+from .editable_fields_config import *
 
 class MaterialForm_SMDA(BaseTemplateForm, SplitterReadOnlyReadWriteFields):
 
     class Meta(BaseTemplateForm.Meta):
         model = Material
-        fields = '__all__'
+        fields = EDITABLE_FIELDS
 
 
     def __init__(self, *args, **kwargs):
