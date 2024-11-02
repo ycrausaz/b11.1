@@ -41,6 +41,7 @@ from django.utils.encoding import force_bytes
 from django.contrib.auth.tokens import default_token_generator
 from django.core.mail import send_mail
 from django.conf import settings
+from .editable_fields_config import EDITABLE_FIELDS_GD, EDITABLE_FIELDS_SMDA, EDITABLE_FIELDS_IL
 import logging
 
 logger = logging.getLogger(__name__)
@@ -286,6 +287,11 @@ class UpdateMaterial_GD_View(FormValidMixin_GD, grGD_GroupRequiredMixin, Success
     success_url = reverse_lazy('list_material_gd')
     success_message = "Das Material wurde erfolgreich aktualisiert."
 
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['editable_fields'] = EDITABLE_FIELDS_GD
+        return kwargs
+
 class ShowMaterial_GD_View(grGD_GroupRequiredMixin, SuccessMessageMixin, DetailView):
     model = Material
     template_name = 'gd/show_material_gd.html'
@@ -370,6 +376,11 @@ class UpdateMaterial_SMDA_View(FormValidMixin_SMDA, grSMDA_GroupRequiredMixin, S
     form_class = MaterialForm_SMDA
     success_url = reverse_lazy('list_material_smda')
     success_message = "Das Material wurde erfolgreich aktualisiert."
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['editable_fields'] = EDITABLE_FIELDS_SMDA
+        return kwargs
 
 class ShowMaterial_SMDA_View(grSMDA_GroupRequiredMixin, SuccessMessageMixin, DetailView):
     model = Material

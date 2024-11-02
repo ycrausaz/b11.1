@@ -4,6 +4,7 @@ from .utils import readonly_field_style
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.password_validation import validate_password
 from django.contrib.auth.forms import SetPasswordForm
+from .models import *
 
 class CustomPasswordResetForm(SetPasswordForm):
     def clean_new_password2(self):
@@ -58,3 +59,46 @@ class SplitterReadOnlyReadWriteFields(forms.Form):
         for field in self:
             if not field.field.widget.attrs.get('readonly', False):
                 yield field
+
+class BaseTemplateForm(forms.ModelForm):
+    """
+    Base form to handle readonly and editable fields.
+    """
+    class Meta:
+        model = Material
+        fields = '__all__'  # Include all model fields
+
+    def __init__(self, *args, **kwargs):
+        # Extract 'editable_fields' from kwargs before calling the parent class constructor
+        editable_fields = kwargs.pop('editable_fields', None)
+        super().__init__(*args, **kwargs)
+
+        # Apply logic to disable fields that are not in the editable list
+        if editable_fields:
+            for field_name in self.fields:
+                if field_name not in editable_fields:
+                    self.fields[field_name].disabled = True
+
+    def get_normal_fields(self):
+        """
+        Return the fields that are editable.
+        """
+        return [field for field in self if not self.fields[field.name].disabled]
+
+    def get_readonly_fields(self):
+        """
+        Return the fields that should be readonly.
+        """
+        return [field for field in self if self.fields[field.name].disabled]
+
+    def save(self, commit=True):
+        """
+        Override the save method to ensure only editable fields are saved.
+        """
+        instance = super().save(commit=False)
+        editable_field_names = [field.name for field in self.get_normal_fields()]
+
+        # Save only the editable fields
+        if commit:
+            instance.save(update_fields=editable_field_names)
+        return instance
