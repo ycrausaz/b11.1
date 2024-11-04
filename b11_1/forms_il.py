@@ -113,7 +113,7 @@ class MaterialForm_IL(ModelForm, SplitterReadOnlyReadWriteFields):
 
     class Meta:
         model = Material
-        fields = EDITABLE_FIELDS
+        fields = EDITABLE_FIELDS_IL
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
