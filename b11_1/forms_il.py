@@ -113,9 +113,7 @@ class MaterialForm_IL(ModelForm, SplitterReadOnlyReadWriteFields):
 
     class Meta:
         model = Material
-        fields = EDITABLE_FIELDS_IL
-        fields.remove('einheit_l_b_h')
-        fields.remove('waehrung')
+        fields = EDITABLE_FIELDS
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

@@ -172,14 +172,14 @@ class MaterialForm_GD(BaseTemplateForm, SplitterReadOnlyReadWriteFields):
 #            'revision_eigen':forms.TextInput(attrs={'readonly':True,'style':readonly_field_style()}),
 #            'zertifiziert_fuer_flug':forms.TextInput(attrs={'readonly':True,'style':readonly_field_style()}),
 #            'verteilung_an_ruag':forms.TextInput(attrs={'readonly':True,'style':readonly_field_style()}),
-#            'revision_fremd':forms.TextInput(attrs={'readonly':True,'style':readonly_field_style()}),
+            'revision_fremd':forms.TextInput(attrs={'readonly':True,'style':readonly_field_style()}),
 #            'a_nummer':forms.TextInput(attrs={'readonly':True,'style':readonly_field_style()}),
 #            'materialart_grunddaten':ReadOnlyForeignKeyWidget(attrs={'readonly':True,'style':readonly_field_style()}),
 #            'produkthierarchie':forms.TextInput(attrs={'readonly':True,'style':readonly_field_style()}),
 #            'rueckfuehrungscode':ReadOnlyForeignKeyWidget(attrs={'readonly':True,'style':readonly_field_style()}),
 #            'serialnummerprofil':ReadOnlyForeignKeyWidget(attrs={'readonly':True,'style':readonly_field_style()}),
 #            'endbevorratet':forms.TextInput(attrs={'readonly':True,'style':readonly_field_style()}),
-#                        'materialzustandsverwaltung':forms.TextInput(attrs={'readonly':True,'style':readonly_field_style()}),
+            'materialzustandsverwaltung':forms.TextInput(attrs={'readonly':True,'style':readonly_field_style()}),
             # End GD
             # Start SMDA
             'werkzuordnung_1':ReadOnlyForeignKeyWidget(attrs={'readonly':True,'style':readonly_field_style()}),
