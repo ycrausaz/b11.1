@@ -33,6 +33,7 @@ class FormValidMixin_IL:
 
     def form_invalid(self, form):
         form.add_error(None, "Es gibt einen oder mehreren Fehler im Formular.")
+        return super().form_invalid(form)
 
     def form_valid(self, form):
         # Add the name of the 'hersteller'
@@ -133,7 +134,7 @@ class FormValidMixin_SMDA:
 
         if item.verteilung_apm_kerda == True:
             item.auszeichnungsfeld = "R"
-        print("item.auszeichnungsfeld = " + item.auszeichnungsfeld)
+        print("item.auszeichnungsfeld = " + str(item.auszeichnungsfeld))
 
 #        print("self = " + str(self))
 #        print("item = " + str(item))
