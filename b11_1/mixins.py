@@ -2,7 +2,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.core.exceptions import PermissionDenied
 import re
 from django.http import HttpResponseRedirect
-from .models import Material, Zuteilung, Auspraegung, G_Partner
+from .models import *
 from pprint import pprint
 
 class GroupRequiredMixin(UserPassesTestMixin):
@@ -104,11 +104,14 @@ class FormValidMixin_GD:
         print("item.geschaeftspartner = " + item.geschaeftspartner)
 
         # Revision Fremd
+        item.revision_fremd = form.cleaned_data['revision']
+        print("item.revision_fremd = " + item.revision_fremd)
 
         # Materialzustandsverwaltung
-        if item.chargenpflicht == 'N':
-            item.materialzustandsverwaltung = 1
-        elif item.chargenpflicht == 'X':
+        print("item.chargenpflicht = " + str(item.chargenpflicht))
+        if item.chargenpflicht:
+            item.materialzustandsverwaltung = 2
+        else:
             item.materialzustandsverwaltung = 2
         print("item.materialzustandsverwaltung = " + str(item.materialzustandsverwaltung))
 
@@ -146,10 +149,11 @@ class FormValidMixin_SMDA:
             item.auszeichnungsfeld = "R"
         print("item.auszeichnungsfeld = " + str(item.auszeichnungsfeld))
 
-#        print("self = " + str(self))
-#        print("item = " + str(item))
-#        print("item.id = " + str(item.id))
-#        print("item.materialart_grunddaten_id = " + str(item.materialart_grunddaten_id))
+        print("item.materialart_grunddaten_id = " + str(item.materialart_grunddaten_id))
+        mat_art = Materialart.objects.filter(id=item.id).first()
+        print("mat_art.text = " + str(mat_art.text))
+        print("<<< APPLY THE RULE HERE >>>")
+
 #        base_obj = Material.objects.filter(id=item.id)
 #        print("base_obj = " + str(base_obj))
 #
@@ -165,15 +169,15 @@ class FormValidMixin_SMDA:
 #
 #        pprint(materials_data)
 #
-#
-#        print("base_obj.materialart_grunddaten_id = " + str(base_obj.materialart_grunddaten_id))
+#        print("base_obj.materialart_grunddaten = " + str(base_obj.materialart_grunddaten))
 
         # Preissteuerung
         item.preissteuerung = "<< TBD >>"
         print("item.preissteuerung = " + item.preissteuerung)
 
         # Preisermittlung
-        item.preisermittlung = "<< TBD >>"
+        if len(item.preissteuerung) > 0:
+            item.preisermittlung = "2"
         print("item.preisermittlung = " + item.preisermittlung)
 
         # Ausprägung
