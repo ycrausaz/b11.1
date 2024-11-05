@@ -202,7 +202,7 @@ CREATE OR REPLACE VIEW mara_grunddaten
     b.text AS mtart,
     c.text AS meins,
     a.herstellerteilenummer AS mfrpn,
-    a.hersteller_nr_gp AS mfrnr,
+    a.geschaeftspartner AS mfrnr,
     a.groesse_abmessung AS groes,
     a.nettogewicht AS ntgew,
     a.laenge AS laeng,

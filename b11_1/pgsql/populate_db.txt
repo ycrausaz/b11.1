@@ -164,7 +164,7 @@ hersteller_ort, -- 40
 revision, -- 41
 bemerkung, -- 42
 produkthierarchie, -- 43
-hersteller_nr_gp, -- 44
+geschaeftspartner, -- 44
 warengruppe, -- 45
 endbevorratet, -- 46
 revision_fremd, -- 47
@@ -256,7 +256,7 @@ preissteuerung -- 88
 (select random_string(30)), -- revision, -- 41
 (select random_string(40)), -- bemerkung, -- 42
 (select random_string(4)), -- produkthierarchie, -- 43
-(select random_string(10)), -- hersteller_nr_gp, -- 44
+(select random_string(10)), -- geschaeftspartner, -- 44
 (select random_string(9)), -- warengruppe, -- 45
 (select random_string(5)), -- endbevorratet, -- 46
 (select random_string(10)), -- revision_fremd, -- 47

@@ -50,7 +50,7 @@
 'rueckfuehrungscode'
 'serialnummerprofil'
 'spare_part_class_code'
-'hersteller_nr_gp'
+'geschaeftspartner'
 'warengruppe'
 'uebersetzungsstatus'
 'endbevorratet'

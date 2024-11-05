@@ -99,8 +99,8 @@ class FormValidMixin_GD:
 #        except G_Partner.DoesNotExist:
 #            lookup_value = ""
 #            print("No lookup")
-#        item.hersteller_nr_gp = lookup_value
-#        print("item.hersteller_nr_gp = " + item.hersteller_nr_gp)
+#        item.geschaeftspartner = lookup_value
+#        print("item.geschaeftspartner = " + item.geschaeftspartner)
 
         # Revision Fremd
 

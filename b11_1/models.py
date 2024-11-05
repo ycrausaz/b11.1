@@ -333,7 +333,7 @@ class Material(models.Model):
     rueckfuehrungscode = models.ForeignKey(Rueckfuehrungscode, null=True, blank=True, on_delete=models.DO_NOTHING, verbose_name="Rückführungscode ")
     serialnummerprofil = models.ForeignKey(Serialnummerprofil, null=True, blank=True, on_delete=models.DO_NOTHING, verbose_name="Serialnummerprofil ")
     spare_part_class_code = models.ForeignKey(SparePartClassCode, null=True, blank=True, on_delete=models.DO_NOTHING, verbose_name="Spare Part Class Code ")
-    hersteller_nr_gp = models.CharField(null=True, blank=True, max_length=40)
+    geschaeftspartner = models.CharField(null=True, blank=True, max_length=40)
     warengruppe = models.CharField(null=True, blank=True, max_length=40)
     uebersetzungsstatus = models.ForeignKey(Uebersetzungsstatus, null=True, blank=True, on_delete=models.DO_NOTHING, verbose_name="Übersetzungsstatus ")
     endbevorratet = models.CharField(null=True, blank=True, max_length=40)

@@ -62,7 +62,7 @@ class MaterialForm_GD(ModelForm, SplitterReadOnlyReadWriteFields):
     # Start GD
     begru = forms.ModelChoiceField(queryset=BEGRU.objects.all(), required=True)
     sparte = forms.ModelChoiceField(queryset=Sparte.objects.all(), required=True)
-    hersteller_nr_gp = forms.CharField(required=True)
+    geschaeftspartner = forms.CharField(required=True)
     warengruppe = forms.CharField(required=True)
     uebersetzungsstatus = forms.ModelChoiceField(queryset=Uebersetzungsstatus.objects.all(), required=True)
     verteilung_an_psd = CustomBooleanChoiceField(required=False)
@@ -161,7 +161,7 @@ class MaterialForm_GD(ModelForm, SplitterReadOnlyReadWriteFields):
             # Start GD
             'begru',
             'sparte',
-            'hersteller_nr_gp',
+            'geschaeftspartner',
             'warengruppe',
             'uebersetzungsstatus',
             'verteilung_an_psd',
@@ -251,7 +251,7 @@ class MaterialForm_GD(ModelForm, SplitterReadOnlyReadWriteFields):
             'cage_code':forms.TextInput(attrs={'readonly':True,'style':readonly_field_style()}),
             'hersteller_name':forms.TextInput(attrs={'readonly':True,'style':readonly_field_style()}),
             'hersteller_adresse':forms.TextInput(attrs={'readonly':True,'style':readonly_field_style()}),
-            'hersteller_nr_gp':forms.TextInput(attrs={'readonly':True,'style':readonly_field_style()}),
+            'geschaeftspartner':forms.TextInput(attrs={'readonly':True,'style':readonly_field_style()}),
             'hersteller_plz':forms.TextInput(attrs={'readonly':True,'style':readonly_field_style()}),
             'hersteller_ort':forms.TextInput(attrs={'readonly':True,'style':readonly_field_style()}),
             'revision':forms.TextInput(attrs={'readonly':True,'style':readonly_field_style()}),
@@ -260,7 +260,7 @@ class MaterialForm_GD(ModelForm, SplitterReadOnlyReadWriteFields):
             # Start GD
             'begru':ReadOnlyForeignKeyWidget(attrs={'readonly':True,'style':readonly_field_style()}),
             'sparte':ReadOnlyForeignKeyWidget(attrs={'readonly':True,'style':readonly_field_style()}),
-            'hersteller':forms.TextInput(attrs={'readonly':True,'style':readonly_field_style()}), #'hersteller_nr_gp'
+            'hersteller':forms.TextInput(attrs={'readonly':True,'style':readonly_field_style()}), #'geschaeftspartner'
             'warengruppe':forms.TextInput(attrs={'readonly':True,'style':readonly_field_style()}),
             'uebersetzungsstatus':ReadOnlyForeignKeyWidget(attrs={'readonly':True,'style':readonly_field_style()}),
             'verteilung_an_psd':forms.TextInput(attrs={'readonly':True,'style':readonly_field_style()}),
