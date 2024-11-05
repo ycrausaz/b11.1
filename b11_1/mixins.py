@@ -36,23 +36,17 @@ class FormValidMixin_IL:
         return super().form_invalid(form)
 
     def form_valid(self, form):
-        # Add the name of the 'hersteller'
         item = form.save(commit=False)
+
+        # Hersteller
         item.hersteller = self.request.user.username
         print("item.hersteller = " + item.hersteller)
 
+        # Gewichtseinheit
         item.gewichtseinheit = "KG"
         print("item.gewichtseinheit = " + item.gewichtseinheit)
 
-        item.einheit_l_b_h = "MM"
-        print("item.einheit_l_b_h = " + item.einheit_l_b_h)
-
-        if item.chargenpflicht == True:
-            item.materialzustandsverwaltung = "2"
-        elif item.chargenpflicht == False:
-            item.materialzustandsverwaltung = "1"
-        print("item.materialzustandsverwaltung = " + item.materialzustandsverwaltung)
-
+        # NSN Gruppe / Klasse
         pattern = r'^\d{4}-\d{2}-\d{3}-\d{4}$'
         if len(item.nato_stock_number) > 0:
             if not re.match(pattern, item.nato_stock_number):
@@ -62,22 +56,17 @@ class FormValidMixin_IL:
         if match:
             item.nsn_gruppe_klasse = match.group(1)
 
+        # Nato Versorgungs-Nr.
         pattern = r'^\d{4}-(\d{2}-\d{3}-\d{4})$'
         match = re.match(pattern, item.nato_stock_number)
         if match:
             item.nato_versorgungs_nr = match.group(1).replace('-', '')
-        key = form.cleaned_data['cage_code']
-        print("key = " + key)
-        try:
-            lookup_record = G_Partner.objects.get(cage_code=key)
-            lookup_value = lookup_record.gp_nummer
-            print("lookup_value = " + lookup_value)
-        except G_Partner.DoesNotExist:
-            lookup_value = ""
-            print("No lookup")
-        item.hersteller_nr_gp = lookup_value
-        print("item.hersteller_nr_gp = " + item.hersteller_nr_gp)
 
+        # Einheit L / B / H
+        item.einheit_l_b_h = "MM"
+        print("item.einheit_l_b_h = " + item.einheit_l_b_h)
+
+        # Währung
         item.waehrung = "CHF"
         print("item.waehrung = " + item.waehrung)
 
@@ -100,6 +89,22 @@ class FormValidMixin_GD:
     def form_valid(self, form):
         item = form.save(commit=False)
 
+        # Geschäftspartner
+#        key = form.cleaned_data['cage_code']
+#        print("key = " + str(key))
+#        try:
+#            lookup_record = G_Partner.objects.get(cage_code=key)
+#            lookup_value = lookup_record.gp_nummer
+#            print("lookup_value = " + lookup_value)
+#        except G_Partner.DoesNotExist:
+#            lookup_value = ""
+#            print("No lookup")
+#        item.hersteller_nr_gp = lookup_value
+#        print("item.hersteller_nr_gp = " + item.hersteller_nr_gp)
+
+        # Revision Fremd
+
+        # Materialzustandsverwaltung
         if item.chargenpflicht == 'N':
             item.materialzustandsverwaltung = 1
         elif item.chargenpflicht == 'X':
@@ -123,15 +128,19 @@ class FormValidMixin_SMDA:
 
     def form_valid(self, form):
         item = form.save(commit=False)
+
+        # Verkaufsorg.
         if item.werkzuordnung_1 == "0800":
             item.verkaufsorg = "A100"
         else:
             item.verkaufsorg = "M100"
         print("item.verkaufsorg = " + item.verkaufsorg)
 
+        # Vertriebsweg
         item.vertriebsweg = "V0"
         print("item.vertriebsweg = " + item.vertriebsweg)
 
+        # Auszeichnungsfeld
         if item.verteilung_apm_kerda == True:
             item.auszeichnungsfeld = "R"
         print("item.auszeichnungsfeld = " + str(item.auszeichnungsfeld))
@@ -157,16 +166,16 @@ class FormValidMixin_SMDA:
 #
 #
 #        print("base_obj.materialart_grunddaten_id = " + str(base_obj.materialart_grunddaten_id))
+
+        # Preissteuerung
         item.preissteuerung = "<< TBD >>"
         print("item.preissteuerung = " + item.preissteuerung)
 
+        # Preisermittlung
         item.preisermittlung = "<< TBD >>"
         print("item.preisermittlung = " + item.preisermittlung)
 
-
-
-
-
+        # Ausprägung
         print("item.zuteilung_id = " + str(item.zuteilung_id))
         zuteilung = Zuteilung.objects.filter(id=item.zuteilung_id).first()
         print("zuteilung = " + str(zuteilung))
