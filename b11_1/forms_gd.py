@@ -63,7 +63,7 @@ class MaterialForm_GD(BaseTemplateForm, SplitterReadOnlyReadWriteFields):
     # Start GD
     begru = forms.ModelChoiceField(queryset=BEGRU.objects.all(), required=True)
     sparte = forms.ModelChoiceField(queryset=Sparte.objects.all(), required=True)
-    geschaeftspartner = forms.CharField(required=True)
+    geschaeftspartner = forms.CharField(required=False)
     warengruppe = forms.CharField(required=True)
     uebersetzungsstatus = forms.ModelChoiceField(queryset=Uebersetzungsstatus.objects.all(), required=True)
     verteilung_an_psd = CustomBooleanChoiceField(required=False)

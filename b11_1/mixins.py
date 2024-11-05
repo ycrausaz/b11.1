@@ -90,17 +90,18 @@ class FormValidMixin_GD:
         item = form.save(commit=False)
 
         # Geschäftspartner
-#        key = form.cleaned_data['cage_code']
-#        print("key = " + str(key))
-#        try:
-#            lookup_record = G_Partner.objects.get(cage_code=key)
-#            lookup_value = lookup_record.gp_nummer
-#            print("lookup_value = " + lookup_value)
-#        except G_Partner.DoesNotExist:
-#            lookup_value = ""
-#            print("No lookup")
-#        item.geschaeftspartner = lookup_value
-#        print("item.geschaeftspartner = " + item.geschaeftspartner)
+        if len(item.geschaeftspartner) == 0:
+            key = form.cleaned_data['cage_code']
+            print("key = " + str(key))
+            try:
+                lookup_record = G_Partner.objects.get(cage_code=key)
+                lookup_value = lookup_record.gp_nummer
+                print("lookup_value = " + lookup_value)
+            except G_Partner.DoesNotExist:
+                lookup_value = ""
+                print("No lookup")
+            item.geschaeftspartner = lookup_value
+        print("item.geschaeftspartner = " + item.geschaeftspartner)
 
         # Revision Fremd
 
