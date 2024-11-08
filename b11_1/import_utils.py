@@ -115,15 +115,10 @@ def process_field_value(field_config, value, row_data):
         # Convert Excel boolean values to Python boolean
         if isinstance(value, str):
             value = value.strip().upper()
-            if value == 'X':
+            if value == 'X' or value == 'J':
                 return True
-            elif value == 'N':
-                return False
             else:
-                # If the value is neither 'X' nor 'N', return None
-                # You could also raise an error here if you prefer
-                logger.warning(f"Invalid boolean value '{value}' - expected 'X' or 'N'")
-                return None
+                return False
         else:
             # If the value is not a string (e.g., it's already a boolean or None)
             logger.warning(f"Unexpected boolean value type: {type(value)}")
