@@ -42,9 +42,45 @@ from django.contrib.auth.tokens import default_token_generator
 from django.core.mail import send_mail
 from django.conf import settings
 from .editable_fields_config import EDITABLE_FIELDS_GD, EDITABLE_FIELDS_SMDA, EDITABLE_FIELDS_IL
+from django.views.generic.edit import FormView
+from django import forms
+from .import_utils import import_from_excel
 import logging
 
 logger = logging.getLogger(__name__)
+
+class ExcelUploadForm(forms.Form):
+    """
+    Form for uploading Excel files with material data.
+    """
+    excel_file = forms.FileField(
+        label='Select Excel File',
+        help_text='Upload an Excel file containing material data (.xlsx format)',
+        widget=forms.FileInput(attrs={
+            'class': 'form-control',
+            'accept': '.xlsx'
+        })
+    )
+
+class ExcelImportView(FormView):
+    """
+    View for handling Excel file uploads and importing material data.
+    """
+    template_name = 'admin/excel_import.html'
+    form_class = ExcelUploadForm
+    success_url = reverse_lazy('list_material_il')
+
+    def form_valid(self, form):
+        excel_file = form.cleaned_data['excel_file']
+        success, message, created, updated = import_from_excel(excel_file, self.request)
+        
+        if success:
+            messages.success(self.request, message)
+        else:
+            messages.error(self.request, message)
+            return self.form_invalid(form)
+
+        return super().form_valid(form)
 
 def custom_permission_denied_view(request, exception=None):
     response = render(request, '403.html')
@@ -106,7 +142,7 @@ class CustomLoginView(LoginView):
         elif self.request.user.groups.filter(name='grSMDA').exists():
             return redirect('list_material_smda')
         elif self.request.user.groups.filter(name='grAdmin').exists():
-            return redirect('admin')
+            return redirect('logging')
         return response
 
     def get(self, request, *args, **kwargs):
@@ -392,8 +428,8 @@ class ShowMaterial_SMDA_View(grSMDA_GroupRequiredMixin, SuccessMessageMixin, Det
         context['form'] = self.form_class(instance=self.object)
         return context    
 
-class Admin_View(ListView):
-    template_name = 'admin.html'
+class Logging_View(ListView):
+    template_name = 'admin/logging.html'
 
     def get(self, request, *args, **kwargs):
         with connection.cursor() as cursor:
@@ -419,4 +455,3 @@ class Admin_View(ListView):
             'log_entries': log_entries,
         }
         return render(request, self.template_name, context)
-
