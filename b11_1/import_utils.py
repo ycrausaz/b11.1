@@ -92,17 +92,6 @@ def process_field_value(field_config, value, row_data):
     Process a single field value based on its configuration.
     Returns the processed value ready for the Material model.
     Raises ValueError if a foreign key value doesn't exist.
-    
-    Args:
-        field_config (dict): Configuration for the field being processed
-        value: The value from the Excel file
-        row_data: The complete row data from the Excel file
-        
-    Returns:
-        Processed value ready for the Material model
-        
-    Raises:
-        ValueError: If a foreign key value doesn't exist in the database
     """
     if pd.isna(value):
         return None
@@ -112,7 +101,6 @@ def process_field_value(field_config, value, row_data):
         return value
     
     elif field_config['type'] == 'boolean':
-        # Convert Excel boolean values to Python boolean
         if isinstance(value, str):
             value = value.strip().upper()
             if value == 'X' or value == 'J':
@@ -120,11 +108,10 @@ def process_field_value(field_config, value, row_data):
             else:
                 return False
         else:
-            # If the value is not a string (e.g., it's already a boolean or None)
             logger.warning(f"Unexpected boolean value type: {type(value)}")
             return None
     
-    elif field_config['type'] == 'fk':
+    elif field_config['type'] in ['fk', 'padded_fk']:
         model_class = field_config['model']
         lookup_field = field_config['lookup_field']
         
@@ -132,19 +119,20 @@ def process_field_value(field_config, value, row_data):
             if pd.isna(value):
                 return None
             
-            # Convert any numeric values to string format, preserving leading zeros
+            # Handle the value conversion first
             if isinstance(value, (int, float)):
-                # Check if it's actually a float but represents an integer
-                if float(value).is_integer():
-                    # Convert to integer first to remove decimal point
-                    value = str(int(value))
-                else:
-                    value = str(value)
-                    
-            # Ensure the value is a string and strip whitespace
-            value = str(value).strip()
-            
-            # Try to get the existing object - don't create if it doesn't exist
+                # Convert to integer first to remove decimal point if it's a float
+                value = str(int(value))
+            else:
+                value = str(value).strip()
+
+            # Apply padding for padded_fk type
+            if field_config['type'] == 'padded_fk':
+                padding_length = field_config.get('length', 1)
+                value = value.zfill(padding_length)
+                logger.debug(f"Padded value to: '{value}' (length {padding_length})")
+
+            # Try to get the existing object
             lookup_kwargs = {lookup_field: value}
             try:
                 obj = model_class.objects.get(**lookup_kwargs)

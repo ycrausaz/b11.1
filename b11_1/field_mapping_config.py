@@ -322,34 +322,38 @@ FIELD_MAPPING = {
     },
 # End GD
 # Start SMDA
-#    'werkzuordnung_1': {
-#        'tab': 'Systemmanager - Datenassistent',
-#        'column': 'C',
-#        'type': 'fk',
-#        'model': Werkzuordnung_1,
-#        'lookup_field': 'text'
-#    },
-#    'werkzuordnung_2': {
-#        'tab': 'Systemmanager - Datenassistent',
-#        'column': 'D',
-#        'type': 'fk',
-#        'model': Werkzuordnung_2,
-#        'lookup_field': 'text'
-#    },
-#    'werkzuordnung_3': {
-#        'tab': 'Systemmanager - Datenassistent',
-#        'column': 'E',
-#        'type': 'fk',
-#        'model': Werkzuordnung_3,
-#        'lookup_field': 'text'
-#    },
-#    'werkzuordnung_4': {
-#        'tab': 'Systemmanager - Datenassistent',
-#        'column': 'F',
-#        'type': 'fk',
-#        'model': Werkzuordnung_4,
-#        'lookup_field': 'text'
-#    },
+    'werkzuordnung_1': {
+        'tab': 'Systemmanager - Datenassistent',
+        'column': 'C',
+        'type': 'padded_fk',
+        'model': Werkzuordnung_1,
+        'lookup_field': 'text',
+        'length': 4
+    },
+    'werkzuordnung_2': {
+        'tab': 'Systemmanager - Datenassistent',
+        'column': 'D',
+        'type': 'padded_fk',
+        'model': Werkzuordnung_2,
+        'lookup_field': 'text',
+        'length': 4
+    },
+    'werkzuordnung_3': {
+        'tab': 'Systemmanager - Datenassistent',
+        'column': 'E',
+        'type': 'padded_fk',
+        'model': Werkzuordnung_3,
+        'lookup_field': 'text',
+        'length': 4
+    },
+    'werkzuordnung_4': {
+        'tab': 'Systemmanager - Datenassistent',
+        'column': 'F',
+        'type': 'padded_fk',
+        'model': Werkzuordnung_4,
+        'lookup_field': 'text',
+        'length': 4
+    },
     'allgemeine_positionstypengruppe': {
         'tab': 'Systemmanager - Datenassistent',
         'column': 'G',
@@ -378,13 +382,14 @@ FIELD_MAPPING = {
         'model': Sonderablauf,
         'lookup_field': 'text'
     },
-#    'temperaturbedingung': {
-#        'tab': 'Systemmanager - Datenassistent',
-#        'column': 'K',
-#        'type': 'fk',
-#        'model': Temperaturbedingung,
-#        'lookup_field': 'text'
-#    },
+    'temperaturbedingung': {
+        'tab': 'Systemmanager - Datenassistent',
+        'column': 'K',
+        'type': 'padded_fk',
+        'model': Temperaturbedingung,
+        'lookup_field': 'text',
+        'length': 2
+    },
     'systemmanager': {
         'tab': 'Systemmanager - Datenassistent',
         'column': 'L',
@@ -434,13 +439,14 @@ FIELD_MAPPING = {
         'model': Zuteilung,
         'lookup_field': 'text'
     },
-#    'auspraegung': {
-#        'tab': 'Systemmanager - Datenassistent',
-#        'column': 'U',
-#        'type': 'fk',
-#        'model': Auspraegung,
-#        'lookup_field': 'text'
-#    },
+    'auspraegung': {
+        'tab': 'Systemmanager - Datenassistent',
+        'column': 'U',
+        'type': 'padded_fk',
+        'model': Auspraegung,
+        'lookup_field': 'text',
+        'length': 2
+    },
     'verkaufsorg': {
         'tab': 'Systemmanager - Datenassistent',
         'column': 'V',
