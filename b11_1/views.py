@@ -49,7 +49,7 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-class ExcelUploadForm(forms.Form):
+class ExcelUploadForm(grAdmin_GroupRequiredMixin, forms.Form):
     """
     Form for uploading Excel files with material data.
     """
@@ -62,13 +62,13 @@ class ExcelUploadForm(forms.Form):
         })
     )
 
-class ExcelImportView(FormView):
+class ExcelImportView(grAdmin_GroupRequiredMixin, FormView):
     """
     View for handling Excel file uploads and importing material data.
     """
     template_name = 'admin/excel_import.html'
     form_class = ExcelUploadForm
-    success_url = reverse_lazy('list_material_il')
+    success_url = reverse_lazy('import_excel')
 
     def form_valid(self, form):
         excel_file = form.cleaned_data['excel_file']
