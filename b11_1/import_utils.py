@@ -5,66 +5,12 @@ from django.contrib import messages
 import logging
 from openpyxl import load_workbook
 from .models import *
+from .field_mapping_config import FIELD_MAPPING
 
 logger = logging.getLogger(__name__)
 
 # Define the mapping between Excel columns and model fields
-FIELD_MAPPING = {
-    # Simple fields
-    'positions_nr': {
-        'tab': 'Input_Lieferant',
-        'column': 'B',
-        'type': 'simple'
-    },
-    'kurztext_de': {
-        'tab': 'Input_Lieferant',
-        'column': 'C',
-        'type': 'simple'
-    },
-    'endbevorratet': {
-        'tab': 'Grunddaten',
-        'column': 'R',
-        'type': 'simple'
-    },
-    'warengruppe': {
-        'tab': 'Grunddaten',
-        'column': 'F',
-        'type': 'simple'
-    },
-    'systemmanager': {
-        'tab': 'Systemmanager - Datenassistent',
-        'column': 'L',
-        'type': 'simple'
-    },
-    'kennziffer_bamf': {
-        'tab': 'Systemmanager - Datenassistent',
-        'column': 'AD',
-        'type': 'simple'
-    },
-
-    # Foreign key fields
-    'basismengeneinheit': {
-        'tab': 'Input_Lieferant',
-        'column': 'L',
-        'type': 'fk',
-        'model': Basismengeneinheit,
-        'lookup_field': 'text'
-    },
-    'begru': {
-        'tab': 'Grunddaten',
-        'column': 'C',
-        'type': 'fk',
-        'model': BEGRU,
-        'lookup_field': 'text'
-    },
-    'werkzuordnung_1': {
-        'tab': 'Systemmanager - Datenassistent',
-        'column': 'C',
-        'type': 'fk',
-        'model': Werkzuordnung_1,
-        'lookup_field': 'text'
-    },
-}
+field_mapping = FIELD_MAPPING
 
 def column_letter_to_index(letter):
     """Convert Excel column letter to zero-based column index."""
@@ -79,7 +25,7 @@ def get_tab_data(excel_file):
     The number of rows to process is determined by the number of non-empty rows
     in column B of the 'Input_Lieferant' tab, starting from row 9.
     """
-    unique_tabs = {mapping['tab'] for mapping in FIELD_MAPPING.values()}
+    unique_tabs = {mapping['tab'] for mapping in field_mapping.values()}
     tab_data = {}
 
     try:
@@ -116,7 +62,7 @@ def get_tab_data(excel_file):
 
                 # Create a dictionary to store column mappings
                 col_mappings = {}
-                for field, config in FIELD_MAPPING.items():
+                for field, config in field_mapping.items():
                     if config['tab'] == tab:
                         col_idx = column_letter_to_index(config['column'])
                         col_mappings[col_idx] = config['column']
@@ -146,32 +92,51 @@ def process_field_value(field_config, value, row_data):
     Process a single field value based on its configuration.
     Returns the processed value ready for the Material model.
     Raises ValueError if a foreign key value doesn't exist.
-
+    
     Args:
         field_config (dict): Configuration for the field being processed
         value: The value from the Excel file
         row_data: The complete row data from the Excel file
-
+        
     Returns:
         Processed value ready for the Material model
-
+        
     Raises:
         ValueError: If a foreign key value doesn't exist in the database
     """
     if pd.isna(value):
         return None
 
+    # Handle different field types
     if field_config['type'] == 'simple':
         return value
-
+    
+    elif field_config['type'] == 'boolean':
+        # Convert Excel boolean values to Python boolean
+        if isinstance(value, str):
+            value = value.strip().upper()
+            if value == 'X':
+                return True
+            elif value == 'N':
+                return False
+            else:
+                # If the value is neither 'X' nor 'N', return None
+                # You could also raise an error here if you prefer
+                logger.warning(f"Invalid boolean value '{value}' - expected 'X' or 'N'")
+                return None
+        else:
+            # If the value is not a string (e.g., it's already a boolean or None)
+            logger.warning(f"Unexpected boolean value type: {type(value)}")
+            return None
+    
     elif field_config['type'] == 'fk':
         model_class = field_config['model']
         lookup_field = field_config['lookup_field']
-
+        
         try:
             if pd.isna(value):
                 return None
-
+            
             # Convert any numeric values to string format, preserving leading zeros
             if isinstance(value, (int, float)):
                 # Check if it's actually a float but represents an integer
@@ -180,10 +145,10 @@ def process_field_value(field_config, value, row_data):
                     value = str(int(value))
                 else:
                     value = str(value)
-
+                    
             # Ensure the value is a string and strip whitespace
             value = str(value).strip()
-
+            
             # Try to get the existing object - don't create if it doesn't exist
             lookup_kwargs = {lookup_field: value}
             try:
@@ -193,11 +158,16 @@ def process_field_value(field_config, value, row_data):
                 error_msg = f"{model_class.__name__} with {lookup_field}='{value}' does not exist in the database"
                 logger.error(error_msg)
                 raise ValueError(error_msg)
-
+            
         except Exception as e:
             error_msg = f"Error processing foreign key {model_class.__name__}: {str(e)}"
             logger.error(error_msg)
             raise ValueError(error_msg)
+
+    else:
+        error_msg = f"Unknown field type: {field_config['type']}"
+        logger.error(error_msg)
+        raise ValueError(error_msg)
 
 def import_from_excel(excel_file, request=None):
     """
@@ -223,7 +193,7 @@ def import_from_excel(excel_file, request=None):
             excel_row = row_idx + 9
 
             # Process each field according to its mapping
-            for field_name, field_config in FIELD_MAPPING.items():
+            for field_name, field_config in field_mapping.items():
                 tab = field_config['tab']
                 column = field_config['column']
 
