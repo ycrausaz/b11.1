@@ -1,1 +1,1 @@
-insert into "b11_1_sonderablauf" (text) values ('M'), ('N');
+insert into "b11_1_sonderablauf" (idx, text) values (1, 'M'), (2, 'N');

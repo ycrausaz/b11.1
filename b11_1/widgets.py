@@ -9,7 +9,7 @@ class ReadOnlyForeignKeyWidget(widgets.Widget):
             attrs = {}
         if value is None:
             return ''
-        foreign_key_instance = self.choices.queryset.get(pk=value)
+        foreign_key_instance = self.choices.queryset.get(idx=value)
         attrs['style'] = readonly_field_style()
         rendered_html = '<input type="text" value="%s" readonly style="%s"/>' % (foreign_key_instance.__str__(), attrs['style'])
         return mark_safe(rendered_html)

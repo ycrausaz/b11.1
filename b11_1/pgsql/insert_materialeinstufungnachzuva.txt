@@ -1,1 +1,1 @@
-insert into "b11_1_materialeinstufungnachzuva" (text) values ('SSB'),('HSB'),('ESB'),('UAM');
+insert into "b11_1_materialeinstufungnachzuva" (idx, text) values (1, 'SSB'),(2, 'HSB'),(3, 'ESB'),(4, 'UAM');

@@ -1,1 +1,1 @@
-insert into "b11_1_basismengeneinheit" (text) values ('ST'),('M'),('KG'),('PAA'),('L'),('LE'),('T'),('STD'),('JHR'),('GLL'),('GLI'),('TO'),('G'),('MG'),('ML'),('CM'),('MM'),('M2'),('DM2'),('CM2'),('M3'),('CDM'),('CCM'),('PT'),('OZ'),('LB');
+insert into "b11_1_basismengeneinheit" (idx, text) values (1, 'ST'),(2, 'M'),(3, 'KG'),(4, 'PAA'),(5, 'L'),(6, 'LE'),(7, 'T'),(8, 'STD'),(9, 'JHR'),(10, 'GLL'),(11, 'GLI'),(12, 'TO'),(13, 'G'),(14, 'MG'),(15, 'ML'),(16, 'CM'),(17, 'MM'),(18, 'M2'),(19, 'DM2'),(20, 'CM2'),(21, 'M3'),(22, 'CDM'),(23, 'CCM'),(24, 'PT'),(25, 'OZ'),(26, 'LB');

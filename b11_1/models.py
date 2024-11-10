@@ -3,18 +3,28 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+class BaseIdxModel(models.Model):
+    """Abstract base class for models with idx field"""
+    idx = models.IntegerField(unique=True, null=True, blank=True)
+    text = models.CharField(null=True, blank=True, max_length=40)
+
+    def __str__(self):
+        return self.text
+
+    class Meta:
+        abstract = True
+        ordering = ['idx']
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     is_first_login = models.BooleanField(default=True)
-    failed_login_attempts = models.IntegerField(default=0)  # Add this line
+    failed_login_attempts = models.IntegerField(default=0)
 
     def __str__(self):
         return self.user.username
 
     class Meta:
         app_label = 'b11_1'
-
 
 class HelpTooltip(models.Model):
     field_name = models.CharField(max_length=100, unique=True)
@@ -26,7 +36,6 @@ class HelpTooltip(models.Model):
     class Meta:
         app_label = 'b11_1'
 
-
 class G_Partner(models.Model):
     cage_code = models.CharField(null=True, blank=True, max_length=40)
     gp_nummer = models.CharField(null=True, blank=True, max_length=40)
@@ -36,246 +45,89 @@ class G_Partner(models.Model):
     class Meta:
         app_label = 'b11_1'
 
-
-class BEGRU(models.Model):
-    text = models.CharField(null=True, blank=True, max_length=40)
-
-    def __str__(self):
-        return self.text
-
+class BEGRU(BaseIdxModel):
     class Meta:
         app_label = 'b11_1'
 
-
-class Basismengeneinheit(models.Model):
-    text = models.CharField(null=True, blank=True, max_length=40)
-
-    def __str__(self):
-        return self.text
-
+class Basismengeneinheit(BaseIdxModel):
     class Meta:
         app_label = 'b11_1'
 
-
-class Materialart(models.Model):
-    text = models.CharField(null=True, blank=True, max_length=40)
-
-    def __str__(self):
-        return self.text
-
+class Materialart(BaseIdxModel):
     class Meta:
         app_label = 'b11_1'
 
-
-class Sparte(models.Model):
-    text = models.CharField(null=True, blank=True, max_length=40)
-
-    def __str__(self):
-        return self.text
-
+class Sparte(BaseIdxModel):
     class Meta:
         app_label = 'b11_1'
 
-
-class Rueckfuehrungscode(models.Model):
-    text = models.CharField(null=True, blank=True, max_length=40)
-
-    def __str__(self):
-        return self.text
-
+class Rueckfuehrungscode(BaseIdxModel):
     class Meta:
         app_label = 'b11_1'
 
-
-class Serialnummerprofil(models.Model):
-    text = models.CharField(null=True, blank=True, max_length=40)
-
-    def __str__(self):
-        return self.text
-
+class Serialnummerprofil(BaseIdxModel):
     class Meta:
         app_label = 'b11_1'
 
-
-class SparePartClassCode(models.Model):
-    text = models.CharField(null=True, blank=True, max_length=40)
-
-    def __str__(self):
-        return self.text
-
+class SparePartClassCode(BaseIdxModel):
     class Meta:
         app_label = 'b11_1'
 
-
-class Uebersetzungsstatus(models.Model):
-    text = models.CharField(null=True, blank=True, max_length=40)
-
-    def __str__(self):
-        return self.text
-
+class Uebersetzungsstatus(BaseIdxModel):
     class Meta:
         app_label = 'b11_1'
 
-
-class Gefahrgutkennzeichen(models.Model):
-    text = models.CharField(null=True, blank=True, max_length=40)
-
-    def __str__(self):
-        return self.text
-
+class Gefahrgutkennzeichen(BaseIdxModel):
     class Meta:
         app_label = 'b11_1'
 
-
-class Werkzuordnung_1(models.Model):
-    text = models.CharField(null=True, blank=True, max_length=40)
-
-    def __str__(self):
-        return self.text
-
+class Werkzuordnung_1(BaseIdxModel):
     class Meta:
         app_label = 'b11_1'
 
-
-class Werkzuordnung_2(models.Model):
-    text = models.CharField(null=True, blank=True, max_length=40)
-
-    def __str__(self):
-        return self.text
-
+class Werkzuordnung_2(BaseIdxModel):
     class Meta:
         app_label = 'b11_1'
 
-
-class Werkzuordnung_3(models.Model):
-    text = models.CharField(null=True, blank=True, max_length=40)
-
-    def __str__(self):
-        return self.text
-
+class Werkzuordnung_3(BaseIdxModel):
     class Meta:
         app_label = 'b11_1'
 
-
-class Werkzuordnung_4(models.Model):
-    text = models.CharField(null=True, blank=True, max_length=40)
-
-    def __str__(self):
-        return self.text
-
+class Werkzuordnung_4(BaseIdxModel):
     class Meta:
         app_label = 'b11_1'
 
-
-class AllgemeinePositionstypengruppe(models.Model):
-    text = models.CharField(null=True, blank=True, max_length=40)
-
-    def __str__(self):
-        return self.text
-
+class AllgemeinePositionstypengruppe(BaseIdxModel):
     class Meta:
         app_label = 'b11_1'
 
-
-#class Vertriebsweg(models.Model):
-#    text = models.CharField(null=True, blank=True, max_length=40)
-#
-#    def __str__(self):
-#        return self.text
-#
-#    class Meta:
-#        app_label = 'b11_1'
-
-
-#class Auszeichnungsfeld(models.Model):
-#    text = models.CharField(null=True, blank=True, max_length=40)
-#
-#    def __str__(self):
-#        return self.text
-#
-#    class Meta:
-#        app_label = 'b11_1'
-
-
-class Fertigungssteuerer(models.Model):
-    text = models.CharField(null=True, blank=True, max_length=40)
-
-    def __str__(self):
-        return self.text
-
+class Fertigungssteuerer(BaseIdxModel):
     class Meta:
         app_label = 'b11_1'
 
-
-class Sonderablauf(models.Model):
-    text = models.CharField(null=True, blank=True, max_length=40)
-
-    def __str__(self):
-        return self.text
-
+class Sonderablauf(BaseIdxModel):
     class Meta:
         app_label = 'b11_1'
 
-
-class Temperaturbedingung(models.Model):
-    text = models.CharField(null=True, blank=True, max_length=40)
-
-    def __str__(self):
-        return self.text
-
+class Temperaturbedingung(BaseIdxModel):
     class Meta:
         app_label = 'b11_1'
 
-
-class Bewertungsklasse(models.Model):
-    text = models.CharField(null=True, blank=True, max_length=40)
-
-    def __str__(self):
-        return self.text
-
+class Bewertungsklasse(BaseIdxModel):
     class Meta:
         app_label = 'b11_1'
 
-
-class Zuteilung(models.Model):
-    text = models.CharField(null=True, blank=True, max_length=40)
-
-    def __str__(self):
-        return self.text
-
+class Zuteilung(BaseIdxModel):
     class Meta:
         app_label = 'b11_1'
 
-
-class Auspraegung(models.Model):
-    text = models.CharField(null=True, blank=True, max_length=40)
-
-    def __str__(self):
-        return self.text
-
+class Auspraegung(BaseIdxModel):
     class Meta:
         app_label = 'b11_1'
 
-
-#class Preissteuerung(models.Model):
-#    text = models.CharField(null=True, blank=True, max_length=40)
-#
-#    def __str__(self):
-#        return self.text
-#
-#    class Meta:
-#        app_label = 'b11_1'
-
-
-class MaterialeinstufungNachZUVA(models.Model):
-    text = models.CharField(null=True, blank=True, max_length=40)
-
-    def __str__(self):
-        return self.text
-
+class MaterialeinstufungNachZUVA(BaseIdxModel):
     class Meta:
         app_label = 'b11_1'
-
 
 class Material(models.Model):
     hersteller = models.CharField(null=True, blank=True, max_length=40)
@@ -292,7 +144,7 @@ class Material(models.Model):
     grunddatentext_fr_2_zeile = models.CharField(null=True, blank=True, max_length=40)
     grunddatentext_en_1_zeile = models.CharField(null=True, blank=True, max_length=40)
     grunddatentext_en_2_zeile = models.CharField(null=True, blank=True, max_length=40)
-    basismengeneinheit = models.ForeignKey(Basismengeneinheit, null=True, blank=True, on_delete=models.DO_NOTHING, verbose_name="Basismengeneinheit ")
+    basismengeneinheit = models.ForeignKey(Basismengeneinheit, to_field='idx', null=True, blank=True, on_delete=models.DO_NOTHING, verbose_name="Basismengeneinheit ")
     bruttogewicht = models.IntegerField(null=True, blank=True)
     gewichtseinheit = models.CharField(null=True, blank=True, max_length=40)
     nettogewicht = models.IntegerField(null=True, blank=True)
@@ -303,7 +155,7 @@ class Material(models.Model):
     nato_versorgungs_nr = models.CharField(null=True, blank=True, max_length=40)
     herstellerteilenummer = models.CharField(null=True, blank=True, max_length=40)
     normbezeichnung = models.CharField(null=True, blank=True, max_length=18)
-    gefahrgutkennzeichen = models.ForeignKey(Gefahrgutkennzeichen, null=True, blank=True, on_delete=models.DO_NOTHING, verbose_name="Gefahrgutkennzeichen ")
+    gefahrgutkennzeichen = models.ForeignKey(Gefahrgutkennzeichen, to_field='idx', null=True, blank=True, on_delete=models.DO_NOTHING, verbose_name="Gefahrgutkennzeichen ")
     instandsetzbar = models.BooleanField(null=True, blank=True)
     chargenpflicht = models.BooleanField(null=True, blank=True)
     bestellmengeneinheit = models.IntegerField(null=True, blank=True)
@@ -325,17 +177,17 @@ class Material(models.Model):
     hersteller_ort = models.CharField(null=True, blank=True, max_length=40)
     revision = models.CharField(null=True, blank=True, max_length=30)
     bemerkung = models.CharField(null=True, blank=True, max_length=40)
-    begru = models.ForeignKey(BEGRU, null=True, blank=True, on_delete=models.DO_NOTHING, verbose_name="BEGRU ")
-    materialart_grunddaten = models.ForeignKey(Materialart, null=True, blank=True, on_delete=models.DO_NOTHING, verbose_name="Materialart ")
-    sparte = models.ForeignKey(Sparte, null=True, blank=True, on_delete=models.DO_NOTHING, verbose_name="Sparte ")
+    begru = models.ForeignKey(BEGRU, to_field='idx', null=True, blank=True, on_delete=models.DO_NOTHING, verbose_name="BEGRU ")
+    materialart_grunddaten = models.ForeignKey(Materialart, to_field='idx', null=True, blank=True, on_delete=models.DO_NOTHING, verbose_name="Materialart ")
+    sparte = models.ForeignKey(Sparte, to_field='idx', null=True, blank=True, on_delete=models.DO_NOTHING, verbose_name="Sparte ")
     produkthierarchie = models.CharField(null=True, blank=True, max_length=40)
     materialzustandsverwaltung = models.CharField(null=True, blank=True, max_length=40)
-    rueckfuehrungscode = models.ForeignKey(Rueckfuehrungscode, null=True, blank=True, on_delete=models.DO_NOTHING, verbose_name="Rückführungscode ")
-    serialnummerprofil = models.ForeignKey(Serialnummerprofil, null=True, blank=True, on_delete=models.DO_NOTHING, verbose_name="Serialnummerprofil ")
-    spare_part_class_code = models.ForeignKey(SparePartClassCode, null=True, blank=True, on_delete=models.DO_NOTHING, verbose_name="Spare Part Class Code ")
+    rueckfuehrungscode = models.ForeignKey(Rueckfuehrungscode, to_field='idx', null=True, blank=True, on_delete=models.DO_NOTHING, verbose_name="Rückführungscode ")
+    serialnummerprofil = models.ForeignKey(Serialnummerprofil, to_field='idx', null=True, blank=True, on_delete=models.DO_NOTHING, verbose_name="Serialnummerprofil ")
+    spare_part_class_code = models.ForeignKey(SparePartClassCode, to_field='idx', null=True, blank=True, on_delete=models.DO_NOTHING, verbose_name="Spare Part Class Code ")
     geschaeftspartner = models.CharField(null=True, blank=True, max_length=40)
     warengruppe = models.CharField(null=True, blank=True, max_length=40)
-    uebersetzungsstatus = models.ForeignKey(Uebersetzungsstatus, null=True, blank=True, on_delete=models.DO_NOTHING, verbose_name="Übersetzungsstatus ")
+    uebersetzungsstatus = models.ForeignKey(Uebersetzungsstatus, to_field='idx', null=True, blank=True, on_delete=models.DO_NOTHING, verbose_name="Übersetzungsstatus ")
     endbevorratet = models.CharField(null=True, blank=True, max_length=40)
     revision_fremd = models.CharField(null=True, blank=True, max_length=40)
     revision_eigen = models.CharField(null=True, blank=True, max_length=40)
@@ -343,35 +195,32 @@ class Material(models.Model):
     a_nummer = models.CharField(null=True, blank=True, max_length=40)
     verteilung_an_psd = models.BooleanField(null=True, blank=True)
     verteilung_an_ruag = models.BooleanField(null=True, blank=True)
-    werkzuordnung_1 = models.ForeignKey(Werkzuordnung_1, null=True, blank=True, on_delete=models.DO_NOTHING, verbose_name="Werkzuordnung ")
-    werkzuordnung_2 = models.ForeignKey(Werkzuordnung_2, null=True, blank=True, on_delete=models.DO_NOTHING, verbose_name="Werkzuordnung (2) ")
-    werkzuordnung_3 = models.ForeignKey(Werkzuordnung_3, null=True, blank=True, on_delete=models.DO_NOTHING, verbose_name="Werkzuordnung (3) ")
-    werkzuordnung_4 = models.ForeignKey(Werkzuordnung_4, null=True, blank=True, on_delete=models.DO_NOTHING, verbose_name="Werkzuordnung (4) ")
-    allgemeine_positionstypengruppe = models.ForeignKey(AllgemeinePositionstypengruppe, null=True, blank=True, on_delete=models.DO_NOTHING, verbose_name="Allgemeine Positionstypengruppe ")
+    werkzuordnung_1 = models.ForeignKey(Werkzuordnung_1, to_field='idx', null=True, blank=True, on_delete=models.DO_NOTHING, verbose_name="Werkzuordnung ")
+    werkzuordnung_2 = models.ForeignKey(Werkzuordnung_2, to_field='idx', null=True, blank=True, on_delete=models.DO_NOTHING, verbose_name="Werkzuordnung (2) ")
+    werkzuordnung_3 = models.ForeignKey(Werkzuordnung_3, to_field='idx', null=True, blank=True, on_delete=models.DO_NOTHING, verbose_name="Werkzuordnung (3) ")
+    werkzuordnung_4 = models.ForeignKey(Werkzuordnung_4, to_field='idx', null=True, blank=True, on_delete=models.DO_NOTHING, verbose_name="Werkzuordnung (4) ")
+    allgemeine_positionstypengruppe = models.ForeignKey(AllgemeinePositionstypengruppe, to_field='idx', null=True, blank=True, on_delete=models.DO_NOTHING, verbose_name="Allgemeine Positionstypengruppe ")
     verkaufsorg = models.CharField(null=True, blank=True, max_length=40)
-#    vertriebsweg = models.ForeignKey(Vertriebsweg, null=True, blank=True, on_delete=models.DO_NOTHING, verbose_name="Vertriebsweg ")
     vertriebsweg = models.CharField(null=True, blank=True, max_length=40)
     fuehrendes_material = models.CharField(null=True, blank=True, max_length=40)
-#    auszeichnungsfeld = models.ForeignKey(Auszeichnungsfeld, null=True, blank=True, on_delete=models.DO_NOTHING, verbose_name="Auszeichungsfeld ")
     auszeichnungsfeld = models.CharField(null=True, blank=True, max_length=40)
-    fertigungssteuerer = models.ForeignKey(Fertigungssteuerer, null=True, blank=True, on_delete=models.DO_NOTHING, verbose_name="Fertigungssteuerer ")
+    fertigungssteuerer = models.ForeignKey(Fertigungssteuerer, to_field='idx', null=True, blank=True, on_delete=models.DO_NOTHING, verbose_name="Fertigungssteuerer ")
     kennzeichen_komplexes_system = models.BooleanField(null=True, blank=True)
-    sonderablauf = models.ForeignKey(Sonderablauf, null=True, blank=True, on_delete=models.DO_NOTHING, verbose_name="Sonderablauf ")
-    temperaturbedingung = models.ForeignKey(Temperaturbedingung, null=True, blank=True, on_delete=models.DO_NOTHING, verbose_name="Temperaturbedingung ")
-    bewertungsklasse = models.ForeignKey(Bewertungsklasse, null=True, blank=True, on_delete=models.DO_NOTHING, verbose_name="Bewertungsklasse ")
+    sonderablauf = models.ForeignKey(Sonderablauf, to_field='idx', null=True, blank=True, on_delete=models.DO_NOTHING, verbose_name="Sonderablauf ")
+    temperaturbedingung = models.ForeignKey(Temperaturbedingung, to_field='idx', null=True, blank=True, on_delete=models.DO_NOTHING, verbose_name="Temperaturbedingung ")
+    bewertungsklasse = models.ForeignKey(Bewertungsklasse, to_field='idx', null=True, blank=True, on_delete=models.DO_NOTHING, verbose_name="Bewertungsklasse ")
     systemmanager = models.CharField(null=True, blank=True, max_length=30)
     kennziffer_bamf = models.CharField(null=True, blank=True, max_length=30)
     mietrelevanz = models.BooleanField(null=True, blank=True)
     next_higher_assembly = models.CharField(null=True, blank=True, max_length=30)
     nachschubklasse = models.CharField(null=True, blank=True, max_length=30)
-    materialeinstufung_nach_zuva = models.ForeignKey(MaterialeinstufungNachZUVA, null=True, blank=True, on_delete=models.DO_NOTHING, verbose_name="Materialeinstufung nach ZUVA ")
+    materialeinstufung_nach_zuva = models.ForeignKey(MaterialeinstufungNachZUVA, to_field='idx', null=True, blank=True, on_delete=models.DO_NOTHING, verbose_name="Materialeinstufung nach ZUVA ")
     orderbuchpflicht = models.BooleanField(null=True, blank=True)
     verteilung_apm_kerda = models.BooleanField(null=True, blank=True)
     verteilung_svsaa = models.BooleanField(null=True, blank=True)
     verteilung_cheops = models.BooleanField(null=True, blank=True)
-    zuteilung = models.ForeignKey(Zuteilung, null=True, blank=True, on_delete=models.DO_NOTHING, verbose_name="Zuteilung ")
-    auspraegung = models.ForeignKey(Auspraegung, null=True, blank=True, on_delete=models.DO_NOTHING, verbose_name="Ausprägung ")
-#    preissteuerung = models.ForeignKey(Preissteuerung, null=True, blank=True, on_delete=models.DO_NOTHING, verbose_name="Preissteuerung ")
+    zuteilung = models.ForeignKey(Zuteilung, to_field='idx', null=True, blank=True, on_delete=models.DO_NOTHING, verbose_name="Zuteilung ")
+    auspraegung = models.ForeignKey(Auspraegung, to_field='idx', null=True, blank=True, on_delete=models.DO_NOTHING, verbose_name="Ausprägung ")
     preissteuerung = models.CharField(null=True, blank=True, max_length=40)
     preisermittlung = models.CharField(null=True, blank=True, max_length=30)
 
