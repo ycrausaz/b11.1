@@ -8,32 +8,37 @@ class ReadOnlyForeignKeyWidget(widgets.Widget):
         super().__init__(attrs)
         self.choices = choices
 
-    def value_from_datadict(self, data, files, name):
-        value = data.get(name, None)
-        return value
-
     def render(self, name, value, attrs=None, renderer=None):
         if attrs is None:
             attrs = {}
-        if value is None:
-            return ''
-
-        # Get the related model
-        model = self.choices.queryset.model if hasattr(self.choices, 'queryset') else None
-        if model is None:
-            return ''
-
-        try:
-            # Try to get the instance using the foreign key relationship
-            if hasattr(model, 'idx'):
-                instance = model.objects.get(idx=value)
-            else:
-                instance = model.objects.get(pk=value)
             
-            display_value = str(instance)
-        except (model.DoesNotExist, AttributeError, ValueError):
-            display_value = ''
+        try:
+            # Get the instance using idx field
+            if hasattr(self.choices, 'model'):
+                if value:
+                    instance = self.choices.get(idx=value)
+                    display_value = str(instance)
+                else:
+                    display_value = ''
+            else:
+                display_value = value or ''
+        except Exception:
+            display_value = value or ''
 
+        # Apply readonly styling
         attrs['style'] = readonly_field_style()
-        final_attrs = self.build_attrs(attrs, {'type': 'text', 'name': name, 'value': display_value, 'readonly': 'readonly'})
-        return mark_safe('<input%s />' % widgets.flatatt(final_attrs))
+        final_attrs = {
+            'type': 'text',
+            'name': name,
+            'value': display_value,
+            'readonly': 'readonly',
+            'class': 'form-control'
+        }
+        final_attrs.update(attrs)
+
+        # Create the HTML attributes string
+        html_attrs = ''
+        for key, val in final_attrs.items():
+            html_attrs += f' {key}="{val}"'
+
+        return mark_safe(f'<input{html_attrs} />')
