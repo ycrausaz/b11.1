@@ -105,7 +105,7 @@ class FormValidMixin_GD:
 
         # Revision Fremd
         item.revision_fremd = form.cleaned_data['revision']
-        print("item.revision_fremd = " + item.revision_fremd)
+        print("item.revision_fremd = " + str(item.revision_fremd))
 
         # Materialzustandsverwaltung
         print("item.chargenpflicht = " + str(item.chargenpflicht))
