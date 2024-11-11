@@ -73,7 +73,7 @@ class ExcelImportView(grAdmin_GroupRequiredMixin, FormView):
     def form_valid(self, form):
         excel_file = form.cleaned_data['excel_file']
         success, message, created, updated = import_from_excel(excel_file, self.request)
-        
+
         if success:
             messages.success(self.request, message)
         else:
@@ -92,7 +92,7 @@ def home(request):
 
 class CustomLoginView(LoginView):
     template_name = 'login_user.html'
-    
+
     def form_invalid(self, form):
         username = form.cleaned_data.get('username')
         try:
@@ -112,20 +112,20 @@ class CustomLoginView(LoginView):
                 send_mail(mail_subject, message, settings.DEFAULT_FROM_EMAIL, [user.email])
                 logger.info(f'Password reset email sent to user: {username}')
                 logger.info(message)
-                
+
                 messages.warning(
                     self.request,
                     "You have entered an incorrect password 3 times. "
                     "A password reset link has been sent to your email."
                 )
-                
+
                 profile.failed_login_attempts = 0
                 profile.save()
             else:
                 messages.error(self.request, "Benutzername und/oder Passwort ungültig.")
         except User.DoesNotExist:
             messages.error(self.request, "Benutzername und/oder Passwort ungültig.")
-        
+
         return self.render_to_response(self.get_context_data(form=form))
 
     def form_valid(self, form):
@@ -234,12 +234,28 @@ class AddMaterial_IL_View(FormValidMixin_IL, grIL_GroupRequiredMixin, SuccessMes
     success_url = reverse_lazy('list_material_il')
     success_message = "Das Material wurde erfolgreich hinzugefügt."
 
+    def post(self, request, *args, **kwargs):
+        if "cancel" in request.POST:
+            # Log the cancellation action
+            self.object = self.get_object()
+            logger.info(f"Bearbeitung von Material '{self.object.kurztext_de}' durch '{request.user.username}' abgebrochen.")
+            return redirect('list_material_gd')
+        return super().post(request, *args, **kwargs)
+
 class UpdateMaterial_IL_View(FormValidMixin_IL, grIL_GroupRequiredMixin, SuccessMessageMixin, UpdateView):
     model = Material
     template_name = 'il/update_material_il.html'
     form_class = MaterialForm_IL
     success_url = reverse_lazy('list_material_il')
     success_message = "Das Material wurde erfolgreich aktualisiert."
+
+    def post(self, request, *args, **kwargs):
+        if "cancel" in request.POST:
+            # Log the cancellation action
+            self.object = self.get_object()
+            logger.info(f"Bearbeitung von Material '{self.object.kurztext_de}' durch '{request.user.username}' abgebrochen.")
+            return redirect('list_material_gd')
+        return super().post(request, *args, **kwargs)
 
 class ShowMaterial_IL_View(grIL_GroupRequiredMixin, SuccessMessageMixin, DetailView):
     model = Material
@@ -327,6 +343,14 @@ class UpdateMaterial_GD_View(FormValidMixin_GD, grGD_GroupRequiredMixin, Success
         kwargs = super().get_form_kwargs()
         kwargs['editable_fields'] = EDITABLE_FIELDS_GD
         return kwargs
+
+    def post(self, request, *args, **kwargs):
+        if "cancel" in request.POST:
+            # Log the cancellation action
+            self.object = self.get_object()
+            logger.info(f"Bearbeitung von Material '{self.object.kurztext_de}' durch '{request.user.username}' abgebrochen.")
+            return redirect('list_material_gd')
+        return super().post(request, *args, **kwargs)
 
 class ShowMaterial_GD_View(grGD_GroupRequiredMixin, SuccessMessageMixin, DetailView):
     model = Material
@@ -417,6 +441,14 @@ class UpdateMaterial_SMDA_View(FormValidMixin_SMDA, grSMDA_GroupRequiredMixin, S
         kwargs = super().get_form_kwargs()
         kwargs['editable_fields'] = EDITABLE_FIELDS_SMDA
         return kwargs
+
+    def post(self, request, *args, **kwargs):
+        if "cancel" in request.POST:
+            # Log the cancellation action
+            self.object = self.get_object()
+            logger.info(f"Bearbeitung von Material '{self.object.kurztext_de}' durch '{request.user.username}' abgebrochen.")
+            return redirect('list_material_gd')
+        return super().post(request, *args, **kwargs)
 
 class ShowMaterial_SMDA_View(grSMDA_GroupRequiredMixin, SuccessMessageMixin, DetailView):
     model = Material
