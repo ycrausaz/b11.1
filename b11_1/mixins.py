@@ -48,7 +48,7 @@ class FormValidMixin_IL:
 
         # NSN Gruppe / Klasse
         pattern = r'^\d{4}-\d{2}-\d{3}-\d{4}$'
-        if len(item.nato_stock_number) > 0:
+        if item.nato_stock_number is not None:
             if not re.match(pattern, item.nato_stock_number):
                 form.add_error('nato_stock_number', "Der Feld 'Nato Stock Number' muss die folgende Formatierung haben: 'XXXX-XX-XXX-XXXX'.")
         pattern = r'^(\d{4})-\d{2}-\d{3}-\d{4}$'
@@ -90,7 +90,7 @@ class FormValidMixin_GD:
         item = form.save(commit=False)
 
         # Geschäftspartner
-        if len(item.geschaeftspartner) == 0:
+        if item.geschaeftspartner is None:
             key = form.cleaned_data['cage_code']
             print("key = " + str(key))
             try:
@@ -176,7 +176,7 @@ class FormValidMixin_SMDA:
         print("item.preissteuerung = " + item.preissteuerung)
 
         # Preisermittlung
-        if len(item.preissteuerung) > 0:
+        if item.preissteuerung is not None:
             item.preisermittlung = "2"
         print("item.preisermittlung = " + item.preisermittlung)
 
