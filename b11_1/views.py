@@ -62,7 +62,7 @@ class ExcelUploadForm(grAdmin_GroupRequiredMixin, forms.Form):
         })
     )
 
-class ExcelImportView(grAdmin_GroupRequiredMixin, FormView):
+class ExcelImportView(grGD_GroupRequiredMixin, grSMDA_GroupRequiredMixin, grAdmin_GroupRequiredMixin, FormView):
     """
     View for handling Excel file uploads and importing material data.
     """
