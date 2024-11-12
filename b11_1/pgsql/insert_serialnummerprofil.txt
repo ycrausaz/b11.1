@@ -1,1 +1,1 @@
-insert into "b11_1_serialnummerprofil" (text) values ('ZM01'),('ZM02'),('ZM03'),('ZM05');
+insert into "b11_1_serialnummerprofil" (idx, text) values (1, 'ZM01'),(2, 'ZM02'),(3, 'ZM03'),(4, 'ZM05');
