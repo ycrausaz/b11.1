@@ -130,7 +130,7 @@ def process_field_value(field_config, value, row_data):
             if field_config['type'] == 'padded_fk':
                 padding_length = field_config.get('length', 1)
                 value = value.zfill(padding_length)
-                logger.debug(f"Padded value to: '{value}' (length {padding_length})")
+                #logger.debug(f"Padded value to: '{value}' (length {padding_length})")
 
             # Try to get the existing object
             lookup_kwargs = {lookup_field: value}

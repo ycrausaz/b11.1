@@ -76,8 +76,10 @@ class ExcelImportView(grGD_GroupRequiredMixin, grSMDA_GroupRequiredMixin, grAdmi
 
         if success:
             messages.success(self.request, message)
+            logger.info(f"Import from '{excel_file}' by '{self.request.user.username}' successful.")
         else:
             messages.error(self.request, message)
+            logger.warn(f"Error when importing '{excel_file}' by '{self.request.user.username}'.")
             return self.form_invalid(form)
 
         return super().form_valid(form)
@@ -159,6 +161,7 @@ class CustomPasswordChangeView(PasswordChangeView):
         user = form.save()
         user.profile.is_first_login = False
         user.profile.save()
+        logger.info(f'User {user.username} changed his password.')
         return response
 
     def form_invalid(self, form):
