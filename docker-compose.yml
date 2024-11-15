@@ -9,9 +9,6 @@ services:
     environment:
       DATABASE_URL: postgres://postgres@database_default:5432/db
       DEBUG: 'True'
-    depends_on:
-      database_default:
-        condition: service_healthy
     links:
       - "database_default"
     command: >
@@ -26,11 +23,6 @@ services:
       SERVICE_MANAGER: "fsm-postgres"
     volumes:
       - "database-default:/var/lib/postgresql/data/"
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres -h localhost"]
-      interval: 5s
-      timeout: 5s
-      retries: 5
 
 volumes:
   database-default:
