@@ -1,35 +1,35 @@
+# Base image
 FROM python:3.12-slim
 
-# Set environment variables for Python
-ENV PYTHONUNBUFFERED=1 \
-    PYTHONDONTWRITEBYTECODE=1
+# Set environment variables
+ENV PYTHONUNBUFFERED 1
 
-# Set the working directory to /app
+# Set work directory
 WORKDIR /app
 
-# Install system dependencies
-RUN apt-get update && \
-    apt-get install -y postgresql-client libpq-dev postgresql-contrib
+# Install dependencies
+RUN apt-get update && apt-get install -y postgresql-client libpq-dev
 
-# Copy only the requirements.in and .env.local files into the container
+# Copy requirements and install Python packages
 COPY requirements.in /app/
+RUN pip install --upgrade pip && pip install pip-tools
+RUN pip-compile requirements.in && pip install --no-cache-dir -r requirements.txt
 
-# Install pip-tools
-RUN pip install --upgrade pip && \
-    pip install pip-tools
+# Copy the rest of the application code
+COPY . .
 
-# Compile requirements.in to requirements.txt and install pip requirements
-RUN pip-compile requirements.in && \
-    pip install --no-cache-dir -r requirements.txt
+# Copy the entrypoint script
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
 
-# Copy the rest of the project files into the container
-COPY . /app/
-
-# Run collectstatic to gather static files
+# Collect static files
 RUN python manage.py collectstatic --noinput
 
-# Make port 80 available to the world outside this container
+# Expose port 80
 EXPOSE 80
 
-# Define the command to run your application
-CMD ["gunicorn", "LBA.wsgi:application", "--bind", "0.0.0.0:80"]
+# Set the entrypoint script
+ENTRYPOINT ["/entrypoint.sh"]
+
+# Default command to run the Django server
+CMD ["python", "manage.py", "runserver", "0.0.0.0:80"]

@@ -1,6 +1,3 @@
-# The docker-compose.yml file is __only__ used for local development.
-# This means that changes to this file will not affect cloud deployments in any way.
-# Read more at https://docs.divio.com/reference/docker-docker-compose/
 services:
   web:
     build: .
@@ -12,18 +9,11 @@ services:
     environment:
       DATABASE_URL: postgres://postgres@database_default:5432/db
       DEBUG: 'True'
+    depends_on:
+      database_default:
+        condition: service_healthy
     links:
       - "database_default"
-    # The following command is used to start the local development server.
-    # Removing this line will mimic the deployment behaviour on Divio Cloud.
-#    command: python manage.py runserver 0.0.0.0:80
-#    command: >
-#      sh -c "python manage.py migrate &&
-#             python manage.py loaddata b11_1/pgsql/backup_users_and_groups.json &&
-#             python manage.py create_user_profiles &&
-#             python manage.py populate_db &&
-#             python manage.py populate_db_data &&
-#             python manage.py runserver 0.0.0.0:80"
     command: >
       sh -c "python manage.py migrate &&
              python manage.py runserver 0.0.0.0:80"
@@ -35,8 +25,13 @@ services:
       POSTGRES_HOST_AUTH_METHOD: "trust"
       SERVICE_MANAGER: "fsm-postgres"
     volumes:
-      - ".:/app:rw"
       - "database-default:/var/lib/postgresql/data/"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -h localhost"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
 volumes:
   database-default:
+
