@@ -18,18 +18,11 @@ RUN pip-compile requirements.in && pip install --no-cache-dir -r requirements.tx
 # Copy the rest of the application code
 COPY . .
 
-# Copy the entrypoint script
-COPY entrypoint.sh /entrypoint.sh
-RUN chmod +x /entrypoint.sh
-
 # Collect static files
 RUN python manage.py collectstatic --noinput
 
 # Expose port 80
 EXPOSE 80
-
-# Set the entrypoint script
-ENTRYPOINT ["/entrypoint.sh"]
 
 # Default command to run the Django server
 CMD ["python", "manage.py", "runserver", "0.0.0.0:80"]
