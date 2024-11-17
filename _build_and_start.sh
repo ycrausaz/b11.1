@@ -1,1 +1,1 @@
-docker-compose build && docker-compose up -d
+docker-compose build --no-cache --progress=plain && docker-compose up -d
