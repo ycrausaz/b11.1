@@ -64,7 +64,7 @@
     </div>
 {% endif %}
 
-{% if user|has_group:"grGD" %}
+{% if user|has_group:"grLBA" %}
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         <li>
@@ -73,16 +73,6 @@
         <li>
             <a class="nav-link" href="{% url 'import_excel' %}">Import Excel Data</a>
         </li>
-        <li>
-            <a class="nav-link" href="{% url 'logout_user' %}">Logout</a>
-        </li>
-      </ul>
-    </div>
-{% endif %}
-
-{% if user|has_group:"grSMDA" %}
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         <li>
             <a class="nav-link" href="{% url 'logout_user' %}">Logout</a>
         </li>

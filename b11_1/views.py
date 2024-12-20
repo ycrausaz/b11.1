@@ -12,7 +12,7 @@ from .forms_smda import MaterialForm_SMDA
 from django.contrib.messages.views import SuccessMessageMixin
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
 from django.urls import reverse_lazy
-from .mixins import grIL_GroupRequiredMixin, grGD_GroupRequiredMixin, grSMDA_GroupRequiredMixin, grAdmin_GroupRequiredMixin
+from .mixins import grIL_GroupRequiredMixin, grLBA_GroupRequiredMixin, grAdmin_GroupRequiredMixin
 import pandas as pd
 from django.shortcuts import render
 from django.http import HttpResponse
@@ -62,7 +62,7 @@ class ExcelUploadForm(grAdmin_GroupRequiredMixin, forms.Form):
         })
     )
 
-class ExcelImportView(grGD_GroupRequiredMixin, grSMDA_GroupRequiredMixin, grAdmin_GroupRequiredMixin, FormView):
+class ExcelImportView(grLBA_GroupRequiredMixin, grAdmin_GroupRequiredMixin, FormView):
     """
     View for handling Excel file uploads and importing material data.
     """
@@ -265,7 +265,7 @@ class ShowMaterial_IL_View(grIL_GroupRequiredMixin, SuccessMessageMixin, DetailV
     template_name = 'il/show_material_il.html'
     form_class = MaterialForm_IL
 
-class ListMaterial_GD_View(grGD_GroupRequiredMixin, ListView):
+class ListMaterial_GD_View(grLBA_GroupRequiredMixin, ListView):
     model = Material
     template_name = 'gd/list_material_gd.html'
 
@@ -320,7 +320,7 @@ class ListMaterial_GD_View(grGD_GroupRequiredMixin, ListView):
 
         return redirect(reverse('list_material_gd'))
 
-class ListMaterialArchived_GD_View(grGD_GroupRequiredMixin, ListView):
+class ListMaterialArchived_GD_View(grLBA_GroupRequiredMixin, ListView):
     model = Material
     template_name = 'gd/list_material_archived_gd.html'
     context_object_name = 'list_material_archived_gd'
@@ -335,7 +335,7 @@ class ListMaterialArchived_GD_View(grGD_GroupRequiredMixin, ListView):
         # Order by the cast integer field
         return qs.order_by('positions_nr_int')
 
-class UpdateMaterial_GD_View(FormValidMixin_GD, grGD_GroupRequiredMixin, SuccessMessageMixin, UpdateView):
+class UpdateMaterial_GD_View(FormValidMixin_GD, grLBA_GroupRequiredMixin, SuccessMessageMixin, UpdateView):
     model = Material
     template_name = 'gd/update_material_gd.html'
     form_class = MaterialForm_GD
@@ -355,7 +355,7 @@ class UpdateMaterial_GD_View(FormValidMixin_GD, grGD_GroupRequiredMixin, Success
             return redirect('list_material_gd')
         return super().post(request, *args, **kwargs)
 
-class ShowMaterial_GD_View(grGD_GroupRequiredMixin, SuccessMessageMixin, DetailView):
+class ShowMaterial_GD_View(grLBA_GroupRequiredMixin, SuccessMessageMixin, DetailView):
     model = Material
     template_name = 'gd/show_material_gd.html'
     form_class = MaterialForm_GD
@@ -365,7 +365,7 @@ class ShowMaterial_GD_View(grGD_GroupRequiredMixin, SuccessMessageMixin, DetailV
         context['form'] = self.form_class(instance=self.object)
         return context    
 
-class ListMaterial_SMDA_View(grSMDA_GroupRequiredMixin, ListView):
+class ListMaterial_SMDA_View(grLBA_GroupRequiredMixin, ListView):
     model = Material
     template_name = 'smda/list_material_smda.html'
 
@@ -418,7 +418,7 @@ class ListMaterial_SMDA_View(grSMDA_GroupRequiredMixin, ListView):
 
         return redirect(reverse('list_material_smda'))
 
-class ListMaterialArchived_SMDA_View(grSMDA_GroupRequiredMixin, ListView):
+class ListMaterialArchived_SMDA_View(grLBA_GroupRequiredMixin, ListView):
     model = Material
     template_name = 'smda/list_material_archived_smda.html'
     context_object_name = 'list_material_archived_smda'
@@ -433,7 +433,7 @@ class ListMaterialArchived_SMDA_View(grSMDA_GroupRequiredMixin, ListView):
         # Order by the cast integer field
         return qs.order_by('positions_nr_int')
 
-class UpdateMaterial_SMDA_View(FormValidMixin_SMDA, grSMDA_GroupRequiredMixin, SuccessMessageMixin, UpdateView):
+class UpdateMaterial_SMDA_View(FormValidMixin_SMDA, grLBA_GroupRequiredMixin, SuccessMessageMixin, UpdateView):
     model = Material
     template_name = 'smda/update_material_smda.html'
     form_class = MaterialForm_SMDA
@@ -453,7 +453,7 @@ class UpdateMaterial_SMDA_View(FormValidMixin_SMDA, grSMDA_GroupRequiredMixin, S
             return redirect('list_material_gd')
         return super().post(request, *args, **kwargs)
 
-class ShowMaterial_SMDA_View(grSMDA_GroupRequiredMixin, SuccessMessageMixin, DetailView):
+class ShowMaterial_SMDA_View(grLBA_GroupRequiredMixin, SuccessMessageMixin, DetailView):
     model = Material
     template_name = 'smda/show_material_smda.html'
     form_class = MaterialForm_SMDA
