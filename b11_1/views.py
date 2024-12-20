@@ -139,10 +139,8 @@ class CustomLoginView(LoginView):
             return redirect('password_change')
         if self.request.user.groups.filter(name='grIL').exists():
             return redirect('list_material_il')
-        elif self.request.user.groups.filter(name='grGD').exists():
+        elif self.request.user.groups.filter(name='grLBA').exists():
             return redirect('list_material_gd')
-        elif self.request.user.groups.filter(name='grSMDA').exists():
-            return redirect('list_material_smda')
         elif self.request.user.groups.filter(name='grAdmin').exists():
             return redirect('logging')
         return response
