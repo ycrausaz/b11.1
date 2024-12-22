@@ -76,10 +76,20 @@
         <li>
             <a class="nav-link" href="{% url 'logout_user' %}">Logout</a>
         </li>
-        <li>
-            <a class="nav-link" href="{{ other_url }}">Switch to the view '{{ other_view }}'</a>
-        </li>
       </ul>
+      <div class="navbar-nav ms-auto">
+        <span class="navbar-text me-2">Aktuelle Sicht:</span>
+        <div class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDarkDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            {{ current_view }}
+          </a>
+          <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end" style="min-width: 100%;" aria-labelledby="navbarDarkDropdownMenuLink">
+            <li>
+                <a class="dropdown-item" href="{{ other_url }}">{{ other_view }}</a>
+            </li>
+          </ul>
+        </div>
+      </div>
     </div>
 {% endif %}
 

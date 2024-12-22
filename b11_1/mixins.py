@@ -232,7 +232,7 @@ class ComputedContextMixin:
         print("ret = ", ret)
         return ret
 
-    def extract_current_view(self, url):
+    def extract_other_view(self, url):
         pattern_gd = r'gd'
         pattern_smda = r'smda'
         match_gd = re.search(pattern_gd, url.strip())
@@ -242,12 +242,20 @@ class ComputedContextMixin:
         if match_smda:
             return "Grunddaten"
 
+    def extract_current_view(self, url):
+        pattern_gd = r'gd'
+        pattern_smda = r'smda'
+        match_gd = re.search(pattern_gd, url.strip())
+        match_smda = re.search(pattern_smda, url.strip())
+        if match_gd:
+            return "Grunddaten"
+        if match_smda:
+            return "Systemmanager / Datenassistent"
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         current_url = resolve(self.request.path_info).url_name
-        print("self.request.path_info = ", self.request.path_info)
-        print("resolve(self.request.path_info) = ", resolve(self.request.path_info))
-        print("resolve(self.request.path_info).url_name = ", resolve(self.request.path_info).url_name)
-        context['other_view'] = self.extract_current_view(self.request.path_info)
+        context['current_view'] = self.extract_current_view(self.request.path_info)
+        context['other_view'] = self.extract_other_view(self.request.path_info)
         context['other_url'] = self.convert_url(self.request.path_info)
         return context
