@@ -4,6 +4,8 @@ import re
 from django.http import HttpResponseRedirect
 from .models import *
 from pprint import pprint
+from django.views.generic import TemplateView
+from django.urls import resolve
 
 class GroupRequiredMixin(UserPassesTestMixin):
     group_required = None
@@ -210,3 +212,42 @@ class FormValidMixin_RUAG:
         item.save()
         return super().form_valid(form)
 
+from django.views.generic import TemplateView
+
+class ComputedContextMixin:
+
+    def convert_url(self, url):
+        pattern_gd = r'gd'
+        pattern_smda = r'smda'
+        match_gd = re.search(pattern_gd, url.strip())
+        match_smda = re.search(pattern_smda, url.strip())
+        ret = '?????????'
+        if match_gd:
+            replacement = "smda"
+            ret = re.sub(pattern_gd, replacement, url.strip())
+        if match_smda:
+            replacement = "gd"
+            ret = re.sub(pattern_smda, replacement, url.strip())
+        print("url = ", url)
+        print("ret = ", ret)
+        return ret
+
+    def extract_current_view(self, url):
+        pattern_gd = r'gd'
+        pattern_smda = r'smda'
+        match_gd = re.search(pattern_gd, url.strip())
+        match_smda = re.search(pattern_smda, url.strip())
+        if match_gd:
+            return "Systemmanager / Datenassistent"
+        if match_smda:
+            return "Grunddaten"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        current_url = resolve(self.request.path_info).url_name
+        print("self.request.path_info = ", self.request.path_info)
+        print("resolve(self.request.path_info) = ", resolve(self.request.path_info))
+        print("resolve(self.request.path_info).url_name = ", resolve(self.request.path_info).url_name)
+        context['other_view'] = self.extract_current_view(self.request.path_info)
+        context['other_url'] = self.convert_url(self.request.path_info)
+        return context
