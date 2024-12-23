@@ -3,6 +3,16 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+class LogEntry(models.Model):
+    id = models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')
+    timestamp = models.DateTimeField(auto_now_add=True)
+    level = models.CharField(max_length=20)
+    message = models.TextField()
+
+    class Meta:
+        app_label = 'b11_1'
+        db_table = 'b11_1_log_entries'
+
 class BaseIdxModel(models.Model):
     """Abstract base class for models with idx field"""
     idx = models.IntegerField(unique=True, null=True, blank=True)
