@@ -264,6 +264,9 @@ class ShowMaterial_IL_View(grIL_GroupRequiredMixin, SuccessMessageMixin, DetailV
     template_name = 'il/show_material_il.html'
     form_class = MaterialForm_IL
 
+    def post(self, request, *args, **kwargs):
+        return redirect('list_material_il')
+
 class ListMaterial_GD_View(ComputedContextMixin, grLBA_GroupRequiredMixin, ListView):
     model = Material
     template_name = 'gd/list_material_gd.html'
@@ -364,6 +367,9 @@ class ShowMaterial_GD_View(ComputedContextMixin, grLBA_GroupRequiredMixin, Succe
         context['form'] = self.form_class(instance=self.object)
         return context    
 
+    def post(self, request, *args, **kwargs):
+        return redirect('list_material_gd')
+
 class ListMaterial_SMDA_View(ComputedContextMixin, grLBA_GroupRequiredMixin, ListView):
     model = Material
     template_name = 'smda/list_material_smda.html'
@@ -461,6 +467,9 @@ class ShowMaterial_SMDA_View(ComputedContextMixin, grLBA_GroupRequiredMixin, Suc
         context = super().get_context_data(**kwargs)
         context['form'] = self.form_class(instance=self.object)
         return context    
+
+    def post(self, request, *args, **kwargs):
+        return redirect('list_material_smda')
 
 class Logging_View(ListView):
     template_name = 'admin/logging.html'
