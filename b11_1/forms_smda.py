@@ -24,6 +24,8 @@ class MaterialForm_SMDA(BaseTemplateForm, SplitterReadOnlyReadWriteFields):
             'spare_part_class_code',
             'materialeinstufung_nach_zuva',
             'bewertungsklasse',
+            'zuteilung',
+            'auspraegung',
         ]
 
     def __init__(self, *args, **kwargs):
@@ -37,6 +39,8 @@ class MaterialForm_SMDA(BaseTemplateForm, SplitterReadOnlyReadWriteFields):
             'spare_part_class_code': {'model': SparePartClassCode, 'queryset': SparePartClassCode.objects.all()},
             'materialeinstufung_nach_zuva': {'model': MaterialeinstufungNachZUVA, 'queryset': MaterialeinstufungNachZUVA.objects.all()},
             'bewertungsklasse': {'model': Bewertungsklasse, 'queryset': Bewertungsklasse.objects.all()},
+            'zuteilung': {'model': Zuteilung, 'queryset': Zuteilung.objects.all()},
+            'auspraegung': {'model': Auspraegung, 'queryset': Auspraegung.objects.all()},
         }
 
         # Initialize foreign key widgets and set required fields
