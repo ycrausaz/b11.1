@@ -1,5 +1,5 @@
 docker-compose build --no-cache --progress=plain && docker-compose up -d
-pause 20
+sleep 20
 docker compose run --rm web python manage.py loaddata b11_1/pgsql/backup_users_and_groups.json
 docker compose run --rm web python manage.py create_user_profiles
 docker compose run --rm web python manage.py populate_db
