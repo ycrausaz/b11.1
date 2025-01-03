@@ -74,10 +74,6 @@ class MaterialForm_GD(BaseTemplateForm, SplitterReadOnlyReadWriteFields):
                     choices = [('', '---------')] + [(obj.idx, str(obj)) for obj in queryset]
                     self.fields[field_name].widget = forms.Select(choices=choices)
 
-                    # Ensure required status is maintained for foreign key fields
-                    if field_name in self.Meta.required_fields:
-                        self.fields[field_name].required = True
-                    
                     # Set initial value if instance exists
                     if instance:
                         value = getattr(instance, field_name)
