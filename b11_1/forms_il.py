@@ -14,7 +14,6 @@ from .forms import CustomBooleanChoiceField, SplitterReadOnlyReadWriteFields, Ba
 from .editable_fields_config import *
 
 class MaterialForm_IL(BaseTemplateForm, SplitterReadOnlyReadWriteFields):
-
     class Meta(BaseTemplateForm.Meta):
         model = Material
         fields = EDITABLE_FIELDS_IL
@@ -48,6 +47,11 @@ class MaterialForm_IL(BaseTemplateForm, SplitterReadOnlyReadWriteFields):
         kwargs['editable_fields'] = EDITABLE_FIELDS_IL
         super().__init__(*args, **kwargs)
 
+        # Set required fields based on Meta.required_fields
+        for field_name in self.Meta.required_fields:
+            if field_name in self.fields:
+                self.fields[field_name].required = True
+
         # Set up foreign key fields with their querysets and required status
         foreign_key_fields = {
             'basismengeneinheit': {'model': Basismengeneinheit, 'queryset': Basismengeneinheit.objects.all()},
@@ -66,6 +70,10 @@ class MaterialForm_IL(BaseTemplateForm, SplitterReadOnlyReadWriteFields):
                     choices = [('', '---------')] + [(obj.idx, str(obj)) for obj in queryset]
                     self.fields[field_name].widget = forms.Select(choices=choices)
 
+                    # Ensure required status is maintained for foreign key fields
+                    if field_name in self.Meta.required_fields:
+                        self.fields[field_name].required = True
+
                     # Set initial value if instance exists
                     if instance:
                         value = getattr(instance, field_name)
@@ -81,10 +89,7 @@ class MaterialForm_IL(BaseTemplateForm, SplitterReadOnlyReadWriteFields):
                         if value:
                             self.fields[field_name].initial = value.idx
 
-                # Set required status based on Meta.required_fields
-                if field_name in self.Meta.required_fields:
-                    self.fields[field_name].required = True
-
+        # Add tooltips
         tooltips = HelpTooltip.objects.all()
         for field_name, field in self.fields.items():
             tooltip = tooltips.filter(field_name=field_name).first()
