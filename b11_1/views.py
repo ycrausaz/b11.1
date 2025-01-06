@@ -67,7 +67,7 @@ class ExcelImportView(GroupRequiredMixin, FormView):
     """
     View for handling Excel file uploads and importing material data.
     """
-    allowed_groups = ['grLBA', 'grGD', 'grSMDA']
+    allowed_groups = ['grLBA', 'grGD', 'grSMDA', 'grAdmin']
     template_name = 'admin/excel_import.html'
     form_class = ExcelUploadForm
     success_url = reverse_lazy('import_excel')
