@@ -66,11 +66,11 @@
         <thead>
             <tr>
                 <th><input type="checkbox" class="select-all" data-form-id="2"></th>
-                <th>Archivierte/s Material/ien ({{ list_material_archived_smda|length }})</th>
+                <th>Archivierte/s Material/ien ({{ list_material_smda_archived|length }})</th>
             </tr>
         </thead>
         <tbody>
-            {% for mat in list_material_archived_smda %}
+            {% for mat in list_material_smda_archived %}
                 <tr>
                     <td><input type="checkbox" name="selected_materials" value="{{ mat.id }}" class="material-checkbox" data-form-id="2"></td>
                     <td>{{ mat.positions_nr }} <a href="{% url 'show_material_smda' mat.id %}">{{ mat.kurztext_de }}</a> ({{ mat.hersteller }})</td>

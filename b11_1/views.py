@@ -299,11 +299,11 @@ class ListMaterial_GD_View(ComputedContextMixin, GroupRequiredMixin, ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        list_material_archived_gd = Material.objects.filter(is_transferred=True, is_archived=True)
+        list_material_gd_archived = Material.objects.filter(is_transferred=True, is_archived=True)
         list_material_gd = Material.objects.filter(is_transferred=True, is_archived=False)
 
         # Convert positions_nr to integers for sorting
-        context['list_material_archived_gd'] = sorted(list_material_archived_gd, key=lambda x: int(x.positions_nr))
+        context['list_material_gd_archived'] = sorted(list_material_gd_archived, key=lambda x: int(x.positions_nr))
         context['list_material_gd'] = sorted(list_material_gd, key=lambda x: int(x.positions_nr))
         return context
 
@@ -344,8 +344,8 @@ class ListMaterial_GD_View(ComputedContextMixin, GroupRequiredMixin, ListView):
 
 class ListMaterialArchived_GD_View(GroupRequiredMixin, ListView):
     model = Material
-    template_name = 'gd/list_material_archived_gd.html'
-    context_object_name = 'list_material_archived_gd'
+    template_name = 'gd/list_material_gd_archived.html'
+    context_object_name = 'list_material_gd_archived'
     allowed_groups = ['grLBA', 'grGD']
 
     def get_queryset(self, **kwargs):
@@ -410,11 +410,11 @@ class ListMaterial_SMDA_View(ComputedContextMixin, GroupRequiredMixin, ListView)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        list_material_archived_smda = Material.objects.filter(is_transferred=True, is_archived=True)
+        list_material_smda_archived = Material.objects.filter(is_transferred=True, is_archived=True)
         list_material_smda = Material.objects.filter(is_transferred=True, is_archived=False)
 
         # Convert positions_nr to integers for sorting
-        context['list_material_archived_smda'] = sorted(list_material_archived_smda, key=lambda x: int(x.positions_nr))
+        context['list_material_smda_archived'] = sorted(list_material_smda_archived, key=lambda x: int(x.positions_nr))
         context['list_material_smda'] = sorted(list_material_smda, key=lambda x: int(x.positions_nr))
         return context
 
@@ -449,8 +449,8 @@ class ListMaterial_SMDA_View(ComputedContextMixin, GroupRequiredMixin, ListView)
 
 class ListMaterialArchived_SMDA_View(GroupRequiredMixin, ListView):
     model = Material
-    template_name = 'smda/list_material_archived_smda.html'
-    context_object_name = 'list_material_archived_smda'
+    template_name = 'smda/list_material_smda_archived.html'
+    context_object_name = 'list_material_smda_archived'
     allowed_groups = ['grLBA', 'grSMDA']
 
     def get_queryset(self, **kwargs):

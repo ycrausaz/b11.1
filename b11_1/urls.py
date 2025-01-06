@@ -30,12 +30,12 @@ urlpatterns = [
     path('show_material_il/<int:pk>', login_required(ShowMaterial_IL_View.as_view()), name='show_material_il'),
 
     path('list_material_gd', login_required(ListMaterial_GD_View.as_view()), name='list_material_gd'),
-    path('list_material_archived_gd', login_required(ListMaterialArchived_GD_View.as_view()), name='list_material_archived_gd'),
+    path('list_material_gd_archived', login_required(ListMaterialArchived_GD_View.as_view()), name='list_material_gd_archived'),
     path('update_material_gd/<int:pk>', login_required(UpdateMaterial_GD_View.as_view()), name='update_material_gd'),
     path('show_material_gd/<int:pk>', login_required(ShowMaterial_GD_View.as_view()), name='show_material_gd'),
 
     path('list_material_smda', login_required(ListMaterial_SMDA_View.as_view()), name='list_material_smda'),
-    path('list_material_archived_smda', login_required(ListMaterialArchived_SMDA_View.as_view()), name='list_material_archived_smda'),
+    path('list_material_smda_archived', login_required(ListMaterialArchived_SMDA_View.as_view()), name='list_material_smda_archived'),
     path('update_material_smda/<int:pk>', login_required(UpdateMaterial_SMDA_View.as_view()), name='update_material_smda'),
     path('show_material_smda/<int:pk>', login_required(ShowMaterial_SMDA_View.as_view()), name='show_material_smda'),
 
