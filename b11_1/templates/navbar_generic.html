@@ -15,6 +15,10 @@
     <div class="navbar-brand">LBA - Beilage 11.1 - Systemmanager / Datenassistent</div>
 {% endif %}
 
+{% if user|has_group:"grLBA" %}
+    <div class="navbar-brand">LBA - Beilage 11.1</div>
+{% endif %}
+
 {% if user|has_group:"grAdmin" %}
     <div class="navbar-brand">LBA - Beilage 11.1 - Admin</div>
 {% endif %}
@@ -53,6 +57,38 @@
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         <li>
             <a class="nav-link" href="{% url 'logging' %}">Logging</a>
+        </li>
+        <li>
+            <a class="nav-link" href="{% url 'import_excel' %}">Import Excel Data</a>
+        </li>
+        <li>
+            <a class="nav-link" href="{% url 'logout_user' %}">Logout</a>
+        </li>
+      </ul>
+    </div>
+{% endif %}
+
+{% if user|has_group:"grGD" %}
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li>
+            <a class="nav-link" href="{% url 'list_material_gd' %}">Materialliste</a>
+        </li>
+        <li>
+            <a class="nav-link" href="{% url 'import_excel' %}">Import Excel Data</a>
+        </li>
+        <li>
+            <a class="nav-link" href="{% url 'logout_user' %}">Logout</a>
+        </li>
+      </ul>
+    </div>
+{% endif %}
+
+{% if user|has_group:"grSMDA" %}
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li>
+            <a class="nav-link" href="{% url 'list_material_smda' %}">Materialliste</a>
         </li>
         <li>
             <a class="nav-link" href="{% url 'import_excel' %}">Import Excel Data</a>

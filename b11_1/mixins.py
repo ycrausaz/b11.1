@@ -7,14 +7,17 @@ from pprint import pprint
 from django.views.generic import TemplateView
 from django.urls import resolve
 
-class GroupRequiredMixin(UserPassesTestMixin):
-    group_required = None
+class GroupRequiredMixin(LoginRequiredMixin):
+    allowed_groups = []
 
-    def test_func(self):
-        if self.group_required and self.request.user.is_authenticated:
-            if self.request.user.groups.filter(name=self.group_required).exists() or self.request.user.is_superuser:
-                return True
-        raise PermissionDenied
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return self.handle_no_permission()
+
+        # Check if user belongs to any of the allowed groups
+        if not any(group in self.allowed_groups for group in request.user.groups.values_list('name', flat=True)):
+            raise PermissionDenied  # Raise an error if the user is not in the required groups
+        return super().dispatch(request, *args, **kwargs)
 
 class grIL_GroupRequiredMixin(GroupRequiredMixin):
     group_required = 'grIL'

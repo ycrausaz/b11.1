@@ -12,7 +12,7 @@ from .forms_smda import MaterialForm_SMDA
 from django.contrib.messages.views import SuccessMessageMixin
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
 from django.urls import reverse_lazy
-from .mixins import grIL_GroupRequiredMixin, grLBA_GroupRequiredMixin, grAdmin_GroupRequiredMixin, ComputedContextMixin
+from .mixins import grIL_GroupRequiredMixin, GroupRequiredMixin, grAdmin_GroupRequiredMixin, ComputedContextMixin
 import pandas as pd
 from django.shortcuts import render
 from django.http import HttpResponse
@@ -63,10 +63,11 @@ class ExcelUploadForm(grAdmin_GroupRequiredMixin, forms.Form):
         })
     )
 
-class ExcelImportView(grLBA_GroupRequiredMixin, grAdmin_GroupRequiredMixin, FormView):
+class ExcelImportView(GroupRequiredMixin, FormView):
     """
     View for handling Excel file uploads and importing material data.
     """
+    allowed_groups = ['grLBA', 'grGD', 'grSMDA']
     template_name = 'admin/excel_import.html'
     form_class = ExcelUploadForm
     success_url = reverse_lazy('import_excel')
@@ -140,6 +141,10 @@ class CustomLoginView(LoginView):
             return redirect('password_change')
         if self.request.user.groups.filter(name='grIL').exists():
             return redirect('list_material_il')
+        elif self.request.user.groups.filter(name='grGD').exists():
+            return redirect('list_material_gd')
+        elif self.request.user.groups.filter(name='grSMDA').exists():
+            return redirect('list_material_smda')
         elif self.request.user.groups.filter(name='grLBA').exists():
             return redirect('list_material_gd')
         elif self.request.user.groups.filter(name='grAdmin').exists():
@@ -190,9 +195,10 @@ class UserLogout(View):
         logout(request)
         return redirect('login_user')
 
-class ListMaterial_IL_View(grIL_GroupRequiredMixin, ListView):
+class ListMaterial_IL_View(GroupRequiredMixin, ListView):
     model = Material
     template_name = 'il/list_material_il.html'
+    allowed_groups = ['grIL']
 
     def get_context_data(self, **kwargs):
 #        logger.info("This is an info message")
@@ -229,12 +235,13 @@ class ListMaterial_IL_View(grIL_GroupRequiredMixin, ListView):
 
         return redirect(reverse('list_material_il'))
 
-class AddMaterial_IL_View(FormValidMixin_IL, grIL_GroupRequiredMixin, SuccessMessageMixin, CreateView):
+class AddMaterial_IL_View(FormValidMixin_IL, GroupRequiredMixin, SuccessMessageMixin, CreateView):
     model = Material
     template_name = 'il/add_material_il.html'
     form_class = MaterialForm_IL
     success_url = reverse_lazy('list_material_il')
     success_message = "Das Material wurde erfolgreich hinzugefügt."
+    allowed_groups = ['grIL']
 
     def post(self, request, *args, **kwargs):
         if "cancel" in request.POST:
@@ -244,12 +251,13 @@ class AddMaterial_IL_View(FormValidMixin_IL, grIL_GroupRequiredMixin, SuccessMes
             return redirect('list_material_gd')
         return super().post(request, *args, **kwargs)
 
-class UpdateMaterial_IL_View(FormValidMixin_IL, grIL_GroupRequiredMixin, SuccessMessageMixin, UpdateView):
+class UpdateMaterial_IL_View(FormValidMixin_IL, GroupRequiredMixin, SuccessMessageMixin, UpdateView):
     model = Material
     template_name = 'il/update_material_il.html'
     form_class = MaterialForm_IL
     success_url = reverse_lazy('list_material_il')
     success_message = "Das Material wurde erfolgreich aktualisiert."
+    allowed_groups = ['grIL']
 
     def post(self, request, *args, **kwargs):
         if "cancel" in request.POST:
@@ -259,17 +267,19 @@ class UpdateMaterial_IL_View(FormValidMixin_IL, grIL_GroupRequiredMixin, Success
             return redirect('list_material_gd')
         return super().post(request, *args, **kwargs)
 
-class ShowMaterial_IL_View(grIL_GroupRequiredMixin, SuccessMessageMixin, DetailView):
+class ShowMaterial_IL_View(GroupRequiredMixin, SuccessMessageMixin, DetailView):
     model = Material
     template_name = 'il/show_material_il.html'
     form_class = MaterialForm_IL
+    allowed_groups = ['grIL']
 
     def post(self, request, *args, **kwargs):
         return redirect('list_material_il')
 
-class ListMaterial_GD_View(ComputedContextMixin, grLBA_GroupRequiredMixin, ListView):
+class ListMaterial_GD_View(ComputedContextMixin, GroupRequiredMixin, ListView):
     model = Material
     template_name = 'gd/list_material_gd.html'
+    allowed_groups = ['grLBA', 'grGD']
 
     def get_queryset(self, **kwargs):
         # Call the superclass method to get the base queryset
@@ -322,10 +332,11 @@ class ListMaterial_GD_View(ComputedContextMixin, grLBA_GroupRequiredMixin, ListV
 
         return redirect(reverse('list_material_gd'))
 
-class ListMaterialArchived_GD_View(grLBA_GroupRequiredMixin, ListView):
+class ListMaterialArchived_GD_View(GroupRequiredMixin, ListView):
     model = Material
     template_name = 'gd/list_material_archived_gd.html'
     context_object_name = 'list_material_archived_gd'
+    allowed_groups = ['grLBA', 'grGD']
 
     def get_queryset(self, **kwargs):
         # Call the superclass method to get the base queryset
@@ -337,12 +348,13 @@ class ListMaterialArchived_GD_View(grLBA_GroupRequiredMixin, ListView):
         # Order by the cast integer field
         return qs.order_by('positions_nr_int')
 
-class UpdateMaterial_GD_View(ComputedContextMixin, FormValidMixin_GD, grLBA_GroupRequiredMixin, SuccessMessageMixin, UpdateView):
+class UpdateMaterial_GD_View(ComputedContextMixin, FormValidMixin_GD, GroupRequiredMixin, SuccessMessageMixin, UpdateView):
     model = Material
     template_name = 'gd/update_material_gd.html'
     form_class = MaterialForm_GD
     success_url = reverse_lazy('list_material_gd')
     success_message = "Das Material wurde erfolgreich aktualisiert."
+    allowed_groups = ['grLBA', 'grGD']
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
@@ -357,10 +369,11 @@ class UpdateMaterial_GD_View(ComputedContextMixin, FormValidMixin_GD, grLBA_Grou
             return redirect('list_material_gd')
         return super().post(request, *args, **kwargs)
 
-class ShowMaterial_GD_View(ComputedContextMixin, grLBA_GroupRequiredMixin, SuccessMessageMixin, DetailView):
+class ShowMaterial_GD_View(ComputedContextMixin, GroupRequiredMixin, SuccessMessageMixin, DetailView):
     model = Material
     template_name = 'gd/show_material_gd.html'
     form_class = MaterialForm_GD
+    allowed_groups = ['grLBA', 'grGD']
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -370,9 +383,10 @@ class ShowMaterial_GD_View(ComputedContextMixin, grLBA_GroupRequiredMixin, Succe
     def post(self, request, *args, **kwargs):
         return redirect('list_material_gd')
 
-class ListMaterial_SMDA_View(ComputedContextMixin, grLBA_GroupRequiredMixin, ListView):
+class ListMaterial_SMDA_View(ComputedContextMixin, GroupRequiredMixin, ListView):
     model = Material
     template_name = 'smda/list_material_smda.html'
+    allowed_groups = ['grLBA', 'grSMDA']
 
     def get_queryset(self, **kwargs):
         # Call the superclass method to get the base queryset
@@ -423,10 +437,11 @@ class ListMaterial_SMDA_View(ComputedContextMixin, grLBA_GroupRequiredMixin, Lis
 
         return redirect(reverse('list_material_smda'))
 
-class ListMaterialArchived_SMDA_View(grLBA_GroupRequiredMixin, ListView):
+class ListMaterialArchived_SMDA_View(GroupRequiredMixin, ListView):
     model = Material
     template_name = 'smda/list_material_archived_smda.html'
     context_object_name = 'list_material_archived_smda'
+    allowed_groups = ['grLBA', 'grSMDA']
 
     def get_queryset(self, **kwargs):
         # Call the superclass method to get the base queryset
@@ -438,12 +453,13 @@ class ListMaterialArchived_SMDA_View(grLBA_GroupRequiredMixin, ListView):
         # Order by the cast integer field
         return qs.order_by('positions_nr_int')
 
-class UpdateMaterial_SMDA_View(ComputedContextMixin, FormValidMixin_SMDA, grLBA_GroupRequiredMixin, SuccessMessageMixin, UpdateView):
+class UpdateMaterial_SMDA_View(ComputedContextMixin, FormValidMixin_SMDA, GroupRequiredMixin, SuccessMessageMixin, UpdateView):
     model = Material
     template_name = 'smda/update_material_smda.html'
     form_class = MaterialForm_SMDA
     success_url = reverse_lazy('list_material_smda')
     success_message = "Das Material wurde erfolgreich aktualisiert."
+    allowed_groups = ['grLBA', 'grSMDA']
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
@@ -458,10 +474,11 @@ class UpdateMaterial_SMDA_View(ComputedContextMixin, FormValidMixin_SMDA, grLBA_
             return redirect('list_material_gd')
         return super().post(request, *args, **kwargs)
 
-class ShowMaterial_SMDA_View(ComputedContextMixin, grLBA_GroupRequiredMixin, SuccessMessageMixin, DetailView):
+class ShowMaterial_SMDA_View(ComputedContextMixin, GroupRequiredMixin, SuccessMessageMixin, DetailView):
     model = Material
     template_name = 'smda/show_material_smda.html'
     form_class = MaterialForm_SMDA
+    allowed_groups = ['grLBA', 'grSMDA']
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
