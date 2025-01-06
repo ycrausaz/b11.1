@@ -30,11 +30,33 @@
         </tbody>
     </table>
     <br/>
-    <button type="submit" name="action" value="transfer" class="btn btn-primary action-button" data-form-id="1" disabled>Material zurück zum Hersteller senden</button>
+    <input type="hidden" name="action" id="action-input">
+    <input type="hidden" name="transfer_comment" id="transfer-comment-input">
+    <button type="button" id="transfer-btn" class="btn btn-primary action-button" data-form-id="1" disabled>Material zurück zum Hersteller senden</button>
     <button type="submit" name="action" value="export" class="btn btn-primary action-button" data-form-id="1" disabled>"SAP input" generieren</button>
+    <input type="hidden" name="export_type" value="LBA">
     <button type="submit" name="action" value="archive" class="btn btn-danger action-button" data-form-id="1" disabled>Archivieren</button>
     <button type="submit" name="action" value="delete" class="btn btn-danger action-button" data-form-id="1" disabled>Löschen</button>
 </form>
+
+<!-- Transfer Comment Modal -->
+<div class="modal fade" id="transferModal" tabindex="-1" aria-labelledby="transferModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="transferModalLabel">Transfer Comment</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <textarea class="form-control" id="comment-text" rows="4" maxlength="4096" placeholder="Enter your comment here..."></textarea>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" id="confirm-transfer">Confirm Transfer</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 <br/>
 
@@ -63,6 +85,28 @@
 
 
 <hr><br/>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const transferBtn = document.getElementById('transfer-btn');
+    const form = document.getElementById('material-form-1');
+    const modal = new bootstrap.Modal(document.getElementById('transferModal'));
+    const confirmBtn = document.getElementById('confirm-transfer');
+    const commentInput = document.getElementById('transfer-comment-input');
+    const actionInput = document.getElementById('action-input');
+
+    transferBtn.addEventListener('click', function() {
+        modal.show();
+    });
+
+    confirmBtn.addEventListener('click', function() {
+        const comment = document.getElementById('comment-text').value;
+        commentInput.value = comment;
+        actionInput.value = 'transfer';  // Set the action value
+        form.submit();
+    });
+});
+</script>
 
 {% include 'checkbox.html' %}
 {% endblock %}

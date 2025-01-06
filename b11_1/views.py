@@ -309,14 +309,18 @@ class ListMaterial_GD_View(ComputedContextMixin, GroupRequiredMixin, ListView):
 
     def post(self, request, *args, **kwargs):
         selected_material_ids = request.POST.getlist('selected_materials')
+        print("len(selected_material_ids) = ", str(len(selected_material_ids)))
         # To switch from LBA mode to RUAG mode
         export_type = request.POST.get('export_type')
         action = request.POST.get('action')
+        print("action = ", action)
 
         if selected_material_ids and action:
+            print("**** post()")
             selected_materials = Material.objects.filter(id__in=selected_material_ids)
             if action == 'transfer':
-                selected_materials.update(is_transferred=False, transfer_date=timezone.now())
+                transfer_comment = request.POST.get('transfer_comment', '')
+                selected_materials.update(is_transferred=False, transfer_date=timezone.now(), transfer_comment=transfer_comment)
                 for material in selected_materials:
                     logger.info("Material '" + material.kurztext_de + "' durch '" + request.user.username + "' übermittelt.")
             elif action == 'archive':

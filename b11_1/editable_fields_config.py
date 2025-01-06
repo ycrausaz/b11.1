@@ -65,6 +65,7 @@ EDITABLE_FIELDS_GD = [
 'serialnummerprofil',
 'endbevorratet',
 'materialzustandsverwaltung',
+'transfer_comment',
 ]
 
 
@@ -98,6 +99,7 @@ EDITABLE_FIELDS_SMDA = [
 'kennzeichen_komplexes_system',
 'kennziffer_bamf',
 'next_higher_assembly',
+'transfer_comment',
 ]
 
 EDITABLE_FIELDS = EDITABLE_FIELDS_IL + EDITABLE_FIELDS_GD + EDITABLE_FIELDS_SMDA

@@ -144,6 +144,7 @@ class Material(models.Model):
     is_transferred = models.BooleanField(null=True, blank=False, default=False)
     is_archived = models.BooleanField(null=True, blank=False, default=False)
     transfer_date = models.DateTimeField(null=True, blank=True)
+    transfer_comment = models.TextField(null=True, blank=True, max_length=4096, verbose_name="Transfer Comment")
     positions_nr = models.IntegerField(null=True, blank=True, verbose_name="Positions-Nr. ")
     kurztext_de = models.CharField(null=True, blank=True, max_length=40, verbose_name="Kurztext DE ")
     kurztext_fr = models.CharField(null=True, blank=True, max_length=40, verbose_name="Kurztext FR ")
