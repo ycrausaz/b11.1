@@ -54,6 +54,14 @@ class FormValidMixin_IL:
         item.gewichtseinheit = "KG"
         print("item.gewichtseinheit = " + item.gewichtseinheit)
 
+        # Bruttogewicht
+        if item.bruttogewicht <= 0:
+            form.add_error('bruttogewicht', "Das Bruttogewicht muss positiv sein.")
+
+        # Nettogewicht
+        if item.nettogewicht <= 0:
+            form.add_error('nettogewicht', "Das Nettogewicht muss positiv sein.")
+
         # NSN Gruppe / Klasse
         pattern = r'^\d{4}-\d{2}-\d{3}-\d{4}$'
         if item.nato_stock_number is not None:
@@ -112,8 +120,8 @@ class FormValidMixin_GD:
         print("item.geschaeftspartner = " + item.geschaeftspartner)
 
         # Revision Fremd
-        item.revision_fremd = form.cleaned_data['revision']
-        print("item.revision_fremd = " + str(item.revision_fremd))
+#        item.revision_fremd = form.cleaned_data['revision']
+#        print("item.revision_fremd = " + str(item.revision_fremd))
 
         # Materialzustandsverwaltung
         print("item.chargenpflicht = " + str(item.chargenpflicht))
