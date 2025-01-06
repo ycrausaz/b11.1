@@ -206,12 +206,18 @@ class ListMaterial_IL_View(GroupRequiredMixin, ListView):
 #        logger.warning("This is a warning message")
 #        logger.critical("This is a critical message")
         context = super().get_context_data(**kwargs)
-        list_material_il_transferred = Material.objects.filter(is_transferred=True, hersteller=self.request.user, is_archived=False)
-        list_material_il = Material.objects.filter(is_transferred=False, hersteller=self.request.user, is_archived=False)
+        list_material_il = Material.objects.filter(is_transferred=False, hersteller=self.request.user, transfer_date__isnull=True)
+        list_material_il_transferred = Material.objects.filter(is_transferred=True, hersteller=self.request.user, transfer_date__isnull=False)
+        list_material_il_returned = Material.objects.filter(is_transferred=False, hersteller=self.request.user, transfer_date__isnull=False)
+
+        print("len(list_material_il_transferred) = ", len(list_material_il_transferred))
+        print("len(list_material_il_returned) = ", len(list_material_il_returned))
+        print("len(list_material_il) = ", len(list_material_il))
 
         # Convert positions_nr to integers for sorting
-        context['list_material_il_transferred'] = sorted(list_material_il_transferred, key=lambda x: int(x.positions_nr))
         context['list_material_il'] = sorted(list_material_il, key=lambda x: int(x.positions_nr))
+        context['list_material_il_transferred'] = sorted(list_material_il_transferred, key=lambda x: int(x.positions_nr))
+        context['list_material_il_returned'] = sorted(list_material_il_returned, key=lambda x: int(x.positions_nr))
         return context
 
     def post(self, request, *args, **kwargs):
@@ -248,7 +254,7 @@ class AddMaterial_IL_View(FormValidMixin_IL, GroupRequiredMixin, SuccessMessageM
             # Log the cancellation action
             self.object = self.get_object()
             logger.info(f"Bearbeitung von Material '{self.object.kurztext_de}' durch '{request.user.username}' abgebrochen.")
-            return redirect('list_material_gd')
+            return redirect('list_material_il')
         return super().post(request, *args, **kwargs)
 
 class UpdateMaterial_IL_View(FormValidMixin_IL, GroupRequiredMixin, SuccessMessageMixin, UpdateView):
@@ -264,7 +270,7 @@ class UpdateMaterial_IL_View(FormValidMixin_IL, GroupRequiredMixin, SuccessMessa
             # Log the cancellation action
             self.object = self.get_object()
             logger.info(f"Bearbeitung von Material '{self.object.kurztext_de}' durch '{request.user.username}' abgebrochen.")
-            return redirect('list_material_gd')
+            return redirect('list_material_il')
         return super().post(request, *args, **kwargs)
 
 class ShowMaterial_IL_View(GroupRequiredMixin, SuccessMessageMixin, DetailView):
@@ -471,7 +477,7 @@ class UpdateMaterial_SMDA_View(ComputedContextMixin, FormValidMixin_SMDA, GroupR
             # Log the cancellation action
             self.object = self.get_object()
             logger.info(f"Bearbeitung von Material '{self.object.kurztext_de}' durch '{request.user.username}' abgebrochen.")
-            return redirect('list_material_gd')
+            return redirect('list_material_smda')
         return super().post(request, *args, **kwargs)
 
 class ShowMaterial_SMDA_View(ComputedContextMixin, GroupRequiredMixin, SuccessMessageMixin, DetailView):
