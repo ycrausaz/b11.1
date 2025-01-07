@@ -7689,7 +7689,7 @@ insert into "b11_1_sonderablauf" (idx, text) values (1, 'M'), (2, 'N');
 insert into "b11_1_sparepartclasscode" (idx, text) values (1, '0'),(2, '1'),(3, '2'),(4, '6');
 insert into "b11_1_sparte" (idx, text) values (1, 'V0'),(2, 'V1'),(3, 'V2'),(4, 'V3'),(5, 'V4'),(6, 'V5'),(7, 'V6'),(8, 'V7'),(9, 'V8');
 insert into "b11_1_temperaturbedingung" (idx, text) values (1, '00'), (2, '01'), (3, '02'), (4, '03'), (5, '04');
-insert into "b11_1_uebersetzungsstatus" (idx, text) values (1, 'P'),(2, 'U'),(3, 'N');
+insert into "b11_1_uebersetzungsstatus" (idx, text) values (1, 'P'),(2, 'U'),(3, 'N'), (4, 'A');
 insert into "b11_1_werkzuordnung_1" (idx, text) values (1, '0420'),(2, '0430'),(3, '0440'),(4, '0800');
 insert into "b11_1_werkzuordnung_2" (idx, text) values (1, '0420'),(2, '0430'),(3, '0440'),(4, '0800');
 insert into "b11_1_werkzuordnung_3" (idx, text) values (1, '0420'),(2, '0430'),(3, '0440'),(4, '0800');
