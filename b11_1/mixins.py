@@ -157,8 +157,12 @@ class FormValidMixin_GD:
         print("item.geschaeftspartner = " + item.geschaeftspartner)
 
         # Revision Fremd
-#        item.revision_fremd = form.cleaned_data['revision']
-#        print("item.revision_fremd = " + str(item.revision_fremd))
+        item.revision_fremd = form.cleaned_data['revision']
+        print("item.revision_fremd = " + str(item.revision_fremd))
+
+        # Produkthierarchie
+        if item.produkthierarchie is not None and len(item.produkthierarchie) != 4:
+            form.add_error('produkthierarchie', "Die Produkthierarchie muss eine 4-Stellen Nummer ('0' left-padded).")
 
         # Materialzustandsverwaltung
         print("item.chargenpflicht = " + str(item.chargenpflicht))
@@ -276,8 +280,6 @@ class ComputedContextMixin:
         if match_smda:
             replacement = "gd"
             ret = re.sub(pattern_smda, replacement, url.strip())
-        print("url = ", url)
-        print("ret = ", ret)
         return ret
 
     def extract_other_view(self, url):

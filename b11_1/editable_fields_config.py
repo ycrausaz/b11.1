@@ -57,14 +57,14 @@ EDITABLE_FIELDS_GD = [
 'revision_eigen', #I
 'zertifiziert_fuer_flug', #J
 'verteilung_an_ruag', #K
-'revision_fremd', #L
+#'revision_fremd', #L
 'a_nummer', #M
 'materialart_grunddaten', #N
 'produkthierarchie', #O
 'rueckfuehrungscode', #P
 'serialnummerprofil', #Q
 #'endbevorratet', #---
-'materialzustandsverwaltung', #S
+#'materialzustandsverwaltung', #S
 #'transfer_comment',
 ]
 
