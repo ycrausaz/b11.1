@@ -13,7 +13,7 @@ EDITABLE_FIELDS_IL = [
 'grunddatentext_en_2_zeile', #L
 'basismengeneinheit', #M
 'bruttogewicht', #N
-'gewichtseinheit', #O
+#'gewichtseinheit', #O
 'nettogewicht', #P
 'groesse_abmessung', #Q
 'ean_upc_code', #R
@@ -33,7 +33,7 @@ EDITABLE_FIELDS_IL = [
 'breite', #AF
 'hoehe', #AG
 'preis', #AH
-'waehrung', #AI
+#'waehrung', #AI
 'preiseinheit', #AJ
 'lagerfaehigkeit', #AK
 'exportkontrollauflage', #AL
@@ -65,7 +65,7 @@ EDITABLE_FIELDS_GD = [
 'serialnummerprofil', #Q
 #'endbevorratet', #---
 'materialzustandsverwaltung', #S
-'transfer_comment',
+#'transfer_comment',
 ]
 
 
@@ -99,7 +99,7 @@ EDITABLE_FIELDS_SMDA = [
 'kennzeichen_komplexes_system', #AC
 'kennziffer_bamf', #AD
 'next_higher_assembly', #AE
-'transfer_comment',
+#'transfer_comment',
 ]
 
 EDITABLE_FIELDS = EDITABLE_FIELDS_IL + EDITABLE_FIELDS_GD + EDITABLE_FIELDS_SMDA

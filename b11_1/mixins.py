@@ -46,6 +46,67 @@ class FormValidMixin_IL:
     def form_valid(self, form):
         item = form.save(commit=False)
 
+        # Bruttogewicht
+        if item.bruttogewicht <= 0:
+            form.add_error('bruttogewicht', "Das Bruttogewicht muss positiv sein.")
+
+        # Nettogewicht
+        if item.nettogewicht is not None and item.nettogewicht <= 0:
+            form.add_error('nettogewicht', "Das Nettogewicht muss positiv sein.")
+
+        # Bestellmengeneinheit
+        if item.bestellmengeneinheit is not None and item.bestellmengeneinheit <= 0:
+            form.add_error('bestellmengeneinheit', "Die Bestellmengeneinheit muss positiv sein.")
+
+        # Mindestbestellmenge
+        if item.mindestbestellmenge is not None and item.mindestbestellmenge <= 0:
+            form.add_error('mindestbestellmenge', "Die Mindestbestellmenge muss positiv sein.")
+
+        # Lieferzeit
+        if item.lieferzeit is not None and item.lieferzeit <= 0:
+            form.add_error('lieferzeit', "Die Lieferzeit muss positiv sein.")
+
+        # Länge
+        if item.laenge is not None and item.laenge <= 0:
+            form.add_error('laenge', "Die Länge muss positiv sein.")
+
+        # Breite
+        if item.breite is not None and item.breite <= 0:
+            form.add_error('breite', "Die Breite muss positiv sein.")
+
+        # Höhe
+        if item.hoehe is not None and item.hoehe <= 0:
+            form.add_error('hoehe', "Die Höhe muss positiv sein.")
+
+        # Preis
+        if item.preis is not None and item.preis <= 0:
+            form.add_error('preis', "Der Preis muss positiv sein.")
+
+        # Preiseinheit
+        if item.preiseinheit is not None and item.preiseinheit <= 0:
+            form.add_error('preiseinheit', "Die Preiseinheit muss positiv sein.")
+
+        # Lagerfähigkeit
+        if item.lagerfaehigkeit is not None and item.lagerfaehigkeit <= 0:
+            form.add_error('lagerfaehigkeit', "Die Lagerfähigkeit muss positiv sein.")
+
+        # NSN Gruppe / Klasse
+        if item.nato_stock_number is not None:
+            pattern = r'^\d{4}-\d{2}-\d{3}-\d{4}$'
+            if not re.match(pattern, item.nato_stock_number):
+                form.add_error('nato_stock_number', "Der Feld 'Nato Stock Number' muss die folgende Formatierung haben: 'XXXX-XX-XXX-XXXX'.")
+            pattern = r'^(\d{4})-\d{2}-\d{3}-\d{4}$'
+            match = re.match(pattern, item.nato_stock_number)
+            if match:
+                item.nsn_gruppe_klasse = match.group(1)
+
+        # Nato Versorgungs-Nr.
+        if item.nato_stock_number is not None:
+            pattern = r'^\d{4}-(\d{2}-\d{3}-\d{4})$'
+            match = re.match(pattern, item.nato_stock_number)
+            if match:
+                item.nato_versorgungs_nr = match.group(1).replace('-', '')
+
         # Hersteller
         item.hersteller = self.request.user.username
         print("item.hersteller = " + item.hersteller)
@@ -53,30 +114,6 @@ class FormValidMixin_IL:
         # Gewichtseinheit
         item.gewichtseinheit = "KG"
         print("item.gewichtseinheit = " + item.gewichtseinheit)
-
-        # Bruttogewicht
-        if item.bruttogewicht <= 0:
-            form.add_error('bruttogewicht', "Das Bruttogewicht muss positiv sein.")
-
-        # Nettogewicht
-        if item.nettogewicht <= 0:
-            form.add_error('nettogewicht', "Das Nettogewicht muss positiv sein.")
-
-        # NSN Gruppe / Klasse
-        pattern = r'^\d{4}-\d{2}-\d{3}-\d{4}$'
-        if item.nato_stock_number is not None:
-            if not re.match(pattern, item.nato_stock_number):
-                form.add_error('nato_stock_number', "Der Feld 'Nato Stock Number' muss die folgende Formatierung haben: 'XXXX-XX-XXX-XXXX'.")
-        pattern = r'^(\d{4})-\d{2}-\d{3}-\d{4}$'
-        match = re.match(pattern, item.nato_stock_number)
-        if match:
-            item.nsn_gruppe_klasse = match.group(1)
-
-        # Nato Versorgungs-Nr.
-        pattern = r'^\d{4}-(\d{2}-\d{3}-\d{4})$'
-        match = re.match(pattern, item.nato_stock_number)
-        if match:
-            item.nato_versorgungs_nr = match.group(1).replace('-', '')
 
         # Einheit L / B / H
         item.einheit_l_b_h = "MM"
