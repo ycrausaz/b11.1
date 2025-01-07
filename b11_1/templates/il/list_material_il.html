@@ -5,6 +5,14 @@
 <h1>Materialliste</h1>
 <br/>
 
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}" role="alert">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
 {% if list_material_il|length == 0 and list_material_il_transferred|length == 0 and list_material_il_returned|length == 0 %}
 <hr>
     <h4>Momentan keine Angabe</h4>
