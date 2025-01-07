@@ -9,216 +9,216 @@ FIELD_MAPPING = {
     },
     'kurztext_de': {
         'tab': 'Input_Lieferant',
-        'column': 'C',
+        'column': 'D',
         'type': 'simple'
     },
     'kurztext_fr': {
         'tab': 'Input_Lieferant',
-        'column': 'D',
+        'column': 'E',
         'type': 'simple'
     },
     'kurztext_en': {
         'tab': 'Input_Lieferant',
-        'column': 'E',
+        'column': 'F',
         'type': 'simple'
     },
     'grunddatentext_de_1_zeile': {
         'tab': 'Input_Lieferant',
-        'column': 'F',
+        'column': 'G',
         'type': 'simple'
     },
     'grunddatentext_de_2_zeile': {
         'tab': 'Input_Lieferant',
-        'column': 'G',
+        'column': 'H',
         'type': 'simple'
     },
     'grunddatentext_fr_1_zeile': {
         'tab': 'Input_Lieferant',
-        'column': 'H',
+        'column': 'I',
         'type': 'simple'
     },
     'grunddatentext_fr_2_zeile': {
         'tab': 'Input_Lieferant',
-        'column': 'I',
+        'column': 'J',
         'type': 'simple'
     },
     'grunddatentext_en_1_zeile': {
         'tab': 'Input_Lieferant',
-        'column': 'J',
+        'column': 'K',
         'type': 'simple'
     },
     'grunddatentext_en_2_zeile': {
         'tab': 'Input_Lieferant',
-        'column': 'K',
+        'column': 'L',
         'type': 'simple'
     },
     'basismengeneinheit': {
         'tab': 'Input_Lieferant',
-        'column': 'L',
+        'column': 'M',
         'type': 'fk',
         'model': Basismengeneinheit,
         'lookup_field': 'text'
     },
     'bruttogewicht': {
         'tab': 'Input_Lieferant',
-        'column': 'M',
+        'column': 'N',
         'type': 'simple'
     },
     'gewichtseinheit': {
         'tab': 'Input_Lieferant',
-        'column': 'N',
+        'column': 'O',
         'type': 'simple'
     },
     'nettogewicht': {
         'tab': 'Input_Lieferant',
-        'column': 'O',
+        'column': 'P',
         'type': 'simple'
     },
     'groesse_abmessung': {
         'tab': 'Input_Lieferant',
-        'column': 'P',
+        'column': 'Q',
         'type': 'simple'
     },
     'ean_upc_code': {
         'tab': 'Input_Lieferant',
-        'column': 'Q',
+        'column': 'R',
         'type': 'simple'
     },
     'nato_stock_number': {
         'tab': 'Input_Lieferant',
-        'column': 'R',
+        'column': 'S',
         'type': 'simple'
     },
     'nsn_gruppe_klasse': {
         'tab': 'Input_Lieferant',
-        'column': 'S',
+        'column': 'T',
         'type': 'simple'
     },
     'nato_versorgungs_nr': {
         'tab': 'Input_Lieferant',
-        'column': 'T',
+        'column': 'U',
         'type': 'simple'
     },
     'herstellerteilenummer': {
         'tab': 'Input_Lieferant',
-        'column': 'U',
+        'column': 'V',
         'type': 'simple'
     },
     'normbezeichnung': {
         'tab': 'Input_Lieferant',
-        'column': 'V',
+        'column': 'W',
         'type': 'simple'
     },
     'gefahrgutkennzeichen': {
         'tab': 'Input_Lieferant',
-        'column': 'W',
+        'column': 'X',
         'type': 'fk',
         'model': Gefahrgutkennzeichen,
         'lookup_field': 'text'
     },
     'instandsetzbar': {
         'tab': 'Input_Lieferant',
-        'column': 'X',
+        'column': 'Y',
         'type': 'boolean'
     },
     'chargenpflicht': {
         'tab': 'Input_Lieferant',
-        'column': 'Y',
+        'column': 'Z',
         'type': 'boolean'
     },
     'bestellmengeneinheit': {
         'tab': 'Input_Lieferant',
-        'column': 'Z',
+        'column': 'AA',
         'type': 'simple'
     },
     'mindestbestellmenge': {
         'tab': 'Input_Lieferant',
-        'column': 'AA',
+        'column': 'AB',
         'type': 'simple'
     },
     'lieferzeit': {
         'tab': 'Input_Lieferant',
-        'column': 'AB',
+        'column': 'AC',
         'type': 'simple'
     },
     'einheit_l_b_h': {
         'tab': 'Input_Lieferant',
-        'column': 'AC',
+        'column': 'AD',
         'type': 'simple'
     },
     'laenge': {
         'tab': 'Input_Lieferant',
-        'column': 'AD',
+        'column': 'AE',
         'type': 'simple'
     },
     'breite': {
         'tab': 'Input_Lieferant',
-        'column': 'AE',
+        'column': 'AF',
         'type': 'simple'
     },
     'hoehe': {
         'tab': 'Input_Lieferant',
-        'column': 'AF',
+        'column': 'AG',
         'type': 'simple'
     },
     'preis': {
         'tab': 'Input_Lieferant',
-        'column': 'AG',
+        'column': 'AH',
         'type': 'simple'
     },
     'waehrung': {
         'tab': 'Input_Lieferant',
-        'column': 'AH',
+        'column': 'AI',
         'type': 'simple'
     },
     'preiseinheit': {
         'tab': 'Input_Lieferant',
-        'column': 'AI',
+        'column': 'AJ',
         'type': 'simple'
     },
     'lagerfaehigkeit': {
         'tab': 'Input_Lieferant',
-        'column': 'AJ',
+        'column': 'AK',
         'type': 'simple'
     },
     'exportkontrollauflage': {
         'tab': 'Input_Lieferant',
-        'column': 'AK',
+        'column': 'AL',
         'type': 'boolean'
     },
     'cage_code': {
         'tab': 'Input_Lieferant',
-        'column': 'AL',
+        'column': 'AM',
         'type': 'simple'
     },
     'hersteller_name': {
         'tab': 'Input_Lieferant',
-        'column': 'AM',
+        'column': 'AN',
         'type': 'simple'
     },
     'hersteller_adresse': {
         'tab': 'Input_Lieferant',
-        'column': 'AN',
+        'column': 'AO',
         'type': 'simple'
     },
     'hersteller_plz': {
         'tab': 'Input_Lieferant',
-        'column': 'AO',
+        'column': 'AP',
         'type': 'simple'
     },
     'hersteller_ort': {
         'tab': 'Input_Lieferant',
-        'column': 'AP',
+        'column': 'AQ',
         'type': 'simple'
     },
     'revision': {
         'tab': 'Input_Lieferant',
-        'column': 'AQ',
+        'column': 'AR',
         'type': 'simple'
     },
     'bemerkung': {
         'tab': 'Input_Lieferant',
-        'column': 'AR',
+        'column': 'AS',
         'type': 'simple'
     },
 # End IL
