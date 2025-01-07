@@ -1,16 +1,22 @@
 {% extends "base_generic.html" %}
+{% load static %}
 
 {% block content %}
-<h1>Login</h1>
-<br/><br/>
+
+<div class="text-center mb-4">
+    <img src="{% static 'images/LBA-logo.png' %}" alt="LBA Logo" class="img-fluid" style="max-width: 200px;">
+</div>
+
+<h3>Login</h3>
     {% if messages %}
+<br/><br/>
         {% for message in messages %}
             <div class="alert alert-{{ message.tags }}">
                 {{ message }}
             </div>
         {% endfor %}
-    {% endif %}
 <br/><br/>
+    {% endif %}
 
 <form action="" method="POST">
     {% csrf_token %}
