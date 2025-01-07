@@ -89,11 +89,11 @@ EDITABLE_FIELDS_SMDA = [
 #'verteilung_cheops', #---
 'zuteilung', #T
 'auspraegung', #U
-'verkaufsorg', #V
-'vertriebsweg', #W
-'auszeichnungsfeld', #X
-'preissteuerung', #Y
-'preisermittlung', #Z
+#'verkaufsorg', #V
+#'vertriebsweg', #W
+#'auszeichnungsfeld', #X
+#'preissteuerung', #Y
+#'preisermittlung', #Z
 'bewertungsklasse', #AA
 'fuehrendes_material', #AB
 'kennzeichen_komplexes_system', #AC
