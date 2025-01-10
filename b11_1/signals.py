@@ -14,15 +14,23 @@ logger = logging.getLogger(__name__)
 
 @receiver(user_logged_in)
 def log_user_login(sender, request, user, **kwargs):
-    logger.info(f'User {user.username} logged in.')
-    user.profile.failed_login_attempts = 0
-    user.profile.save()
+    if not user.is_superuser:
+        logger.info(f'User {user.username} logged in.')
+        user.profile.failed_login_attempts = 0
+        user.profile.save()
 
 @receiver(user_logged_out)
 def log_user_logout(sender, request, user, **kwargs):
-    logger.info(f'User {user.username} logged out.')
+    if not user.is_superuser:
+        logger.info(f'User {user.username} logged out.')
 
 @receiver(user_login_failed)
 def log_user_login_failed(sender, credentials, request, **kwargs):
     username = credentials.get('username')
-    logger.warning(f'Login failed for user: {username}')
+    try:
+        user = User.objects.get(username=username)
+        if not user.is_superuser:
+            logger.warning(f'Login failed for user: {username}')
+    except User.DoesNotExist:
+        # If user doesn't exist, log it anyway as it could be a security concern
+        logger.warning(f'Login failed for user: {username}')
