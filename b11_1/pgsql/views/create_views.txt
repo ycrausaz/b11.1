@@ -392,7 +392,7 @@ CREATE OR REPLACE VIEW marc_werksdaten
  SELECT a.id AS tmp_id,
     a.positions_nr AS source_id,
     a.lieferzeit AS plifz,
-    b.text AS werk,
+    b.text AS werks,
     'ND'::text AS dismm,
     c.text AS fevor,
         CASE
