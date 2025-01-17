@@ -217,6 +217,89 @@ select[readonly],
     color: #212529 !important;             /* Ensure dropdown text is dark */
 }
 
+table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+}
+td {
+    padding: 8px;
+    border: 1px solid #ddd;
+}
+/* Specific styles for the form table */
+form table {
+    table-layout: auto;
+}
+form table td:first-child {
+    width: 1%;
+    white-space: nowrap;
+    padding-right: 20px;
+}
+form table td:last-child {
+    width: auto;
+}
+
+/* Enhanced form table styles */
+form table {
+    width: 100%;
+    table-layout: auto;
+    border-collapse: collapse;
+}
+
+form table td {
+    padding: 8px;
+    vertical-align: top;
+}
+
+/* Label column */
+form table td:first-child {
+    width: 200px; /* Fixed width for labels */
+    white-space: nowrap;
+    padding-right: 20px;
+}
+
+/* Field column */
+form table td:last-child {
+    width: auto; /* Takes remaining space */
+}
+
+/* Make form fields fill their container */
+form table input[type="text"],
+form table input[type="number"],
+form table input[type="email"],
+form table input[type="password"],
+form table select,
+form table textarea,
+form table .select2-container {
+    width: 100% !important;
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+/* Ensure select2 fields also take full width */
+.select2-container {
+    width: 100% !important;
+}
+
+/* Maintain proper spacing for error messages */
+form table .error {
+    margin-top: 4px;
+    display: block;
+}
+
+/* Remove spinners from number inputs */
+/* For Chrome, Safari, Edge, Opera */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* For Firefox */
+input[type="number"] {
+    -moz-appearance: textfield;
+}
+
 </style>
 
 
