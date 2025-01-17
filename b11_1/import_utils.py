@@ -191,6 +191,23 @@ def process_field_value(field_config, value, row_data):
         logger.error(error_msg)
         raise ValueError(error_msg)
 
+# import_utils.py
+
+def process_additional_fields(material, row_data):
+    """
+    Process and update fields that are not part of the Excel import.
+    Args:
+        material: The Material model instance
+        row_data: Dictionary containing the row data from Excel
+    """
+    try:
+        material.is_transferred = True
+        material.save()
+
+    except Exception as e:
+        logger.error(f"Error processing additional fields for material {material.positions_nr}: {str(e)}")
+        raise
+
 def import_from_excel(excel_file, request=None):
     """
     Process the uploaded Excel file and create new Material objects.
@@ -220,7 +237,6 @@ def import_from_excel(excel_file, request=None):
                 column = field_config['column']
 
                 try:
-                    # Get value using the column letter as is
                     value = tab_data[tab].loc[row_idx, column]
                     processed_value = process_field_value(field_config, value, tab_data[tab].iloc[row_idx])
 
@@ -245,8 +261,12 @@ def import_from_excel(excel_file, request=None):
             # Only process the row if there were no errors
             if not row_has_error and material_data:
                 try:
-                    # Always create a new Material object
+                    # Create new Material object
                     material = Material.objects.create(**material_data)
+
+                    # Process additional fields not in Excel
+                    process_additional_fields(material, material_data)
+
                     materials_created += 1
                     logger.info(f"Created new material from row {excel_row}")
 
@@ -260,11 +280,11 @@ def import_from_excel(excel_file, request=None):
         if errors:
             error_message = "Import completed with errors. Please check the error messages above."
             logger.error(f"Excel import completed with {len(errors)} errors")
-            return False, error_message, materials_created, 0  # Updated count is always 0
+            return False, error_message, materials_created, 0
         else:
             success_message = f'Successfully processed Excel file. Created: {materials_created} materials.'
             logger.info(f'Excel import completed. Created: {materials_created} materials.')
-            return True, success_message, materials_created, 0  # Updated count is always 0
+            return True, success_message, materials_created, 0
 
     except Exception as e:
         error_message = f'Error processing Excel file: {str(e)}'
