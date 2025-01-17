@@ -243,8 +243,6 @@ CREATE OR REPLACE VIEW mara_grunddaten
     'UAM'::text AS hndlcode,
     j.text AS tempb,
     k.text AS zzsonderablauf,
-    a.lagerfaehigkeit AS "MARA-MHDHB",
-    '1'::text AS "MARA-MHDRZ",
     '2'::text AS "MARA-IPRKZ"
    FROM b11_1_material a
      LEFT JOIN b11_1_materialart b ON b.id = a.materialart_grunddaten_id
@@ -437,10 +435,12 @@ CREATE OR REPLACE VIEW marc_werksdaten
  SELECT a.id AS tmp_id,
     a.positions_nr AS source_id,
     a.lieferzeit AS plifz,
-    b.text AS werk,
+    b.text AS werks,
     'ND'::text AS dismm,
-    a.fertigungssteuerer_id AS fevor,
-    a.orderbuchpflicht AS kordb
+    c.text AS fevor,
+        CASE
+            WHEN a.orderbuchpflicht = true THEN 'X'::text
+        END AS kordb
    FROM b11_1_material a
      LEFT JOIN b11_1_werkzuordnung_1 b ON a.werkzuordnung_1_id = b.id
      LEFT JOIN b11_1_fertigungssteuerer c ON a.fertigungssteuerer_id = c.id
@@ -460,15 +460,12 @@ CREATE OR REPLACE VIEW mbew_buchhaltung
  SELECT a.id AS tmp_id,
     a.positions_nr AS source_id,
     b.text AS bwkey,
-    a.auszeichnungsfeld AS vprsv,
+    a.preissteuerung AS vprsv,
     a.preis AS verpr,
     a.preis AS stprs,
     a.preiseinheit AS peinh,
     f.text AS bklas,
-        CASE
-            WHEN a.auszeichnungsfeld IS NULL THEN ''::text
-            ELSE '2'::text
-        END AS mlast
+    a.preisermittlung as mlast
    FROM b11_1_material a
      LEFT JOIN b11_1_werkzuordnung_1 b ON a.werkzuordnung_1_id = b.id
      LEFT JOIN b11_1_bewertungsklasse f ON a.bewertungsklasse_id = f.id
@@ -504,7 +501,7 @@ CREATE OR REPLACE VIEW mvke_verkaufsdaten
  AS
  SELECT a.id AS tmp_id,
     a.positions_nr AS source_id,
-    'M100'::text AS vkorg,
+    a.verkaufsorg as vkorg,
     a.vertriebsweg AS vtweg,
     c.text AS mtpos
    FROM b11_1_material a

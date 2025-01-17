@@ -5,7 +5,7 @@ CREATE OR REPLACE VIEW mara_grunddaten
     b.text AS mtart,
     c.text AS meins,
     a.herstellerteilenummer AS mfrpn,
-    a.hersteller AS mfrnr,
+    a.geschaeftspartner AS mfrnr,
     a.groesse_abmessung AS groes,
     a.nettogewicht AS ntgew,
     a.laenge AS laeng,
@@ -46,8 +46,6 @@ CREATE OR REPLACE VIEW mara_grunddaten
     'UAM'::text AS hndlcode,
     j.text AS tempb,
     k.text AS zzsonderablauf,
-    a.lagerfaehigkeit AS "MARA-MHDHB",
-    '1'::text AS "MARA-MHDRZ",
     '2'::text AS "MARA-IPRKZ"
    FROM b11_1_material a
      LEFT JOIN b11_1_materialart b ON b.id = a.materialart_grunddaten_id

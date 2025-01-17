@@ -87,6 +87,40 @@ def get_tab_data(excel_file):
 
     return tab_data
 
+# Define special field processors
+def process_produkthierarchie(value):
+    """
+    Special processor for produkthierarchie field.
+    Add your custom logic here.
+    """
+    if pd.isna(value):
+        return None
+
+    # Convert to string and strip whitespace
+    value = str(value).strip().zfill(4)
+
+    return value
+
+#    # Example processing:
+#    # - Ensure correct format (e.g., XX.XX.XX)
+#    # - Validate hierarchical structure
+#    # - Convert legacy formats
+#    parts = value.split('.')
+#    if len(parts) == 3:
+#        # Pad each part to 2 digits
+#        formatted_parts = [part.zfill(2) for part in parts]
+#        return '.'.join(formatted_parts)
+#    else:
+#        logger.warning(f"Invalid produkthierarchie format: {value}")
+#        return value
+
+# Map field names to their special processors
+FIELD_PROCESSORS = {
+    'produkthierarchie': process_produkthierarchie,
+    # Add more special processors here:
+    # 'another_field': process_another_field,
+}
+
 def process_field_value(field_config, value, row_data):
     """
     Process a single field value based on its configuration.
@@ -95,6 +129,12 @@ def process_field_value(field_config, value, row_data):
     """
     if pd.isna(value):
         return None
+
+    # Check if field has a special processor
+    field_name = next(name for name, config in FIELD_MAPPING.items()
+                     if config == field_config)
+    if field_name in FIELD_PROCESSORS:
+        return FIELD_PROCESSORS[field_name](value)
 
     # Handle different field types
     if field_config['type'] == 'simple':
@@ -130,7 +170,6 @@ def process_field_value(field_config, value, row_data):
             if field_config['type'] == 'padded_fk':
                 padding_length = field_config.get('length', 1)
                 value = value.zfill(padding_length)
-                #logger.debug(f"Padded value to: '{value}' (length {padding_length})")
 
             # Try to get the existing object
             lookup_kwargs = {lookup_field: value}
