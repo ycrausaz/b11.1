@@ -43,6 +43,12 @@ class MaterialForm_IL(BaseTemplateForm, SplitterReadOnlyReadWriteFields):
             'hersteller_ort',
         ]
 
+        # Set up foreign key fields with their querysets and required status
+        foreign_key_fields = {
+            'basismengeneinheit': {'model': Basismengeneinheit, 'queryset': Basismengeneinheit.objects.all()},
+            'gefahrgutkennzeichen': {'model': Gefahrgutkennzeichen, 'queryset': Gefahrgutkennzeichen.objects.all()},
+        }
+
     def __init__(self, *args, **kwargs):
         kwargs['editable_fields'] = EDITABLE_FIELDS_IL
         super().__init__(*args, **kwargs)
@@ -52,16 +58,10 @@ class MaterialForm_IL(BaseTemplateForm, SplitterReadOnlyReadWriteFields):
             if field_name in self.fields:
                 self.fields[field_name].required = True
 
-        # Set up foreign key fields with their querysets and required status
-        foreign_key_fields = {
-            'basismengeneinheit': {'model': Basismengeneinheit, 'queryset': Basismengeneinheit.objects.all()},
-            'gefahrgutkennzeichen': {'model': Gefahrgutkennzeichen, 'queryset': Gefahrgutkennzeichen.objects.all()},
-        }
-
         # Initialize foreign key widgets and set required fields
         instance = kwargs.get('instance')
 
-        for field_name, field_info in foreign_key_fields.items():
+        for field_name, field_info in self.Meta.foreign_key_fields.items():
             if field_name in self.fields:
                 queryset = field_info['queryset']
 

@@ -28,15 +28,6 @@ class MaterialForm_SMDA(BaseTemplateForm, SplitterReadOnlyReadWriteFields):
             'auspraegung',
         ]
 
-    def __init__(self, *args, **kwargs):
-        kwargs['editable_fields'] = EDITABLE_FIELDS_SMDA
-        super().__init__(*args, **kwargs)
-
-        # Set required fields based on Meta.required_fields
-        for field_name in self.Meta.required_fields:
-            if field_name in self.fields:
-                self.fields[field_name].required = True
-
         # Set up foreign key fields with their querysets and required status
         foreign_key_fields = {
             'werkzuordnung_1': {'model': Werkzuordnung_1, 'queryset': Werkzuordnung_1.objects.all()},
@@ -48,10 +39,19 @@ class MaterialForm_SMDA(BaseTemplateForm, SplitterReadOnlyReadWriteFields):
             'auspraegung': {'model': Auspraegung, 'queryset': Auspraegung.objects.all()},
         }
 
+    def __init__(self, *args, **kwargs):
+        kwargs['editable_fields'] = EDITABLE_FIELDS_SMDA
+        super().__init__(*args, **kwargs)
+
+        # Set required fields based on Meta.required_fields
+        for field_name in self.Meta.required_fields:
+            if field_name in self.fields:
+                self.fields[field_name].required = True
+
         # Initialize foreign key widgets and set required fields
         instance = kwargs.get('instance')
 
-        for field_name, field_info in foreign_key_fields.items():
+        for field_name, field_info in self.Meta.foreign_key_fields.items():
             if field_name in self.fields:
                 queryset = field_info['queryset']
 
