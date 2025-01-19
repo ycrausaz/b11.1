@@ -15,6 +15,17 @@ from .editable_fields_config import *
 
 class MaterialForm_GD(BaseTemplateForm, SplitterReadOnlyReadWriteFields):
 
+    revision_fremd = forms.CharField(
+        label='Revision Fremd.',
+        required=False,
+        disabled=True  # This marks it as disabled for BaseTemplateForm
+    )
+    materialzustandsverwaltung = forms.CharField(
+        label='Materialzustandsverwaltung',
+        required=False,
+        disabled=True
+    )
+
     class Meta(BaseTemplateForm.Meta):
         model = Material
         fields = EDITABLE_FIELDS
@@ -26,6 +37,10 @@ class MaterialForm_GD(BaseTemplateForm, SplitterReadOnlyReadWriteFields):
             'uebersetzungsstatus',
             'materialart_grunddaten',
             'produkthierarchie',
+        ]
+        computed_fields = [
+            'revision_fremd',
+            'materialzustandsverwaltung',
         ]
 
         # Set up foreign key fields with their querysets and required status
@@ -62,8 +77,17 @@ class MaterialForm_GD(BaseTemplateForm, SplitterReadOnlyReadWriteFields):
             if field_name in self.fields:
                 self.fields[field_name].required = True
 
+        # Mark computed fields
+        for field_name in self.Meta.computed_fields:
+            self.fields[field_name].is_computed = True
+
         # Initialize foreign key widgets and set required fields
         instance = kwargs.get('instance')
+
+        if instance:
+            # Set initial values for readonly fields
+            self.fields['revision_fremd'].initial = instance.revision_fremd
+            self.fields['materialzustandsverwaltung'].initial = instance.materialzustandsverwaltung
         
         for field_name, field_info in self.Meta.foreign_key_fields.items():
             if field_name in self.fields:

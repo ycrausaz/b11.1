@@ -4,13 +4,13 @@
     <h1>Material aktualisieren</h1>
     <br/>
 
-      {% if form.non_field_errors %}
+    {% if form.non_field_errors %}
         {% for nfe in form.non_field_errors %}
             <div class="alert alert-error" role="alert">
                 {{ nfe }}
             </div>
         {% endfor %}
-      {% endif %}
+    {% endif %}
 
 <form method="post">
     {% csrf_token %}
@@ -19,71 +19,85 @@
         <div class="column">
             <div class="mytitle">Daten zu pflegen</div>
             <div class="content">
+                <table>
+                {% for field in form.get_normal_fields %}
+                    {% if not field.is_hidden %}
+                        <tr>
+                            <td>
+                                {% with label_with_tooltip=field|add_tooltip %}
+                                    {{ label_with_tooltip|safe }}:
+                                    {% if field.field.required %}
+                                        <span class="required">*</span>
+                                    {% endif %}
+                                {% endwith %}
+                            </td>
+                            <td>
+                                {{ field }}
+                                {% if field.errors %}
+                                    <div class="error">
+                                        {% for error in field.errors %}
+                                            <p>{{ error }}</p>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% else %}
+                        {{ field }}
+                    {% endif %}
+                {% endfor %}
 
-    <table>
-      {% for field in form.get_normal_fields %}
-          {% if not field.is_hidden %}
-              <tr>
-                  <td>
-                      {% with label_with_tooltip=field|add_tooltip %}
-                          {{ label_with_tooltip|safe }}:
-                          {% if field.field.required %}
-                              <span class="required">*</span>
-                          {% endif %}
-                      {% endwith %}
-                  </td>
-                  <td>
-                      {{ field }}
-                      {% if field.errors %}
-                          <div class="error">
-                              {% for error in field.errors %}
-                                  <p>{{ error }}</p>
-                              {% endfor %}
-                          </div>
-                      {% endif %}
-                  </td>
-              </tr>
-          {% else %}
-              {{ field }}  <!-- Render hidden fields outside of the table -->
-          {% endif %}
-      {% endfor %}
-    </table>
+                <tr><td colspan="2"><hr></td></tr>
 
+                <tr><td colspan="2"><strong>Berechnete Felder</strong></td></tr>
+                {% for field in form.get_computed_fields %}
+                    {% if not field.is_hidden %}
+                        <tr>
+                            <td>
+                                <label for="{{ field.id_for_label }}">
+                                    {{ field.label }}:
+                                </label>
+                            </td>
+                            <td>
+                                {{ field }}
+                            </td>
+                        </tr>
+                    {% endif %}
+                {% endfor %}
+                </table>
             </div>
         </div>
         <div class="column">
             <div class="mytitle">Stammdaten</div>
             <div class="content">
-
-    <table>
-        {% for field in form.get_readonly_fields %}
-            {% if not field.is_hidden %}
-                <tr>
-                    <td>
-                        <label for="{{ field.id_for_label }}">
-                            {{ field.label }}:
-                            {% if field.field.required %}
-                                <span class="required">*</span>
-                            {% endif %}
-                        </label>
-                    </td>
-                    <td>
+                <table>
+                {% for field in form.get_readonly_fields %}
+                    {% if not field.is_hidden %}
+                        <tr>
+                            <td>
+                                <label for="{{ field.id_for_label }}">
+                                    {{ field.label }}:
+                                    {% if field.field.required %}
+                                        <span class="required">*</span>
+                                    {% endif %}
+                                </label>
+                            </td>
+                            <td>
+                                {{ field }}
+                                {% if field.errors %}
+                                    <div class="error">
+                                        {% for error in field.errors %}
+                                            <p>{{ error }}</p>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% else %}
                         {{ field }}
-                        {% if field.errors %}
-                            <div class="error">
-                                {% for error in field.errors %}
-                                    <p>{{ error }}</p>
-                                {% endfor %}
-                            </div>
-                        {% endif %}
-                    </td>
-                </tr>
-            {% else %}
-                {{ field }}  <!-- Render hidden fields outside of the table -->
-            {% endif %}
-        {% endfor %}
-    </table>
-
+                    {% endif %}
+                {% endfor %}
+                </table>
             </div>
         </div>
     </div>
@@ -93,6 +107,73 @@
     <input type="submit" value="Änderungen speichern" class="btn btn-primary">
     <button type="submit" name="cancel" class="btn btn-secondary">Zurück ohne Speichern</button>
 </form>
+
+<script>
+// Store all original options when the page loads
+let originalOptions = [];
+
+function updateAuspraegungOptions() {
+    const zuteilungSelect = document.getElementById('id_zuteilung');
+    const auspraegungSelect = document.getElementById('id_auspraegung');
+
+    // Get current auspraegung value
+    const currentAuspraegung = auspraegungSelect.value;
+
+    // Remove all options except the first one (empty choice)
+    while (auspraegungSelect.options.length > 1) {
+        auspraegungSelect.remove(1);
+    }
+
+    // Get selected zuteilung value
+    const selectedOption = zuteilungSelect.selectedOptions[0];
+    if (!selectedOption) return;
+
+    const zuteilungValue = selectedOption.text.trim();
+    let allowedValues = [];
+
+    // Set allowed values based on zuteilung
+    if (zuteilungValue === 'BM' || zuteilungValue === 'TRP') {
+        allowedValues = ['01', '02', '03', '04'];
+    } else if (zuteilungValue === 'MKZ' || zuteilungValue === 'PRD') {
+        allowedValues = ['01', '02', '03'];
+    }
+
+    // Add allowed options back from our stored original options
+    originalOptions.forEach(option => {
+        if (allowedValues.includes(option.text.trim())) {
+            const newOption = new Option(option.text, option.value);
+            auspraegungSelect.add(newOption);
+        }
+    });
+
+    // Try to restore previous value if still valid
+    if (currentAuspraegung && Array.from(auspraegungSelect.options).some(opt => opt.value === currentAuspraegung)) {
+        auspraegungSelect.value = currentAuspraegung;
+    } else {
+        auspraegungSelect.value = '';
+    }
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    const zuteilungSelect = document.getElementById('id_zuteilung');
+    const auspraegungSelect = document.getElementById('id_auspraegung');
+
+    if (zuteilungSelect && auspraegungSelect) {
+        // Store initial options for auspraegung (skip the empty choice)
+        originalOptions = Array.from(auspraegungSelect.options)
+            .filter(option => option.value !== '')
+            .map(option => ({
+                text: option.text,
+                value: option.value
+            }));
+
+        // Add change event listener
+        zuteilungSelect.addEventListener('change', updateAuspraegungOptions);
+        // Initialize on page load
+        updateAuspraegungOptions();
+    }
+});
+</script>
 
 <br/>
 
