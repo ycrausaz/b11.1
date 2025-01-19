@@ -14,6 +14,18 @@ from .forms import CustomBooleanChoiceField, SplitterReadOnlyReadWriteFields, Ba
 from .editable_fields_config import *
 
 class MaterialForm_IL(BaseTemplateForm, SplitterReadOnlyReadWriteFields):
+
+    gewichtseinheit = forms.CharField(
+        label='Gewichtseinheit',
+        required=False,
+        disabled=True  # This marks it as disabled for BaseTemplateForm
+    )
+    waehrung = forms.CharField(
+        label='Währung',
+        required=False,
+        disabled=True
+    )
+
     class Meta(BaseTemplateForm.Meta):
         model = Material
         fields = EDITABLE_FIELDS_IL
@@ -42,6 +54,10 @@ class MaterialForm_IL(BaseTemplateForm, SplitterReadOnlyReadWriteFields):
             'hersteller_plz',
             'hersteller_ort',
         ]
+        computed_fields = [
+            'gewichtseinheit',
+            'waehrung',
+        ]
 
         # Set up foreign key fields with their querysets and required status
         foreign_key_fields = {
@@ -58,8 +74,17 @@ class MaterialForm_IL(BaseTemplateForm, SplitterReadOnlyReadWriteFields):
             if field_name in self.fields:
                 self.fields[field_name].required = True
 
+        # Mark computed fields
+        for field_name in self.Meta.computed_fields:
+            self.fields[field_name].is_computed = True
+
         # Initialize foreign key widgets and set required fields
         instance = kwargs.get('instance')
+
+        if instance:
+            # Set initial values for readonly fields
+            self.fields['gewichtseinheit'].initial = instance.gewichtseinheit
+            self.fields['waehrung'].initial = instance.waehrung
 
         for field_name, field_info in self.Meta.foreign_key_fields.items():
             if field_name in self.fields:

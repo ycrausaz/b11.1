@@ -41,6 +41,24 @@
                 {{ field }}  <!-- Render hidden fields outside of the table -->
             {% endif %}
         {% endfor %}
+
+                <tr><td colspan="2"><hr></td></tr>
+
+                <tr><td colspan="2"><strong>Berechnete Felder</strong></td></tr>
+                {% for field in form.get_computed_fields %}
+                    {% if not field.is_hidden %}
+                        <tr>
+                            <td>
+                                <label for="{{ field.id_for_label }}">
+                                    {{ field.label }}:
+                                </label>
+                            </td>
+                            <td>
+                                {{ field }}
+                            </td>
+                        </tr>
+                    {% endif %}
+                {% endfor %}
     </table>
     <br/>
     
