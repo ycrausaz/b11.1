@@ -15,6 +15,32 @@ from .editable_fields_config import *
 
 class MaterialForm_SMDA(BaseTemplateForm, SplitterReadOnlyReadWriteFields):
 
+    verkaufsorg = forms.CharField(
+        label='Verkaufsorg.',
+        required=False,
+        disabled=True  # This marks it as disabled for BaseTemplateForm
+    )
+    vertriebsweg = forms.CharField(
+        label='Vertriebsweg',
+        required=False,
+        disabled=True
+    )
+    auszeichnungsfeld = forms.CharField(
+        label='Auszeichnungsfeld',
+        required=False,
+        disabled=True
+    )
+    preissteuerung = forms.CharField(
+        label='Preissteuerung',
+        required=False,
+        disabled=True
+    )
+    preisermittlung = forms.CharField(
+        label='Preisermittlung',
+        required=False,
+        disabled=True
+    )
+
     class Meta(BaseTemplateForm.Meta):
         model = Material
         fields = EDITABLE_FIELDS
@@ -26,6 +52,13 @@ class MaterialForm_SMDA(BaseTemplateForm, SplitterReadOnlyReadWriteFields):
             'bewertungsklasse',
             'zuteilung',
             'auspraegung',
+        ]
+        computed_fields = [
+            'verkaufsorg',
+            'vertriebsweg',
+            'auszeichnungsfeld',
+            'preissteuerung',
+            'preisermittlung',
         ]
 
         # Set up foreign key fields with their querysets and required status
@@ -48,8 +81,20 @@ class MaterialForm_SMDA(BaseTemplateForm, SplitterReadOnlyReadWriteFields):
             if field_name in self.fields:
                 self.fields[field_name].required = True
 
+        # Mark computed fields
+        for field_name in self.Meta.computed_fields:
+            self.fields[field_name].is_computed = True
+
         # Initialize foreign key widgets and set required fields
         instance = kwargs.get('instance')
+
+        if instance:
+            # Set initial values for readonly fields
+            self.fields['verkaufsorg'].initial = instance.verkaufsorg
+            self.fields['vertriebsweg'].initial = instance.vertriebsweg
+            self.fields['auszeichnungsfeld'].initial = instance.auszeichnungsfeld
+            self.fields['preissteuerung'].initial = instance.preissteuerung
+            self.fields['preisermittlung'].initial = instance.preisermittlung
 
         for field_name, field_info in self.Meta.foreign_key_fields.items():
             if field_name in self.fields:

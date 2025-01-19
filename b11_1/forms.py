@@ -66,39 +66,35 @@ class BaseTemplateForm(forms.ModelForm):
     """
     class Meta:
         model = Material
-        fields = '__all__'  # Include all model fields
+        fields = '__all__'
 
     def __init__(self, *args, **kwargs):
-        # Extract 'editable_fields' from kwargs before calling the parent class constructor
         editable_fields = kwargs.pop('editable_fields', None)
         super().__init__(*args, **kwargs)
 
-        # Apply logic to disable fields that are not in the editable list
         if editable_fields:
             for field_name in self.fields:
+                field = self.fields[field_name]
                 if field_name not in editable_fields:
-                    self.fields[field_name].disabled = True
+                    # If it's not in editable_fields, mark it as disabled
+                    field.disabled = True
+                    # Also ensure the widget has readonly attribute
+                    field.widget.attrs['readonly'] = True
 
     def get_normal_fields(self):
-        """
-        Return the fields that are editable.
-        """
-        return [field for field in self if not self.fields[field.name].disabled]
+        """Return only editable fields."""
+        return [field for field in self if not field.field.disabled and not getattr(field.field, 'is_computed', False)]
+
+    def get_computed_fields(self):
+        """Return computed fields."""
+        return [field for field in self if getattr(field.field, 'is_computed', False)]
 
     def get_readonly_fields(self):
-        """
-        Return the fields that should be readonly.
-        """
-        return [field for field in self if self.fields[field.name].disabled]
+        """Return only readonly fields, excluding computed fields."""
+        return [field for field in self if field.field.disabled and not getattr(field.field, 'is_computed', False)]
 
     def save(self, commit=True):
-        """
-        Override the save method to ensure only editable fields are saved.
-        """
         instance = super().save(commit=False)
-        editable_field_names = [field.name for field in self.get_normal_fields()]
-
-        # Save only the editable fields
         if commit:
-            instance.save(update_fields=editable_field_names)
+            instance.save(update_fields=[field.name for field in self.get_normal_fields()])
         return instance
