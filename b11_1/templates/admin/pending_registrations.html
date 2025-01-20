@@ -2,6 +2,9 @@
 
 {% block content %}
 <div class="container mt-5">
+
+    {% if pending_profiles|length > 0 %}
+
     <h2>Pending User Registrations</h2>
     
     <table class="table">
@@ -84,5 +87,12 @@
             {% endfor %}
         </tbody>
     </table>
+
+    {% else %}
+
+    <h2>No Pending User Registrations</h2>
+
+    {% endif %}
+
 </div>
 {% endblock %}
