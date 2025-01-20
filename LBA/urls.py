@@ -18,9 +18,14 @@ from django.urls import path
 from django.urls import include
 from django.conf.urls.static import static
 from django.conf import settings
+from django.http import HttpResponse
+
+def service_worker(request):
+    return HttpResponse(status=204)
 
 urlpatterns = [
     path('main_admin/', admin.site.urls),
+    path('serviceworker.js', service_worker),
 ]
 
 urlpatterns += [
