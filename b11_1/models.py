@@ -26,6 +26,12 @@ class BaseIdxModel(models.Model):
         ordering = ['idx']
 
 class Profile(models.Model):
+    USER_STATUS_CHOICES = [
+        ('pending', 'Pending Approval'),
+        ('approved', 'Approved'),
+        ('rejected', 'Rejected')
+    ]
+    
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     username = models.CharField(max_length=50, unique=True, null=True, blank=True)
     firm = models.CharField(max_length=100, null=True, blank=True)
@@ -39,12 +45,9 @@ class Profile(models.Model):
     failed_login_attempts = models.IntegerField(default=0)
     registration_token = models.CharField(max_length=100, null=True, blank=True)
     token_expiry = models.DateTimeField(null=True, blank=True)
-
-    def __str__(self):
-        return self.username or self.user.username
-
-    class Meta:
-        app_label = 'b11_1'
+    status = models.CharField(max_length=20, choices=USER_STATUS_CHOICES, default='pending')
+    rejection_reason = models.TextField(null=True, blank=True)
+    registration_date = models.DateTimeField(auto_now_add=True, null=True, blank=True)
 
 class HelpTooltip(models.Model):
     field_name = models.CharField(max_length=100, unique=True)

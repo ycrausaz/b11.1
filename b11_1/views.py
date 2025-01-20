@@ -119,7 +119,7 @@ class CustomLoginView(LoginView):
                 reset_link = reverse('password_reset_confirm', kwargs={'uidb64': uid, 'token': token})      
                 reset_url = f'http://{current_site.domain}{reset_link}'
                 message = f'It seems you have failed to login 3 times. Please reset your password using the following link:\n{reset_url}'
-                send_mail(mail_subject, message, settings.DEFAULT_FROM_EMAIL, [user.email])
+#                send_mail(mail_subject, message, settings.DEFAULT_FROM_EMAIL, [user.email])
                 logger.info(f'Password reset email sent to user: {username}')
                 logger.info(message)
 
@@ -175,7 +175,7 @@ class CustomLoginView(LoginView):
                 reset_link = reverse('password_reset_confirm', kwargs={'uidb64': uid, 'token': token})      
                 reset_url = f'http://{current_site.domain}{reset_link}'
                 message = f'It seems you have failed to login 3 times. Please reset your password using the following link:\n{reset_url}'
-                send_mail(mail_subject, message, settings.DEFAULT_FROM_EMAIL, [user.email])
+#                send_mail(mail_subject, message, settings.DEFAULT_FROM_EMAIL, [user.email])
                 logger.info(f'Password reset email sent to user: {username}')
                 logger.info(message)
 
@@ -571,8 +571,6 @@ class Logging_View(ListView):
         }
         return render(request, self.template_name, context)
 
-from django.contrib.auth.models import User, Group  # Add Group to the imports
-
 class RegisterView(View):
     template_name = 'registration/register.html'
 
@@ -583,10 +581,8 @@ class RegisterView(View):
     def post(self, request):
         form = UserRegistrationForm(request.POST)
         if form.is_valid():
-            # Get the username from the form
             submitted_username = form.cleaned_data['username']
             
-            # Create auth_user with the submitted username
             user = User.objects.create(
                 username=submitted_username,
                 email=form.cleaned_data['email'],
@@ -595,47 +591,16 @@ class RegisterView(View):
                 is_active=False
             )
 
-            # Add user to grIL group
-            try:
-                il_group = Group.objects.get(name='grIL')
-                user.groups.add(il_group)
-                logger.info(f"User {submitted_username} added to grIL group")
-            except Group.DoesNotExist:
-                logger.error(f"Group 'grIL' not found when registering user {submitted_username}")
-
-            # Create profile and link it to the user
             profile = form.save(commit=False)
             profile.user = user
             profile.username = submitted_username
             profile.registration_token = get_random_string(50)
             profile.token_expiry = timezone.now() + timedelta(days=2)
+            profile.status = 'pending'  # Set initial status
             profile.save()
 
-            # Send registration email
-            registration_link = request.build_absolute_uri(
-                reverse('complete_registration', args=[profile.registration_token])
-            )
-            
-            email_context = {
-                'username': submitted_username,
-                'registration_link': registration_link,
-                'expiry_date': profile.token_expiry,
-            }
-            
-            email_body = render_to_string('registration/email/registration_email.html', email_context)
-            
-#            send_mail(
-#                'Complete your registration',
-#                email_body,
-#                settings.DEFAULT_FROM_EMAIL,
-#                [profile.email],
-#                fail_silently=False,
-#            )
-            print("Email sent!")
-            print("email_body = ", email_body)
-
-            messages.success(request, 'Registration successful! Please check your email to complete the registration.')
-            logger.info(f"New user registration: {submitted_username}")
+            messages.success(request, 'Registration submitted successfully! Please wait for administrator approval.')
+            logger.info(f"New user registration pending approval: {submitted_username}")
             return redirect('login_user')
 
         return render(request, self.template_name, {'form': form})
@@ -685,3 +650,108 @@ class CompleteRegistrationView(View):
             messages.error(request, 'Invalid or expired registration link.')
 
         return render(request, self.template_name, {'token': token})
+
+class PendingRegistrationsView(grAdmin_GroupRequiredMixin, ListView):
+    model = Profile
+    template_name = 'admin/pending_registrations.html'
+    context_object_name = 'pending_profiles'
+    allowed_groups = ['grAdmin']
+
+    def get_queryset(self):
+        return Profile.objects.filter(status='pending').order_by('-registration_date')
+
+class ApproveRegistrationView(grAdmin_GroupRequiredMixin, View):
+    allowed_groups = ['grAdmin']
+
+    def post(self, request, profile_id):
+        try:
+            profile = Profile.objects.get(id=profile_id, status='pending')
+            user = profile.user
+
+            # Approve the user
+            profile.status = 'approved'
+            profile.save()
+
+            # Add user to grIL group
+            try:
+                il_group = Group.objects.get(name='grIL')
+                user.groups.add(il_group)
+            except Group.DoesNotExist:
+                logger.error(f"Group 'grIL' not found when approving user {profile.username}")
+
+            # Send approval email
+            registration_link = request.build_absolute_uri(
+                reverse('complete_registration', args=[profile.registration_token])
+            )
+
+            email_context = {
+                'username': profile.username,
+                'registration_link': registration_link,
+                'expiry_date': profile.token_expiry,
+            }
+
+            email_body = render_to_string('registration/email/registration_approved_email.html', email_context)
+
+#            send_mail(
+#                'Your registration has been approved',
+#                email_body,
+#                settings.DEFAULT_FROM_EMAIL,
+#                [profile.email],
+#                fail_silently=False,
+#            )
+            print("[ApproveRegistrationView] Mail sent!")
+            print("email_body = ", email_body)
+
+            messages.success(request, f'Registration for {profile.username} has been approved.')
+            logger.info(f"Registration approved for user: {profile.username}")
+
+        except Profile.DoesNotExist:
+            messages.error(request, 'Profile not found.')
+
+        return redirect('pending_registrations')
+
+class RejectRegistrationView(grAdmin_GroupRequiredMixin, View):
+    allowed_groups = ['grAdmin']
+
+    def post(self, request, profile_id):
+        try:
+            profile = Profile.objects.get(id=profile_id, status='pending')
+            rejection_reason = request.POST.get('rejection_reason')
+
+            if not rejection_reason:
+                messages.error(request, 'Please provide a rejection reason.')
+                return redirect('pending_registrations')
+
+            # Reject the user
+            profile.status = 'rejected'
+            profile.rejection_reason = rejection_reason
+            profile.save()
+
+            # Send rejection email
+            email_context = {
+                'username': profile.username,
+                'rejection_reason': rejection_reason,
+            }
+
+            email_body = render_to_string('registration/email/registration_rejected_email.html', email_context)
+
+#            send_mail(
+#                'Your registration has been rejected',
+#                email_body,
+#                settings.DEFAULT_FROM_EMAIL,
+#                [profile.email],
+#                fail_silently=False,
+#            )
+            print("[RejectRegistrationView] Mail sent!")
+            print("email_body = ", email_body)
+
+            # Delete the associated User object
+            profile.user.delete()
+
+            messages.success(request, f'Registration for {profile.username} has been rejected.')
+            logger.info(f"Registration rejected for user: {profile.username}")
+
+        except Profile.DoesNotExist:
+            messages.error(request, 'Profile not found.')
+
+        return redirect('pending_registrations')
