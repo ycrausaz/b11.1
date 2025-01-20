@@ -93,7 +93,7 @@ class ExcelImportView(GroupRequiredMixin, FormView):
         return super().form_valid(form)
 
 def custom_permission_denied_view(request, exception=None):
-    response = render(request, '403.html')
+    response = render(request, 'admin/403.html')
     response.status_code = 403
     return response
 
@@ -101,7 +101,7 @@ def home(request):
    return redirect('login_user')
 
 class CustomLoginView(LoginView):
-    template_name = 'login_user.html'
+    template_name = 'admin/login_user.html'
 
     def form_invalid(self, form):
         username = form.cleaned_data.get('username')
@@ -195,12 +195,12 @@ class CustomLoginView(LoginView):
         return self.render_to_response(self.get_context_data(form=form))
 
     def get(self, request, *args, **kwargs):
-        return render(request, 'login_user.html', {})
+        return render(request, 'admin/login_user.html', {})
 
 class CustomPasswordChangeView(PasswordChangeView):
     form_class = CustomPasswordChangeForm
     success_url = reverse_lazy('login_user')
-    template_name = 'password_change.html'
+    template_name = 'admin/password_change.html'
 
     def form_valid(self, form):
         messages.success(self.request, "Your password has been changed successfully.")
@@ -221,7 +221,7 @@ class CustomPasswordChangeView(PasswordChangeView):
 class CustomPasswordResetConfirmView(PasswordResetConfirmView):
     form_class = CustomPasswordResetForm
     success_url = reverse_lazy('login_user')
-    template_name = 'password_reset_confirm.html'
+    template_name = 'admin/password_reset_confirm.html'
 
     def form_valid(self, form):
         messages.success(self.request, "Your password has been reset successfully. You can now log in with your new password.")

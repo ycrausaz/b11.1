@@ -19,10 +19,10 @@ urlpatterns = [
     path('login_user', CustomLoginView.as_view(), name='login_user'),
     path('logout_user', UserLogout.as_view(), name='logout_user'),
     path('password_change', CustomPasswordChangeView.as_view(), name='password_change'),
-    path('password_change_done', TemplateView.as_view(template_name='password_change_done.html'), name='password_change_done'),
-    path('password_reset', PasswordResetView.as_view(), name='password_reset'),
+    path('password_change_done', TemplateView.as_view(template_name='admin/password_change_done.html'), name='password_change_done'),
+    path('password_reset', PasswordResetView.as_view(template_name='admin/password_reset.html'), name='password_reset'),
     path('reset/<uidb64>/<token>', CustomPasswordResetConfirmView.as_view(), name='password_reset_confirm'),
-    path('reset/done', PasswordResetCompleteView.as_view(), name='password_reset_complete'),
+    path('reset/done', PasswordResetCompleteView.as_view(template_name='admin/password_reset_complete.html'), name='password_reset_complete'),
 
     path('list_material_il', login_required(ListMaterial_IL_View.as_view()), name='list_material_il'),
     path('add_material_il', login_required(AddMaterial_IL_View.as_view()), name='add_material_il'),
