@@ -31,7 +31,7 @@ from django.template import RequestContext
 from .forms import CustomPasswordChangeForm
 from .forms import CustomPasswordResetForm
 from b11_1.models import Profile, Material
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.views import LoginView
 from django.contrib.auth.views import PasswordResetConfirmView
@@ -45,6 +45,12 @@ from .editable_fields_config import EDITABLE_FIELDS_GD, EDITABLE_FIELDS_SMDA, ED
 from django.views.generic.edit import FormView
 from django import forms
 from .import_utils import import_from_excel
+from django.utils.crypto import get_random_string
+from django.utils import timezone
+from datetime import timedelta
+from django.core.mail import send_mail
+from django.template.loader import render_to_string
+from .forms import UserRegistrationForm
 import logging
 
 logger = logging.getLogger(__name__)
@@ -150,6 +156,43 @@ class CustomLoginView(LoginView):
         elif self.request.user.groups.filter(name='grAdmin').exists():
             return redirect('logging')
         return response
+
+
+    def form_invalid(self, form):
+        username = form.cleaned_data.get('username')
+        try:
+            # First try to find the profile by username
+            profile = Profile.objects.get(username=username)
+            user = profile.user
+            profile.failed_login_attempts += 1
+            profile.save()
+
+            if profile.failed_login_attempts >= 3:
+                current_site = get_current_site(self.request)
+                mail_subject = 'Reset your password'
+                uid = urlsafe_base64_encode(force_bytes(user.pk))
+                token = default_token_generator.make_token(user)
+                reset_link = reverse('password_reset_confirm', kwargs={'uidb64': uid, 'token': token})      
+                reset_url = f'http://{current_site.domain}{reset_link}'
+                message = f'It seems you have failed to login 3 times. Please reset your password using the following link:\n{reset_url}'
+                send_mail(mail_subject, message, settings.DEFAULT_FROM_EMAIL, [user.email])
+                logger.info(f'Password reset email sent to user: {username}')
+                logger.info(message)
+
+                messages.warning(
+                    self.request,
+                    "You have entered an incorrect password 3 times. "
+                    "A password reset link has been sent to your email."
+                )
+
+                profile.failed_login_attempts = 0
+                profile.save()
+            else:
+                messages.error(self.request, "Username and/or password invalid.")
+        except Profile.DoesNotExist:
+            messages.error(self.request, "Username and/or password invalid.")
+
+        return self.render_to_response(self.get_context_data(form=form))
 
     def get(self, request, *args, **kwargs):
         return render(request, 'login_user.html', {})
@@ -527,3 +570,118 @@ class Logging_View(ListView):
             'log_entries': log_entries,
         }
         return render(request, self.template_name, context)
+
+from django.contrib.auth.models import User, Group  # Add Group to the imports
+
+class RegisterView(View):
+    template_name = 'registration/register.html'
+
+    def get(self, request):
+        form = UserRegistrationForm()
+        return render(request, self.template_name, {'form': form})
+
+    def post(self, request):
+        form = UserRegistrationForm(request.POST)
+        if form.is_valid():
+            # Get the username from the form
+            submitted_username = form.cleaned_data['username']
+            
+            # Create auth_user with the submitted username
+            user = User.objects.create(
+                username=submitted_username,
+                email=form.cleaned_data['email'],
+                first_name=form.cleaned_data['first_name'],
+                last_name=form.cleaned_data['last_name'],
+                is_active=False
+            )
+
+            # Add user to grIL group
+            try:
+                il_group = Group.objects.get(name='grIL')
+                user.groups.add(il_group)
+                logger.info(f"User {submitted_username} added to grIL group")
+            except Group.DoesNotExist:
+                logger.error(f"Group 'grIL' not found when registering user {submitted_username}")
+
+            # Create profile and link it to the user
+            profile = form.save(commit=False)
+            profile.user = user
+            profile.username = submitted_username
+            profile.registration_token = get_random_string(50)
+            profile.token_expiry = timezone.now() + timedelta(days=2)
+            profile.save()
+
+            # Send registration email
+            registration_link = request.build_absolute_uri(
+                reverse('complete_registration', args=[profile.registration_token])
+            )
+            
+            email_context = {
+                'username': submitted_username,
+                'registration_link': registration_link,
+                'expiry_date': profile.token_expiry,
+            }
+            
+            email_body = render_to_string('registration/email/registration_email.html', email_context)
+            
+#            send_mail(
+#                'Complete your registration',
+#                email_body,
+#                settings.DEFAULT_FROM_EMAIL,
+#                [profile.email],
+#                fail_silently=False,
+#            )
+            print("Email sent!")
+            print("email_body = ", email_body)
+
+            messages.success(request, 'Registration successful! Please check your email to complete the registration.')
+            logger.info(f"New user registration: {submitted_username}")
+            return redirect('login_user')
+
+        return render(request, self.template_name, {'form': form})
+
+class CompleteRegistrationView(View):
+    template_name = 'registration/complete_registration.html'
+
+    def get(self, request, token):
+        try:
+            profile = Profile.objects.get(
+                registration_token=token,
+                token_expiry__gt=timezone.now(),
+                user__is_active=False
+            )
+            return render(request, self.template_name, {'token': token})
+        except Profile.DoesNotExist:
+            messages.error(request, 'Invalid or expired registration link.')
+            return redirect('login_user')
+
+    def post(self, request, token):
+        try:
+            profile = Profile.objects.get(
+                registration_token=token,
+                token_expiry__gt=timezone.now(),
+                user__is_active=False
+            )
+
+            password = request.POST.get('password')
+            if password:
+                user = profile.user
+                # Remove this line as we want to keep the original username
+                # user.username = profile.email  # This was causing the issue
+                user.set_password(password)
+                user.is_active = True
+                user.save()
+                
+                profile.registration_token = None
+                profile.token_expiry = None
+                profile.save()
+                
+                messages.success(request, 'Registration completed! You can now login.')
+                return redirect('login_user')
+            else:
+                messages.error(request, 'Please provide a password.')
+                
+        except Profile.DoesNotExist:
+            messages.error(request, 'Invalid or expired registration link.')
+
+        return render(request, self.template_name, {'token': token})

@@ -1,0 +1,15 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2>Complete Registration</h2>
+    <form method="post">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="password">Choose your password:</label>
+            <input type="password" name="password" class="form-control" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Complete Registration</button>
+    </form>
+</div>
+{% endblock %}

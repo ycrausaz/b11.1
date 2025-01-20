@@ -98,3 +98,22 @@ class BaseTemplateForm(forms.ModelForm):
         if commit:
             instance.save(update_fields=[field.name for field in self.get_normal_fields()])
         return instance
+
+class UserRegistrationForm(forms.ModelForm):
+    username = forms.CharField(max_length=50)
+    
+    class Meta:
+        model = Profile
+        fields = ['username', 'firm', 'first_name', 'last_name', 'role', 'country', 'email', 'phone']
+
+    def clean_username(self):
+        username = self.cleaned_data.get('username')
+        if User.objects.filter(username=username).exists() or Profile.objects.filter(username=username).exists():
+            raise forms.ValidationError('This username is already taken.')
+        return username
+
+    def clean_email(self):
+        email = self.cleaned_data.get('email')
+        if User.objects.filter(email=email).exists():
+            raise forms.ValidationError('This email is already registered.')
+        return email
