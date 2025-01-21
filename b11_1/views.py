@@ -157,43 +157,6 @@ class CustomLoginView(LoginView):
             return redirect('logging')
         return response
 
-
-    def form_invalid(self, form):
-        username = form.cleaned_data.get('username')
-        try:
-            # First try to find the profile by username
-            profile = Profile.objects.get(username=username)
-            user = profile.user
-            profile.failed_login_attempts += 1
-            profile.save()
-
-            if profile.failed_login_attempts >= 3:
-                current_site = get_current_site(self.request)
-                mail_subject = 'Reset your password'
-                uid = urlsafe_base64_encode(force_bytes(user.pk))
-                token = default_token_generator.make_token(user)
-                reset_link = reverse('password_reset_confirm', kwargs={'uidb64': uid, 'token': token})      
-                reset_url = f'http://{current_site.domain}{reset_link}'
-                message = f'It seems you have failed to login 3 times. Please reset your password using the following link:\n{reset_url}'
-#                send_mail(mail_subject, message, settings.DEFAULT_FROM_EMAIL, [user.email])
-                logger.info(f'Password reset email sent to user: {username}')
-                logger.info(message)
-
-                messages.warning(
-                    self.request,
-                    "You have entered an incorrect password 3 times. "
-                    "A password reset link has been sent to your email."
-                )
-
-                profile.failed_login_attempts = 0
-                profile.save()
-            else:
-                messages.error(self.request, "Username and/or password invalid.")
-        except Profile.DoesNotExist:
-            messages.error(self.request, "Username and/or password invalid.")
-
-        return self.render_to_response(self.get_context_data(form=form))
-
     def get(self, request, *args, **kwargs):
         return render(request, 'admin/login_user.html', {})
 
