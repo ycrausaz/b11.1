@@ -208,8 +208,8 @@ class FormValidMixin_SMDA:
 
         print("item.materialart_grunddaten_id = " + str(item.materialart_grunddaten_id))
         mat_art = Materialart.objects.filter(id=item.id).first()
-        print("mat_art.text = " + str(mat_art.text))
-        print("<<< APPLY THE RULE HERE >>>")
+#        print("mat_art.text = " + str(mat_art.text))
+#        print("<<< APPLY THE RULE HERE >>>")
 
 #        base_obj = Material.objects.filter(id=item.id)
 #        print("base_obj = " + str(base_obj))

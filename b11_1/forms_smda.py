@@ -101,8 +101,12 @@ class MaterialForm_SMDA(BaseTemplateForm, SplitterReadOnlyReadWriteFields):
                 queryset = field_info['queryset']
 
                 if field_name in EDITABLE_FIELDS_SMDA:
-                    # For editable fields, use Select widget with idx values
-                    choices = [('', '---------')] + [(obj.idx, str(obj)) for obj in queryset]
+                    # For editable fields, use Select widget with both text and explanation
+                    choices = [('', '---')]
+                    for obj in queryset:
+                        display_text = str(obj)  # This will use the updated __str__ method
+                        choices.append((obj.idx, display_text))
+                    
                     self.fields[field_name].widget = forms.Select(choices=choices)
 
                     # Set initial value if instance exists
@@ -120,6 +124,7 @@ class MaterialForm_SMDA(BaseTemplateForm, SplitterReadOnlyReadWriteFields):
                         if value:
                             self.fields[field_name].initial = value.idx
 
+        # Add tooltips
         tooltips = HelpTooltip.objects.all()
         for field_name, field in self.fields.items():
             tooltip = tooltips.filter(field_name=field_name).first()

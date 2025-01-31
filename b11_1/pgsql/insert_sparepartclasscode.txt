@@ -1,1 +1,1 @@
-insert into "b11_1_sparepartclasscode" (idx, text) values (1, '0'),(2, '1'),(3, '2'),(4, '6');
+insert into "b11_1_sparepartclasscode" (idx, text, explanation) values (1, '0', 'Item kann nicht repariert werden (Normteil, Kaufteil)'),(2, '1', ''),(3, '2', 'Full-Support (Stationäre Systeme)'),(4, '6', 'Item kann grundsätzlich repariert werden');

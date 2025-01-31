@@ -17,9 +17,12 @@ class BaseIdxModel(models.Model):
     """Abstract base class for models with idx field"""
     idx = models.IntegerField(unique=True, null=True, blank=True)
     text = models.CharField(null=True, blank=True, max_length=40)
+    explanation = models.CharField(null=True, blank=True, max_length=200)
 
     def __str__(self):
-        return self.text
+        if self.explanation:
+            return f"{self.text} - {self.explanation}"
+        return self.text or str(self.idx)
 
     class Meta:
         abstract = True

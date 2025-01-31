@@ -1,53 +1,62 @@
 {% extends "base_generic.html" %}
 
+<!-- templates/add_material_il.html -->
 {% block content %}
     <h1>Neues Material</h1>
     <br/>
 
-      {% if form.non_field_errors %}
+    {% if form.non_field_errors %}
         {% for nfe in form.non_field_errors %}
             <div class="alert alert-error" role="alert">
                 {{ nfe }}
             </div>
         {% endfor %}
-      {% endif %}
+    {% endif %}
 
-<form method="post">
-    {% csrf_token %}
+    <form method="post">
+        {% csrf_token %}
 
-    <table>
-        {% for field in form %}
-            {% if not field.is_hidden %}
-                <tr>
-                    <td>
-                        <label for="{{ field.id_for_label }}">
-                            {{ field.label }}:
-                            {% if field.field.required %}
-                                <span class="required">*</span>
+        <table>
+            {% for field in form %}
+                {% if not field.is_hidden %}
+                    <tr>
+                        <td>
+                            <label for="{{ field.id_for_label }}">
+                                {{ field.label }}:
+                                {% if field.field.required %}
+                                    <span class="required">*</span>
+                                {% endif %}
+                            </label>
+                        </td>
+                        <td>
+                            {{ field }}
+                            {% if field.errors %}
+                                <div class="error">
+                                    {% for error in field.errors %}
+                                        <p>{{ error }}</p>
+                                    {% endfor %}
+                                </div>
                             {% endif %}
-                        </label>
-                    </td>
-                    <td>
-                        {{ field }}
-                        {% if field.errors %}
-                            <div class="error">
-                                {% for error in field.errors %}
-                                    <p>{{ error }}</p>
-                                {% endfor %}
-                            </div>
-                        {% endif %}
-                    </td>
-                </tr>
-            {% else %}
-                {{ field }}  <!-- Render hidden fields outside of the table -->
-            {% endif %}
-        {% endfor %}
-    </table>
+                        </td>
+                    </tr>
+                {% else %}
+                    {{ field }}
+                {% endif %}
+            {% endfor %}
+        </table>
 
-    </br>
+        </br>
 
-    <input type="submit" value="Speichern" class="btn btn-primary">
-    <button type="submit" name="cancel" class="btn btn-secondary">Zurück ohne Speichern</button>
-</form>
+        <input type="submit" value="Speichern" class="btn btn-primary">
+        <button type="submit" name="cancel" class="btn btn-secondary">Zurück ohne Speichern</button>
+    </form>
+
+    <script>
+        $(document).ready(function() {
+            $('.select2').select2({
+                width: '100%'
+            });
+        });
+    </script>
    
 {% endblock %}
