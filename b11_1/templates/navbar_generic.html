@@ -33,16 +33,16 @@
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            Material
+            {% trans "Material_nav" %}
           </a>
           <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                <li><a class="dropdown-item" href="{% url 'list_material_il' %}">Materialliste</a></li>
-                <li><a class="dropdown-item" href="{% url 'add_material_il' %}">Neues Material definieren</a></li>
+                <li><a class="dropdown-item" href="{% url 'list_material_il' %}">{% trans "Materialliste_nav" %}</a></li>
+                <li><a class="dropdown-item" href="{% url 'add_material_il' %}">{% trans "Neues Material definieren_nav" %}</a></li>
           </ul>
         </li>
 <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            Account
+            {% trans "Account_nav" %}
           </a>
           <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                 <li><a class="dropdown-item" href="{% url 'password_change' %}">Passwort ändern</a></li>

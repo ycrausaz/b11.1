@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-02 09:24+0100\n"
+"POT-Creation-Date: 2025-02-02 12:39+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -405,6 +405,22 @@ msgstr "Save"
 #: b11_1/templates/il/add_material_il.html:51
 msgid "Back without saving"
 msgstr ""
+
+#: b11_1/templates/navbar_generic.html:36
+msgid "Material_nav"
+msgstr "New material"
+
+#: b11_1/templates/navbar_generic.html:39
+msgid "Materialliste_nav"
+msgstr "List of material"
+
+#: b11_1/templates/navbar_generic.html:40
+msgid "Neues Material definieren_nav"
+msgstr "Define a new material"
+
+#: b11_1/templates/navbar_generic.html:45
+msgid "Account_nav"
+msgstr "Account"
 
 #: venv/lib/python3.12/site-packages/click/_termui_impl.py:518
 #, python-brace-format
