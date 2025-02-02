@@ -1,8 +1,10 @@
+{% load i18n %}
+
 <!doctype html>
 {% load static %}
 {#{% load pwa %}#}
 <link rel="shortcut icon" type="image/png" href="{% static 'images/swiss-logo-flag.png' %}" >
-<html lang="en">
+<html lang="{{ LANGUAGE_CODE }}">
   <head>
 {#    {% progressive_web_app_meta %}#}
 
