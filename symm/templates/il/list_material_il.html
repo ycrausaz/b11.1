@@ -1,0 +1,104 @@
+{% extends "base_generic.html" %}
+
+<!-- templates/list_material_il.html -->
+{% block content %}
+<h1>Materialliste</h1>
+<br/>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}" role="alert">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
+{% if list_material_il|length == 0 and list_material_il_transferred|length == 0 and list_material_il_returned|length == 0 %}
+<hr>
+    <h4>Momentan keine Angabe</h4>
+{% else %}
+
+{% if list_material_il|length > 0 %}
+<hr>
+<form method="post" id="material-form-1">
+    {% csrf_token %}
+    <table class="table table-striped table-hover">
+        <thead>
+            <tr>
+                <th><input type="checkbox" class="select-all" data-form-id="1"></th>
+                <th>Offenes/e Material/ien ({{ list_material_il|length }})</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for mat in list_material_il %}
+                <tr>
+                    <td><input type="checkbox" name="selected_materials" value="{{ mat.id }}" class="material-checkbox" data-form-id="1"></td>
+                    <td>{{ mat.positions_nr }} <a href="{% url 'update_material_il' mat.id %}">{{ mat.kurztext_de }}</a></td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <br/>
+    <button type="submit" name="action" value="transfer" class="btn btn-primary action-button" data-form-id="1" disabled>Übermitteln an die LBA</button>
+    <button type="submit" name="action" value="delete" class="btn btn-danger action-button" data-form-id="1" disabled>Löschen</button>
+</form>
+
+<br/>
+{% endif %}
+
+{% if list_material_il_returned|length > 0 %}
+<hr>
+<form method="post" id="material-form-2">
+    {% csrf_token %}
+    <table class="table table-striped table-hover">
+        <thead>
+            <tr>
+                <th><input type="checkbox" class="select-all" data-form-id="2"></th>
+                <th>Material/ien zum Nacharbeiten ({{ list_material_il_returned|length }})</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for mat in list_material_il_returned %}
+                <tr>
+                    <td><input type="checkbox" name="selected_materials" value="{{ mat.id }}" class="material-checkbox" data-form-id="2"></td>
+                    <td>{{ mat.positions_nr }} <a href="{% url 'update_material_il' mat.id %}">{{ mat.kurztext_de }}</a></td>
+                    <td>{{ mat.transfer_comment }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <br/>
+    <button type="submit" name="action" value="transfer" class="btn btn-primary action-button" data-form-id="2" disabled>Übermitteln an die LBA</button>
+    <button type="submit" name="action" value="delete" class="btn btn-danger action-button" data-form-id="2" disabled>Löschen</button>
+</form>
+
+<br/>
+{% endif %}
+
+{% if list_material_il_transferred|length > 0 %}
+<hr>
+<form method="post" id="material-form-3">
+    {% csrf_token %}
+    <table class="table table-striped table-hover">
+        <thead>
+            <tr>
+                <th><input type="checkbox" class="select-all" data-form-id="3"></th>
+                <th>Übermittelte/s Material/ien ({{ list_material_il_transferred|length }})</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for mat in list_material_il_transferred %}
+                <tr>
+                    <td><input type="checkbox" name="selected_materials" value="{{ mat.id }}" class="material-checkbox" data-form-id="3"></td>
+                    <td>{{ mat.positions_nr }} {{ mat.kurztext_de }} ({{ mat.transfer_date|date:"d.m.Y - H:i" }})</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <br/>
+    <button type="submit" name="action" value="archive" class="btn btn-danger action-button" data-form-id="3" disabled>Archivieren</button>
+</form>
+{% endif %}
+{% include 'checkbox.html' %}
+{% endif%}
+{% endblock %}

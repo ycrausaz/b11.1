@@ -1,0 +1,167 @@
+{% load i18n %} 
+{% load group_tags %}
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+  <div class="container-fluid">
+
+{% if user|has_group:"grIL" %}
+    <div class="navbar-brand">LBA - Beilage 11.1 (für {{ user }})</div>
+{% endif %}
+
+{% if user|has_group:"grGD" %}
+    <div class="navbar-brand">LBA - Beilage 11.1 - Grunddaten Team</div>
+{% endif %}
+
+{% if user|has_group:"grSMDA" %}
+    <div class="navbar-brand">LBA - Beilage 11.1 - Systemmanager / Datenassistent</div>
+{% endif %}
+
+{% if user|has_group:"grLBA" %}
+    <div class="navbar-brand">LBA - Beilage 11.1</div>
+{% endif %}
+
+{% if user|has_group:"grAdmin" %}
+    <div class="navbar-brand">LBA - Beilage 11.1 - Admin</div>
+{% endif %}
+
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+{% if user|has_group:"grIL" %}
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            {% trans "Material_nav" %}
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <li><a class="dropdown-item" href="{% url 'list_material_il' %}">{% trans "Materialliste_nav" %}</a></li>
+                <li><a class="dropdown-item" href="{% url 'add_material_il' %}">{% trans "Neues Material definieren_nav" %}</a></li>
+          </ul>
+        </li>
+<li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            {% trans "Account_nav" %}
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <li><a class="dropdown-item" href="{% url 'password_change' %}">Passwort ändern</a></li>
+                <li><a class="dropdown-item" href="{% url 'logout_user' %}">Logout</a></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+{% endif %}
+
+{% if user|has_group:"grAdmin" %}
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li>
+            <a class="nav-link" href="{% url 'logging' %}">Logging</a>
+        </li>
+        <li>
+            <a class="nav-link" href="{% url 'import_excel' %}">Import Excel Data</a>
+        </li>
+        <li>
+            <a class="nav-link" href="{% url 'pending_registrations' %}">Registrations</a>
+        </li>
+        <li>
+            <a class="nav-link" href="{% url 'logout_user' %}">Logout</a>
+        </li>
+      </ul>
+    </div>
+{% endif %}
+
+{% if user|has_group:"grGD" %}
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li>
+            <a class="nav-link" href="{% url 'list_material_gd' %}">Materialliste</a>
+        </li>
+        <li>
+            <a class="nav-link" href="{% url 'import_excel' %}">Import Excel Data</a>
+        </li>
+        <li>
+            <a class="nav-link" href="{% url 'logout_user' %}">Logout</a>
+        </li>
+      </ul>
+    </div>
+{% endif %}
+
+{% if user|has_group:"grSMDA" %}
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li>
+            <a class="nav-link" href="{% url 'list_material_smda' %}">Materialliste</a>
+        </li>
+        <li>
+            <a class="nav-link" href="{% url 'import_excel' %}">Import Excel Data</a>
+        </li>
+        <li>
+            <a class="nav-link" href="{% url 'logout_user' %}">Logout</a>
+        </li>
+      </ul>
+    </div>
+{% endif %}
+
+{% if user|has_group:"grLBA" %}
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li>
+            <a class="nav-link" href="{% url 'list_material_gd' %}">Materialliste</a>
+        </li>
+        <li>
+            <a class="nav-link" href="{% url 'import_excel' %}">Import Excel Data</a>
+        </li>
+        <li>
+            <a class="nav-link" href="{% url 'logout_user' %}">Logout</a>
+        </li>
+      </ul>
+      <div class="navbar-nav ms-auto">
+        <span class="navbar-text me-2">Aktuelle Sicht:</span>
+        <div class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDarkDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            {{ current_view }}
+          </a>
+          <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end" style="min-width: 100%;" aria-labelledby="navbarDarkDropdownMenuLink">
+            <li>
+                <a class="dropdown-item" href="{{ other_url }}">{{ other_view }}</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+
+    </div>
+{% endif %}
+
+<div class="navbar-nav ms-auto">
+    <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="languageDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            {% get_current_language as LANGUAGE_CODE %}
+            {% get_language_info for LANGUAGE_CODE as current_language %}
+            {{ current_language.name_local }}
+        </a>
+        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="languageDropdown">
+            {% get_available_languages as LANGUAGES %}
+            {% get_language_info_list for LANGUAGES as languages %}
+            {% for language in languages %}
+                <li>
+                    <form action="{% url 'set_language' %}" method="post" class="d-inline">
+                        {% csrf_token %}
+                        {% with request.path|cut:LANGUAGE_CODE|cut:"/" as path_without_lang %}
+                            <input name="next" type="hidden" value="/{{ language.code }}/{{ path_without_lang }}">
+                        {% endwith %}
+                        <input name="language" type="hidden" value="{{ language.code }}">
+                        <button type="submit" class="dropdown-item {% if language.code == LANGUAGE_CODE %}active{% endif %}">
+                            {{ language.name_local }}
+                        </button>
+                    </form>
+                </li>
+            {% endfor %}
+        </ul>
+    </li>
+</div>
+
+  </div>
+</nav>

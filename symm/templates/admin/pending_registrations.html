@@ -1,0 +1,98 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+<div class="container mt-5">
+
+    {% if pending_profiles|length > 0 %}
+
+    <h2>Pending User Registrations</h2>
+    
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Username</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Firm</th>
+                <th>Role</th>
+                <th>Registration Date</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for profile in pending_profiles %}
+            <tr>
+                <td>{{ profile.username }}</td>
+                <td>{{ profile.first_name }} {{ profile.last_name }}</td>
+                <td><a href="mailto:{{ profile.email }}">{{ profile.email }}</a></td>
+                <td>{{ profile.firm }}</td>
+                <td>{{ profile.role }}</td>
+                <td>{{ profile.registration_date|date:"d.m.Y H:i" }}</td>
+                <td>
+                    <button type="button" class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#approveModal{{ profile.id }}">
+                        Approve
+                    </button>
+                    <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#rejectModal{{ profile.id }}">
+                        Reject
+                    </button>
+                </td>
+            </tr>
+            
+            <!-- Approve Modal -->
+            <div class="modal fade" id="approveModal{{ profile.id }}" tabindex="-1" aria-labelledby="approveModalLabel{{ profile.id }}" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <form method="post" action="{% url 'approve_registration' profile.id %}">
+                            {% csrf_token %}
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="approveModalLabel{{ profile.id }}">Approve Registration</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <p>Are you sure you want to approve this registration?</p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                <button type="submit" class="btn btn-success">Approve</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Reject Modal -->
+            <div class="modal fade" id="rejectModal{{ profile.id }}" tabindex="-1" aria-labelledby="rejectModalLabel{{ profile.id }}" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <form method="post" action="{% url 'reject_registration' profile.id %}">
+                            {% csrf_token %}
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="rejectModalLabel{{ profile.id }}">Reject Registration</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="form-group">
+                                    <label for="rejection_reason">Rejection Reason:</label>
+                                    <textarea class="form-control" id="rejection_reason" name="rejection_reason" required></textarea>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                <button type="submit" class="btn btn-danger">Reject</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    {% else %}
+
+    <h2>No Pending User Registrations</h2>
+
+    {% endif %}
+
+</div>
+{% endblock %}

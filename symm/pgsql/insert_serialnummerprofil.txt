@@ -1,0 +1,1 @@
+insert into "b11_1_serialnummerprofil" (idx, text, explanation) values (1, 'ZM01', 'Serial für Equipments'),(2, 'ZM02', 'Serial für Serialnummer'),(3, 'ZM03', 'Serial für Equipment o UK'),(4, 'ZM05', 'Temp. AApot Conoxia');

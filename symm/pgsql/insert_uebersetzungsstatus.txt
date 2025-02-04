@@ -1,0 +1,1 @@
+insert into "b11_1_uebersetzungsstatus" (idx, text, explanation) values (1, 'P', 'prüfen (Übersetzungstext vorhanden aber Mangel an Vollständigkeit oder Qualität )'),(2, 'U', 'übersetzen (kein Übersetzungstext vorhanden) '),(3, 'N', 'nicht übersetzen'), (4, 'A', 'Übersetzung (FR) abgeschlossen');

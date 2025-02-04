@@ -1,0 +1,43 @@
+{% extends "base_generic.html" %}
+{% load static %}
+
+{% block content %}
+
+<div class="text-center mb-4">
+    <img src="{% static 'images/LBA-logo.png' %}" alt="LBA Logo" class="img-fluid" style="max-width: 200px;">
+</div>
+
+<h3>Login</h3>
+    {% if messages %}
+<br/><br/>
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">
+                {{ message }}
+            </div>
+        {% endfor %}
+<br/><br/>
+    {% endif %}
+
+<form action="" method="POST">
+    {% csrf_token %}
+
+    <div class="form-group">
+      <label for="username">Benutzername</label>
+      <input type="text" class="form-control" name="username" style="width: 300px;" id="focusField">
+    </div>
+    <div class="form-group">
+      <label for="password">Passwort</label>
+      <input type="password" class="form-control" name="password" style="width: 300px;">
+    </div>
+
+    <input type="submit" value="Login" class="btn btn-secondary">
+    <a href="{% url 'register' %}" class="btn btn-secondary">Zugriff beantragen</a>    
+</form>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    document.getElementById("focusField").focus();
+});
+</script>
+
+{% endblock %}

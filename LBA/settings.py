@@ -34,7 +34,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'b11_1',
+    'symm',
     'bootstrap_datepicker_plus',
 ]
 
@@ -52,7 +52,7 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'LBA.urls'
 
-HANDLER403 = 'b11_1.views.custom_permission_denied_view'
+HANDLER403 = 'symm.views.custom_permission_denied_view'
 
 TEMPLATES = [
     {
@@ -66,7 +66,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'django.template.context_processors.i18n',
-                'b11_1.context_processors.app_version',
+                'symm.context_processors.app_version',
             ],
         },
     },
@@ -101,9 +101,9 @@ else:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql',
-            'NAME': 'b11-1',
-            'USER': 'b11-1_user',
-            'PASSWORD': 'b11-1_user',
+            'NAME': 'symm',
+            'USER': 'symm_user',
+            'PASSWORD': 'symm_user',
             'HOST': 'localhost',
             'PORT': '5432',
         },
@@ -140,7 +140,7 @@ LOGGING = {
         },
         'db': {
             'level': 'DEBUG',
-            'class': 'b11_1.db_log_handler.DatabaseLogHandler',
+            'class': 'symm.db_log_handler.DatabaseLogHandler',
 #            'formatter': 'verbose',
             'formatter': 'simple',
         },
@@ -155,7 +155,7 @@ LOGGING = {
             'level': 'INFO',
             'propagate': False,
         },
-        'b11_1': {
+        'symm': {
             'handlers': ['console', 'db'],
             'level': 'DEBUG',
             'propagate': False,

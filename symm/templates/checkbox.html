@@ -1,0 +1,68 @@
+<script>
+    // Function to toggle button state for a given form
+    function toggleButtons(formId) {
+        var checkboxes = document.querySelectorAll(`.material-checkbox[data-form-id="${formId}"]`);
+        var anyChecked = Array.from(checkboxes).some(checkbox => checkbox.checked);
+        var buttons = document.querySelectorAll(`.action-button[data-form-id="${formId}"]`);
+        for (var button of buttons) {
+            button.disabled = !anyChecked;
+        }
+    }
+
+    // Toggle all checkboxes for a given form when "select-all" checkbox is clicked
+    function selectAllToggle(event) {
+        var formId = event.target.getAttribute('data-form-id');
+        var checkboxes = document.querySelectorAll(`.material-checkbox[data-form-id="${formId}"]`);
+        var isChecked = event.target.checked;
+        for (var checkbox of checkboxes) {
+            checkbox.checked = isChecked;
+        }
+        toggleButtons(formId);
+    }
+
+    // Clear selections and disable buttons after form submission
+    function clearSelections(formId) {
+        var checkboxes = document.querySelectorAll(`.material-checkbox[data-form-id="${formId}"]`);
+        var selectAllCheckbox = document.querySelector(`.select-all[data-form-id="${formId}"]`);
+        var buttons = document.querySelectorAll(`.action-button[data-form-id="${formId}"]`);
+
+        // Uncheck all checkboxes
+        for (var checkbox of checkboxes) {
+            checkbox.checked = false;
+        }
+
+        // Uncheck the select-all checkbox
+        if (selectAllCheckbox) {
+            selectAllCheckbox.checked = false;
+        }
+
+        // Disable all action buttons
+        for (var button of buttons) {
+            button.disabled = true;
+        }
+    }
+
+    // Add event listeners to "select-all" checkboxes
+    document.querySelectorAll('.select-all').forEach(function(selectAllCheckbox) {
+        selectAllCheckbox.addEventListener('click', selectAllToggle);
+    });
+
+    // Add onclick event to all material checkboxes to toggle buttons independently
+    document.querySelectorAll('.material-checkbox').forEach(function(checkbox) {
+        checkbox.addEventListener('click', function(event) {
+            var formId = event.target.getAttribute('data-form-id');
+            toggleButtons(formId);
+        });
+    });
+
+    // Add submit event listener to clear selections after form submission
+    document.querySelectorAll('form').forEach(function(form) {
+        form.addEventListener('submit', function(event) {
+            var formId = event.target.getAttribute('data-form-id');
+            clearSelections(formId);
+            // Allow the form to submit after clearing selections
+            form.submit();
+        });
+    });
+
+</script>
