@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-04 16:46+0100\n"
+"POT-Creation-Date: 2025-02-04 19:18+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -411,7 +411,7 @@ msgstr ""
 
 #: b11_1/templates/navbar_generic.html:36 symm/templates/navbar_generic.html:36
 msgid "Material_nav"
-msgstr "Neues Material"
+msgstr "Material"
 
 #: b11_1/templates/navbar_generic.html:39 symm/templates/navbar_generic.html:39
 msgid "Materialliste_nav"
@@ -425,11 +425,41 @@ msgstr "Neues Material definieren"
 msgid "Account_nav"
 msgstr "Account"
 
-#: symm/templates/gd/list_material_gd.html:5
-#, fuzzy
-#| msgid "Materialliste_nav"
+#: symm/templates/il/list_material_il.html:6
 msgid "Materialliste"
 msgstr "Materialliste"
+
+#: symm/templates/il/list_material_il.html:19
+msgid "Momentan keine Angabe"
+msgstr "Momentan keine Angabe"
+
+#: symm/templates/il/list_material_il.html:30
+msgid "Offenes/e Material/ien"
+msgstr "Offenes/e Material/ien"
+
+#: symm/templates/il/list_material_il.html:72
+msgid "Übermitteln an die LBA"
+msgstr ""
+
+#: symm/templates/il/list_material_il.html:73
+msgid "Löschen"
+msgstr ""
+
+#: symm/templates/il/update_material_il.html:7
+msgid "Material aktualisieren"
+msgstr "Materialliste"
+
+#: symm/templates/il/update_material_il.html:50
+msgid "Berechnete Felder"
+msgstr ""
+
+#: symm/templates/il/update_material_il.html:68
+msgid "Änderungen speichern"
+msgstr ""
+
+#: symm/templates/il/update_material_il.html:69
+msgid "Zurück ohne Speichern"
+msgstr ""
 
 #: venv/lib/python3.12/site-packages/click/_termui_impl.py:518
 #, python-brace-format
@@ -1934,6 +1964,3 @@ msgstr ""
 #: venv/lib/python3.12/site-packages/django/views/templates/default_urlconf.html:236
 msgid "Connect, get help, or contribute"
 msgstr ""
-
-#~ msgid "Momentan keine Angabe"
-#~ msgstr "Momentan keine Angabe"

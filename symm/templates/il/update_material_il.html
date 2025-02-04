@@ -1,9 +1,10 @@
 {% extends "base_generic.html" %}
+{% load i18n %}
 
 <!-- templates/update_material_il.html -->
 {% load help_tags %}
 {% block content %}
-    <h1>Material aktualisieren</h1>
+    <h1>{% trans "Material aktualisieren" %}</h1>
     <br/>
 
       {% if form.non_field_errors %}
@@ -46,7 +47,7 @@
 
                 <tr><td colspan="2"><hr></td></tr>
 
-                <tr><td colspan="2"><strong>Berechnete Felder</strong></td></tr>
+                <tr><td colspan="2"><strong>{% trans "Berechnete Felder" %}</strong></td></tr>
                 {% for field in form.get_computed_fields %}
                     {% if not field.is_hidden %}
                         <tr>
@@ -64,8 +65,8 @@
     </table>
     <br/>
     
-    <input type="submit" value="Änderungen speichern" class="btn btn-primary">
-    <button type="submit" name="cancel" class="btn btn-secondary">Zurück ohne Speichern</button>
+    <input type="submit" value={% trans "Änderungen speichern" %} class="btn btn-primary">
+    <button type="submit" name="cancel" class="btn btn-secondary">{% trans "Zurück ohne Speichern" %}</button>
 </form>
 
 <br/>

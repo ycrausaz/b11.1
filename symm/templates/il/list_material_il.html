@@ -1,8 +1,9 @@
 {% extends "base_generic.html" %}
+{% load i18n %}
 
 <!-- templates/list_material_il.html -->
 {% block content %}
-<h1>Materialliste</h1>
+<h1>{% trans "Materialliste" %}</h1>
 <br/>
 
     {% if messages %}
@@ -15,7 +16,7 @@
 
 {% if list_material_il|length == 0 and list_material_il_transferred|length == 0 and list_material_il_returned|length == 0 %}
 <hr>
-    <h4>Momentan keine Angabe</h4>
+    <h4>{% trans "Momentan keine Angabe" %}</h4>
 {% else %}
 
 {% if list_material_il|length > 0 %}
@@ -26,7 +27,7 @@
         <thead>
             <tr>
                 <th><input type="checkbox" class="select-all" data-form-id="1"></th>
-                <th>Offenes/e Material/ien ({{ list_material_il|length }})</th>
+                <th>{% trans "Offenes/e Material/ien" %} ({{ list_material_il|length }})</th>
             </tr>
         </thead>
         <tbody>
@@ -68,8 +69,8 @@
         </tbody>
     </table>
     <br/>
-    <button type="submit" name="action" value="transfer" class="btn btn-primary action-button" data-form-id="2" disabled>Übermitteln an die LBA</button>
-    <button type="submit" name="action" value="delete" class="btn btn-danger action-button" data-form-id="2" disabled>Löschen</button>
+    <button type="submit" name="action" value="transfer" class="btn btn-primary action-button" data-form-id="2" disabled>{% trans "Übermitteln an die LBA" %}</button>
+    <button type="submit" name="action" value="delete" class="btn btn-danger action-button" data-form-id="2" disabled>{% trans "Löschen" %}</button>
 </form>
 
 <br/>
