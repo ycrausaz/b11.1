@@ -1,1 +1,0 @@
-insert into "b11_1_sparte" (idx, text, explanation) values (1, 'V0', 'Stammdaten (MSTAE V099)'),(2, 'V1', 'Armeematerial'),(3, 'V2', 'Verpflegung'),(4, 'V3', 'Betriebsstoffe'),(5, 'V4', 'Munition'),(6, 'V5', 'Dienstleistungen'),(7, 'V6', 'Sanitätsmaterial'),(8, 'V7', 'IKT Informatik, Komm'),(9, 'V8', 'Textilien');
