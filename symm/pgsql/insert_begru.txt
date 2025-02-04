@@ -1,1 +1,1 @@
-insert into "b11_1_begru" (idx, text, explanation) values (1, '1000', 'LBA Benennungen'), (2, '3000', 'RUAG AG Flug'), (3, '4000', 'RUAG AG Land'), (4, '5000', 'LW'), (5, '6000', 'LBA'), (6, '7000', 'FUB'), (7, '8000', 'ar'), (9, '9000', 'AApot');
+insert into "symm_begru" (idx, text, explanation) values (1, '1000', 'LBA Benennungen'), (2, '3000', 'RUAG AG Flug'), (3, '4000', 'RUAG AG Land'), (4, '5000', 'LW'), (5, '6000', 'LBA'), (6, '7000', 'FUB'), (7, '8000', 'ar'), (9, '9000', 'AApot');

@@ -1,4 +1,4 @@
-insert into "b11_1_g_partner" ("cage_code","gp_nummer","kreditor_nr","name") values 
+insert into "symm_g_partner" ("cage_code","gp_nummer","kreditor_nr","name") values 
 ('CE195','1000056525','0002169619','2 DIRECT GMBH'),
 ('U8726','1000055282','0002129774','3 Com Uk Ltd'),
 ('4LTM','1000034559','0002006582','3A Technology & Management AG'),

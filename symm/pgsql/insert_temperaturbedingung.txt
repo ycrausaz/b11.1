@@ -1,1 +1,1 @@
-insert into "b11_1_temperaturbedingung" (idx, text, explanation) values (1, '00', 'ohne Anforderungen'), (2, '01', 'Ambiente 15-25°'), (3, '02', 'Kühlware 02 – 08°'), (4, '03', 'Tiefkühlware < -18°'), (5, '04', 'Tiefkühlware < -80°');
+insert into "symm_temperaturbedingung" (idx, text, explanation) values (1, '00', 'ohne Anforderungen'), (2, '01', 'Ambiente 15-25°'), (3, '02', 'Kühlware 02 – 08°'), (4, '03', 'Tiefkühlware < -18°'), (5, '04', 'Tiefkühlware < -80°');

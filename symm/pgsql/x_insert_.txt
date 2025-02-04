@@ -1,1 +1,1 @@
-insert into "b11_1_x" (text) values x;
+insert into "symm_x" (text) values x;

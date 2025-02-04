@@ -1,4 +1,4 @@
-insert into b11_1_material (
+insert into symm_material (
 hersteller,
 is_archived,
 is_transferred,
@@ -163,7 +163,7 @@ Null,
 2,
 3
 );
-insert into b11_1_material (
+insert into symm_material (
 hersteller,
 is_archived,
 is_transferred,
@@ -328,7 +328,7 @@ Null,
 3,
 2
 );
-insert into b11_1_material (
+insert into symm_material (
 hersteller,
 is_archived,
 is_transferred,
@@ -493,7 +493,7 @@ Null,
 1,
 4
 );
-insert into b11_1_material (
+insert into symm_material (
 hersteller,
 is_archived,
 is_transferred,

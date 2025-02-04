@@ -117,7 +117,7 @@ END;
 $$ LANGUAGE plpgsql;
 
 
-insert into b11_1_material (
+insert into symm_material (
 is_transferred,
 is_archived,
 hersteller,
@@ -233,7 +233,7 @@ preissteuerung -- 88
 (select random_nato_versorgungs_nr()), -- nato_versorgungs_nr, -- 18
 (select random_string(12)), -- herstellerteilenummer, -- 19
 (select random_string(18)), -- normbezeichnung, -- 20
-(select id from b11_1_gefahrgutkennzeichen order by random() limit 1), -- gefahrgutkennzeichen, -- 21
+(select id from symm_gefahrgutkennzeichen order by random() limit 1), -- gefahrgutkennzeichen, -- 21
 (select random()::int::boolean), -- instandsetzbar, -- 22
 (select random()::int::boolean), -- chargenpflicht, -- 23
 (select random_between(1, 100)), -- bestellmengeneinheit, -- 24
@@ -265,21 +265,21 @@ preissteuerung -- 88
 (select random_string(10)), -- a_nummer, -- 50
 (select random()::int::boolean), -- verteilung_an_psd, -- 51
 (select random()::int::boolean), -- verteilung_an_ruag, -- 52
-(select id from b11_1_werkzuordnung_1 order by random() limit 1), -- werk, -- 53
-(select id from b11_1_werkzuordnung_2 order by random() limit 1), -- werk, -- 54
-(select id from b11_1_werkzuordnung_3 order by random() limit 1), -- werk, -- 55
-(select id from b11_1_werkzuordnung_4 order by random() limit 1), -- werk, -- 56
-(select id from b11_1_allgemeinepositionstypengruppe order by random() limit 1), -- allgemeine_positionstypengruppe, -- 57
+(select id from symm_werkzuordnung_1 order by random() limit 1), -- werk, -- 53
+(select id from symm_werkzuordnung_2 order by random() limit 1), -- werk, -- 54
+(select id from symm_werkzuordnung_3 order by random() limit 1), -- werk, -- 55
+(select id from symm_werkzuordnung_4 order by random() limit 1), -- werk, -- 56
+(select id from symm_allgemeinepositionstypengruppe order by random() limit 1), -- allgemeine_positionstypengruppe, -- 57
 'M100', -- verkaufsorg, -- 58
 'V0', -- vertriebsweg, -- 59
 '', -- fuehrendes_material, -- 60
 (select random()::int::boolean), -- auszeichnungsfeld, -- 61
-(select id from b11_1_materialeinstufungnachzuva order by random() limit 1), -- materialeinstufungnachzuva -- 62
-(select id from b11_1_fertigungssteuerer order by random() limit 1), -- fertigungssteuerer, -- 63
+(select id from symm_materialeinstufungnachzuva order by random() limit 1), -- materialeinstufungnachzuva -- 62
+(select id from symm_fertigungssteuerer order by random() limit 1), -- fertigungssteuerer, -- 63
 (select random()::int::boolean), -- kennzeichen_komplexes_system, -- 64
-(select id from b11_1_sonderablauf order by random() limit 1), -- sonderablauf, -- 65
-(select id from b11_1_temperaturbedingung order by random() limit 1), -- temperaturbedingung, -- 66
-(select id from b11_1_bewertungsklasse order by random() limit 1), -- bewertungsklasse, -- 67
+(select id from symm_sonderablauf order by random() limit 1), -- sonderablauf, -- 65
+(select id from symm_temperaturbedingung order by random() limit 1), -- temperaturbedingung, -- 66
+(select id from symm_bewertungsklasse order by random() limit 1), -- bewertungsklasse, -- 67
 (select random_string(10)), -- systemmanager, -- 68
 '55G', -- kennziffer_bamf, -- 69
 (select random()::int::boolean), -- mietrelevanz, -- 70
@@ -288,17 +288,17 @@ preissteuerung -- 88
 (select random()::int::boolean), -- verteilung_apm_kerda, -- 73
 (select random()::int::boolean), -- verteilung_svsaa, -- 74
 (select random()::int::boolean), -- verteilung_cheops, -- 75
-(select id from b11_1_zuteilung order by random() limit 1), -- zuteilung, -- 76
-(select id from b11_1_auspraegung order by random() limit 1), -- auspraegung, -- 77
-(select id from b11_1_basismengeneinheit order by random() limit 1), -- basismengeneinheit_id, -- 78
-(select id from b11_1_begru order by random() limit 1), -- begru_id, -- 79
-(select id from b11_1_materialart order by random() limit 1), -- materialart_grunddaten_id, -- 80
+(select id from symm_zuteilung order by random() limit 1), -- zuteilung, -- 76
+(select id from symm_auspraegung order by random() limit 1), -- auspraegung, -- 77
+(select id from symm_basismengeneinheit order by random() limit 1), -- basismengeneinheit_id, -- 78
+(select id from symm_begru order by random() limit 1), -- begru_id, -- 79
+(select id from symm_materialart order by random() limit 1), -- materialart_grunddaten_id, -- 80
 (select random_between(1, 2)), -- materialzustandsverwaltung, -- 81
-(select id from b11_1_rueckfuehrungscode order by random() limit 1), -- rueckfuehrungscode_id, -- 82
-(select id from b11_1_serialnummerprofil order by random() limit 1), -- serialnummerprofil_id, -- 83
-(select id from b11_1_sparepartclasscode order by random() limit 1), -- spare_part_class_code_id, -- 84
-(select id from b11_1_sparte order by random() limit 1), -- sparte_id, -- 85
-(select id from b11_1_uebersetzungsstatus order by random() limit 1), -- uebersetzungsstatus_id -- 86
+(select id from symm_rueckfuehrungscode order by random() limit 1), -- rueckfuehrungscode_id, -- 82
+(select id from symm_serialnummerprofil order by random() limit 1), -- serialnummerprofil_id, -- 83
+(select id from symm_sparepartclasscode order by random() limit 1), -- spare_part_class_code_id, -- 84
+(select id from symm_sparte order by random() limit 1), -- sparte_id, -- 85
+(select id from symm_uebersetzungsstatus order by random() limit 1), -- uebersetzungsstatus_id -- 86
 (select random()::int::boolean), -- orderbuchpflicht -- 87
 (select random_s_or_v()) -- preissteuerung -- 88
 )

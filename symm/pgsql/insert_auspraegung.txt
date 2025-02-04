@@ -1,1 +1,1 @@
-insert into "b11_1_auspraegung" (idx, text) values (1, '01'), (2, '02'), (3, '03'), (4, '04');
+insert into "symm_auspraegung" (idx, text) values (1, '01'), (2, '02'), (3, '03'), (4, '04');

@@ -9,32 +9,32 @@ CREATE OR REPLACE VIEW ckmlcr_material_ledger_preise
     a.preis AS stprs,
     a.preis AS pvprs,
     'CHF'::text AS waers
-   FROM b11_1_material a
-     LEFT JOIN b11_1_werkzuordnung_1 b ON a.werkzuordnung_1_id = b.id
+   FROM symm_material a
+     LEFT JOIN symm_werkzuordnung_1 b ON a.werkzuordnung_1_id = b.id
   WHERE a.is_transferred = true
   ORDER BY a.positions_nr, b.text;
 CREATE OR REPLACE VIEW makt_beschreibung
  AS
- SELECT b11_1_material.id AS tmp_id,
-    b11_1_material.positions_nr AS source_id,
+ SELECT symm_material.id AS tmp_id,
+    symm_material.positions_nr AS source_id,
     'D'::text AS spras,
-    b11_1_material.kurztext_de AS maktx
-   FROM b11_1_material
-  WHERE b11_1_material.is_transferred = true
+    symm_material.kurztext_de AS maktx
+   FROM symm_material
+  WHERE symm_material.is_transferred = true
 UNION ALL
- SELECT b11_1_material.id AS tmp_id,
-    b11_1_material.positions_nr AS source_id,
+ SELECT symm_material.id AS tmp_id,
+    symm_material.positions_nr AS source_id,
     'F'::text AS spras,
-    b11_1_material.kurztext_fr AS maktx
-   FROM b11_1_material
-  WHERE b11_1_material.is_transferred = true
+    symm_material.kurztext_fr AS maktx
+   FROM symm_material
+  WHERE symm_material.is_transferred = true
 UNION ALL
- SELECT b11_1_material.id AS tmp_id,
-    b11_1_material.positions_nr AS source_id,
+ SELECT symm_material.id AS tmp_id,
+    symm_material.positions_nr AS source_id,
     'E'::text AS spras,
-    b11_1_material.kurztext_en AS maktx
-   FROM b11_1_material
-  WHERE b11_1_material.is_transferred = true
+    symm_material.kurztext_en AS maktx
+   FROM symm_material
+  WHERE symm_material.is_transferred = true
   ORDER BY 1;
 CREATE OR REPLACE VIEW mara_grunddaten
  AS
@@ -87,16 +87,16 @@ CREATE OR REPLACE VIEW mara_grunddaten
     a.lagerfaehigkeit AS "MARA-MHDHB",
     '1'::text AS "MARA-MHDRZ",
     '2'::text AS "MARA-IPRKZ"
-   FROM b11_1_material a
-     LEFT JOIN b11_1_materialart b ON b.id = a.materialart_grunddaten_id
-     LEFT JOIN b11_1_basismengeneinheit c ON c.id = a.basismengeneinheit_id
-     LEFT JOIN b11_1_gefahrgutkennzeichen d ON d.id = a.gefahrgutkennzeichen_id
-     LEFT JOIN b11_1_begru e ON e.id = a.begru_id
-     LEFT JOIN b11_1_sparte f ON f.id = a.sparte_id
-     LEFT JOIN b11_1_rueckfuehrungscode h ON h.id = a.rueckfuehrungscode_id
-     LEFT JOIN b11_1_sparepartclasscode i ON i.id = a.spare_part_class_code_id
-     LEFT JOIN b11_1_temperaturbedingung j ON j.id = a.temperaturbedingung_id
-     LEFT JOIN b11_1_sonderablauf k ON k.id = a.sonderablauf_id
+   FROM symm_material a
+     LEFT JOIN symm_materialart b ON b.id = a.materialart_grunddaten_id
+     LEFT JOIN symm_basismengeneinheit c ON c.id = a.basismengeneinheit_id
+     LEFT JOIN symm_gefahrgutkennzeichen d ON d.id = a.gefahrgutkennzeichen_id
+     LEFT JOIN symm_begru e ON e.id = a.begru_id
+     LEFT JOIN symm_sparte f ON f.id = a.sparte_id
+     LEFT JOIN symm_rueckfuehrungscode h ON h.id = a.rueckfuehrungscode_id
+     LEFT JOIN symm_sparepartclasscode i ON i.id = a.spare_part_class_code_id
+     LEFT JOIN symm_temperaturbedingung j ON j.id = a.temperaturbedingung_id
+     LEFT JOIN symm_sonderablauf k ON k.id = a.sonderablauf_id
   WHERE a.is_transferred = true;
 CREATE OR REPLACE VIEW mara_ausp_merkmale
  AS
@@ -132,8 +132,8 @@ CREATE OR REPLACE VIEW mara_ausp_merkmale
             a.preiseinheit AS v_preiseinheit,
             to_char(CURRENT_DATE::timestamp with time zone, 'DD.MM.YYYY'::text) AS v_gueltigab,
             a.lagerfaehigkeit AS v_lagerfaehigkeit
-           FROM b11_1_material a
-             LEFT JOIN b11_1_uebersetzungsstatus b ON b.id = a.uebersetzungsstatus_id
+           FROM symm_material a
+             LEFT JOIN symm_uebersetzungsstatus b ON b.id = a.uebersetzungsstatus_id
           WHERE a.is_transferred = true
         )
  SELECT original_query.tmp_id,
@@ -254,7 +254,7 @@ CREATE OR REPLACE VIEW mara_kssk_klassenzuordnung
          SELECT a.id AS tmp_id,
             a.positions_nr AS source_id,
             '001'::text AS klart
-           FROM b11_1_material a
+           FROM symm_material a
           WHERE a.is_transferred = true
         )
  SELECT source_data.tmp_id,
@@ -295,32 +295,32 @@ UNION ALL
   ORDER BY 1;
 CREATE OR REPLACE VIEW mara_stxh_grunddaten
  AS
- SELECT b11_1_material.id AS tmp_id,
-    b11_1_material.positions_nr AS source_id,
+ SELECT symm_material.id AS tmp_id,
+    symm_material.positions_nr AS source_id,
     'MATERIAL'::text AS tdobject,
-    b11_1_material.positions_nr AS tdname,
+    symm_material.positions_nr AS tdname,
     'GRUN'::text AS tdid,
     'D'::text AS tdspras
-   FROM b11_1_material
-  WHERE b11_1_material.is_transferred = true
+   FROM symm_material
+  WHERE symm_material.is_transferred = true
 UNION ALL
- SELECT b11_1_material.id AS tmp_id,
-    b11_1_material.positions_nr AS source_id,
+ SELECT symm_material.id AS tmp_id,
+    symm_material.positions_nr AS source_id,
     'MATERIAL'::text AS tdobject,
-    b11_1_material.positions_nr AS tdname,
+    symm_material.positions_nr AS tdname,
     'GRUN'::text AS tdid,
     'F'::text AS tdspras
-   FROM b11_1_material
-  WHERE b11_1_material.is_transferred = true
+   FROM symm_material
+  WHERE symm_material.is_transferred = true
 UNION ALL
- SELECT b11_1_material.id AS tmp_id,
-    b11_1_material.positions_nr AS source_id,
+ SELECT symm_material.id AS tmp_id,
+    symm_material.positions_nr AS source_id,
     'MATERIAL'::text AS tdobject,
-    b11_1_material.positions_nr AS tdname,
+    symm_material.positions_nr AS tdname,
     'GRUN'::text AS tdid,
     'E'::text AS tdspras
-   FROM b11_1_material
-  WHERE b11_1_material.is_transferred = true
+   FROM symm_material
+  WHERE symm_material.is_transferred = true
   ORDER BY 1;
 CREATE OR REPLACE VIEW mara_stxl_grunddaten
  AS
@@ -333,59 +333,59 @@ CREATE OR REPLACE VIEW mara_stxl_grunddaten
     mara_stxl_grunddaten.line_counter,
     mara_stxl_grunddaten.tdformat,
     mara_stxl_grunddaten.text AS tdline
-   FROM ( SELECT b11_1_material.id AS tmp_id,
-            b11_1_material.positions_nr AS source_id,
+   FROM ( SELECT symm_material.id AS tmp_id,
+            symm_material.positions_nr AS source_id,
             'D'::text AS tdspras,
             1 AS line_counter,
             ''::text AS tdformat,
-            b11_1_material.grunddatentext_de_1_zeile AS text
-           FROM b11_1_material
-          WHERE b11_1_material.is_transferred = true
+            symm_material.grunddatentext_de_1_zeile AS text
+           FROM symm_material
+          WHERE symm_material.is_transferred = true
         UNION ALL
-         SELECT b11_1_material.id AS tmp_id,
-            b11_1_material.positions_nr,
+         SELECT symm_material.id AS tmp_id,
+            symm_material.positions_nr,
             'D'::text AS text,
             2,
             '/'::text AS tdformat,
-            b11_1_material.grunddatentext_de_2_zeile
-           FROM b11_1_material
-          WHERE b11_1_material.is_transferred = true
+            symm_material.grunddatentext_de_2_zeile
+           FROM symm_material
+          WHERE symm_material.is_transferred = true
         UNION ALL
-         SELECT b11_1_material.id AS tmp_id,
-            b11_1_material.positions_nr,
+         SELECT symm_material.id AS tmp_id,
+            symm_material.positions_nr,
             'F'::text AS text,
             1,
             ''::text AS tdformat,
-            b11_1_material.grunddatentext_fr_1_zeile
-           FROM b11_1_material
-          WHERE b11_1_material.is_transferred = true
+            symm_material.grunddatentext_fr_1_zeile
+           FROM symm_material
+          WHERE symm_material.is_transferred = true
         UNION ALL
-         SELECT b11_1_material.id AS tmp_id,
-            b11_1_material.positions_nr,
+         SELECT symm_material.id AS tmp_id,
+            symm_material.positions_nr,
             'F'::text AS text,
             2,
             '/'::text AS tdformat,
-            b11_1_material.grunddatentext_fr_2_zeile
-           FROM b11_1_material
-          WHERE b11_1_material.is_transferred = true
+            symm_material.grunddatentext_fr_2_zeile
+           FROM symm_material
+          WHERE symm_material.is_transferred = true
         UNION ALL
-         SELECT b11_1_material.id AS tmp_id,
-            b11_1_material.positions_nr,
+         SELECT symm_material.id AS tmp_id,
+            symm_material.positions_nr,
             'E'::text AS text,
             1,
             ''::text AS tdformat,
-            b11_1_material.grunddatentext_en_1_zeile
-           FROM b11_1_material
-          WHERE b11_1_material.is_transferred = true
+            symm_material.grunddatentext_en_1_zeile
+           FROM symm_material
+          WHERE symm_material.is_transferred = true
         UNION ALL
-         SELECT b11_1_material.id AS tmp_id,
-            b11_1_material.positions_nr,
+         SELECT symm_material.id AS tmp_id,
+            symm_material.positions_nr,
             'E'::text AS text,
             2,
             '/'::text AS tdformat,
-            b11_1_material.grunddatentext_en_2_zeile
-           FROM b11_1_material
-          WHERE b11_1_material.is_transferred = true) mara_stxl_grunddaten
+            symm_material.grunddatentext_en_2_zeile
+           FROM symm_material
+          WHERE symm_material.is_transferred = true) mara_stxl_grunddaten
   ORDER BY mara_stxl_grunddaten.source_id, mara_stxl_grunddaten.tdspras, mara_stxl_grunddaten.line_counter;
 CREATE OR REPLACE VIEW marc_werksdaten
  AS
@@ -398,9 +398,9 @@ CREATE OR REPLACE VIEW marc_werksdaten
         CASE
             WHEN a.orderbuchpflicht = true THEN 'X'::text
         END AS kordb
-   FROM b11_1_material a
-     LEFT JOIN b11_1_werkzuordnung_1 b ON a.werkzuordnung_1_id = b.id
-     LEFT JOIN b11_1_fertigungssteuerer c ON a.fertigungssteuerer_id = c.id
+   FROM symm_material a
+     LEFT JOIN symm_werkzuordnung_1 b ON a.werkzuordnung_1_id = b.id
+     LEFT JOIN symm_fertigungssteuerer c ON a.fertigungssteuerer_id = c.id
   WHERE a.is_transferred = true
   ORDER BY a.positions_nr, b.text;
 CREATE OR REPLACE VIEW mbew_buchhaltung
@@ -414,19 +414,19 @@ CREATE OR REPLACE VIEW mbew_buchhaltung
     a.preiseinheit AS peinh,
     f.text AS bklas,
     a.preisermittlung as mlast
-   FROM b11_1_material a
-     LEFT JOIN b11_1_werkzuordnung_1 b ON a.werkzuordnung_1_id = b.id
-     LEFT JOIN b11_1_bewertungsklasse f ON a.bewertungsklasse_id = f.id
+   FROM symm_material a
+     LEFT JOIN symm_werkzuordnung_1 b ON a.werkzuordnung_1_id = b.id
+     LEFT JOIN symm_bewertungsklasse f ON a.bewertungsklasse_id = f.id
   WHERE a.is_transferred = true
   ORDER BY a.positions_nr, b.text;
 CREATE OR REPLACE VIEW mlan_steuer
  AS
- SELECT b11_1_material.id AS tmp_id,
-    b11_1_material.positions_nr AS source_id,
+ SELECT symm_material.id AS tmp_id,
+    symm_material.positions_nr AS source_id,
     'CH'::text AS aland
-   FROM b11_1_material
-  WHERE b11_1_material.is_transferred = true
-  ORDER BY b11_1_material.positions_nr;
+   FROM symm_material
+  WHERE symm_material.is_transferred = true
+  ORDER BY symm_material.positions_nr;
 CREATE OR REPLACE VIEW mvke_verkaufsdaten
  AS
  SELECT a.id AS tmp_id,
@@ -434,7 +434,7 @@ CREATE OR REPLACE VIEW mvke_verkaufsdaten
     a.verkaufsorg as vkorg,
     a.vertriebsweg AS vtweg,
     c.text AS mtpos
-   FROM b11_1_material a
-     LEFT JOIN b11_1_allgemeinepositionstypengruppe c ON c.id = a.allgemeine_positionstypengruppe_id
+   FROM symm_material a
+     LEFT JOIN symm_allgemeinepositionstypengruppe c ON c.id = a.allgemeine_positionstypengruppe_id
   WHERE a.is_transferred = true
   ORDER BY a.positions_nr;

@@ -1,1 +1,1 @@
-insert into "b11_1_gefahrgutkennzeichen" (idx, text, explanation) values (1, 'V01', 'Gefahrstoff'),(2, 'V02', 'Gefahrgut'),(3, 'V03', 'Radioaktiv');
+insert into "symm_gefahrgutkennzeichen" (idx, text, explanation) values (1, 'V01', 'Gefahrstoff'),(2, 'V02', 'Gefahrgut'),(3, 'V03', 'Radioaktiv');
