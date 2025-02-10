@@ -121,16 +121,18 @@
                     <h6>Vorhandene Anlagen</h6>
                     {% for attachment in object.attachments.all %}
                         <div class="existing-attachment-row mb-2">
-                            <div class="row">
+                        <div class="row">
                                 <div class="col-5">
                                     <a href="{{ attachment.file.url }}" target="_blank">{{ attachment.file.name|basename }}</a>
                                 </div>
-                                <div class="col-6">
+                                <div class="col-5">  <!-- Changed from col-6 to col-4 -->
                                     {{ attachment.comment }}
                                 </div>
-                                <div class="col-1">
-                                    <input type="checkbox" name="delete_attachments[]" value="{{ attachment.id }}">
-                                    <label>Löschen</label>
+                                <div class="col-2">  <!-- Changed from col-1 to col-3 -->
+                                    <div class="form-check d-flex align-items-center">
+                                        <input type="checkbox" name="delete_attachments[]" value="{{ attachment.id }}" class="form-check-input me-2">
+                                        <label class="form-check-label">Löschen</label>
+                                    </div>
                                 </div>
                             </div>
                         </div>
