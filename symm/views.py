@@ -318,11 +318,16 @@ class UpdateMaterial_IL_View(FormValidMixin_IL, GroupRequiredMixin, SuccessMessa
         # Handle deletion of existing attachments
         attachments_to_delete = self.request.POST.getlist('delete_attachments[]')
         if attachments_to_delete:
-            MaterialAttachment.objects.filter(
+            # Get the attachments to delete
+            attachments = MaterialAttachment.objects.filter(
                 id__in=attachments_to_delete,
                 material=self.object
-            ).delete()
+            )
             
+            # Delete each attachment (this will trigger the delete() method we defined)
+            for attachment in attachments:
+                attachment.delete()
+
         # Handle new file attachments
         files = self.request.FILES.getlist('attachment_files[]')
         comments = self.request.POST.getlist('attachment_comments[]')
@@ -453,11 +458,16 @@ class UpdateMaterial_GD_View(ComputedContextMixin, FormValidMixin_GD, GroupRequi
         # Handle deletion of existing attachments
         attachments_to_delete = self.request.POST.getlist('delete_attachments[]')
         if attachments_to_delete:
-            MaterialAttachment.objects.filter(
+            # Get the attachments to delete
+            attachments = MaterialAttachment.objects.filter(
                 id__in=attachments_to_delete,
                 material=self.object
-            ).delete()
+            )
             
+            # Delete each attachment (this will trigger the delete() method we defined)
+            for attachment in attachments:
+                attachment.delete()
+
         # Handle new file attachments
         files = self.request.FILES.getlist('attachment_files[]')
         comments = self.request.POST.getlist('attachment_comments[]')
@@ -584,11 +594,16 @@ class UpdateMaterial_SMDA_View(ComputedContextMixin, FormValidMixin_SMDA, GroupR
         # Handle deletion of existing attachments
         attachments_to_delete = self.request.POST.getlist('delete_attachments[]')
         if attachments_to_delete:
-            MaterialAttachment.objects.filter(
+            # Get the attachments to delete
+            attachments = MaterialAttachment.objects.filter(
                 id__in=attachments_to_delete,
                 material=self.object
-            ).delete()
+            )
             
+            # Delete each attachment (this will trigger the delete() method we defined)
+            for attachment in attachments:
+                attachment.delete()
+
         # Handle new file attachments
         files = self.request.FILES.getlist('attachment_files[]')
         comments = self.request.POST.getlist('attachment_comments[]')

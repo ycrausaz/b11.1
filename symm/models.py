@@ -262,9 +262,15 @@ class Material(models.Model):
         ordering = ["positions_nr"]
         app_label = 'symm'
 
+def material_attachment_path(instance, filename):
+    """
+    Files will be uploaded to MEDIA_ROOT/material_attachments/material_id/filename
+    """
+    return f'material_attachments/{instance.material.id}/{filename}'
+
 class MaterialAttachment(models.Model):
     material = models.ForeignKey(Material, on_delete=models.CASCADE, related_name='attachments')
-    file = models.FileField(upload_to='material_attachments/%Y/%m/%d/')
+    file = models.FileField(upload_to=material_attachment_path)
     comment = models.TextField(blank=True)
     uploaded_at = models.DateTimeField(auto_now_add=True)
     uploaded_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
@@ -275,3 +281,13 @@ class MaterialAttachment(models.Model):
 
     def __str__(self):
         return f"Attachment for {self.material} - {self.file.name}"
+
+    def delete(self, *args, **kwargs):
+        # Delete the file from storage
+        if self.file:
+            storage = self.file.storage
+            if storage.exists(self.file.name):
+                storage.delete(self.file.name)
+
+        # Delete the model instance
+        super().delete(*args, **kwargs)

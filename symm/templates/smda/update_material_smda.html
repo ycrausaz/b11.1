@@ -170,60 +170,58 @@
 
 <script>
 $(document).ready(function() {
-    // Original Auspraegung functionality
-    let originalOptions = [];
-
-    function updateAuspraegungOptions() {
+    setTimeout(() => {
+        let originalOptions = [];
         const zuteilungSelect = document.getElementById('id_zuteilung');
         const auspraegungSelect = document.getElementById('id_auspraegung');
 
-        const currentAuspraegung = auspraegungSelect.value;
+        if (zuteilungSelect && auspraegungSelect && auspraegungSelect.options) {
+            originalOptions = Array.from(auspraegungSelect.options)
+                .filter(option => option.value !== '')
+                .map(option => ({
+                    text: option.text,
+                    value: option.value
+                }));
 
-        while (auspraegungSelect.options.length > 1) {
-            auspraegungSelect.remove(1);
-        }
+            function updateAuspraegungOptions() {
+                if (!auspraegungSelect?.options) return;
 
-        const selectedOption = zuteilungSelect.selectedOptions[0];
-        if (!selectedOption) return;
+                const currentAuspraegung = auspraegungSelect.value;
 
-        const zuteilungValue = selectedOption.text.trim();
-        let allowedValues = [];
+                while (auspraegungSelect.options?.length > 1) {
+                    auspraegungSelect.remove(1);
+                }
 
-        if (zuteilungValue === 'BM' || zuteilungValue === 'TRP') {
-            allowedValues = ['01', '02', '03', '04'];
-        } else if (zuteilungValue === 'MKZ' || zuteilungValue === 'PRD') {
-            allowedValues = ['01', '02', '03'];
-        }
+                const selectedOption = zuteilungSelect?.selectedOptions?.[0];
+                if (!selectedOption) return;
 
-        originalOptions.forEach(option => {
-            if (allowedValues.includes(option.text.trim())) {
-                const newOption = new Option(option.text, option.value);
-                auspraegungSelect.add(newOption);
+                const zuteilungValue = selectedOption.text.trim();
+                let allowedValues = [];
+
+                if (zuteilungValue === 'BM' || zuteilungValue === 'TRP') {
+                    allowedValues = ['01', '02', '03', '04'];
+                } else if (zuteilungValue === 'MKZ' || zuteilungValue === 'PRD') {
+                    allowedValues = ['01', '02', '03'];
+                }
+
+                originalOptions.forEach(option => {
+                    if (allowedValues.includes(option.text.trim())) {
+                        const newOption = new Option(option.text, option.value);
+                        auspraegungSelect.add(newOption);
+                    }
+                });
+
+                if (currentAuspraegung && Array.from(auspraegungSelect.options).some(opt => opt.value === currentAuspraegung)) {
+                    auspraegungSelect.value = currentAuspraegung;
+                } else {
+                    auspraegungSelect.value = '';
+                }
             }
-        });
 
-        if (currentAuspraegung && Array.from(auspraegungSelect.options).some(opt => opt.value === currentAuspraegung)) {
-            auspraegungSelect.value = currentAuspraegung;
-        } else {
-            auspraegungSelect.value = '';
+            zuteilungSelect.addEventListener('change', updateAuspraegungOptions);
+            updateAuspraegungOptions();
         }
-    }
-
-    // Initialize Auspraegung functionality
-    const zuteilungSelect = document.getElementById('id_zuteilung');
-    const auspraegungSelect = document.getElementById('id_auspraegung');
-
-    if (zuteilungSelect && auspraegungSelect) {
-        originalOptions = Array.from(auspraegungSelect.options)
-            .filter(option => option.value !== '')
-            .map(option => ({
-                text: option.text,
-                value: option.value
-            }));
-
-        zuteilungSelect.addEventListener('change', updateAuspraegungOptions);
-        updateAuspraegungOptions();
-    }
+    }, 100);
 
     // Attachment functionality
     $('#add-attachment').click(function() {
