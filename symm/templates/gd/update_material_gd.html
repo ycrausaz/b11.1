@@ -107,57 +107,59 @@
 
     <br/>
 
-                <!-- Attachments Section -->
-                <div class="card mt-4">
-                    <div class="card-header">
-                        <h5>Anlagen</h5>
-                    </div>
-                    <div class="card-body">
-                        <!-- Existing Attachments -->
-                        {% if object.attachments.all %}
-                            <div class="mb-4">
-                                <h6>Vorhandene Anlagen</h6>
-                                {% for attachment in object.attachments.all %}
-                                    <div class="existing-attachment-row mb-2">
-                                        <div class="row">
-                                            <div class="col-5">
-                                                <a href="{{ attachment.file.url }}" target="_blank">{{ attachment.file.name }}</a>
-                                            </div>
-                                            <div class="col-6">
-                                                {{ attachment.comment }}
-                                            </div>
-                                            <div class="col-1">
-                                                <input type="checkbox" name="delete_attachments[]" value="{{ attachment.id }}">
-                                                <label>Löschen</label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                {% endfor %}
-                            </div>
-                        {% endif %}
-
-                        <!-- New Attachments -->
-                        <div id="attachments-container">
-                            <h6>Neue Anlagen</h6>
-                            <div class="attachment-row mb-2">
-                                <div class="row">
-                                    <div class="col-5">
-                                        <input type="file" name="attachment_files[]" class="form-control">
-                                    </div>
-                                    <div class="col-6">
-                                        <input type="text" name="attachment_comments[]" class="form-control" placeholder="Kommentar">
-                                    </div>
-                                    <div class="col-1">
-                                        <button type="button" class="btn btn-danger remove-attachment">×</button>
-                                    </div>
+<!-- Attachment section -->
+<div style="width: 80%;">  <!-- Match table-container width -->
+    <div class="card">
+        <div class="card-header">
+            <h5>Anlagen</h5>
+        </div>
+        <div class="card-body">
+            <!-- Existing Attachments -->
+            {% if object.attachments.all %}
+                <div class="mb-4">
+                    <h6>Vorhandene Anlagen</h6>
+                    {% for attachment in object.attachments.all %}
+                        <div class="existing-attachment-row mb-2">
+                            <div class="row">
+                                <div class="col-5">
+                                    <a href="{{ attachment.file.url }}" target="_blank">{{ attachment.file.name }}</a>
+                                </div>
+                                <div class="col-6">
+                                    {{ attachment.comment }}
+                                </div>
+                                <div class="col-1">
+                                    <input type="checkbox" name="delete_attachments[]" value="{{ attachment.id }}">
+                                    <label>Löschen</label>
                                 </div>
                             </div>
                         </div>
-                        <button type="button" class="btn btn-secondary btn-sm mt-2" id="add-attachment">
-                            Weitere Anlage hinzufügen
-                        </button>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <!-- New Attachments -->
+            <div id="attachments-container">
+                <h6>Neue Anlagen</h6>
+                <div class="attachment-row mb-2">
+                    <div class="row">
+                        <div class="col-5">
+                            <input type="file" name="attachment_files[]" class="form-control">
+                        </div>
+                        <div class="col-6">
+                            <input type="text" name="attachment_comments[]" class="form-control" placeholder="Kommentar">
+                        </div>
+                        <div class="col-1">
+                            <button type="button" class="btn btn-danger remove-attachment">×</button>
+                        </div>
                     </div>
                 </div>
+            </div>
+            <button type="button" class="btn btn-secondary btn-sm mt-2" id="add-attachment">
+                Weitere Anlage hinzufügen
+            </button>
+        </div>
+    </div>
+</div>
 
     </br>
 
