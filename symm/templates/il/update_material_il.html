@@ -7,68 +7,138 @@
     <h1>{% trans "Material aktualisieren" %}</h1>
     <br/>
 
-      {% if form.non_field_errors %}
+    {% if form.non_field_errors %}
         {% for nfe in form.non_field_errors %}
             <div class="alert alert-error" role="alert">
                 {{ nfe }}
             </div>
         {% endfor %}
-      {% endif %}
+    {% endif %}
 
-<form method="post">
-    {% csrf_token %}
-    <table>
-        {% for field in form %}
-            {% if not field.is_hidden %}
-                <tr>
-                    <td>
-                        {% with label_with_tooltip=field|add_tooltip %}
-                            {{ label_with_tooltip|safe }}:
-                            {% if field.field.required %}
-                                <span class="required">*</span>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <table>
+            {% for field in form %}
+                {% if not field.is_hidden %}
+                    <tr>
+                        <td>
+                            {% with label_with_tooltip=field|add_tooltip %}
+                                {{ label_with_tooltip|safe }}:
+                                {% if field.field.required %}
+                                    <span class="required">*</span>
+                                {% endif %}
+                            {% endwith %}
+                        </td>
+                        <td>
+                            {{ field }}
+                            {% if field.errors %}
+                                <div class="error">
+                                    {% for error in field.errors %}
+                                        <p>{{ error }}</p>
+                                    {% endfor %}
+                                </div>
                             {% endif %}
-                        {% endwith %}
-                    </td>
-                    <td>
-                        {{ field }}
-                        {% if field.errors %}
-                            <div class="error">
-                                {% for error in field.errors %}
-                                    <p>{{ error }}</p>
-                                {% endfor %}
+                        </td>
+                    </tr>
+                {% else %}
+                    {{ field }}
+                {% endif %}
+            {% endfor %}
+
+            <tr><td colspan="2"><hr></td></tr>
+
+            <tr><td colspan="2"><strong>{% trans "Berechnete Felder" %}</strong></td></tr>
+            {% for field in form.get_computed_fields %}
+                {% if not field.is_hidden %}
+                    <tr>
+                        <td>
+                            <label for="{{ field.id_for_label }}">
+                                {{ field.label }}:
+                            </label>
+                        </td>
+                        <td>
+                            {{ field }}
+                        </td>
+                    </tr>
+                {% endif %}
+            {% endfor %}
+        </table>
+
+        <!-- Existing Attachments Section -->
+        {% if object.attachments.all %}
+            <div class="card mt-4 mb-4">
+                <div class="card-header">
+                    <h5>{% trans "Existing Attachments" %}</h5>
+                </div>
+                <div class="card-body">
+                    {% for attachment in object.attachments.all %}
+                        <div class="existing-attachment-row mb-3">
+                            <div class="row">
+                                <div class="col-5">
+                                    <a href="{{ attachment.file.url }}" target="_blank">{{ attachment.file.name }}</a>
+                                </div>
+                                <div class="col-6">
+                                    {{ attachment.comment }}
+                                </div>
+                                <div class="col-1">
+                                    <input type="checkbox" name="delete_attachments[]" value="{{ attachment.id }}">
+                                    <label>{% trans "Delete" %}</label>
+                                </div>
                             </div>
-                        {% endif %}
-                    </td>
-                </tr>
-            {% else %}
-                {{ field }}  <!-- Render hidden fields outside of the table -->
-            {% endif %}
-        {% endfor %}
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endif %}
 
-                <tr><td colspan="2"><hr></td></tr>
+        <!-- New Attachments Section -->
+        <div class="card mt-4 mb-4">
+            <div class="card-header">
+                <h5>{% trans "New Attachments" %}</h5>
+            </div>
+            <div class="card-body">
+                <div id="attachments-container">
+                    <div class="attachment-row mb-3">
+                        <div class="row">
+                            <div class="col-5">
+                                <input type="file" name="attachment_files[]" class="form-control">
+                            </div>
+                            <div class="col-6">
+                                <input type="text" name="attachment_comments[]" class="form-control" placeholder="{% trans 'Comment' %}">
+                            </div>
+                            <div class="col-1">
+                                <button type="button" class="btn btn-danger remove-attachment">×</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <button type="button" class="btn btn-secondary" id="add-attachment">
+                    {% trans "Add Another Attachment" %}
+                </button>
+            </div>
+        </div>
 
-                <tr><td colspan="2"><strong>{% trans "Berechnete Felder" %}</strong></td></tr>
-                {% for field in form.get_computed_fields %}
-                    {% if not field.is_hidden %}
-                        <tr>
-                            <td>
-                                <label for="{{ field.id_for_label }}">
-                                    {{ field.label }}:
-                                </label>
-                            </td>
-                            <td>
-                                {{ field }}
-                            </td>
-                        </tr>
-                    {% endif %}
-                {% endfor %}
-    </table>
-    <br/>
-    
-    <input type="submit" value={% trans "Änderungen speichern" %} class="btn btn-primary">
-    <button type="submit" name="cancel" class="btn btn-secondary">{% trans "Zurück ohne Speichern" %}</button>
-</form>
+        <input type="submit" value="{% trans "Änderungen speichern" %}" class="btn btn-primary">
+        <button type="submit" name="cancel" class="btn btn-secondary">{% trans "Zurück ohne Speichern" %}</button>
+    </form>
 
-<br/>
+    <script>
+        $(document).ready(function() {
+            // Handle attachment functionality
+            $('#add-attachment').click(function() {
+                const newRow = $('.attachment-row:first').clone();
+                newRow.find('input').val('');
+                $('#attachments-container').append(newRow);
+            });
+
+            $(document).on('click', '.remove-attachment', function() {
+                if ($('.attachment-row').length > 1) {
+                    $(this).closest('.attachment-row').remove();
+                } else {
+                    $('.attachment-row:first').find('input').val('');
+                }
+            });
+        });
+    </script>
    
 {% endblock %}

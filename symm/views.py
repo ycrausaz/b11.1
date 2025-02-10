@@ -5,7 +5,7 @@ from django.views.generic import ListView, DetailView
 from django.views.generic.base import View
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from .models import Material, Zuteilung, Auspraegung, G_Partner
+from .models import Material, Zuteilung, Auspraegung, G_Partner, MaterialAttachment
 from .forms_il import MaterialForm_IL
 from .forms_gd import MaterialForm_GD
 from .forms_smda import MaterialForm_SMDA
@@ -247,6 +247,7 @@ class ListMaterial_IL_View(GroupRequiredMixin, ListView):
 
         return redirect(reverse('list_material_il'))
 
+# In views.py
 class AddMaterial_IL_View(FormValidMixin_IL, GroupRequiredMixin, SuccessMessageMixin, CreateView):
     model = Material
     template_name = 'il/add_material_il.html'
@@ -261,7 +262,31 @@ class AddMaterial_IL_View(FormValidMixin_IL, GroupRequiredMixin, SuccessMessageM
             self.object = self.get_object()
             logger.info(f"Bearbeitung von Material '{self.object.kurztext_de}' durch '{request.user.username}' abgebrochen.")
             return redirect('list_material_il')
-        return super().post(request, *args, **kwargs)
+
+        form = self.get_form()
+        if form.is_valid():
+            return self.form_valid(form)
+        return self.form_invalid(form)
+
+    def form_valid(self, form):
+        # Save the material instance
+        self.object = form.save()
+        
+        # Handle file attachments
+        files = self.request.FILES.getlist('attachment_files[]')
+        comments = self.request.POST.getlist('attachment_comments[]')
+        
+        # Create MaterialAttachment instances for each file
+        for file, comment in zip(files, comments):
+            if file:  # Only create if a file was actually uploaded
+                MaterialAttachment.objects.create(
+                    material=self.object,
+                    file=file,
+                    comment=comment,
+                    uploaded_by=self.request.user
+                )
+        
+        return super().form_valid(form)
 
 class UpdateMaterial_IL_View(FormValidMixin_IL, GroupRequiredMixin, SuccessMessageMixin, UpdateView):
     model = Material
@@ -277,7 +302,45 @@ class UpdateMaterial_IL_View(FormValidMixin_IL, GroupRequiredMixin, SuccessMessa
             self.object = self.get_object()
             logger.info(f"Bearbeitung von Material '{self.object.kurztext_de}' durch '{request.user.username}' abgebrochen.")
             return redirect('list_material_il')
-        return super().post(request, *args, **kwargs)
+
+        # Get the existing object
+        self.object = self.get_object()
+        form = self.get_form()
+        
+        if form.is_valid():
+            return self.form_valid(form)
+        return self.form_invalid(form)
+
+    def form_valid(self, form):
+        # Save the material instance
+        self.object = form.save()
+        
+        # Handle deletion of existing attachments
+        attachments_to_delete = self.request.POST.getlist('delete_attachments[]')
+        if attachments_to_delete:
+            MaterialAttachment.objects.filter(
+                id__in=attachments_to_delete,
+                material=self.object
+            ).delete()
+            
+        # Handle new file attachments
+        files = self.request.FILES.getlist('attachment_files[]')
+        comments = self.request.POST.getlist('attachment_comments[]')
+        
+        # Create MaterialAttachment instances for each new file
+        for file, comment in zip(files, comments):
+            if file:  # Only create if a file was actually uploaded
+                MaterialAttachment.objects.create(
+                    material=self.object,
+                    file=file,
+                    comment=comment,
+                    uploaded_by=self.request.user
+                )
+        
+        # Log the update action
+        logger.info(f"Material '{self.object.kurztext_de}' wurde durch '{self.request.user.username}' aktualisiert.")
+        
+        return super().form_valid(form)
 
 class ShowMaterial_IL_View(GroupRequiredMixin, SuccessMessageMixin, DetailView):
     model = Material
@@ -383,7 +446,45 @@ class UpdateMaterial_GD_View(ComputedContextMixin, FormValidMixin_GD, GroupRequi
             self.object = self.get_object()
             logger.info(f"Bearbeitung von Material '{self.object.kurztext_de}' durch '{request.user.username}' abgebrochen.")
             return redirect('list_material_gd')
-        return super().post(request, *args, **kwargs)
+
+        # Get the existing object
+        self.object = self.get_object()
+        form = self.get_form()
+        
+        if form.is_valid():
+            return self.form_valid(form)
+        return self.form_invalid(form)
+
+    def form_valid(self, form):
+        # Save the material instance
+        self.object = form.save()
+        
+        # Handle deletion of existing attachments
+        attachments_to_delete = self.request.POST.getlist('delete_attachments[]')
+        if attachments_to_delete:
+            MaterialAttachment.objects.filter(
+                id__in=attachments_to_delete,
+                material=self.object
+            ).delete()
+            
+        # Handle new file attachments
+        files = self.request.FILES.getlist('attachment_files[]')
+        comments = self.request.POST.getlist('attachment_comments[]')
+        
+        # Create MaterialAttachment instances for each new file
+        for file, comment in zip(files, comments):
+            if file:  # Only create if a file was actually uploaded
+                MaterialAttachment.objects.create(
+                    material=self.object,
+                    file=file,
+                    comment=comment,
+                    uploaded_by=self.request.user
+                )
+        
+        # Log the update action
+        logger.info(f"Material '{self.object.kurztext_de}' wurde durch '{self.request.user.username}' aktualisiert.")
+        
+        return super().form_valid(form)
 
 class ShowMaterial_GD_View(ComputedContextMixin, GroupRequiredMixin, SuccessMessageMixin, DetailView):
     model = Material
@@ -490,7 +591,45 @@ class UpdateMaterial_SMDA_View(ComputedContextMixin, FormValidMixin_SMDA, GroupR
             self.object = self.get_object()
             logger.info(f"Bearbeitung von Material '{self.object.kurztext_de}' durch '{request.user.username}' abgebrochen.")
             return redirect('list_material_smda')
-        return super().post(request, *args, **kwargs)
+
+        # Get the existing object
+        self.object = self.get_object()
+        form = self.get_form()
+        
+        if form.is_valid():
+            return self.form_valid(form)
+        return self.form_invalid(form)
+
+    def form_valid(self, form):
+        # Save the material instance
+        self.object = form.save()
+        
+        # Handle deletion of existing attachments
+        attachments_to_delete = self.request.POST.getlist('delete_attachments[]')
+        if attachments_to_delete:
+            MaterialAttachment.objects.filter(
+                id__in=attachments_to_delete,
+                material=self.object
+            ).delete()
+            
+        # Handle new file attachments
+        files = self.request.FILES.getlist('attachment_files[]')
+        comments = self.request.POST.getlist('attachment_comments[]')
+        
+        # Create MaterialAttachment instances for each new file
+        for file, comment in zip(files, comments):
+            if file:  # Only create if a file was actually uploaded
+                MaterialAttachment.objects.create(
+                    material=self.object,
+                    file=file,
+                    comment=comment,
+                    uploaded_by=self.request.user
+                )
+        
+        # Log the update action
+        logger.info(f"Material '{self.object.kurztext_de}' wurde durch '{self.request.user.username}' aktualisiert.")
+        
+        return super().form_valid(form)
 
 class ShowMaterial_SMDA_View(ComputedContextMixin, GroupRequiredMixin, SuccessMessageMixin, DetailView):
     model = Material

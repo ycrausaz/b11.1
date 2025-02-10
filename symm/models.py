@@ -262,3 +262,16 @@ class Material(models.Model):
         ordering = ["positions_nr"]
         app_label = 'symm'
 
+class MaterialAttachment(models.Model):
+    material = models.ForeignKey(Material, on_delete=models.CASCADE, related_name='attachments')
+    file = models.FileField(upload_to='material_attachments/%Y/%m/%d/')
+    comment = models.TextField(blank=True)
+    uploaded_at = models.DateTimeField(auto_now_add=True)
+    uploaded_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+
+    class Meta:
+        app_label = 'symm'
+        ordering = ['-uploaded_at']
+
+    def __str__(self):
+        return f"Attachment for {self.material} - {self.file.name}"

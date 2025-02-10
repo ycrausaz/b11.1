@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-04 19:18+0100\n"
+"POT-Creation-Date: 2025-02-10 13:27+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -30,400 +30,407 @@ msgstr ""
 msgid "English"
 msgstr ""
 
-#: b11_1/models.py:8 symm/models.py:8
+#: symm/models.py:8
 msgid "ID"
 msgstr ""
 
-#: b11_1/models.py:164 symm/models.py:164
+#: symm/models.py:164
 msgid "Transfer Comment"
 msgstr ""
 
-#: b11_1/models.py:165 symm/models.py:165
+#: symm/models.py:165
 msgid "Positions-Nr."
 msgstr ""
 
-#: b11_1/models.py:166 symm/models.py:166
+#: symm/models.py:166
 msgid "Kurztext DE"
 msgstr ""
 
-#: b11_1/models.py:167 symm/models.py:167
+#: symm/models.py:167
 msgid "Kurztext FR"
 msgstr ""
 
-#: b11_1/models.py:168 symm/models.py:168
+#: symm/models.py:168
 msgid "Kurztext EN"
 msgstr ""
 
-#: b11_1/models.py:169 symm/models.py:169
+#: symm/models.py:169
 msgid "Grunddatentext DE - 1. Zeile"
 msgstr ""
 
-#: b11_1/models.py:170 symm/models.py:170
+#: symm/models.py:170
 msgid "Grunddatentext DE - 2. Zeile"
 msgstr ""
 
-#: b11_1/models.py:171 symm/models.py:171
+#: symm/models.py:171
 msgid "Grunddatentext FR - 1. Zeile"
 msgstr ""
 
-#: b11_1/models.py:172 symm/models.py:172
+#: symm/models.py:172
 msgid "Grunddatentext FR - 2. Zeile"
 msgstr ""
 
-#: b11_1/models.py:173 symm/models.py:173
+#: symm/models.py:173
 msgid "Grunddatentext EN - 1. Zeile"
 msgstr ""
 
-#: b11_1/models.py:174 symm/models.py:174
+#: symm/models.py:174
 msgid "Grunddatentext EN - 2. Zeile"
 msgstr ""
 
-#: b11_1/models.py:175 symm/models.py:175
+#: symm/models.py:175
 msgid "Basismengeneinheit"
 msgstr ""
 
-#: b11_1/models.py:176 symm/models.py:176
+#: symm/models.py:176
 msgid "Bruttogewicht"
 msgstr ""
 
-#: b11_1/models.py:177 symm/models.py:177
+#: symm/models.py:177
 msgid "Gewichtseinheit"
 msgstr ""
 
-#: b11_1/models.py:178 symm/models.py:178
+#: symm/models.py:178
 msgid "Nettogewicht"
 msgstr ""
 
-#: b11_1/models.py:179 symm/models.py:179
+#: symm/models.py:179
 msgid "Grösse / Abmessung"
 msgstr ""
 
-#: b11_1/models.py:180 symm/models.py:180
+#: symm/models.py:180
 msgid "EAN / UPC Code"
 msgstr ""
 
-#: b11_1/models.py:181 symm/models.py:181
+#: symm/models.py:181
 msgid "Nato Stock Number"
 msgstr ""
 
-#: b11_1/models.py:182 symm/models.py:182
+#: symm/models.py:182
 msgid "NSN Gruppe / Klasse"
 msgstr ""
 
-#: b11_1/models.py:183 symm/models.py:183
+#: symm/models.py:183
 msgid "Nato Versorgungs-Nr."
 msgstr ""
 
-#: b11_1/models.py:184 symm/models.py:184
+#: symm/models.py:184
 msgid "Herstellerteilenummer"
 msgstr ""
 
-#: b11_1/models.py:185 symm/models.py:185
+#: symm/models.py:185
 msgid "Normbezeichnung"
 msgstr ""
 
-#: b11_1/models.py:186 symm/models.py:186
+#: symm/models.py:186
 msgid "Gefahrgutkennzeichen"
 msgstr ""
 
-#: b11_1/models.py:187 symm/models.py:187
+#: symm/models.py:187
 msgid "Instandsetzbar"
 msgstr ""
 
-#: b11_1/models.py:188 symm/models.py:188
+#: symm/models.py:188
 msgid "Chargenpflicht"
 msgstr ""
 
-#: b11_1/models.py:189 symm/models.py:189
+#: symm/models.py:189
 msgid "Bestellmengeneinheit"
 msgstr ""
 
-#: b11_1/models.py:190 symm/models.py:190
+#: symm/models.py:190
 msgid "Mindestbestellmenge"
 msgstr ""
 
-#: b11_1/models.py:191 symm/models.py:191
+#: symm/models.py:191
 msgid "Lieferzeit"
 msgstr ""
 
-#: b11_1/models.py:192 symm/models.py:192
+#: symm/models.py:192
 msgid "Einheit L / B / H"
 msgstr ""
 
-#: b11_1/models.py:193 symm/models.py:193
+#: symm/models.py:193
 msgid "Länge"
 msgstr ""
 
-#: b11_1/models.py:194 symm/models.py:194
+#: symm/models.py:194
 msgid "Breite"
 msgstr ""
 
-#: b11_1/models.py:195 symm/models.py:195
+#: symm/models.py:195
 msgid "Höhe"
 msgstr ""
 
-#: b11_1/models.py:196 symm/models.py:196
+#: symm/models.py:196
 msgid "Preis"
 msgstr ""
 
-#: b11_1/models.py:197 symm/models.py:197
+#: symm/models.py:197
 msgid "Währung"
 msgstr ""
 
-#: b11_1/models.py:198 symm/models.py:198
+#: symm/models.py:198
 msgid "Preiseinheit"
 msgstr ""
 
-#: b11_1/models.py:199 symm/models.py:199
+#: symm/models.py:199
 msgid "Lagerfähigkeit"
 msgstr ""
 
-#: b11_1/models.py:200 symm/models.py:200
+#: symm/models.py:200
 msgid "Exportkontrollauflage"
 msgstr ""
 
-#: b11_1/models.py:201 symm/models.py:201
+#: symm/models.py:201
 msgid "CAGE Code"
 msgstr ""
 
-#: b11_1/models.py:202 symm/models.py:202
+#: symm/models.py:202
 msgid "Hersteller Name"
 msgstr ""
 
-#: b11_1/models.py:203 symm/models.py:203
+#: symm/models.py:203
 msgid "Hersteller Adresse"
 msgstr ""
 
-#: b11_1/models.py:204 symm/models.py:204
+#: symm/models.py:204
 msgid "Hersteller PLZ "
 msgstr ""
 
-#: b11_1/models.py:205 symm/models.py:205
+#: symm/models.py:205
 msgid "Hersteller Ort"
 msgstr ""
 
-#: b11_1/models.py:206 symm/models.py:206
+#: symm/models.py:206
 msgid "Revision"
 msgstr ""
 
-#: b11_1/models.py:207 symm/models.py:207
+#: symm/models.py:207
 msgid "Bemerkung"
 msgstr ""
 
-#: b11_1/models.py:208 symm/models.py:208
+#: symm/models.py:208
 msgid "BEGRU"
 msgstr ""
 
-#: b11_1/models.py:209 symm/models.py:209
+#: symm/models.py:209
 msgid "Materialart"
 msgstr ""
 
-#: b11_1/models.py:210 symm/models.py:210
+#: symm/models.py:210
 msgid "Sparte"
 msgstr ""
 
-#: b11_1/models.py:211 symm/models.py:211
+#: symm/models.py:211
 msgid "Produkthierarchie"
 msgstr ""
 
-#: b11_1/models.py:212 symm/models.py:212
+#: symm/models.py:212
 msgid "Materialzustandsverwaltung"
 msgstr ""
 
-#: b11_1/models.py:213 symm/models.py:213
+#: symm/models.py:213
 msgid "Rückführungscode"
 msgstr ""
 
-#: b11_1/models.py:214 symm/models.py:214
+#: symm/models.py:214
 msgid "Serialnummerprofil"
 msgstr ""
 
-#: b11_1/models.py:215 symm/models.py:215
+#: symm/models.py:215
 msgid "Spare Part Class Code"
 msgstr ""
 
-#: b11_1/models.py:216 symm/models.py:216
+#: symm/models.py:216
 msgid "Geschäftspartner"
 msgstr ""
 
-#: b11_1/models.py:217 symm/models.py:217
+#: symm/models.py:217
 msgid "Warengruppe"
 msgstr ""
 
-#: b11_1/models.py:218 symm/models.py:218
+#: symm/models.py:218
 msgid "Übersetzungsstatus"
 msgstr ""
 
-#: b11_1/models.py:219 symm/models.py:219
+#: symm/models.py:219
 msgid "Endbevorratet"
 msgstr ""
 
-#: b11_1/models.py:220 symm/models.py:220
+#: symm/models.py:220
 msgid "Revision Fremd"
 msgstr ""
 
-#: b11_1/models.py:221 symm/models.py:221
+#: symm/models.py:221
 msgid "Revision Eigen"
 msgstr ""
 
-#: b11_1/models.py:222 symm/models.py:222
+#: symm/models.py:222
 msgid "Zertifiziert für Flug"
 msgstr ""
 
-#: b11_1/models.py:223 symm/models.py:223
+#: symm/models.py:223
 msgid "A-Nummer"
 msgstr ""
 
-#: b11_1/models.py:224 symm/models.py:224
+#: symm/models.py:224
 msgid "Verteilung an PSD"
 msgstr ""
 
-#: b11_1/models.py:225 symm/models.py:225
+#: symm/models.py:225
 msgid "Verteilung an RUAG"
 msgstr ""
 
-#: b11_1/models.py:226 symm/models.py:226
+#: symm/models.py:226
 msgid "Werkzuordnung"
 msgstr ""
 
-#: b11_1/models.py:227 symm/models.py:227
+#: symm/models.py:227
 msgid "Werkzuordnung (2)"
 msgstr ""
 
-#: b11_1/models.py:228 symm/models.py:228
+#: symm/models.py:228
 msgid "Werkzuordnung (3)"
 msgstr ""
 
-#: b11_1/models.py:229 symm/models.py:229
+#: symm/models.py:229
 msgid "Werkzuordnung (4)"
 msgstr ""
 
-#: b11_1/models.py:230 symm/models.py:230
+#: symm/models.py:230
 msgid "Allgemeine Positionstypengruppe"
 msgstr ""
 
-#: b11_1/models.py:231 symm/models.py:231
+#: symm/models.py:231
 msgid "Verkaufsorg."
 msgstr ""
 
-#: b11_1/models.py:232 symm/models.py:232
+#: symm/models.py:232
 msgid "Vertriebsweg"
 msgstr ""
 
-#: b11_1/models.py:233 symm/models.py:233
+#: symm/models.py:233
 msgid "Führendes Material"
 msgstr ""
 
-#: b11_1/models.py:234 symm/models.py:234
+#: symm/models.py:234
 msgid "Auszeichnungsfeld"
 msgstr ""
 
-#: b11_1/models.py:235 symm/models.py:235
+#: symm/models.py:235
 msgid "Fertigungssteuerer"
 msgstr ""
 
-#: b11_1/models.py:236 symm/models.py:236
+#: symm/models.py:236
 msgid "Kennzeichen komplexes System"
 msgstr ""
 
-#: b11_1/models.py:237 symm/models.py:237
+#: symm/models.py:237
 msgid "Sonderablauf"
 msgstr ""
 
-#: b11_1/models.py:238 symm/models.py:238
+#: symm/models.py:238
 msgid "Temperaturbedingung"
 msgstr ""
 
-#: b11_1/models.py:239 symm/models.py:239
+#: symm/models.py:239
 msgid "Bewertungsklasse"
 msgstr ""
 
-#: b11_1/models.py:240 symm/models.py:240
+#: symm/models.py:240
 msgid "Systemmanager"
 msgstr ""
 
-#: b11_1/models.py:241 symm/models.py:241
+#: symm/models.py:241
 msgid "Kennziffer BAMF"
 msgstr ""
 
-#: b11_1/models.py:242 symm/models.py:242
+#: symm/models.py:242
 msgid "Mietrelevanz"
 msgstr ""
 
-#: b11_1/models.py:243 symm/models.py:243
+#: symm/models.py:243
 msgid "Next Higher Assembly"
 msgstr ""
 
-#: b11_1/models.py:244 symm/models.py:244
+#: symm/models.py:244
 msgid "Nachschubklasse"
 msgstr ""
 
-#: b11_1/models.py:245 symm/models.py:245
+#: symm/models.py:245
 msgid "Materialeinstufung nach ZUVA"
 msgstr ""
 
-#: b11_1/models.py:246 symm/models.py:246
+#: symm/models.py:246
 msgid "Orderbuchpflicht"
 msgstr ""
 
-#: b11_1/models.py:247 symm/models.py:247
+#: symm/models.py:247
 msgid "Verteilung APM Kerda"
 msgstr ""
 
-#: b11_1/models.py:248 symm/models.py:248
+#: symm/models.py:248
 msgid "Verteilung SVSAA"
 msgstr ""
 
-#: b11_1/models.py:249 symm/models.py:249
+#: symm/models.py:249
 msgid "Verteilung CHEOPS"
 msgstr ""
 
-#: b11_1/models.py:250 symm/models.py:250
+#: symm/models.py:250
 msgid "Zuteilung"
 msgstr ""
 
-#: b11_1/models.py:251 symm/models.py:251
+#: symm/models.py:251
 msgid "Ausprägung"
 msgstr ""
 
-#: b11_1/models.py:252 symm/models.py:252
+#: symm/models.py:252
 msgid "Preissteuerung"
 msgstr ""
 
-#: b11_1/models.py:253 symm/models.py:253
+#: symm/models.py:253
 msgid "Preisermittlung"
 msgstr ""
 
-#: b11_1/templates/il/add_material_il.html:5
-#: symm/templates/il/add_material_il.html:5
+#: symm/templates/gd/update_material_gd.html:163
+#: symm/templates/il/update_material_il.html:121
+#: symm/templates/smda/update_material_smda.html:163
+msgid "Änderungen speichern"
+msgstr "Save the changes"
+
+#: symm/templates/gd/update_material_gd.html:164
+#: symm/templates/il/update_material_il.html:122
+#: symm/templates/smda/update_material_smda.html:164
+msgid "Zurück ohne Speichern"
+msgstr "Back without saving"
+
+#: symm/templates/il/add_material_il.html:6
 msgid "New Material"
 msgstr "New material"
 
-#: b11_1/templates/il/add_material_il.html:50
-#: symm/templates/il/add_material_il.html:50
+#: symm/templates/il/add_material_il.html:51
+msgid "Attachments"
+msgstr ""
+
+#: symm/templates/il/add_material_il.html:61
+#: symm/templates/il/update_material_il.html:107
+msgid "Comment"
+msgstr ""
+
+#: symm/templates/il/add_material_il.html:70
+#: symm/templates/il/update_material_il.html:116
+msgid "Add Another Attachment"
+msgstr ""
+
+#: symm/templates/il/add_material_il.html:75
 msgid "Save"
 msgstr "Save"
 
-#: b11_1/templates/il/add_material_il.html:51
-#: symm/templates/il/add_material_il.html:51
+#: symm/templates/il/add_material_il.html:76
 msgid "Back without saving"
 msgstr ""
-
-#: b11_1/templates/navbar_generic.html:36 symm/templates/navbar_generic.html:36
-msgid "Material_nav"
-msgstr "Material"
-
-#: b11_1/templates/navbar_generic.html:39 symm/templates/navbar_generic.html:39
-msgid "Materialliste_nav"
-msgstr "List of material"
-
-#: b11_1/templates/navbar_generic.html:40 symm/templates/navbar_generic.html:40
-msgid "Neues Material definieren_nav"
-msgstr "Define a new material"
-
-#: b11_1/templates/navbar_generic.html:45 symm/templates/navbar_generic.html:45
-msgid "Account_nav"
-msgstr "Account"
 
 #: symm/templates/il/list_material_il.html:6
 msgid "Materialliste"
@@ -453,13 +460,34 @@ msgstr "List of material"
 msgid "Berechnete Felder"
 msgstr ""
 
-#: symm/templates/il/update_material_il.html:68
-msgid "Änderungen speichern"
+#: symm/templates/il/update_material_il.html:71
+msgid "Existing Attachments"
 msgstr ""
 
-#: symm/templates/il/update_material_il.html:69
-msgid "Zurück ohne Speichern"
+#: symm/templates/il/update_material_il.html:85
+#: venv/lib/python3.12/site-packages/django/forms/formsets.py:499
+msgid "Delete"
 msgstr ""
+
+#: symm/templates/il/update_material_il.html:97
+msgid "New Attachments"
+msgstr ""
+
+#: symm/templates/navbar_generic.html:36
+msgid "Material_nav"
+msgstr "Material"
+
+#: symm/templates/navbar_generic.html:39
+msgid "Materialliste_nav"
+msgstr "List of material"
+
+#: symm/templates/navbar_generic.html:40
+msgid "Neues Material definieren_nav"
+msgstr "Define a new material"
+
+#: symm/templates/navbar_generic.html:45
+msgid "Account_nav"
+msgstr "Account"
 
 #: venv/lib/python3.12/site-packages/click/_termui_impl.py:518
 #, python-brace-format
@@ -1329,10 +1357,6 @@ msgstr[1] ""
 #: venv/lib/python3.12/site-packages/django/forms/formsets.py:484
 #: venv/lib/python3.12/site-packages/django/forms/formsets.py:491
 msgid "Order"
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/forms/formsets.py:499
-msgid "Delete"
 msgstr ""
 
 #: venv/lib/python3.12/site-packages/django/forms/models.py:901
