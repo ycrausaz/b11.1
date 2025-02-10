@@ -1,5 +1,6 @@
 {% extends "base_generic.html" %}
 {% load i18n %}
+{% load custom_filters %}
 
 <!-- templates/update_material_il.html -->
 {% load help_tags %}
@@ -65,31 +66,27 @@
         </table>
 
         <!-- Existing Attachments Section -->
-        {% if object.attachments.all %}
-            <div class="card mt-4 mb-4">
-                <div class="card-header">
-                    <h5>{% trans "Existing Attachments" %}</h5>
-                </div>
-                <div class="card-body">
-                    {% for attachment in object.attachments.all %}
-                        <div class="existing-attachment-row mb-3">
-                            <div class="row">
-                                <div class="col-5">
-                                    <a href="{{ attachment.file.url }}" target="_blank">{{ attachment.file.name }}</a>
-                                </div>
-                                <div class="col-6">
-                                    {{ attachment.comment }}
-                                </div>
-                                <div class="col-1">
-                                    <input type="checkbox" name="delete_attachments[]" value="{{ attachment.id }}">
-                                    <label>{% trans "Delete" %}</label>
-                                </div>
-                            </div>
-                        </div>
-                    {% endfor %}
+{% if object.attachments.all %}
+    <div class="mb-4">
+        <h6>Vorhandene Anlagen</h6>
+        {% for attachment in object.attachments.all %}
+            <div class="existing-attachment-row mb-2">
+                <div class="row">
+                    <div class="col-5">
+                        <a href="{{ attachment.file.url }}" target="_blank">{{ attachment.file.name|basename }}</a>
+                    </div>
+                    <div class="col-6">
+                        {{ attachment.comment }}
+                    </div>
+                    <div class="col-1">
+                        <input type="checkbox" name="delete_attachments[]" value="{{ attachment.id }}">
+                        <label>Löschen</label>
+                    </div>
                 </div>
             </div>
-        {% endif %}
+        {% endfor %}
+    </div>
+{% endif %}
 
         <!-- New Attachments Section -->
         <div class="card mt-4 mb-4">

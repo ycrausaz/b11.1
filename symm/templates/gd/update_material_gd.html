@@ -1,5 +1,6 @@
 {% extends "base_generic.html" %}
 {% load i18n %}
+{% load custom_filters %}
 
 <!-- templates/update_material_gd.html -->
 {% load help_tags %}
@@ -107,14 +108,14 @@
 
     <br/>
 
-<!-- Attachment section -->
-<div style="width: 80%;">  <!-- Match table-container width -->
-    <div class="card">
-        <div class="card-header">
-            <h5>Anlagen</h5>
-        </div>
-        <div class="card-body">
-            <!-- Existing Attachments -->
+        <!-- Attachment section -->
+            <div style="width: 80%;">  <!-- Match table-container width -->
+                <div class="card">
+                    <div class="card-header">
+                        <h5>Anlagen</h5>
+                    </div>
+                    <div class="card-body">
+                        <!-- Existing Attachments -->
             {% if object.attachments.all %}
                 <div class="mb-4">
                     <h6>Vorhandene Anlagen</h6>
@@ -122,7 +123,7 @@
                         <div class="existing-attachment-row mb-2">
                             <div class="row">
                                 <div class="col-5">
-                                    <a href="{{ attachment.file.url }}" target="_blank">{{ attachment.file.name }}</a>
+                                    <a href="{{ attachment.file.url }}" target="_blank">{{ attachment.file.name|basename }}</a>
                                 </div>
                                 <div class="col-6">
                                     {{ attachment.comment }}
