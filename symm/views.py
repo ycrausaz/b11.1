@@ -342,15 +342,6 @@ class UpdateMaterial_IL_View(FormValidMixin_IL, GroupRequiredMixin, SuccessMessa
         
         return super().form_valid(form)
 
-class ShowMaterial_IL_View(GroupRequiredMixin, SuccessMessageMixin, DetailView):
-    model = Material
-    template_name = 'il/show_material_il.html'
-    form_class = MaterialForm_IL
-    allowed_groups = ['grIL']
-
-    def post(self, request, *args, **kwargs):
-        return redirect('list_material_il')
-
 class ListMaterial_GD_View(ComputedContextMixin, GroupRequiredMixin, ListView):
     model = Material
     template_name = 'gd/list_material_gd.html'
@@ -486,20 +477,6 @@ class UpdateMaterial_GD_View(ComputedContextMixin, FormValidMixin_GD, GroupRequi
         
         return super().form_valid(form)
 
-class ShowMaterial_GD_View(ComputedContextMixin, GroupRequiredMixin, SuccessMessageMixin, DetailView):
-    model = Material
-    template_name = 'gd/show_material_gd.html'
-    form_class = MaterialForm_GD
-    allowed_groups = ['grLBA', 'grGD']
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['form'] = self.form_class(instance=self.object)
-        return context    
-
-    def post(self, request, *args, **kwargs):
-        return redirect('list_material_gd')
-
 class ListMaterial_SMDA_View(ComputedContextMixin, GroupRequiredMixin, ListView):
     model = Material
     template_name = 'smda/list_material_smda.html'
@@ -630,20 +607,6 @@ class UpdateMaterial_SMDA_View(ComputedContextMixin, FormValidMixin_SMDA, GroupR
         logger.info(f"Material '{self.object.kurztext_de}' wurde durch '{self.request.user.username}' aktualisiert.")
         
         return super().form_valid(form)
-
-class ShowMaterial_SMDA_View(ComputedContextMixin, GroupRequiredMixin, SuccessMessageMixin, DetailView):
-    model = Material
-    template_name = 'smda/show_material_smda.html'
-    form_class = MaterialForm_SMDA
-    allowed_groups = ['grLBA', 'grSMDA']
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['form'] = self.form_class(instance=self.object)
-        return context    
-
-    def post(self, request, *args, **kwargs):
-        return redirect('list_material_smda')
 
 class Logging_View(ListView):
     template_name = 'admin/logging.html'
