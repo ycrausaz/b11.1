@@ -4,6 +4,9 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.utils.translation import gettext_lazy as _
 
+MAX_ATTACHMENTS_PER_MATERIAL = 5
+MAX_ATTACHMENT_SIZE = 2.5 * 1024 * 1024  # 2.5MB in bytes
+
 class LogEntry(models.Model):
     id = models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name=_('ID'))
     timestamp = models.DateTimeField(auto_now_add=True)
@@ -275,19 +278,21 @@ class MaterialAttachment(models.Model):
     uploaded_at = models.DateTimeField(auto_now_add=True)
     uploaded_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
 
+    def clean(self):
+        if self.file:
+            if self.file.size > MAX_ATTACHMENT_SIZE:
+                raise ValidationError(f'File size cannot exceed {MAX_ATTACHMENT_SIZE/1024/1024:.1f}MB')
+            
+            # Count existing attachments for this material
+            if not self.id:  # Only check on new attachments
+                existing_count = MaterialAttachment.objects.filter(material=self.material).count()
+                if existing_count >= MAX_ATTACHMENTS_PER_MATERIAL:
+                    raise ValidationError(f'Cannot have more than {MAX_ATTACHMENTS_PER_MATERIAL} attachments per material')
+
+    def save(self, *args, **kwargs):
+        self.full_clean()
+        super().save(*args, **kwargs)
+
     class Meta:
         app_label = 'symm'
         ordering = ['-uploaded_at']
-
-    def __str__(self):
-        return f"Attachment for {self.material} - {self.file.name}"
-
-    def delete(self, *args, **kwargs):
-        # Delete the file from storage
-        if self.file:
-            storage = self.file.storage
-            if storage.exists(self.file.name):
-                storage.delete(self.file.name)
-
-        # Delete the model instance
-        super().delete(*args, **kwargs)

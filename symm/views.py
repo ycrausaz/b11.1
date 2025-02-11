@@ -5,7 +5,7 @@ from django.views.generic import ListView, DetailView
 from django.views.generic.base import View
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from .models import Material, Zuteilung, Auspraegung, G_Partner, MaterialAttachment
+from .models import Material, Zuteilung, Auspraegung, G_Partner, MaterialAttachment, MAX_ATTACHMENTS_PER_MATERIAL, MAX_ATTACHMENT_SIZE
 from .forms_il import MaterialForm_IL
 from .forms_gd import MaterialForm_GD
 from .forms_smda import MaterialForm_SMDA
@@ -312,40 +312,63 @@ class UpdateMaterial_IL_View(FormValidMixin_IL, GroupRequiredMixin, SuccessMessa
         return self.form_invalid(form)
 
     def form_valid(self, form):
-        # Save the material instance
-        self.object = form.save()
-        
-        # Handle deletion of existing attachments
-        attachments_to_delete = self.request.POST.getlist('delete_attachments[]')
-        if attachments_to_delete:
-            # Get the attachments to delete
-            attachments = MaterialAttachment.objects.filter(
-                id__in=attachments_to_delete,
-                material=self.object
-            )
-            
-            # Delete each attachment (this will trigger the delete() method we defined)
-            for attachment in attachments:
-                attachment.delete()
+        try:
+            # Handle file attachments
+            files = self.request.FILES.getlist('attachment_files[]')
+            comments = self.request.POST.getlist('attachment_comments[]')
 
-        # Handle new file attachments
-        files = self.request.FILES.getlist('attachment_files[]')
-        comments = self.request.POST.getlist('attachment_comments[]')
-        
-        # Create MaterialAttachment instances for each new file
-        for file, comment in zip(files, comments):
-            if file:  # Only create if a file was actually uploaded
-                MaterialAttachment.objects.create(
-                    material=self.object,
-                    file=file,
-                    comment=comment,
-                    uploaded_by=self.request.user
+            # Check total number of attachments (existing + new)
+            existing_count = self.object.attachments.count()
+            new_valid_files = [f for f in files if f]  # Filter out empty file inputs
+            if existing_count + len(new_valid_files) > MAX_ATTACHMENTS_PER_MATERIAL:
+                messages.error(self.request,
+                    f'Cannot have more than {MAX_ATTACHMENTS_PER_MATERIAL} attachments per material')
+                return self.form_invalid(form)
+
+            # Validate file sizes
+            for file in new_valid_files:
+                if file.size > MAX_ATTACHMENT_SIZE:
+                    messages.error(self.request,
+                        f'File {file.name} exceeds the maximum size of {MAX_ATTACHMENT_SIZE/1024/1024:.1f}MB')
+                    return self.form_invalid(form)
+
+            # Save the material instance
+            self.object = form.save()
+
+            # Handle deletion of existing attachments
+            attachments_to_delete = self.request.POST.getlist('delete_attachments[]')
+            if attachments_to_delete:
+                attachments = MaterialAttachment.objects.filter(
+                    id__in=attachments_to_delete,
+                    material=self.object
                 )
-        
-        # Log the update action
-        logger.info(f"Material '{self.object.kurztext_de}' wurde durch '{self.request.user.username}' aktualisiert.")
-        
-        return super().form_valid(form)
+                for attachment in attachments:
+                    attachment.delete()
+
+            # Create MaterialAttachment instances for each new file
+            for file, comment in zip(files, comments):
+                if file:  # Only create if a file was actually uploaded
+                    try:
+                        attachment = MaterialAttachment(
+                            material=self.object,
+                            file=file,
+                            comment=comment,
+                            uploaded_by=self.request.user
+                        )
+                        attachment.full_clean()
+                        attachment.save()
+                    except ValidationError as e:
+                        messages.error(self.request, str(e))
+                        return self.form_invalid(form)
+
+            # Log the update action
+            logger.info(f"Material '{self.object.kurztext_de}' wurde durch '{self.request.user.username}' aktualisiert.")
+
+            return super().form_valid(form)
+
+        except Exception as e:
+            messages.error(self.request, str(e))
+            return self.form_invalid(form)
 
 class ListMaterial_GD_View(ComputedContextMixin, GroupRequiredMixin, ListView):
     model = Material
@@ -452,40 +475,63 @@ class UpdateMaterial_GD_View(ComputedContextMixin, FormValidMixin_GD, GroupRequi
         return self.form_invalid(form)
 
     def form_valid(self, form):
-        # Save the material instance
-        self.object = form.save()
-        
-        # Handle deletion of existing attachments
-        attachments_to_delete = self.request.POST.getlist('delete_attachments[]')
-        if attachments_to_delete:
-            # Get the attachments to delete
-            attachments = MaterialAttachment.objects.filter(
-                id__in=attachments_to_delete,
-                material=self.object
-            )
-            
-            # Delete each attachment (this will trigger the delete() method we defined)
-            for attachment in attachments:
-                attachment.delete()
+        try:
+            # Handle file attachments
+            files = self.request.FILES.getlist('attachment_files[]')
+            comments = self.request.POST.getlist('attachment_comments[]')
 
-        # Handle new file attachments
-        files = self.request.FILES.getlist('attachment_files[]')
-        comments = self.request.POST.getlist('attachment_comments[]')
-        
-        # Create MaterialAttachment instances for each new file
-        for file, comment in zip(files, comments):
-            if file:  # Only create if a file was actually uploaded
-                MaterialAttachment.objects.create(
-                    material=self.object,
-                    file=file,
-                    comment=comment,
-                    uploaded_by=self.request.user
+            # Check total number of attachments (existing + new)
+            existing_count = self.object.attachments.count()
+            new_valid_files = [f for f in files if f]  # Filter out empty file inputs
+            if existing_count + len(new_valid_files) > MAX_ATTACHMENTS_PER_MATERIAL:
+                messages.error(self.request,
+                    f'Cannot have more than {MAX_ATTACHMENTS_PER_MATERIAL} attachments per material')
+                return self.form_invalid(form)
+
+            # Validate file sizes
+            for file in new_valid_files:
+                if file.size > MAX_ATTACHMENT_SIZE:
+                    messages.error(self.request,
+                        f'File {file.name} exceeds the maximum size of {MAX_ATTACHMENT_SIZE/1024/1024:.1f}MB')
+                    return self.form_invalid(form)
+
+            # Save the material instance
+            self.object = form.save()
+
+            # Handle deletion of existing attachments
+            attachments_to_delete = self.request.POST.getlist('delete_attachments[]')
+            if attachments_to_delete:
+                attachments = MaterialAttachment.objects.filter(
+                    id__in=attachments_to_delete,
+                    material=self.object
                 )
-        
-        # Log the update action
-        logger.info(f"Material '{self.object.kurztext_de}' wurde durch '{self.request.user.username}' aktualisiert.")
-        
-        return super().form_valid(form)
+                for attachment in attachments:
+                    attachment.delete()
+
+            # Create MaterialAttachment instances for each new file
+            for file, comment in zip(files, comments):
+                if file:  # Only create if a file was actually uploaded
+                    try:
+                        attachment = MaterialAttachment(
+                            material=self.object,
+                            file=file,
+                            comment=comment,
+                            uploaded_by=self.request.user
+                        )
+                        attachment.full_clean()
+                        attachment.save()
+                    except ValidationError as e:
+                        messages.error(self.request, str(e))
+                        return self.form_invalid(form)
+
+            # Log the update action
+            logger.info(f"Material '{self.object.kurztext_de}' wurde durch '{self.request.user.username}' aktualisiert.")
+
+            return super().form_valid(form)
+
+        except Exception as e:
+            messages.error(self.request, str(e))
+            return self.form_invalid(form)
 
 class ListMaterial_SMDA_View(ComputedContextMixin, GroupRequiredMixin, ListView):
     model = Material
@@ -588,40 +634,63 @@ class UpdateMaterial_SMDA_View(ComputedContextMixin, FormValidMixin_SMDA, GroupR
         return self.form_invalid(form)
 
     def form_valid(self, form):
-        # Save the material instance
-        self.object = form.save()
-        
-        # Handle deletion of existing attachments
-        attachments_to_delete = self.request.POST.getlist('delete_attachments[]')
-        if attachments_to_delete:
-            # Get the attachments to delete
-            attachments = MaterialAttachment.objects.filter(
-                id__in=attachments_to_delete,
-                material=self.object
-            )
-            
-            # Delete each attachment (this will trigger the delete() method we defined)
-            for attachment in attachments:
-                attachment.delete()
+        try:
+            # Handle file attachments
+            files = self.request.FILES.getlist('attachment_files[]')
+            comments = self.request.POST.getlist('attachment_comments[]')
 
-        # Handle new file attachments
-        files = self.request.FILES.getlist('attachment_files[]')
-        comments = self.request.POST.getlist('attachment_comments[]')
-        
-        # Create MaterialAttachment instances for each new file
-        for file, comment in zip(files, comments):
-            if file:  # Only create if a file was actually uploaded
-                MaterialAttachment.objects.create(
-                    material=self.object,
-                    file=file,
-                    comment=comment,
-                    uploaded_by=self.request.user
+            # Check total number of attachments (existing + new)
+            existing_count = self.object.attachments.count()
+            new_valid_files = [f for f in files if f]  # Filter out empty file inputs
+            if existing_count + len(new_valid_files) > MAX_ATTACHMENTS_PER_MATERIAL:
+                messages.error(self.request,
+                    f'Cannot have more than {MAX_ATTACHMENTS_PER_MATERIAL} attachments per material')
+                return self.form_invalid(form)
+
+            # Validate file sizes
+            for file in new_valid_files:
+                if file.size > MAX_ATTACHMENT_SIZE:
+                    messages.error(self.request,
+                        f'File {file.name} exceeds the maximum size of {MAX_ATTACHMENT_SIZE/1024/1024:.1f}MB')
+                    return self.form_invalid(form)
+
+            # Save the material instance
+            self.object = form.save()
+
+            # Handle deletion of existing attachments
+            attachments_to_delete = self.request.POST.getlist('delete_attachments[]')
+            if attachments_to_delete:
+                attachments = MaterialAttachment.objects.filter(
+                    id__in=attachments_to_delete,
+                    material=self.object
                 )
-        
-        # Log the update action
-        logger.info(f"Material '{self.object.kurztext_de}' wurde durch '{self.request.user.username}' aktualisiert.")
-        
-        return super().form_valid(form)
+                for attachment in attachments:
+                    attachment.delete()
+
+            # Create MaterialAttachment instances for each new file
+            for file, comment in zip(files, comments):
+                if file:  # Only create if a file was actually uploaded
+                    try:
+                        attachment = MaterialAttachment(
+                            material=self.object,
+                            file=file,
+                            comment=comment,
+                            uploaded_by=self.request.user
+                        )
+                        attachment.full_clean()
+                        attachment.save()
+                    except ValidationError as e:
+                        messages.error(self.request, str(e))
+                        return self.form_invalid(form)
+
+            # Log the update action
+            logger.info(f"Material '{self.object.kurztext_de}' wurde durch '{self.request.user.username}' aktualisiert.")
+
+            return super().form_valid(form)
+
+        except Exception as e:
+            messages.error(self.request, str(e))
+            return self.form_invalid(form)
 
 class Logging_View(ListView):
     template_name = 'admin/logging.html'
