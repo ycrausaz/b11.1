@@ -404,7 +404,6 @@ class ListMaterial_GD_View(ComputedContextMixin, GroupRequiredMixin, ListView):
         print("action = ", action)
 
         if selected_material_ids and action:
-            print("**** post()")
             selected_materials = Material.objects.filter(id__in=selected_material_ids)
             if action == 'transfer':
                 transfer_comment = request.POST.get('transfer_comment', '')
@@ -422,7 +421,7 @@ class ListMaterial_GD_View(ComputedContextMixin, GroupRequiredMixin, ListView):
             elif action == 'delete':
                 for material in selected_materials:
                     logger.info("Material '" + material.kurztext_de + "' durch '" + request.user.username + "' gelöscht.")
-                selected_materials.delete()
+                    material.delete()
             elif action == 'export':
                 for material in selected_materials:
                     logger.info("Material '" + material.kurztext_de + "' durch '" + request.user.username + "' exportiert.")

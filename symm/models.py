@@ -1,5 +1,6 @@
 # symm/models.py
 
+import os
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils.translation import gettext_lazy as _
@@ -255,6 +256,14 @@ class Material(models.Model):
     preissteuerung = models.CharField(null=True, blank=True, max_length=40, verbose_name=_("Preissteuerung"))
     preisermittlung = models.CharField(null=True, blank=True, max_length=30, verbose_name=_("Preisermittlung"))
 
+    def delete(self, *args, **kwargs):
+        # First, delete all attachment files from storage
+        for attachment in self.attachments.all():
+            attachment.delete()  # This will call MaterialAttachment's delete() method
+
+        # Then delete the Material record (which will cascade delete attachments)
+        super().delete(*args, **kwargs)
+
     def __str__(self):
         if self.positions_nr is not None:
             return str(self.positions_nr) + " - " + self.kurztext_de + " (" + self.hersteller + ")"
@@ -282,7 +291,7 @@ class MaterialAttachment(models.Model):
         if self.file:
             if self.file.size > MAX_ATTACHMENT_SIZE:
                 raise ValidationError(f'File size cannot exceed {MAX_ATTACHMENT_SIZE/1024/1024:.1f}MB')
-            
+
             # Count existing attachments for this material
             if not self.id:  # Only check on new attachments
                 existing_count = MaterialAttachment.objects.filter(material=self.material).count()
@@ -292,6 +301,26 @@ class MaterialAttachment(models.Model):
     def save(self, *args, **kwargs):
         self.full_clean()
         super().save(*args, **kwargs)
+
+    def delete(self, *args, **kwargs):
+        if self.file:
+            # Get the file and folder paths
+            file_path = self.file.path
+            folder_path = os.path.dirname(file_path)
+
+            # Delete the physical file
+            if self.file.storage.exists(self.file.name):
+                self.file.storage.delete(self.file.name)
+
+            # Try to delete the empty folder, ignore errors if it's not empty
+            try:
+                os.rmdir(folder_path)
+            except OSError:
+                # Folder not empty or other OS error, we can safely ignore this
+                pass
+
+        # Delete the database record
+        super().delete(*args, **kwargs)
 
     class Meta:
         app_label = 'symm'
