@@ -12,6 +12,6 @@ class MaterialAttachmentStorage(S3Boto3Storage):
             'access_key': settings.AWS_ACCESS_KEY_ID,
             'secret_key': settings.AWS_SECRET_ACCESS_KEY,
             'endpoint_url': getattr(settings, 'AWS_S3_ENDPOINT_URL', None),
-            'use_ssl': settings.AWS_S3_USE_SSL,
+#            'use_ssl': settings.AWS_S3_USE_SSL,
         })
         return defaults
