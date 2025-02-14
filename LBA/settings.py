@@ -2,6 +2,7 @@ import os
 from pathlib import Path
 import dj_database_url
 from django.utils.translation import gettext_lazy as _
+import socket
 
 LANGUAGES = [
     ('de', _('German')),
@@ -77,14 +78,18 @@ WSGI_APPLICATION = 'LBA.wsgi.application'
 
 #IN_DOCKER = os.environ.get('IN_DOCKER', False)
 
-if "DATABASE_URL" in os.environ:
+if "DIVIO_HOSTING" in os.environ:
     DIVIO_HOSTING=True
 else:
     DIVIO_HOSTING=False
 
+if "DATABASE_URL" in os.environ and not "DIVIO_HOSTING" in os.environ:
+    DOCKER_HOSTING=True
+else:
+    DOCKER_HOSTING=False
 
 # Database
-if DIVIO_HOSTING:
+if DIVIO_HOSTING or DOCKER_HOSTING:
     DATABASES = {'default': dj_database_url.config(conn_max_age=500)}
 else:
     # Local development database configuration
@@ -171,7 +176,7 @@ else:
     AWS_ACCESS_KEY_ID = 'admin'
     AWS_SECRET_ACCESS_KEY = 'admin123'
     AWS_STORAGE_BUCKET_NAME = 'symm'  # Create this bucket in MinIO
-    AWS_S3_ENDPOINT_URL = 'http://localhost:9000'  # MinIO endpoint
+    AWS_S3_ENDPOINT_URL = 'http://192.168.1.2:9000'  # MinIO endpoint
     AWS_S3_USE_SSL = False
     AWS_QUERYSTRING_AUTH = False
 
