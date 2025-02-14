@@ -207,8 +207,7 @@ else:
     AWS_S3_ENDPOINT_URL = 'http://192.168.1.2:9000'  # MinIO endpoint
     AWS_S3_USE_SSL = False
     AWS_QUERYSTRING_AUTH = False
-
-print("AWS_S3_ENDPOINT_URL = ", AWS_S3_ENDPOINT_URL)
+    print("AWS_S3_ENDPOINT_URL = ", AWS_S3_ENDPOINT_URL)
 
 # Common S3 settings
 AWS_S3_FILE_OVERWRITE = False
