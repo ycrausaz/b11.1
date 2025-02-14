@@ -83,10 +83,14 @@ if "DIVIO_HOSTING" in os.environ:
 else:
     DIVIO_HOSTING=False
 
+print("DIVIO_HOSTING = ", str(DIVIO_HOSTING))
+
 if "DATABASE_URL" in os.environ and not "DIVIO_HOSTING" in os.environ:
     DOCKER_HOSTING=True
 else:
     DOCKER_HOSTING=False
+
+print("DOCKER_HOSTING = ", str(DOCKER_HOSTING))
 
 # Database
 if DIVIO_HOSTING or DOCKER_HOSTING:
@@ -179,6 +183,8 @@ else:
     AWS_S3_ENDPOINT_URL = 'http://192.168.1.2:9000'  # MinIO endpoint
     AWS_S3_USE_SSL = False
     AWS_QUERYSTRING_AUTH = False
+
+print("AWS_S3_ENDPOINT_URL = ", AWS_S3_ENDPOINT_URL)
 
 # Common S3 settings
 AWS_S3_FILE_OVERWRITE = False
