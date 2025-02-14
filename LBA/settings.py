@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'symm',
+    'storages',
     'bootstrap_datepicker_plus',
 ]
 
@@ -76,26 +77,15 @@ WSGI_APPLICATION = 'LBA.wsgi.application'
 
 #IN_DOCKER = os.environ.get('IN_DOCKER', False)
 
-# Database
 if "DATABASE_URL" in os.environ:
-#    # Docker database configuration
-#    default_db_url = f'postgres://{os.environ.get("B11_1_USER")}:{os.environ.get("B11_1_PASSWORD")}@{os.environ.get("DB_HOST")}:{os.environ.get("DB_PORT")}/{os.environ.get("B11_1_DB")}'
-#    print("default_db_url = ", default_db_url)
-#
-#    DATABASES = {
-#        'default': dj_database_url.parse(default_db_url, conn_max_age=600),
-#    }
+    DIVIO_HOSTING=True
+else:
+    DIVIO_HOSTING=False
 
+
+# Database
+if DIVIO_HOSTING:
     DATABASES = {'default': dj_database_url.config(conn_max_age=500)}
-
-    # Add SSL configuration
-#    for db in DATABASES.values():
-#        db['OPTIONS'] = {
-#            'sslmode': 'require',
-#            'sslcert': '/app/ssl/server.crt',
-#            'sslkey': '/app/ssl/server.key',
-#            'sslrootcert': '/app/ssl/server.crt',
-#        }
 else:
     # Local development database configuration
     DATABASES = {
@@ -166,6 +156,29 @@ LOGGING = {
 LOCALE_PATHS = [
     os.path.join(BASE_DIR, 'locale'),
 ]
+
+# S3/MinIO settings
+if DIVIO_HOSTING:
+    # Production settings (Divio S3)
+    AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID')
+    AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY')
+    AWS_STORAGE_BUCKET_NAME = os.environ.get('AWS_STORAGE_BUCKET_NAME')
+    AWS_S3_REGION_NAME = os.environ.get('AWS_REGION_NAME', 'us-east-1')
+    AWS_S3_USE_SSL = True
+    AWS_QUERYSTRING_AUTH = True
+else:
+    # Development settings (MinIO)
+    AWS_ACCESS_KEY_ID = 'admin'
+    AWS_SECRET_ACCESS_KEY = 'admin123'
+    AWS_STORAGE_BUCKET_NAME = 'symm'  # Create this bucket in MinIO
+    AWS_S3_ENDPOINT_URL = 'http://localhost:9000'  # MinIO endpoint
+    AWS_S3_USE_SSL = False
+    AWS_QUERYSTRING_AUTH = False
+
+# Common S3 settings
+AWS_S3_FILE_OVERWRITE = False
+AWS_DEFAULT_ACL = None
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 
 # Internationalization
 LANGUAGE_CODE = 'de'

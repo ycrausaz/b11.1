@@ -76,7 +76,7 @@
                         <div class="existing-attachment-row mb-3">
                             <div class="row">
                                 <div class="col-5">
-                                    <a href="{{ attachment.file.url }}" target="_blank">{{ attachment.file.name|basename }}</a>
+                                    <a href="{{ attachment.get_file_url }}" target="_blank">{{ attachment.file.name|basename }}</a>
                                 </div>
                                 <div class="col-6">
                                     {{ attachment.comment }}

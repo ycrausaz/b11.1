@@ -4,6 +4,10 @@ import os
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils.translation import gettext_lazy as _
+from django.conf import settings
+import boto3
+from botocore.client import Config
+from .storage import MaterialAttachmentStorage
 
 MAX_ATTACHMENTS_PER_MATERIAL = 5
 MAX_ATTACHMENT_SIZE = 2.5 * 1024 * 1024  # 2.5MB in bytes
@@ -276,50 +280,59 @@ class Material(models.Model):
 
 def material_attachment_path(instance, filename):
     """
-    Files will be uploaded to MEDIA_ROOT/material_attachments/material_id/filename
+    Files will be uploaded to S3/MinIO in material_attachments/material_id/filename
     """
-    return f'material_attachments/{instance.material.id}/{filename}'
+    return f'{instance.material.id}/{filename}'
 
 class MaterialAttachment(models.Model):
-    material = models.ForeignKey(Material, on_delete=models.CASCADE, related_name='attachments')
-    file = models.FileField(upload_to=material_attachment_path)
+    material = models.ForeignKey('Material', on_delete=models.CASCADE, related_name='attachments')
+    file = models.FileField(
+        upload_to=material_attachment_path,
+        storage=MaterialAttachmentStorage()
+    )
     comment = models.TextField(blank=True)
     uploaded_at = models.DateTimeField(auto_now_add=True)
     uploaded_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
 
-    def clean(self):
-        if self.file:
-            if self.file.size > MAX_ATTACHMENT_SIZE:
-                raise ValidationError(f'File size cannot exceed {MAX_ATTACHMENT_SIZE/1024/1024:.1f}MB')
+    def get_file_url(self):
+        """Generate a pre-signed URL for the file that expires in 1 hour"""
+        if not settings.DIVIO_HOSTING:
+            # MinIO configuration
+            s3_client = boto3.client('s3',
+                endpoint_url=settings.AWS_S3_ENDPOINT_URL,
+                aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
+                aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY,
+                config=Config(signature_version='s3v4'),
+                verify=False
+            )
+        else:
+            # Production S3 configuration
+            s3_client = boto3.client('s3',
+                aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
+                aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY,
+                region_name=settings.AWS_S3_REGION_NAME
+            )
 
-            # Count existing attachments for this material
-            if not self.id:  # Only check on new attachments
-                existing_count = MaterialAttachment.objects.filter(material=self.material).count()
-                if existing_count >= MAX_ATTACHMENTS_PER_MATERIAL:
-                    raise ValidationError(f'Cannot have more than {MAX_ATTACHMENTS_PER_MATERIAL} attachments per material')
-
-    def save(self, *args, **kwargs):
-        self.full_clean()
-        super().save(*args, **kwargs)
+        try:
+            # Construct the full key including the material_attachments prefix
+            key = f"material_attachments/{self.file.name}"
+            url = s3_client.generate_presigned_url(
+                'get_object',
+                Params={
+                    'Bucket': settings.AWS_STORAGE_BUCKET_NAME,
+                    'Key': key
+                },
+                ExpiresIn=3600  # URL expires in 1 hour
+            )
+            return url
+        except Exception as e:
+            print(f"Error generating pre-signed URL: {e}")
+            return None
 
     def delete(self, *args, **kwargs):
+        # Delete the file from S3/MinIO
         if self.file:
-            # Get the file and folder paths
-            file_path = self.file.path
-            folder_path = os.path.dirname(file_path)
-
-            # Delete the physical file
-            if self.file.storage.exists(self.file.name):
-                self.file.storage.delete(self.file.name)
-
-            # Try to delete the empty folder, ignore errors if it's not empty
-            try:
-                os.rmdir(folder_path)
-            except OSError:
-                # Folder not empty or other OS error, we can safely ignore this
-                pass
-
-        # Delete the database record
+            self.file.delete(save=False)
         super().delete(*args, **kwargs)
 
     class Meta:

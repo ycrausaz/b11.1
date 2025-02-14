@@ -123,7 +123,7 @@
                         <div class="existing-attachment-row mb-2">
                         <div class="row">
                                 <div class="col-5">
-                                    <a href="{{ attachment.file.url }}" target="_blank">{{ attachment.file.name|basename }}</a>
+                                    <a href="{{ attachment.get_file_url }}" target="_blank">{{ attachment.file.name|basename }}</a>
                                 </div>
                                 <div class="col-5">  <!-- Changed from col-6 to col-4 -->
                                     {{ attachment.comment }}
