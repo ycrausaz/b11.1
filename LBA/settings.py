@@ -83,14 +83,10 @@ if "DIVIO_HOSTING" in os.environ:
 else:
     DIVIO_HOSTING=False
 
-print("DIVIO_HOSTING = ", str(DIVIO_HOSTING))
-
 if "DATABASE_URL" in os.environ and not "DIVIO_HOSTING" in os.environ:
     DOCKER_HOSTING=True
 else:
     DOCKER_HOSTING=False
-
-print("DOCKER_HOSTING = ", str(DOCKER_HOSTING))
 
 # Database
 if DIVIO_HOSTING or DOCKER_HOSTING:
@@ -199,6 +195,15 @@ if DIVIO_HOSTING:
             "BACKEND": "django.contrib.staticfiles.storage.ManifestStaticFilesStorage",
         },
     }
+    #DEFAULT_STORAGE_BACKEND=s3-storage
+    #DEFAULT_STORAGE_BUCKET=beilage111-test-5d283a4e9cd740efae7c4ba-64f17a2.divio-media.net
+    #DEFAULT_STORAGE_SECRET_ACCESS_KEY=4aCEPL1wdr/R0Q2Vlq1x7WLWp51kKUprM6GyMtjS
+    #DEFAULT_STORAGE_DSN=s3://AKIA2UXM2NNWBHDLPHHY:4aCEPL1wdr%2FR0Q2Vlq1x7WLWp51kKUprM6GyMtjS@beilage111-test-5d283a4e9cd740efae7c4ba-64f17a2.divio-media.net.s3-eu-central-1.amazonaws.com/?auth=s3v4&domain=beilage111-test-5d283a4e9cd740efae7c4ba-64f17a2.divio-media.net
+    #DEFAULT_STORAGE_REGION=eu-central-1
+    #DEFAULT_STORAGE_ACCESS_KEY_ID=AKIA2UXM2NNWBHDLPHHY
+    #DEFAULT_STORAGE_CUSTOM_DOMAIN=beilage111-test-5d283a4e9cd740efae7c4ba-64f17a2.divio-media.net
+    #DEFAULT_STORAGE_ENDPOINT_URL=https://s3-eu-central-1.amazonaws.com
+    #DEFAULT_STORAGE_ENDPOINT=s3-eu-central-1.amazonaws.com
 else:
     # Development settings (MinIO)
     AWS_ACCESS_KEY_ID = 'admin'
@@ -207,7 +212,6 @@ else:
     AWS_S3_ENDPOINT_URL = 'http://192.168.1.2:9000'  # MinIO endpoint
     AWS_S3_USE_SSL = False
     AWS_QUERYSTRING_AUTH = False
-    print("AWS_S3_ENDPOINT_URL = ", AWS_S3_ENDPOINT_URL)
 
 # Common S3 settings
 AWS_S3_FILE_OVERWRITE = False
