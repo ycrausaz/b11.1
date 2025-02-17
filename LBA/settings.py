@@ -196,12 +196,12 @@ if DIVIO_HOSTING:
         },
     }
     #DEFAULT_STORAGE_BACKEND=s3-storage
-    #DEFAULT_STORAGE_BUCKET=beilage111-test-5d283a4e9cd740efae7c4ba-64f17a2.divio-media.net
-    #DEFAULT_STORAGE_SECRET_ACCESS_KEY=4aCEPL1wdr/R0Q2Vlq1x7WLWp51kKUprM6GyMtjS
-    #DEFAULT_STORAGE_DSN=s3://AKIA2UXM2NNWBHDLPHHY:4aCEPL1wdr%2FR0Q2Vlq1x7WLWp51kKUprM6GyMtjS@beilage111-test-5d283a4e9cd740efae7c4ba-64f17a2.divio-media.net.s3-eu-central-1.amazonaws.com/?auth=s3v4&domain=beilage111-test-5d283a4e9cd740efae7c4ba-64f17a2.divio-media.net
+    #DEFAULT_STORAGE_BUCKET=beilage111-test-5d283a4e9cd740efae7c4ba-ac86959.divio-media.org
+    #DEFAULT_STORAGE_SECRET_ACCESS_KEY=spjuYvdp/Lw85LwQWL1wFk4iKIldYqgmICq91t6s
+    #DEFAULT_STORAGE_DSN=s3://AKIA6EOIDQE3KXRV72NA:spjuYvdp%2FLw85LwQWL1wFk4iKIldYqgmICq91t6s@beilage111-test-5d283a4e9cd740efae7c4ba-ac86959.divio-media.org.s3-eu-central-1.amazonaws.com/?auth=s3v4&domain=beilage111-test-5d283a4e9cd740efae7c4ba-ac86959.divio-media.org
     #DEFAULT_STORAGE_REGION=eu-central-1
-    #DEFAULT_STORAGE_ACCESS_KEY_ID=AKIA2UXM2NNWBHDLPHHY
-    #DEFAULT_STORAGE_CUSTOM_DOMAIN=beilage111-test-5d283a4e9cd740efae7c4ba-64f17a2.divio-media.net
+    #DEFAULT_STORAGE_ACCESS_KEY_ID=AKIA6EOIDQE3KXRV72NA
+    #DEFAULT_STORAGE_CUSTOM_DOMAIN=beilage111-test-5d283a4e9cd740efae7c4ba-ac86959.divio-media.org
     #DEFAULT_STORAGE_ENDPOINT_URL=https://s3-eu-central-1.amazonaws.com
     #DEFAULT_STORAGE_ENDPOINT=s3-eu-central-1.amazonaws.com
 else:
