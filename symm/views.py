@@ -210,10 +210,6 @@ class ListMaterial_IL_View(GroupRequiredMixin, ListView):
     allowed_groups = ['grIL']
 
     def get_context_data(self, **kwargs):
-#        logger.info("This is an info message")
-#        logger.error("This is an error message")
-#        logger.warning("This is a warning message")
-#        logger.critical("This is a critical message")
         context = super().get_context_data(**kwargs)
         list_material_il = Material.objects.filter(is_transferred=False, hersteller=self.request.user, transfer_date__isnull=True)
         list_material_il_transferred = Material.objects.filter(is_transferred=True, hersteller=self.request.user, transfer_date__isnull=False)
@@ -223,10 +219,17 @@ class ListMaterial_IL_View(GroupRequiredMixin, ListView):
         print("len(list_material_il_returned) = ", len(list_material_il_returned))
         print("len(list_material_il) = ", len(list_material_il))
 
-        # Convert positions_nr to integers for sorting
-        context['list_material_il'] = sorted(list_material_il, key=lambda x: int(x.positions_nr))
-        context['list_material_il_transferred'] = sorted(list_material_il_transferred, key=lambda x: int(x.positions_nr))
-        context['list_material_il_returned'] = sorted(list_material_il_returned, key=lambda x: int(x.positions_nr))
+        # Define sort key function that handles None values
+        def sort_key(x):
+            if x.positions_nr is None:
+                return float('inf')  # Put None values at the end
+            return int(x.positions_nr)
+
+        # Sort lists using the new sort key
+        context['list_material_il'] = sorted(list_material_il, key=sort_key)
+        context['list_material_il_transferred'] = sorted(list_material_il_transferred, key=sort_key)
+        context['list_material_il_returned'] = sorted(list_material_il_returned, key=sort_key)
+
         return context
 
     def post(self, request, *args, **kwargs):
@@ -260,7 +263,6 @@ class AddMaterial_IL_View(FormValidMixin_IL, GroupRequiredMixin, SuccessMessageM
 
     def post(self, request, *args, **kwargs):
         if "cancel" in request.POST:
-            # Log the cancellation action
             logger.info(f"Erstellung von Material durch '{request.user.username}' abgebrochen.")
             return redirect('list_material_il')
 
@@ -272,7 +274,7 @@ class AddMaterial_IL_View(FormValidMixin_IL, GroupRequiredMixin, SuccessMessageM
     def form_valid(self, form):
         try:
             with transaction.atomic():
-                # Start by validating the form data but don't save to database yet
+                # Start by validating the form data
                 self.object = form.save(commit=False)
 
                 # Get new files and comments
