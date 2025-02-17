@@ -51,6 +51,9 @@ from datetime import timedelta
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
 from .forms import UserRegistrationForm
+from django.db import transaction
+from django.core.exceptions import ValidationError
+from botocore.exceptions import BotoCoreError, ClientError
 import logging
 
 logger = logging.getLogger(__name__)
@@ -116,7 +119,7 @@ class CustomLoginView(LoginView):
                 mail_subject = 'Reset your password'
                 uid = urlsafe_base64_encode(force_bytes(user.pk))
                 token = default_token_generator.make_token(user)
-                reset_link = reverse('password_reset_confirm', kwargs={'uidb64': uid, 'token': token})      
+                reset_link = reverse('password_reset_confirm', kwargs={'uidb64': uid, 'token': token})
                 reset_url = f'http://{current_site.domain}{reset_link}'
                 message = f'It seems you have failed to login 3 times. Please reset your password using the following link:\n{reset_url}'
 #                send_mail(mail_subject, message, settings.DEFAULT_FROM_EMAIL, [user.email])
@@ -271,11 +274,11 @@ class AddMaterial_IL_View(FormValidMixin_IL, GroupRequiredMixin, SuccessMessageM
     def form_valid(self, form):
         # Save the material instance
         self.object = form.save()
-        
+
         # Handle file attachments
         files = self.request.FILES.getlist('attachment_files[]')
         comments = self.request.POST.getlist('attachment_comments[]')
-        
+
         # Create MaterialAttachment instances for each file
         for file, comment in zip(files, comments):
             if file:  # Only create if a file was actually uploaded
@@ -285,7 +288,7 @@ class AddMaterial_IL_View(FormValidMixin_IL, GroupRequiredMixin, SuccessMessageM
                     comment=comment,
                     uploaded_by=self.request.user
                 )
-        
+
         return super().form_valid(form)
 
 class UpdateMaterial_IL_View(FormValidMixin_IL, GroupRequiredMixin, SuccessMessageMixin, UpdateView):
@@ -306,69 +309,110 @@ class UpdateMaterial_IL_View(FormValidMixin_IL, GroupRequiredMixin, SuccessMessa
         # Get the existing object
         self.object = self.get_object()
         form = self.get_form()
-        
+
         if form.is_valid():
             return self.form_valid(form)
         return self.form_invalid(form)
 
     def form_valid(self, form):
         try:
-            # Handle file attachments
-            files = self.request.FILES.getlist('attachment_files[]')
-            comments = self.request.POST.getlist('attachment_comments[]')
+            with transaction.atomic():
+                # Start by validating the form data
+                self.object = form.save(commit=False)
 
-            # Check total number of attachments (existing + new)
-            existing_count = self.object.attachments.count()
-            new_valid_files = [f for f in files if f]  # Filter out empty file inputs
-            if existing_count + len(new_valid_files) > MAX_ATTACHMENTS_PER_MATERIAL:
-                messages.error(self.request,
-                    f'Cannot have more than {MAX_ATTACHMENTS_PER_MATERIAL} attachments per material')
-                return self.form_invalid(form)
+                # Get new files and comments
+                files = self.request.FILES.getlist('attachment_files[]')
+                comments = self.request.POST.getlist('attachment_comments[]')
+                attachments_to_delete = self.request.POST.getlist('delete_attachments[]')
 
-            # Validate file sizes
-            for file in new_valid_files:
-                if file.size > MAX_ATTACHMENT_SIZE:
-                    messages.error(self.request,
-                        f'File {file.name} exceeds the maximum size of {MAX_ATTACHMENT_SIZE/1024/1024:.1f}MB')
-                    return self.form_invalid(form)
+                # Handle deletion of existing attachments first
+                if attachments_to_delete:
+                    attachments = MaterialAttachment.objects.filter(
+                        id__in=attachments_to_delete,
+                        material=self.object
+                    )
+                    for attachment in attachments:
+                        try:
+                            # Delete from S3 first
+                            attachment.file.delete(save=False)
+                        except (BotoCoreError, ClientError) as e:
+                            error_msg = f"Failed to delete file {attachment.file.name} from storage: {str(e)}"
+                            logger.error(error_msg)
+                            form.add_error(None, error_msg)
+                            return self.render_to_response(self.get_context_data(form=form))
 
-            # Save the material instance
-            self.object = form.save()
+                        # If S3 deletion successful, delete from database
+                        attachment.delete()
 
-            # Handle deletion of existing attachments
-            attachments_to_delete = self.request.POST.getlist('delete_attachments[]')
-            if attachments_to_delete:
-                attachments = MaterialAttachment.objects.filter(
-                    id__in=attachments_to_delete,
-                    material=self.object
-                )
-                for attachment in attachments:
-                    attachment.delete()
+                # Create temporary list to track new attachments
+                new_attachments = []
 
-            # Create MaterialAttachment instances for each new file
-            for file, comment in zip(files, comments):
-                if file:  # Only create if a file was actually uploaded
-                    try:
-                        attachment = MaterialAttachment(
-                            material=self.object,
-                            file=file,
-                            comment=comment,
-                            uploaded_by=self.request.user
-                        )
-                        attachment.full_clean()
-                        attachment.save()
-                    except ValidationError as e:
-                        messages.error(self.request, str(e))
-                        return self.form_invalid(form)
+                # Process new file attachments
+                for file, comment in zip(files, comments):
+                    if file:
+                        try:
+                            attachment = MaterialAttachment(
+                                material=self.object,
+                                file=file,
+                                comment=comment,
+                                uploaded_by=self.request.user
+                            )
+                            # Validate the attachment
+                            attachment.full_clean()
 
-            # Log the update action
-            logger.info(f"Material '{self.object.kurztext_de}' wurde durch '{self.request.user.username}' aktualisiert.")
+                            # Try to save file to S3 first
+                            try:
+                                # Note: Don't save to database yet
+                                attachment.file.save(file.name, file, save=False)
+                            except (BotoCoreError, ClientError) as e:
+                                error_msg = f"Failed to upload file {file.name} to storage: {str(e)}"
+                                logger.error(error_msg)
+                                form.add_error(None, error_msg)
+                                return self.render_to_response(self.get_context_data(form=form))
 
-            return super().form_valid(form)
+                            new_attachments.append(attachment)
+
+                        except ValidationError as e:
+                            error_msg = f"Validation error for file {file.name}: {str(e)}"
+                            logger.error(error_msg)
+                            form.add_error(None, error_msg)
+                            return self.render_to_response(self.get_context_data(form=form))
+
+                # If we got here, all S3 operations were successful
+                # Now save the material object
+                self.object.save()
+
+                # And save all new attachments to database
+                for attachment in new_attachments:
+                    attachment.save()
+
+                # Log the successful update
+                logger.info(f"Material '{self.object.kurztext_de}' wurde durch '{self.request.user.username}' aktualisiert.")
+
+                return super().form_valid(form)
+
+        except ValidationError as e:
+            # Clean up any files that might have been uploaded to S3 before the error
+            for attachment in new_attachments:
+                try:
+                    attachment.file.delete(save=False)
+                except (BotoCoreError, ClientError) as s3_error:
+                    logger.error(f"Failed to clean up file {attachment.file.name} after error: {str(s3_error)}")
+
+            form.add_error(None, str(e))
+            return self.render_to_response(self.get_context_data(form=form))
+
+        except (BotoCoreError, ClientError) as e:
+            error_msg = f"Failed to upload file to storage: {str(e)}"
+            logger.error(error_msg)
+            form.add_error(None, error_msg)
+            return self.render_to_response(self.get_context_data(form=form))
 
         except Exception as e:
-            messages.error(self.request, str(e))
-            return self.form_invalid(form)
+            error_msg = f"Unexpected error: {str(e)}"
+            logger.error(error_msg)
+            form.add_error(None, error_msg)
+            return self.render_to_response(self.get_context_data(form=form))
 
 class ListMaterial_GD_View(ComputedContextMixin, GroupRequiredMixin, ListView):
     model = Material
@@ -458,79 +502,105 @@ class UpdateMaterial_GD_View(ComputedContextMixin, FormValidMixin_GD, GroupRequi
         kwargs['editable_fields'] = EDITABLE_FIELDS_GD
         return kwargs
 
-    def post(self, request, *args, **kwargs):
-        if "cancel" in request.POST:
-            # Log the cancellation action
-            self.object = self.get_object()
-            logger.info(f"Bearbeitung von Material '{self.object.kurztext_de}' durch '{request.user.username}' abgebrochen.")
-            return redirect('list_material_gd')
-
-        # Get the existing object
-        self.object = self.get_object()
-        form = self.get_form()
-        
-        if form.is_valid():
-            return self.form_valid(form)
-        return self.form_invalid(form)
-
     def form_valid(self, form):
         try:
-            # Handle file attachments
-            files = self.request.FILES.getlist('attachment_files[]')
-            comments = self.request.POST.getlist('attachment_comments[]')
+            with transaction.atomic():
+                # Start by validating the form data
+                self.object = form.save(commit=False)
 
-            # Check total number of attachments (existing + new)
-            existing_count = self.object.attachments.count()
-            new_valid_files = [f for f in files if f]  # Filter out empty file inputs
-            if existing_count + len(new_valid_files) > MAX_ATTACHMENTS_PER_MATERIAL:
-                messages.error(self.request,
-                    f'Cannot have more than {MAX_ATTACHMENTS_PER_MATERIAL} attachments per material')
-                return self.form_invalid(form)
+                # Get new files and comments
+                files = self.request.FILES.getlist('attachment_files[]')
+                comments = self.request.POST.getlist('attachment_comments[]')
+                attachments_to_delete = self.request.POST.getlist('delete_attachments[]')
 
-            # Validate file sizes
-            for file in new_valid_files:
-                if file.size > MAX_ATTACHMENT_SIZE:
-                    messages.error(self.request,
-                        f'File {file.name} exceeds the maximum size of {MAX_ATTACHMENT_SIZE/1024/1024:.1f}MB')
-                    return self.form_invalid(form)
+                # Handle deletion of existing attachments first
+                if attachments_to_delete:
+                    attachments = MaterialAttachment.objects.filter(
+                        id__in=attachments_to_delete,
+                        material=self.object
+                    )
+                    for attachment in attachments:
+                        try:
+                            # Delete from S3 first
+                            attachment.file.delete(save=False)
+                        except (BotoCoreError, ClientError) as e:
+                            error_msg = f"Failed to delete file {attachment.file.name} from storage: {str(e)}"
+                            logger.error(error_msg)
+                            form.add_error(None, error_msg)
+                            return self.render_to_response(self.get_context_data(form=form))
 
-            # Save the material instance
-            self.object = form.save()
+                        # If S3 deletion successful, delete from database
+                        attachment.delete()
 
-            # Handle deletion of existing attachments
-            attachments_to_delete = self.request.POST.getlist('delete_attachments[]')
-            if attachments_to_delete:
-                attachments = MaterialAttachment.objects.filter(
-                    id__in=attachments_to_delete,
-                    material=self.object
-                )
-                for attachment in attachments:
-                    attachment.delete()
+                # Create temporary list to track new attachments
+                new_attachments = []
 
-            # Create MaterialAttachment instances for each new file
-            for file, comment in zip(files, comments):
-                if file:  # Only create if a file was actually uploaded
-                    try:
-                        attachment = MaterialAttachment(
-                            material=self.object,
-                            file=file,
-                            comment=comment,
-                            uploaded_by=self.request.user
-                        )
-                        attachment.full_clean()
-                        attachment.save()
-                    except ValidationError as e:
-                        messages.error(self.request, str(e))
-                        return self.form_invalid(form)
+                # Process new file attachments
+                for file, comment in zip(files, comments):
+                    if file:
+                        try:
+                            attachment = MaterialAttachment(
+                                material=self.object,
+                                file=file,
+                                comment=comment,
+                                uploaded_by=self.request.user
+                            )
+                            # Validate the attachment
+                            attachment.full_clean()
 
-            # Log the update action
-            logger.info(f"Material '{self.object.kurztext_de}' wurde durch '{self.request.user.username}' aktualisiert.")
+                            # Try to save file to S3 first
+                            try:
+                                # Note: Don't save to database yet
+                                attachment.file.save(file.name, file, save=False)
+                            except (BotoCoreError, ClientError) as e:
+                                error_msg = f"Failed to upload file {file.name} to storage: {str(e)}"
+                                logger.error(error_msg)
+                                form.add_error(None, error_msg)
+                                return self.render_to_response(self.get_context_data(form=form))
 
-            return super().form_valid(form)
+                            new_attachments.append(attachment)
+
+                        except ValidationError as e:
+                            error_msg = f"Validation error for file {file.name}: {str(e)}"
+                            logger.error(error_msg)
+                            form.add_error(None, error_msg)
+                            return self.render_to_response(self.get_context_data(form=form))
+
+                # If we got here, all S3 operations were successful
+                # Now save the material object
+                self.object.save()
+
+                # And save all new attachments to database
+                for attachment in new_attachments:
+                    attachment.save()
+
+                # Log the successful update
+                logger.info(f"Material '{self.object.kurztext_de}' wurde durch '{self.request.user.username}' aktualisiert.")
+
+                return super().form_valid(form)
+
+        except ValidationError as e:
+            # Clean up any files that might have been uploaded to S3 before the error
+            for attachment in new_attachments:
+                try:
+                    attachment.file.delete(save=False)
+                except (BotoCoreError, ClientError) as s3_error:
+                    logger.error(f"Failed to clean up file {attachment.file.name} after error: {str(s3_error)}")
+
+            form.add_error(None, str(e))
+            return self.render_to_response(self.get_context_data(form=form))
+
+        except (BotoCoreError, ClientError) as e:
+            error_msg = f"Failed to upload file to storage: {str(e)}"
+            logger.error(error_msg)
+            form.add_error(None, error_msg)
+            return self.render_to_response(self.get_context_data(form=form))
 
         except Exception as e:
-            messages.error(self.request, str(e))
-            return self.form_invalid(form)
+            error_msg = f"Unexpected error: {str(e)}"
+            logger.error(error_msg)
+            form.add_error(None, error_msg)
+            return self.render_to_response(self.get_context_data(form=form))
 
 class ListMaterial_SMDA_View(ComputedContextMixin, GroupRequiredMixin, ListView):
     model = Material
@@ -627,69 +697,110 @@ class UpdateMaterial_SMDA_View(ComputedContextMixin, FormValidMixin_SMDA, GroupR
         # Get the existing object
         self.object = self.get_object()
         form = self.get_form()
-        
+
         if form.is_valid():
             return self.form_valid(form)
         return self.form_invalid(form)
 
     def form_valid(self, form):
         try:
-            # Handle file attachments
-            files = self.request.FILES.getlist('attachment_files[]')
-            comments = self.request.POST.getlist('attachment_comments[]')
+            with transaction.atomic():
+                # Start by validating the form data
+                self.object = form.save(commit=False)
 
-            # Check total number of attachments (existing + new)
-            existing_count = self.object.attachments.count()
-            new_valid_files = [f for f in files if f]  # Filter out empty file inputs
-            if existing_count + len(new_valid_files) > MAX_ATTACHMENTS_PER_MATERIAL:
-                messages.error(self.request,
-                    f'Cannot have more than {MAX_ATTACHMENTS_PER_MATERIAL} attachments per material')
-                return self.form_invalid(form)
+                # Get new files and comments
+                files = self.request.FILES.getlist('attachment_files[]')
+                comments = self.request.POST.getlist('attachment_comments[]')
+                attachments_to_delete = self.request.POST.getlist('delete_attachments[]')
 
-            # Validate file sizes
-            for file in new_valid_files:
-                if file.size > MAX_ATTACHMENT_SIZE:
-                    messages.error(self.request,
-                        f'File {file.name} exceeds the maximum size of {MAX_ATTACHMENT_SIZE/1024/1024:.1f}MB')
-                    return self.form_invalid(form)
+                # Handle deletion of existing attachments first
+                if attachments_to_delete:
+                    attachments = MaterialAttachment.objects.filter(
+                        id__in=attachments_to_delete,
+                        material=self.object
+                    )
+                    for attachment in attachments:
+                        try:
+                            # Delete from S3 first
+                            attachment.file.delete(save=False)
+                        except (BotoCoreError, ClientError) as e:
+                            error_msg = f"Failed to delete file {attachment.file.name} from storage: {str(e)}"
+                            logger.error(error_msg)
+                            form.add_error(None, error_msg)
+                            return self.render_to_response(self.get_context_data(form=form))
 
-            # Save the material instance
-            self.object = form.save()
+                        # If S3 deletion successful, delete from database
+                        attachment.delete()
 
-            # Handle deletion of existing attachments
-            attachments_to_delete = self.request.POST.getlist('delete_attachments[]')
-            if attachments_to_delete:
-                attachments = MaterialAttachment.objects.filter(
-                    id__in=attachments_to_delete,
-                    material=self.object
-                )
-                for attachment in attachments:
-                    attachment.delete()
+                # Create temporary list to track new attachments
+                new_attachments = []
 
-            # Create MaterialAttachment instances for each new file
-            for file, comment in zip(files, comments):
-                if file:  # Only create if a file was actually uploaded
-                    try:
-                        attachment = MaterialAttachment(
-                            material=self.object,
-                            file=file,
-                            comment=comment,
-                            uploaded_by=self.request.user
-                        )
-                        attachment.full_clean()
-                        attachment.save()
-                    except ValidationError as e:
-                        messages.error(self.request, str(e))
-                        return self.form_invalid(form)
+                # Process new file attachments
+                for file, comment in zip(files, comments):
+                    if file:
+                        try:
+                            attachment = MaterialAttachment(
+                                material=self.object,
+                                file=file,
+                                comment=comment,
+                                uploaded_by=self.request.user
+                            )
+                            # Validate the attachment
+                            attachment.full_clean()
 
-            # Log the update action
-            logger.info(f"Material '{self.object.kurztext_de}' wurde durch '{self.request.user.username}' aktualisiert.")
+                            # Try to save file to S3 first
+                            try:
+                                # Note: Don't save to database yet
+                                attachment.file.save(file.name, file, save=False)
+                            except (BotoCoreError, ClientError) as e:
+                                error_msg = f"Failed to upload file {file.name} to storage: {str(e)}"
+                                logger.error(error_msg)
+                                form.add_error(None, error_msg)
+                                return self.render_to_response(self.get_context_data(form=form))
 
-            return super().form_valid(form)
+                            new_attachments.append(attachment)
+
+                        except ValidationError as e:
+                            error_msg = f"Validation error for file {file.name}: {str(e)}"
+                            logger.error(error_msg)
+                            form.add_error(None, error_msg)
+                            return self.render_to_response(self.get_context_data(form=form))
+
+                # If we got here, all S3 operations were successful
+                # Now save the material object
+                self.object.save()
+
+                # And save all new attachments to database
+                for attachment in new_attachments:
+                    attachment.save()
+
+                # Log the successful update
+                logger.info(f"Material '{self.object.kurztext_de}' wurde durch '{self.request.user.username}' aktualisiert.")
+
+                return super().form_valid(form)
+
+        except ValidationError as e:
+            # Clean up any files that might have been uploaded to S3 before the error
+            for attachment in new_attachments:
+                try:
+                    attachment.file.delete(save=False)
+                except (BotoCoreError, ClientError) as s3_error:
+                    logger.error(f"Failed to clean up file {attachment.file.name} after error: {str(s3_error)}")
+
+            form.add_error(None, str(e))
+            return self.render_to_response(self.get_context_data(form=form))
+
+        except (BotoCoreError, ClientError) as e:
+            error_msg = f"Failed to upload file to storage: {str(e)}"
+            logger.error(error_msg)
+            form.add_error(None, error_msg)
+            return self.render_to_response(self.get_context_data(form=form))
 
         except Exception as e:
-            messages.error(self.request, str(e))
-            return self.form_invalid(form)
+            error_msg = f"Unexpected error: {str(e)}"
+            logger.error(error_msg)
+            form.add_error(None, error_msg)
+            return self.render_to_response(self.get_context_data(form=form))
 
 class Logging_View(ListView):
     template_name = 'admin/logging.html'
@@ -712,7 +823,7 @@ class Logging_View(ListView):
             nb_log_entries = len(log_entries)
 
         # Context data to pass to the template
-        context = { 
+        context = {
             'nb_materials': nb_materials,
             'nb_log_entries': nb_log_entries,
             'log_entries': log_entries,
@@ -730,7 +841,7 @@ class RegisterView(View):
         form = UserRegistrationForm(request.POST)
         if form.is_valid():
             submitted_username = form.cleaned_data['username']
-            
+
             user = User.objects.create(
                 username=submitted_username,
                 email=form.cleaned_data['email'],
@@ -784,16 +895,16 @@ class CompleteRegistrationView(View):
                 user.set_password(password)
                 user.is_active = True
                 user.save()
-                
+
                 profile.registration_token = None
                 profile.token_expiry = None
                 profile.save()
-                
+
                 messages.success(request, 'Registration completed! You can now login.')
                 return redirect('login_user')
             else:
                 messages.error(request, 'Please provide a password.')
-                
+
         except Profile.DoesNotExist:
             messages.error(request, 'Invalid or expired registration link.')
 

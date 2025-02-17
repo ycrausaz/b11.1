@@ -330,9 +330,16 @@ class MaterialAttachment(models.Model):
             return None
 
     def delete(self, *args, **kwargs):
-        # Delete the file from S3/MinIO
-        if self.file:
-            self.file.delete(save=False)
+        try:
+            # Try to delete the file from S3
+            if self.file:
+                self.file.delete(save=False)
+        except (BotoCoreError, ClientError) as e:
+            logger.error(f"Failed to delete file {self.file.name} from storage: {str(e)}")
+            # You might want to raise the error here depending on your requirements
+            # For now, we'll continue with the database deletion even if S3 deletion fails
+
+        # Delete the database record
         super().delete(*args, **kwargs)
 
     class Meta:
