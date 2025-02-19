@@ -2,6 +2,7 @@
 
 EDITABLE_FIELDS_IL = [
 'positions_nr', #B
+'referenznummer_leiferant', #C
 'kurztext_de', #D
 'kurztext_fr', #E
 'kurztext_en', #F

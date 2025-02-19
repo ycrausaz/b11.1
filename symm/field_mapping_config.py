@@ -7,6 +7,11 @@ FIELD_MAPPING = {
         'column': 'B',
         'type': 'simple'
     },
+    'referenznummer_leiferant': {
+        'tab': 'Input_Lieferant',
+        'column': 'C',
+        'type': 'simple'
+    },
     'kurztext_de': {
         'tab': 'Input_Lieferant',
         'column': 'D',

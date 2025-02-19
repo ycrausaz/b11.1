@@ -171,6 +171,7 @@ class Material(models.Model):
     transfer_date = models.DateTimeField(null=True, blank=True)
     transfer_comment = models.TextField(null=True, blank=True, max_length=4096, verbose_name=_("Transfer Comment"))
     positions_nr = models.IntegerField(null=True, blank=True, verbose_name=_("Positions-Nr."))
+    referenznummer_leiferant = models.CharField(null=True, blank=True, max_length=40, verbose_name=_("Referenz-Nr. Lieferant"))
     kurztext_de = models.CharField(null=True, blank=True, max_length=40, verbose_name=_("Kurztext DE"))
     kurztext_fr = models.CharField(null=True, blank=True, max_length=40, verbose_name=_("Kurztext FR"))
     kurztext_en = models.CharField(null=True, blank=True, max_length=40, verbose_name=_("Kurztext EN"))
