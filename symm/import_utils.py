@@ -22,43 +22,54 @@ def column_letter_to_index(letter):
 def get_tab_data(excel_file):
     """
     Read all required tabs from the Excel file and return their DataFrames.
-    The number of rows to process is determined by the number of non-empty rows
-    in column B of the 'Input_Lieferant' tab, starting from row 9.
+    Skips rows where positions_nr (column B) or kurztext_de (column D) is empty.
     """
     unique_tabs = {mapping['tab'] for mapping in field_mapping.values()}
     tab_data = {}
 
     try:
-        # First, determine the number of rows by reading column B from Input_Lieferant
+        # First, read columns B and D from Input_Lieferant to determine valid rows
         initial_df = pd.read_excel(
             excel_file,
             sheet_name='Input_Lieferant',
             skiprows=8,  # Skip first 8 rows to start at row 9
-            usecols='B',  # Only read column B
+            usecols='B,D',  # Read columns B (positions_nr) and D (kurztext_de)
             header=None
         )
 
-        # Find the last non-empty row in column B (column index is 1 in pandas)
-        last_row_mask = initial_df[1].notna()  # Column B is index 1
-        if not last_row_mask.any():
-            raise ValueError("No data found in column B of Input_Lieferant tab")
+        # Create masks for rows with non-empty required fields
+        valid_positions_mask = initial_df[1].notna()  # Column B (positions_nr)
+        valid_kurztext_mask = initial_df[3].notna()  # Column D (kurztext_de)
 
-        last_row = last_row_mask[last_row_mask].index[-1]
-        num_rows = last_row + 1
+        # Combine masks to get rows where both fields are non-empty
+        valid_rows_mask = valid_positions_mask & valid_kurztext_mask
 
-        logger.info(f"Determined {num_rows} rows of data from Input_Lieferant tab, column B")
+        if not valid_rows_mask.any():
+            raise ValueError("No valid data found with both positions_nr and kurztext_de in Input_Lieferant tab")
 
-        # Now read all required tabs with the determined number of rows
+        # Get indices of valid rows
+        valid_row_indices = valid_rows_mask[valid_rows_mask].index
+
+        logger.info(f"Found {len(valid_row_indices)} valid rows with both positions_nr and kurztext_de in Input_Lieferant tab")
+
+        # Track skipped rows for logging
+        total_rows = len(initial_df)
+        skipped_rows = total_rows - len(valid_row_indices)
+        logger.info(f"Skipped {skipped_rows} rows due to missing positions_nr or kurztext_de")
+
+        # Now read all required tabs, but only keep the valid rows
         for tab in unique_tabs:
             try:
-                # Read the sheet into a pandas DataFrame
+                # Read the entire sheet
                 df = pd.read_excel(
                     excel_file,
                     sheet_name=tab,
                     skiprows=8,  # Skip first 8 rows to start at row 9
-                    nrows=num_rows,  # Only read the determined number of rows
                     header=None
                 )
+
+                # Filter to keep only rows with valid data
+                df = df.iloc[valid_row_indices]
 
                 # Create a dictionary to store column mappings
                 col_mappings = {}
@@ -70,7 +81,7 @@ def get_tab_data(excel_file):
                 # Rename columns to match Excel letters
                 df.rename(columns={col_idx: letter for col_idx, letter in col_mappings.items()}, inplace=True)
 
-                # Reset the index to start from 0 after skipping rows
+                # Reset the index to start from 0 after filtering
                 df.reset_index(drop=True, inplace=True)
 
                 tab_data[tab] = df
@@ -82,8 +93,8 @@ def get_tab_data(excel_file):
                 raise ValueError(f"Error reading tab {tab}: {str(e)}")
 
     except Exception as e:
-        logger.error(f"Error determining number of rows from Input_Lieferant tab: {str(e)}")
-        raise ValueError(f"Error determining number of rows from Input_Lieferant tab: {str(e)}")
+        logger.error(f"Error determining valid rows from Input_Lieferant tab: {str(e)}")
+        raise ValueError(f"Error determining valid rows from Input_Lieferant tab: {str(e)}")
 
     return tab_data
 
@@ -139,7 +150,7 @@ def process_field_value(field_config, value, row_data):
     # Handle different field types
     if field_config['type'] == 'simple':
         return value
-    
+
     elif field_config['type'] == 'boolean':
         if isinstance(value, str):
             value = value.strip().upper()
@@ -150,15 +161,15 @@ def process_field_value(field_config, value, row_data):
         else:
             logger.warning(f"Unexpected boolean value type: {type(value)}")
             return None
-    
+
     elif field_config['type'] in ['fk', 'padded_fk']:
         model_class = field_config['model']
         lookup_field = field_config['lookup_field']
-        
+
         try:
             if pd.isna(value):
                 return None
-            
+
             # Handle the value conversion first
             if isinstance(value, (int, float)):
                 # Convert to integer first to remove decimal point if it's a float
@@ -180,7 +191,7 @@ def process_field_value(field_config, value, row_data):
                 error_msg = f"{model_class.__name__} with {lookup_field}='{value}' does not exist in the database"
                 logger.error(error_msg)
                 raise ValueError(error_msg)
-            
+
         except Exception as e:
             error_msg = f"Error processing foreign key {model_class.__name__}: {str(e)}"
             logger.error(error_msg)
