@@ -46,7 +46,7 @@ def export_to_excel(materials, export_type):
     ]
 
     view_to_sheet = {
-        'MARA_Grunddaten': 'MARA - Grunddaten',
+        'MARA_MARA': 'MARA - MARA',
         'MAKT_Beschreibung': 'MAKT - Beschreibung',
         'MARA_STXH_Grunddaten': 'MARA_STXH - Grunddaten. Text Al',
         'MARA_STXL_Grunddaten': 'MARA_STXL - Grunddaten. Text',
