@@ -4,7 +4,7 @@ CREATE OR REPLACE VIEW mara_kssk_klassenzuordnung
          SELECT a.id AS tmp_id,
             a.positions_nr AS source_id,
             '001'::text AS klart
-           FROM b11_1_material a
+           FROM symm_material a
           WHERE a.is_transferred = true
         )
  SELECT source_data.tmp_id,

@@ -9,8 +9,8 @@ CREATE OR REPLACE VIEW marc_werksdaten
         CASE
             WHEN a.orderbuchpflicht = true THEN 'X'::text
         END AS kordb
-   FROM b11_1_material a
-     LEFT JOIN b11_1_werkzuordnung_1 b ON a.werkzuordnung_1_id = b.id
-     LEFT JOIN b11_1_fertigungssteuerer c ON a.fertigungssteuerer_id = c.id
+   FROM symm_material a
+     LEFT JOIN symm_werkzuordnung_1 b ON a.werkzuordnung_1_id = b.id
+     LEFT JOIN symm_fertigungssteuerer c ON a.fertigungssteuerer_id = c.id
   WHERE a.is_transferred = true
   ORDER BY a.positions_nr, b.text;

@@ -9,8 +9,8 @@ CREATE OR REPLACE VIEW mbew_buchhaltung
     a.preiseinheit AS peinh,
     f.text AS bklas,
     a.preisermittlung as mlast
-   FROM b11_1_material a
-     LEFT JOIN b11_1_werkzuordnung_1 b ON a.werkzuordnung_1_id = b.id
-     LEFT JOIN b11_1_bewertungsklasse f ON a.bewertungsklasse_id = f.id
+   FROM symm_material a
+     LEFT JOIN symm_werkzuordnung_1 b ON a.werkzuordnung_1_id = b.id
+     LEFT JOIN symm_bewertungsklasse f ON a.bewertungsklasse_id = f.id
   WHERE a.is_transferred = true
   ORDER BY a.positions_nr, b.text;

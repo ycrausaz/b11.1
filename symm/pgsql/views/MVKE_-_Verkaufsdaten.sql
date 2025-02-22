@@ -5,7 +5,7 @@ CREATE OR REPLACE VIEW mvke_verkaufsdaten
     a.verkaufsorg as vkorg,
     a.vertriebsweg AS vtweg,
     c.text AS mtpos
-   FROM b11_1_material a
-     LEFT JOIN b11_1_allgemeinepositionstypengruppe c ON c.id = a.allgemeine_positionstypengruppe_id
+   FROM symm_material a
+     LEFT JOIN symm_allgemeinepositionstypengruppe c ON c.id = a.allgemeine_positionstypengruppe_id
   WHERE a.is_transferred = true
   ORDER BY a.positions_nr;

@@ -32,8 +32,8 @@ CREATE OR REPLACE VIEW mara_ausp_merkmale
             a.preiseinheit AS v_preiseinheit,
             to_char(CURRENT_DATE::timestamp with time zone, 'DD.MM.YYYY'::text) AS v_gueltigab,
             a.lagerfaehigkeit AS v_lagerfaehigkeit
-           FROM b11_1_material a
-             LEFT JOIN b11_1_uebersetzungsstatus b ON b.id = a.uebersetzungsstatus_id
+           FROM symm_material a
+             LEFT JOIN symm_uebersetzungsstatus b ON b.id = a.uebersetzungsstatus_id
           WHERE a.is_transferred = true
         )
  SELECT original_query.tmp_id,
