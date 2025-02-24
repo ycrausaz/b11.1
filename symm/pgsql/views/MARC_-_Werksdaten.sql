@@ -8,6 +8,7 @@ CREATE OR REPLACE VIEW marc_werksdaten
     c.text AS fevor,
         CASE
             WHEN a.orderbuchpflicht = true THEN 'X'::text
+            ELSE NULL::text
         END AS kordb
    FROM symm_material a
      LEFT JOIN symm_werkzuordnung_1 b ON a.werkzuordnung_1_id = b.idx

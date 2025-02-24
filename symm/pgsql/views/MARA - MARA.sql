@@ -47,9 +47,9 @@ CREATE OR REPLACE VIEW mara_mara
     j.text AS tempb,
     k.text AS zzsonderablauf,
     '2'::text AS "IPRKZ",
-    a.externe_warengruppe as extwg,
+    a.externe_warengruppe AS extwg,
         CASE
-            WHEN a.kennzeichen_komplexes_system = true then 'X'::text
+            WHEN a.kennzeichen_komplexes_system = true THEN 'X'::text
             ELSE ''::text
         END AS zzkomsys
    FROM symm_material a

@@ -2,7 +2,7 @@ CREATE OR REPLACE VIEW mvke_verkaufsdaten
  AS
  SELECT a.id AS tmp_id,
     a.positions_nr AS source_id,
-    a.verkaufsorg as vkorg,
+    a.verkaufsorg AS vkorg,
     a.vertriebsweg AS vtweg,
     c.text AS mtpos
    FROM symm_material a

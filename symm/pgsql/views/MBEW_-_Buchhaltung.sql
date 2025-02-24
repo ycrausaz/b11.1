@@ -8,7 +8,7 @@ CREATE OR REPLACE VIEW mbew_buchhaltung
     a.preis AS stprs,
     a.preiseinheit AS peinh,
     f.text AS bklas,
-    a.preisermittlung as mlast
+    a.preisermittlung AS mlast
    FROM symm_material a
      LEFT JOIN symm_werkzuordnung_1 b ON a.werkzuordnung_1_id = b.idx
      LEFT JOIN symm_bewertungsklasse f ON a.bewertungsklasse_id = f.idx
