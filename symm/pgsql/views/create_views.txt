@@ -10,7 +10,7 @@ CREATE OR REPLACE VIEW ckmlcr_material_ledger_preise
     a.preis AS pvprs,
     'CHF'::text AS waers
    FROM symm_material a
-     LEFT JOIN symm_werkzuordnung_1 b ON a.werkzuordnung_1_id = b.id
+     LEFT JOIN symm_werkzuordnung_1 b ON a.werkzuordnung_1_id = b.idx
   WHERE a.is_transferred = true
   ORDER BY a.positions_nr, b.text;
 CREATE OR REPLACE VIEW makt_beschreibung
@@ -36,14 +36,14 @@ UNION ALL
    FROM symm_material
   WHERE symm_material.is_transferred = true
   ORDER BY 1;
-CREATE OR REPLACE VIEW mara_grunddaten
+CREATE OR REPLACE VIEW mara_mara
  AS
  SELECT a.id AS tmp_id,
     a.positions_nr AS source_id,
     b.text AS mtart,
     c.text AS meins,
     a.herstellerteilenummer AS mfrpn,
-    a.hersteller AS mfrnr,
+    a.geschaeftspartner AS mfrnr,
     a.groesse_abmessung AS groes,
     a.nettogewicht AS ntgew,
     a.laenge AS laeng,
@@ -84,19 +84,22 @@ CREATE OR REPLACE VIEW mara_grunddaten
     'UAM'::text AS hndlcode,
     j.text AS tempb,
     k.text AS zzsonderablauf,
-    a.lagerfaehigkeit AS "MARA-MHDHB",
-    '1'::text AS "MARA-MHDRZ",
-    '2'::text AS "MARA-IPRKZ"
+    '2'::text AS "IPRKZ",
+    a.externe_warengruppe as extwg,
+        CASE
+            WHEN a.kennzeichen_komplexes_system = true then 'X'::text
+            ELSE ''::text
+        END AS zzkomsys
    FROM symm_material a
-     LEFT JOIN symm_materialart b ON b.id = a.materialart_grunddaten_id
-     LEFT JOIN symm_basismengeneinheit c ON c.id = a.basismengeneinheit_id
-     LEFT JOIN symm_gefahrgutkennzeichen d ON d.id = a.gefahrgutkennzeichen_id
-     LEFT JOIN symm_begru e ON e.id = a.begru_id
-     LEFT JOIN symm_sparte f ON f.id = a.sparte_id
-     LEFT JOIN symm_rueckfuehrungscode h ON h.id = a.rueckfuehrungscode_id
-     LEFT JOIN symm_sparepartclasscode i ON i.id = a.spare_part_class_code_id
-     LEFT JOIN symm_temperaturbedingung j ON j.id = a.temperaturbedingung_id
-     LEFT JOIN symm_sonderablauf k ON k.id = a.sonderablauf_id
+     LEFT JOIN symm_materialart b ON b.idx = a.materialart_grunddaten_id
+     LEFT JOIN symm_basismengeneinheit c ON c.idx = a.basismengeneinheit_id
+     LEFT JOIN symm_gefahrgutkennzeichen d ON d.idx = a.gefahrgutkennzeichen_id
+     LEFT JOIN symm_begru e ON e.idx = a.begru_id
+     LEFT JOIN symm_sparte f ON f.idx = a.sparte_id
+     LEFT JOIN symm_rueckfuehrungscode h ON h.idx = a.rueckfuehrungscode_id
+     LEFT JOIN symm_sparepartclasscode i ON i.idx = a.spare_part_class_code_id
+     LEFT JOIN symm_temperaturbedingung j ON j.idx = a.temperaturbedingung_id
+     LEFT JOIN symm_sonderablauf k ON k.idx = a.sonderablauf_id
   WHERE a.is_transferred = true;
 CREATE OR REPLACE VIEW mara_ausp_merkmale
  AS
@@ -127,13 +130,22 @@ CREATE OR REPLACE VIEW mara_ausp_merkmale
                     WHEN a.verteilung_svsaa = true THEN 'X'::text
                     ELSE ''::text
                 END AS v_svsaa,
+                CASE
+                    WHEN a.mietrelevanz = true THEN 'X'::text
+                    ELSE ''::text
+                END as v_miet_relevanz,
+            a.nachschubklasse as v_nachschubklasse,
             a.preis AS v_bewertungspreis,
             a.waehrung AS v_waehrung,
             a.preiseinheit AS v_preiseinheit,
             to_char(CURRENT_DATE::timestamp with time zone, 'DD.MM.YYYY'::text) AS v_gueltigab,
-            a.lagerfaehigkeit AS v_lagerfaehigkeit
+            a.lagerfaehigkeit AS v_lagerfaehigkeit,
+            c.text as zuteilung,
+            d.text as auspraegung
            FROM symm_material a
-             LEFT JOIN symm_uebersetzungsstatus b ON b.id = a.uebersetzungsstatus_id
+             LEFT JOIN symm_uebersetzungsstatus b ON b.idx = a.uebersetzungsstatus_id
+             LEFT JOIN symm_zuteilung c on c.idx = a.zuteilung_id
+             LEFT JOIN symm_auspraegung d on d.idx = a.auspraegung_id
           WHERE a.is_transferred = true
         )
  SELECT original_query.tmp_id,
@@ -198,13 +210,13 @@ UNION ALL
     original_query.v_apm AS atwrt,
     'V_APM'::text AS atnam
    FROM original_query
-UNION ALL
- SELECT original_query.tmp_id,
-    original_query.source_id,
-    original_query.klart,
-    original_query.v_cheops AS atwrt,
-    'V_CHEOPS'::text AS atnam
-   FROM original_query
+--UNION ALL
+-- SELECT original_query.tmp_id,
+--    original_query.source_id,
+--    original_query.klart,
+--    original_query.v_cheops AS atwrt,
+--    'V_CHEOPS'::text AS atnam
+--   FROM original_query
 UNION ALL
  SELECT original_query.tmp_id,
     original_query.source_id,
@@ -247,6 +259,60 @@ UNION ALL
     original_query.v_lagerfaehigkeit::character varying AS atwrt,
     'V_LAGERFAEHIGKEIT'::text AS atnam
    FROM original_query
+UNION ALL
+ SELECT original_query.tmp_id,
+    original_query.source_id,
+    original_query.klart,
+        CASE
+            WHEN original_query.zuteilung = 'BM' THEN original_query.auspraegung
+            ELSE ''::text
+        END AS atwart,
+    'V_BETRIEBSMITTEL'::text AS atnam
+   FROM original_query
+UNION ALL
+ SELECT original_query.tmp_id,
+    original_query.source_id,
+    original_query.klart,
+        CASE
+            WHEN original_query.zuteilung = 'TRP' THEN original_query.auspraegung
+            ELSE ''::text
+        END AS atwart,
+    'V_SONDERBETRIEBSMITTEL_TRP'::text AS atnam
+   FROM original_query
+UNION ALL
+ SELECT original_query.tmp_id,
+    original_query.source_id,
+    original_query.klart,
+        CASE
+            WHEN original_query.zuteilung = 'MKZ' THEN original_query.auspraegung
+            ELSE ''::text
+        END AS atwart,
+    'V_SONDERBETRIEBSMITTEL_MKZ'::text AS atnam
+   FROM original_query
+UNION ALL
+ SELECT original_query.tmp_id,
+    original_query.source_id,
+    original_query.klart,
+        CASE
+            WHEN original_query.zuteilung = 'PRD' THEN original_query.auspraegung
+            ELSE ''::text
+        END AS atwart,
+    'V_SONDERBETRIEBSMITTEL_PRD'::text AS atnam
+   FROM original_query
+UNION ALL
+ SELECT original_query.tmp_id,
+    original_query.source_id,
+    original_query.klart,
+    original_query.v_miet_relevanz AS atwrt,
+    'V_MIET_RELEVANZ'::text AS atnam
+   FROM original_query
+UNION ALL
+ SELECT original_query.tmp_id,
+    original_query.source_id,
+    original_query.klart,
+    original_query.v_nachschubklasse AS atwrt,
+    'V_NACHSCHUBKLASSE'::text AS atnam
+   FROM original_query
   ORDER BY 1, 4;
 CREATE OR REPLACE VIEW mara_kssk_klassenzuordnung
  AS
@@ -261,12 +327,6 @@ CREATE OR REPLACE VIEW mara_kssk_klassenzuordnung
     source_data.source_id,
     source_data.klart,
     'V_VERTEILUNG_PSD'::text AS class
-   FROM source_data
-UNION ALL
- SELECT source_data.tmp_id,
-    source_data.source_id,
-    source_data.klart,
-    'V_VERTEILUNG_RUAG'::text AS class
    FROM source_data
 UNION ALL
  SELECT source_data.tmp_id,
@@ -399,8 +459,8 @@ CREATE OR REPLACE VIEW marc_werksdaten
             WHEN a.orderbuchpflicht = true THEN 'X'::text
         END AS kordb
    FROM symm_material a
-     LEFT JOIN symm_werkzuordnung_1 b ON a.werkzuordnung_1_id = b.id
-     LEFT JOIN symm_fertigungssteuerer c ON a.fertigungssteuerer_id = c.id
+     LEFT JOIN symm_werkzuordnung_1 b ON a.werkzuordnung_1_id = b.idx
+     LEFT JOIN symm_fertigungssteuerer c ON a.fertigungssteuerer_id = c.idx
   WHERE a.is_transferred = true
   ORDER BY a.positions_nr, b.text;
 CREATE OR REPLACE VIEW mbew_buchhaltung
@@ -415,8 +475,8 @@ CREATE OR REPLACE VIEW mbew_buchhaltung
     f.text AS bklas,
     a.preisermittlung as mlast
    FROM symm_material a
-     LEFT JOIN symm_werkzuordnung_1 b ON a.werkzuordnung_1_id = b.id
-     LEFT JOIN symm_bewertungsklasse f ON a.bewertungsklasse_id = f.id
+     LEFT JOIN symm_werkzuordnung_1 b ON a.werkzuordnung_1_id = b.idx
+     LEFT JOIN symm_bewertungsklasse f ON a.bewertungsklasse_id = f.idx
   WHERE a.is_transferred = true
   ORDER BY a.positions_nr, b.text;
 CREATE OR REPLACE VIEW mlan_steuer
@@ -435,6 +495,6 @@ CREATE OR REPLACE VIEW mvke_verkaufsdaten
     a.vertriebsweg AS vtweg,
     c.text AS mtpos
    FROM symm_material a
-     LEFT JOIN symm_allgemeinepositionstypengruppe c ON c.id = a.allgemeine_positionstypengruppe_id
+     LEFT JOIN symm_allgemeinepositionstypengruppe c ON c.idx = a.allgemeine_positionstypengruppe_id
   WHERE a.is_transferred = true
   ORDER BY a.positions_nr;

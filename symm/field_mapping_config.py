@@ -504,6 +504,11 @@ FIELD_MAPPING = {
         'column': 'AE',
         'type': 'simple'
     },
+    'externe_warengruppe': {
+        'tab': 'Systemmanager - Datenassistent',
+        'column': 'AF',
+        'type': 'simple'
+    },
 # End SMDA
 }
 

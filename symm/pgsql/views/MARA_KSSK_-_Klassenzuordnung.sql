@@ -16,12 +16,6 @@ UNION ALL
  SELECT source_data.tmp_id,
     source_data.source_id,
     source_data.klart,
-    'V_VERTEILUNG_RUAG'::text AS class
-   FROM source_data
-UNION ALL
- SELECT source_data.tmp_id,
-    source_data.source_id,
-    source_data.klart,
     'V_ZUSATZDATEN'::text AS class
    FROM source_data
 UNION ALL

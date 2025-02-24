@@ -46,15 +46,20 @@ CREATE OR REPLACE VIEW mara_mara
     'UAM'::text AS hndlcode,
     j.text AS tempb,
     k.text AS zzsonderablauf,
-    '2'::text AS "MARA-IPRKZ"
+    '2'::text AS "IPRKZ",
+    a.externe_warengruppe as extwg,
+        CASE
+            WHEN a.kennzeichen_komplexes_system = true then 'X'::text
+            ELSE ''::text
+        END AS zzkomsys
    FROM symm_material a
-     LEFT JOIN symm_materialart b ON b.id = a.materialart_grunddaten_id
-     LEFT JOIN symm_basismengeneinheit c ON c.id = a.basismengeneinheit_id
-     LEFT JOIN symm_gefahrgutkennzeichen d ON d.id = a.gefahrgutkennzeichen_id
-     LEFT JOIN symm_begru e ON e.id = a.begru_id
-     LEFT JOIN symm_sparte f ON f.id = a.sparte_id
-     LEFT JOIN symm_rueckfuehrungscode h ON h.id = a.rueckfuehrungscode_id
-     LEFT JOIN symm_sparepartclasscode i ON i.id = a.spare_part_class_code_id
-     LEFT JOIN symm_temperaturbedingung j ON j.id = a.temperaturbedingung_id
-     LEFT JOIN symm_sonderablauf k ON k.id = a.sonderablauf_id
+     LEFT JOIN symm_materialart b ON b.idx = a.materialart_grunddaten_id
+     LEFT JOIN symm_basismengeneinheit c ON c.idx = a.basismengeneinheit_id
+     LEFT JOIN symm_gefahrgutkennzeichen d ON d.idx = a.gefahrgutkennzeichen_id
+     LEFT JOIN symm_begru e ON e.idx = a.begru_id
+     LEFT JOIN symm_sparte f ON f.idx = a.sparte_id
+     LEFT JOIN symm_rueckfuehrungscode h ON h.idx = a.rueckfuehrungscode_id
+     LEFT JOIN symm_sparepartclasscode i ON i.idx = a.spare_part_class_code_id
+     LEFT JOIN symm_temperaturbedingung j ON j.idx = a.temperaturbedingung_id
+     LEFT JOIN symm_sonderablauf k ON k.idx = a.sonderablauf_id
   WHERE a.is_transferred = true;

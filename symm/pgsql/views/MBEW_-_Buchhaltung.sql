@@ -10,7 +10,7 @@ CREATE OR REPLACE VIEW mbew_buchhaltung
     f.text AS bklas,
     a.preisermittlung as mlast
    FROM symm_material a
-     LEFT JOIN symm_werkzuordnung_1 b ON a.werkzuordnung_1_id = b.id
-     LEFT JOIN symm_bewertungsklasse f ON a.bewertungsklasse_id = f.id
+     LEFT JOIN symm_werkzuordnung_1 b ON a.werkzuordnung_1_id = b.idx
+     LEFT JOIN symm_bewertungsklasse f ON a.bewertungsklasse_id = f.idx
   WHERE a.is_transferred = true
   ORDER BY a.positions_nr, b.text;

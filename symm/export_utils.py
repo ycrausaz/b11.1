@@ -106,9 +106,24 @@ def export_to_excel(materials, export_type):
                     df['SOURCE_ID'] = df['SOURCE_ID'].astype(str).str.zfill(3)
                     df = df.sort_values(by='SOURCE_ID')
 
-                # Replace 'MFRPN' column values with 16-character random strings
-                if 'MFRPN' in df.columns:
-                    df['MFRPN'] = df['MFRPN'].apply(lambda x: generate_random_string())
+                # Transform MFRPN column if it exists
+                if 'ZZFUEHR_MAT' in df.columns:
+                    # Apply transformation to convert NNNN.NNNN to 0000000000NNNNNNNN
+                    df['ZZFUEHR_MAT'] = df['ZZFUEHR_MAT'].apply(
+                        lambda x: '0000000000' + x.replace('.', '') 
+                        if isinstance(x, str) and '.' in x 
+                        else x
+                    )
+
+                # Format dimension columns (LAENG, BREIT, HOEHE) to have 3 decimal places
+                for dimension_col in ['LAENG', 'BREIT', 'HOEHE']:
+                    if dimension_col in df.columns:
+                        # First ensure values are converted to float
+                        df[dimension_col] = pd.to_numeric(df[dimension_col], errors='coerce')
+                        # Format to display exactly 3 decimal places
+                        df[dimension_col] = df[dimension_col].apply(
+                            lambda x: f"{x:.3f}" if pd.notnull(x) else x
+                        )
 
                 # Filter out records with null values in specified columns for specific views
                 if view == 'MARC_Werksdaten' and 'WERKS' in df.columns:

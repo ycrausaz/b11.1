@@ -10,7 +10,7 @@ CREATE OR REPLACE VIEW marc_werksdaten
             WHEN a.orderbuchpflicht = true THEN 'X'::text
         END AS kordb
    FROM symm_material a
-     LEFT JOIN symm_werkzuordnung_1 b ON a.werkzuordnung_1_id = b.id
-     LEFT JOIN symm_fertigungssteuerer c ON a.fertigungssteuerer_id = c.id
+     LEFT JOIN symm_werkzuordnung_1 b ON a.werkzuordnung_1_id = b.idx
+     LEFT JOIN symm_fertigungssteuerer c ON a.fertigungssteuerer_id = c.idx
   WHERE a.is_transferred = true
   ORDER BY a.positions_nr, b.text;

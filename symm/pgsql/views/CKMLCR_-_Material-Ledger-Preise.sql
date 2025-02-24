@@ -10,6 +10,6 @@ CREATE OR REPLACE VIEW ckmlcr_material_ledger_preise
     a.preis AS pvprs,
     'CHF'::text AS waers
    FROM symm_material a
-     LEFT JOIN symm_werkzuordnung_1 b ON a.werkzuordnung_1_id = b.id
+     LEFT JOIN symm_werkzuordnung_1 b ON a.werkzuordnung_1_id = b.idx
   WHERE a.is_transferred = true
   ORDER BY a.positions_nr, b.text;
