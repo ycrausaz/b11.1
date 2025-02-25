@@ -100,6 +100,7 @@ EDITABLE_FIELDS_SMDA = [
 'kennzeichen_komplexes_system', #AC
 'kennziffer_bamf', #AD
 'next_higher_assembly', #AE
+'externe_warengruppe', #AF
 #'transfer_comment',
 ]
 

@@ -239,15 +239,15 @@ class FormValidMixin_SMDA:
 
         # Ausprägung
         print("item.zuteilung_id = " + str(item.zuteilung_id))
-        zuteilung = Zuteilung.objects.filter(id=item.zuteilung_id).first()
+        zuteilung = item.zuteilung
         print("zuteilung = " + str(zuteilung))
         print("item.auspraegung_id = " + str(item.auspraegung_id))
-        auspraegung = Auspraegung.objects.filter(id=item.auspraegung_id).first()
+        auspraegung = item.auspraegung
         print("auspraegung = " + str(auspraegung))
-        if zuteilung.text == "MKZ" and auspraegung.text == "04":
-            form.add_error('auspraegung', "Die Ausprägung mit 'MKZ' muss '01', '02' oder '03' sein.")
-        if zuteilung.text == "PRD" and auspraegung.text == "04":
-            form.add_error('auspraegung', "Die Ausprägung mit 'PRD' muss '01', '02' oder '03' sein.")
+        if zuteilung.text == "MKZ" and (auspraegung.text == "02" or auspraegung.text == "03" or auspraegung.text == "04"):
+            form.add_error('auspraegung', "Die Ausprägung mit 'MKZ' muss '01' sein.")
+        if zuteilung.text == "PRD" and (auspraegung.text == "03" or auspraegung.text == "04"):
+            form.add_error('auspraegung', "Die Ausprägung mit 'PRD' muss '01' oder '02' sein.")
 
         if form.errors:
             return self.form_invalid(form)
