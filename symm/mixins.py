@@ -206,28 +206,6 @@ class FormValidMixin_SMDA:
             item.auszeichnungsfeld = "R"
         print("item.auszeichnungsfeld = " + str(item.auszeichnungsfeld))
 
-        print("item.materialart_grunddaten_id = " + str(item.materialart_grunddaten_id))
-        mat_art = Materialart.objects.filter(id=item.id).first()
-#        print("mat_art.text = " + str(mat_art.text))
-#        print("<<< APPLY THE RULE HERE >>>")
-
-#        base_obj = Material.objects.filter(id=item.id)
-#        print("base_obj = " + str(base_obj))
-#
-#        field_names = [field.name for field in Material._meta.get_fields()]
-#        materials_data = []
-#        for obj in base_obj:
-#            field_value_dict = {}
-#            for field in field_names:
-#                # Use getattr to get the value of the field from the object
-#                value = getattr(obj, field, None)
-#                field_value_dict[field] = value
-#            materials_data.append(field_value_dict)
-#
-#        pprint(materials_data)
-#
-#        print("base_obj.materialart_grunddaten = " + str(base_obj.materialart_grunddaten))
-
         # Preissteuerung
         item.preissteuerung = "<< TBD >>"
         print("item.preissteuerung = " + item.preissteuerung)

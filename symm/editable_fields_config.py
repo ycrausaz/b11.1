@@ -51,7 +51,7 @@ EDITABLE_FIELDS_IL = [
 EDITABLE_FIELDS_GD = [
 'begru', #C
 'sparte', #D
-'geschaeftspartner', #D
+'geschaeftspartner', #E
 'warengruppe', #F
 'uebersetzungsstatus', #G
 'verteilung_an_psd', #H
