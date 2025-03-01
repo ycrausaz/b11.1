@@ -18,7 +18,7 @@ urlpatterns = [
 
 # Add translated URLs
 urlpatterns += i18n_patterns(
-    path('', include('symm.urls')),  # Include all your app URLs
+    path('', include('b11_1.urls')),  # Include all your app URLs
     path('main_admin/', admin.site.urls),
     prefix_default_language=True
 ) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

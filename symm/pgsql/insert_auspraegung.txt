@@ -1,1 +1,0 @@
-insert into "symm_auspraegung" (idx, text) values (1, '01'), (2, '02'), (3, '03'), (4, '04');

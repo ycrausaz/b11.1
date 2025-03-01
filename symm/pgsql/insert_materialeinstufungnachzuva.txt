@@ -1,1 +1,0 @@
-insert into "symm_materialeinstufungnachzuva" (idx, text) values (1, 'SSB'),(2, 'HSB'),(3, 'ESB'),(4, 'UAM');

@@ -1,4 +1,0 @@
-insert into "symm_werkzuordnung_1" (idx, text, explanation) values (1, '0420', 'Logistikwerk'),(2, '0430', 'Truppen- / Einsatzwerk'),(3, '0440', 'Log San Material'),(4, '0800', 'armasuisse');
-insert into "symm_werkzuordnung_2" (idx, text, explanation) values (1, '0420', 'Logistikwerk'),(2, '0430', 'Truppen- / Einsatzwerk'),(3, '0440', 'Log San Material'),(4, '0800', 'armasuisse');
-insert into "symm_werkzuordnung_3" (idx, text, explanation) values (1, '0420', 'Logistikwerk'),(2, '0430', 'Truppen- / Einsatzwerk'),(3, '0440', 'Log San Material'),(4, '0800', 'armasuisse');
-insert into "symm_werkzuordnung_4" (idx, text, explanation) values (1, '0420', 'Logistikwerk'),(2, '0430', 'Truppen- / Einsatzwerk'),(3, '0440', 'Log San Material'),(4, '0800', 'armasuisse');

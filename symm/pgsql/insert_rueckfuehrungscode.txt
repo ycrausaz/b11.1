@@ -1,1 +1,0 @@
-insert into "symm_rueckfuehrungscode" (idx, text, explanation) values (1, 'F', 'Verbrauchsmaterial nur Zustandscode F'), (2, 'R', 'Verbrauchsmaterial mit Rückgabepflicht'),(3, 'N', 'keine Rückgabepflicht'),(4, 'V', 'Verbrauchsmaterial');

@@ -1,1 +1,0 @@
-insert into "symm_sonderablauf" (idx, text, explanation) values (1, 'M', 'Mehrstufige Ih (Item kann auf mehreren Ih-Stufen instandgehalten werden, Beispiel: kleinere Defekte bei LBA, grössere Schäden bei RUAG)'), (2, 'N', 'kein Sonderablauf');

@@ -1,1 +1,0 @@
-\copy symm_helptooltip (field_name, content) FROM 'symm/pgsql/help.csv' WITH (FORMAT csv, DELIMITER '|', QUOTE '"', ESCAPE '"', HEADER);
