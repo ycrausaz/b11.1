@@ -309,6 +309,13 @@ input[type="number"] {
     opacity: 0.65;
 }
 
+    /* Styles for conditional required fields */
+    .conditional-required {
+        display: none; /* Initially hidden, shown via JavaScript */
+    }
+
+</style>
+
 <script>
 $(document).ready(function() {
     const MAX_FILE_SIZE = 2.5 * 1024 * 1024; // 2.5MB in bytes
@@ -409,9 +416,6 @@ $(document).ready(function() {
     });
 });
 </script>
-
-</style>
-
 
   <title>Beilage 11.1</title>
   </head>
