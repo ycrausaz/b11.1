@@ -141,7 +141,7 @@ def export_to_excel(materials, export_type):
 
     # Create the HttpResponse object with the appropriate Excel header
     response = HttpResponse(output, content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-    response['Content-Disposition'] = 'attachment; filename=MDG_UPLOAD_' + datetime.today().strftime('%Y%m%d_%H%M%S') + '.xlsx'
+    response['Content-Disposition'] = 'attachment; filename=MDG_UPLOAD_' + datetime.today().strftime('%Y%m%d_%H%M%S') + '_' + export_type + '.xlsx'
 
     return response
 

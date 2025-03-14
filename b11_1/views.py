@@ -503,9 +503,7 @@ class ListMaterial_GD_View(ComputedContextMixin, GroupRequiredMixin, ListView):
         selected_material_ids = request.POST.getlist('selected_materials')
         print("len(selected_material_ids) = ", str(len(selected_material_ids)))
         # To switch from LBA mode to RUAG mode
-        export_type = request.POST.get('export_type')
         action = request.POST.get('action')
-        print("action = ", action)
 
         if selected_material_ids and action:
             selected_materials = Material.objects.filter(id__in=selected_material_ids)
@@ -526,10 +524,14 @@ class ListMaterial_GD_View(ComputedContextMixin, GroupRequiredMixin, ListView):
                 for material in selected_materials:
                     logger.info("Material '" + material.kurztext_de + "' durch '" + request.user.username + "' gelöscht.")
                     material.delete()
-            elif action == 'export':
+            elif action == 'export_lba':
                 for material in selected_materials:
-                    logger.info("Material '" + material.kurztext_de + "' durch '" + request.user.username + "' exportiert.")
-                return export_to_excel(selected_materials, export_type)
+                    logger.info("Material '" + material.kurztext_de + "' durch '" + request.user.username + "' exportiert (LBA).")
+                return export_to_excel(selected_materials, 'LBA')
+            elif action == 'export_ruag':
+                for material in selected_materials:
+                    logger.info("Material '" + material.kurztext_de + "' durch '" + request.user.username + "' exportiert (RUAG).")
+                return export_to_excel(selected_materials, 'RUAG')
 
         return redirect(reverse('list_material_gd'))
 
@@ -690,7 +692,6 @@ class ListMaterial_SMDA_View(ComputedContextMixin, GroupRequiredMixin, ListView)
     def post(self, request, *args, **kwargs):
         selected_material_ids = request.POST.getlist('selected_materials')
         # To switch from LBA mode to RUAG mode
-        export_type = request.POST.get('export_type')
         action = request.POST.get('action')
 
         if selected_material_ids and action:
@@ -711,10 +712,14 @@ class ListMaterial_SMDA_View(ComputedContextMixin, GroupRequiredMixin, ListView)
                 for material in selected_materials:
                     logger.info("Material '" + material.kurztext_de + "' durch '" + request.user.username + "' gelöscht.")
                 selected_materials.delete()
-            elif action == 'export':
+            elif action == 'export_lba':
                 for material in selected_materials:
-                    logger.info("Material '" + material.kurztext_de + "' durch '" + request.user.username + "' exportiert.")
-                return export_to_excel(selected_materials, export_type)
+                    logger.info("Material '" + material.kurztext_de + "' durch '" + request.user.username + "' exportiert (LBA).")
+                return export_to_excel(selected_materials, 'LBA')
+            elif action == 'export_ruag':
+                for material in selected_materials:
+                    logger.info("Material '" + material.kurztext_de + "' durch '" + request.user.username + "' exportiert (RUAG).")
+                return export_to_excel(selected_materials, 'RUAG')
 
         return redirect(reverse('list_material_smda'))
 
