@@ -48,11 +48,12 @@ class MaterialForm_IL(BaseTemplateForm, SplitterReadOnlyReadWriteFields):
             'hoehe',
             'preis',
 #            'waehrung',
-            'preiseinheit',
-            'hersteller_name',
-            'hersteller_adresse',
-            'hersteller_plz',
-            'hersteller_ort',
+#            'cage_code',
+#            'preiseinheit',
+#            'hersteller_name',
+#            'hersteller_adresse',
+#            'hersteller_plz',
+#            'hersteller_ort',
         ]
         computed_fields = [
             'gewichtseinheit',
@@ -65,6 +66,35 @@ class MaterialForm_IL(BaseTemplateForm, SplitterReadOnlyReadWriteFields):
             'gefahrgutkennzeichen': {'model': Gefahrgutkennzeichen, 'queryset': Gefahrgutkennzeichen.objects.all()},
         }
 
+    def clean(self):
+        cleaned_data = super().clean()
+        cage_code = cleaned_data.get('cage_code')
+        hersteller_name = cleaned_data.get('hersteller_name')
+        hersteller_adresse = cleaned_data.get('hersteller_adresse')
+        hersteller_plz = cleaned_data.get('hersteller_plz')
+        hersteller_ort = cleaned_data.get('hersteller_ort')
+        
+        # Check if cage_code is empty, then the other fields must be filled
+        if not cage_code:
+            hersteller_fields = {
+                'hersteller_name': hersteller_name,
+                'hersteller_adresse': hersteller_adresse,
+                'hersteller_plz': hersteller_plz,
+                'hersteller_ort': hersteller_ort
+            }
+            
+            if not all(hersteller_fields.values()):
+                missing_fields = [field for field, value in hersteller_fields.items() if not value]
+                for field in missing_fields:
+                    self.add_error(field, "Dieses Feld ist erforderlich, wenn CAGE Code nicht angegeben ist.")
+        
+        # Check if any of the hersteller fields are empty, then cage_code is required
+        elif not all([hersteller_name, hersteller_adresse, hersteller_plz, hersteller_ort]):
+            if not cage_code:
+                self.add_error('cage_code', "CAGE Code ist erforderlich, wenn Herstellerinformationen nicht vollständig sind.")
+                
+        return cleaned_data
+
     def __init__(self, *args, **kwargs):
         kwargs['editable_fields'] = EDITABLE_FIELDS_IL
         super().__init__(*args, **kwargs)
@@ -73,6 +103,14 @@ class MaterialForm_IL(BaseTemplateForm, SplitterReadOnlyReadWriteFields):
         for field_name in self.Meta.required_fields:
             if field_name in self.fields:
                 self.fields[field_name].required = True
+
+        # Initialize the conditional fields as not required
+        # since we'll handle validation in clean() method
+        self.fields['cage_code'].required = False
+        self.fields['hersteller_name'].required = False
+        self.fields['hersteller_adresse'].required = False
+        self.fields['hersteller_plz'].required = False
+        self.fields['hersteller_ort'].required = False
 
         # Mark computed fields
         for field_name in self.Meta.computed_fields:

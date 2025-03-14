@@ -27,6 +27,8 @@
                                 {{ label_with_tooltip|safe }}:
                                 {% if field.field.required %}
                                     <span class="required">*</span>
+                                {% elif field.name == 'cage_code' or field.name == 'hersteller_name' or field.name == 'hersteller_adresse' or field.name == 'hersteller_plz' or field.name == 'hersteller_ort' %}
+                                    <span class="required conditional-required" id="{{ field.name }}_required">*</span>
                                 {% endif %}
                             {% endwith %}
                         </td>
@@ -230,6 +232,38 @@ $(document).ready(function() {
             return false;
         }
     });
+
+    // Add conditional requirement handling
+    function updateRequiredStatus() {
+        var cageCode = $('#id_cage_code').val();
+        var herstellerName = $('#id_hersteller_name').val();
+        var herstellerAdresse = $('#id_hersteller_adresse').val();
+        var herstellerPlz = $('#id_hersteller_plz').val();
+        var herstellerOrt = $('#id_hersteller_ort').val();
+        
+        // If cage_code is empty, hersteller fields are required
+        if (!cageCode) {
+            $('#hersteller_name_required, #hersteller_adresse_required, #hersteller_plz_required, #hersteller_ort_required').show();
+        } else {
+            $('#hersteller_name_required, #hersteller_adresse_required, #hersteller_plz_required, #hersteller_ort_required').hide();
+        }
+        
+        // If any hersteller field is empty, cage_code is required
+        if (!herstellerName || !herstellerAdresse || !herstellerPlz || !herstellerOrt) {
+            $('#cage_code_required').show();
+        } else {
+            $('#cage_code_required').hide();
+        }
+    }
+    
+    // Initial state
+    updateRequiredStatus();
+    
+    // Bind to input events
+    $('#id_cage_code, #id_hersteller_name, #id_hersteller_adresse, #id_hersteller_plz, #id_hersteller_ort').on('input change', function() {
+        updateRequiredStatus();
+    });
+
 });
 </script>
 
