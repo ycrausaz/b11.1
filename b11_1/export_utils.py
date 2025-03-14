@@ -37,13 +37,6 @@ def export_to_excel(materials, export_type):
     Returns:
     HttpResponse: An HttpResponse with the Excel file for download.
     """
-    # List of your database view names
-    views = [
-        'MARA_Grunddaten', 'MARA_AUSP_Merkmale', 'MARA_KSSK_Klassenzuordnung',
-        'MARA_STXH_Grunddaten', 'MARA_STXL_Grunddaten', 'MARC_Werksdaten',
-        'MBEW_Buchhaltung', 'MLAN_Steuer', 'MVKE_Verkaufsdaten', 'MAKT_Beschreibung',
-        'CKMLCR_material_ledger_preise'
-    ]
 
     view_to_sheet = {
         'MARA_MARA': 'MARA - MARA',
