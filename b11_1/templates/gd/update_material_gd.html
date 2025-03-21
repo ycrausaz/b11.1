@@ -16,160 +16,155 @@
         {% endfor %}
     {% endif %}
 
-<form method="post" enctype="multipart/form-data">
-    {% csrf_token %}
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
 
-    <div class="table-container">
-        <div class="column">
-            <div class="mytitle">Daten zu pflegen</div>
-            <div class="content">
-                <table>
-                {% for field in form.get_normal_fields %}
-                    {% if not field.is_hidden %}
-                        <tr>
-                            <td>
-                                {% with label_with_tooltip=field|add_tooltip %}
-                                    {{ label_with_tooltip|safe }}:
-                                    {% if field.field.required %}
-                                        <span class="required">*</span>
-                                    {% endif %}
-                                {% endwith %}
-                            </td>
-                            <td>
+        <div class="table-container">
+            <div class="column">
+                <div class="mytitle">Daten zu pflegen</div>
+                <div class="content">
+                    <table>
+                        {% for field in form.get_normal_fields %}
+                            {% if not field.is_hidden %}
+                                <tr>
+                                    <td>
+                                        {% with label_with_tooltip=field|add_tooltip %}
+                                            {{ label_with_tooltip|safe }}:
+                                            {% if field.field.required %}
+                                                <span class="required">*</span>
+                                            {% endif %}
+                                        {% endwith %}
+                                    </td>
+                                    <td>
+                                        {{ field }}
+                                        {% if field.errors %}
+                                            <div class="error">
+                                                {% for error in field.errors %}
+                                                    <p>{{ error }}</p>
+                                                {% endfor %}
+                                            </div>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            {% else %}
                                 {{ field }}
-                                {% if field.errors %}
-                                    <div class="error">
-                                        {% for error in field.errors %}
-                                            <p>{{ error }}</p>
-                                        {% endfor %}
-                                    </div>
-                                {% endif %}
-                            </td>
-                        </tr>
-                    {% else %}
-                        {{ field }}
-                    {% endif %}
-                {% endfor %}
+                            {% endif %}
+                        {% endfor %}
 
-                <tr><td colspan="2"><hr></td></tr>
+                        <tr><td colspan="2"><hr></td></tr>
 
-                <tr><td colspan="2"><strong>Berechnete Felder</strong></td></tr>
-                {% for field in form.get_computed_fields %}
-                    {% if not field.is_hidden %}
-                        <tr>
-                            <td>
-                                <label for="{{ field.id_for_label }}">
-                                    {{ field.label }}:
-                                </label>
-                            </td>
-                            <td>
+                        <tr><td colspan="2"><strong>Berechnete Felder</strong></td></tr>
+                        {% for field in form.get_computed_fields %}
+                            {% if not field.is_hidden %}
+                                <tr>
+                                    <td>
+                                        <label for="{{ field.id_for_label }}">
+                                            {{ field.label }}:
+                                        </label>
+                                    </td>
+                                    <td>
+                                        {{ field }}
+                                    </td>
+                                </tr>
+                            {% endif %}
+                        {% endfor %}
+                    </table>
+                </div>
+            </div>
+            <div class="column">
+                <div class="mytitle">Stammdaten</div>
+                <div class="content">
+                    <table>
+                        {% for field in form.get_readonly_fields %}
+                            {% if not field.is_hidden %}
+                                <tr>
+                                    <td>
+                                        <label for="{{ field.id_for_label }}">
+                                            {{ field.label }}:
+                                            {% if field.field.required %}
+                                                <span class="required">*</span>
+                                            {% endif %}
+                                        </label>
+                                    </td>
+                                    <td>
+                                        {{ field }}
+                                        {% if field.errors %}
+                                            <div class="error">
+                                                {% for error in field.errors %}
+                                                    <p>{{ error }}</p>
+                                                {% endfor %}
+                                            </div>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            {% else %}
                                 {{ field }}
-                            </td>
-                        </tr>
-                    {% endif %}
-                {% endfor %}
-                </table>
+                            {% endif %}
+                        {% endfor %}
+                    </table>
+                </div>
             </div>
         </div>
-        <div class="column">
-            <div class="mytitle">Stammdaten</div>
-            <div class="content">
-                <table>
-                {% for field in form.get_readonly_fields %}
-                    {% if not field.is_hidden %}
-                        <tr>
-                            <td>
-                                <label for="{{ field.id_for_label }}">
-                                    {{ field.label }}:
-                                    {% if field.field.required %}
-                                        <span class="required">*</span>
-                                    {% endif %}
-                                </label>
-                            </td>
-                            <td>
-                                {{ field }}
-                                {% if field.errors %}
-                                    <div class="error">
-                                        {% for error in field.errors %}
-                                            <p>{{ error }}</p>
-                                        {% endfor %}
-                                    </div>
-                                {% endif %}
-                            </td>
-                        </tr>
-                    {% else %}
-                        {{ field }}
-                    {% endif %}
-                {% endfor %}
-                </table>
-            </div>
-        </div>
-    </div>
 
-    <br/>
-
-        <!-- Attachment section -->
-            <div style="width: 80%;">  <!-- Match table-container width -->
-                <div class="card">
-                    <div class="card-header">
-                        <h5>Anlagen</h5>
-                    </div>
-                    <div class="card-body">
-                        <!-- Existing Attachments -->
-            {% if object.attachments.all %}
-                <div class="mb-4">
-                    <h6>Vorhandene Anlagen</h6>
+        <!-- Existing Attachments Section -->
+        {% if object.attachments.all %}
+            <div class="card mt-4 mb-4 same-width">
+                <div class="card-header">
+                    <h5>{% trans "Existing Attachments" %}</h5>
+                </div>
+                <div class="card-body">
                     {% for attachment in object.attachments.all %}
-                        <div class="existing-attachment-row mb-2">
-                        <div class="row">
-                                <div class="col-5">
+                        <div class="existing-attachment-row mb-3">
+                            <div class="row">
+                                <div class="col-4">
                                     <a href="{{ attachment.get_file_url }}" target="_blank">{{ attachment.file.name|basename }}</a>
                                 </div>
-                                <div class="col-5">  <!-- Changed from col-6 to col-4 -->
+                                <div class="col-6">
                                     {{ attachment.comment }}
                                 </div>
-                                <div class="col-2">  <!-- Changed from col-1 to col-3 -->
-                                    <div class="form-check d-flex align-items-center">
-                                        <input type="checkbox" name="delete_attachments[]" value="{{ attachment.id }}" class="form-check-input me-2">
-                                        <label class="form-check-label">Löschen</label>
-                                    </div>
+                                <div class="col-2">
+                                    <input type="checkbox" name="delete_attachments[]" value="{{ attachment.id }}">
+                                    <label>{% trans "Delete" %}</label>
                                 </div>
                             </div>
                         </div>
                     {% endfor %}
                 </div>
-            {% endif %}
+            </div>
+        {% endif %}
 
-            <!-- New Attachments -->
-            <div id="attachments-container">
-                <h6>Neue Anlagen</h6>
-                <div class="attachment-row mb-2">
-                    <div class="row">
-                        <div class="col-5">
-                            <input type="file" name="attachment_files[]" class="form-control">
-                        </div>
-                        <div class="col-6">
-                            <input type="text" name="attachment_comments[]" class="form-control" placeholder="Kommentar">
-                        </div>
-                        <div class="col-1">
-                            <button type="button" class="btn btn-danger remove-attachment">×</button>
+        <!-- New Attachments Section -->
+        <div class="card mt-4 mb-4 same-width">
+            <div class="card-header">
+                <h5>{% trans "New Attachments" %}</h5>
+            </div>
+            <div class="card-body">
+                <div id="attachments-container">
+                    <div class="attachment-row mb-3">
+                        <div class="row">
+                            <div class="col-5">
+                                <input type="file" name="attachment_files[]" class="form-control">
+                            </div>
+                            <div class="col-6">
+                                <input type="text" name="attachment_comments[]" class="form-control" placeholder="{% trans 'Comment' %}">
+                            </div>
+                            <div class="col-1">
+                                <button type="button" class="btn btn-danger remove-attachment">×</button>
+                            </div>
                         </div>
                     </div>
                 </div>
+                <button type="button" class="btn btn-secondary" id="add-attachment">
+                    {% trans "Add Another Attachment" %}
+                </button>
             </div>
-            <button type="button" class="btn btn-secondary btn-sm mt-2" id="add-attachment">
-                Weitere Anlage hinzufügen
-            </button>
         </div>
-    </div>
-</div>
 
-    </br>
+        <div class="same-width" style="margin-top: 20px;">
+            <input type="submit" value="{% trans "Änderungen speichern" %}" class="btn btn-primary">
+            <button type="submit" name="cancel" class="btn btn-secondary">{% trans "Zurück ohne Speichern" %}</button>
+        </div>
+    </form>
 
-    <input type="submit" value="{% trans "Änderungen speichern" %}" class="btn btn-primary">
-    <button type="submit" name="cancel" class="btn btn-secondary">{% trans "Zurück ohne Speichern" %}</button>
-</form>
-
-<br/>
-
+    <br/>
 {% endblock %}

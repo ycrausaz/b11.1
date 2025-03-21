@@ -150,9 +150,10 @@ select[readonly],
     opacity: 0.65;
 }
 
-/* Column layout */
+/* Table container: center it and keep its width */
 .table-container {
     width: 80%;
+    margin: 0 auto;  /* Center the table container */
     height: 800px;
     display: flex;
     border: 1px solid #ddd;
@@ -223,4 +224,11 @@ label[data-bs-toggle="tooltip"] {
     padding: 5px;
     border-radius: 5px;
     z-index: 1000;
+}
+
+/* Custom styling for cards to match the width of .table-container */
+.same-width {
+    width: 80%;
+    margin: 0 auto;
+    box-sizing: border-box;  /* Include padding and border in the width */
 }
