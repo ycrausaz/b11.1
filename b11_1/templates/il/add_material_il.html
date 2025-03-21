@@ -77,61 +77,6 @@
         <input type="submit" value="{% trans 'Save' %}" class="btn btn-primary">
         <button type="submit" name="cancel" class="btn btn-secondary">{% trans 'Zurück ohne Speichern' %}</button>
     </form>
-
-    <script>
-        $(document).ready(function() {
-            $('.select2').select2({
-                width: '100%'
-            });
-
-            // Handle attachment functionality
-            $('#add-attachment').click(function() {
-                const newRow = $('.attachment-row:first').clone();
-                newRow.find('input').val('');
-                $('#attachments-container').append(newRow);
-            });
-
-            $(document).on('click', '.remove-attachment', function() {
-                if ($('.attachment-row').length > 1) {
-                    $(this).closest('.attachment-row').remove();
-                } else {
-                    $('.attachment-row:first').find('input').val('');
-                }
-            });
-
-            // Add conditional requirement handling
-            function updateRequiredStatus() {
-                var cageCode = $('#id_cage_code').val();
-                var herstellerName = $('#id_hersteller_name').val();
-                var herstellerAdresse = $('#id_hersteller_adresse').val();
-                var herstellerPlz = $('#id_hersteller_plz').val();
-                var herstellerOrt = $('#id_hersteller_ort').val();
-                
-                // If cage_code is empty, hersteller fields are required
-                if (!cageCode) {
-                    $('#hersteller_name_required, #hersteller_adresse_required, #hersteller_plz_required, #hersteller_ort_required').show();
-                } else {
-                    $('#hersteller_name_required, #hersteller_adresse_required, #hersteller_plz_required, #hersteller_ort_required').hide();
-                }
-                
-                // If any hersteller field is empty, cage_code is required
-                if (!herstellerName || !herstellerAdresse || !herstellerPlz || !herstellerOrt) {
-                    $('#cage_code_required').show();
-                } else {
-                    $('#cage_code_required').hide();
-                }
-            }
-            
-            // Initial state
-            updateRequiredStatus();
-            
-            // Bind to input events
-            $('#id_cage_code, #id_hersteller_name, #id_hersteller_adresse, #id_hersteller_plz, #id_hersteller_ort').on('input change', function() {
-                updateRequiredStatus();
-            });
-
-        });
-    </script>
    
 <br/>
 
