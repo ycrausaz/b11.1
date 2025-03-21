@@ -208,7 +208,7 @@ else:
     # Development settings (MinIO)
     AWS_ACCESS_KEY_ID = 'admin'
     AWS_SECRET_ACCESS_KEY = 'admin123'
-    AWS_STORAGE_BUCKET_NAME = 'b11_1'  # Create this bucket in MinIO
+    AWS_STORAGE_BUCKET_NAME = 'b11-1'  # Create this bucket in MinIO
     AWS_S3_ENDPOINT_URL = 'http://192.168.1.2:9000'  # MinIO endpoint
     AWS_S3_USE_SSL = False
     AWS_QUERYSTRING_AUTH = False
