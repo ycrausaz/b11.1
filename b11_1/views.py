@@ -476,7 +476,7 @@ class UpdateMaterial_IL_View(FormValidMixin_IL, GroupRequiredMixin, SuccessMessa
 
 class ListMaterial_GD_View(ComputedContextMixin, GroupRequiredMixin, ListView):
     model = Material
-    template_name = 'gd/list_material_gd.html'
+    template_name = 'gd_smda/list_material_gd_smda.html'
     allowed_groups = ['grLBA', 'grGD']
 
     def get_queryset(self, **kwargs):
@@ -495,8 +495,8 @@ class ListMaterial_GD_View(ComputedContextMixin, GroupRequiredMixin, ListView):
         list_material_gd = Material.objects.filter(is_transferred=True, is_archived=False)
 
         # Convert positions_nr to integers for sorting
-        context['list_material_gd_archived'] = sorted(list_material_gd_archived, key=lambda x: int(x.positions_nr))
-        context['list_material_gd'] = sorted(list_material_gd, key=lambda x: int(x.positions_nr))
+        context['list_material_archived'] = sorted(list_material_gd_archived, key=lambda x: int(x.positions_nr))
+        context['list_material'] = sorted(list_material_gd, key=lambda x: int(x.positions_nr))
         return context
 
     def post(self, request, *args, **kwargs):
@@ -537,7 +537,7 @@ class ListMaterial_GD_View(ComputedContextMixin, GroupRequiredMixin, ListView):
 
 class ListMaterialArchived_GD_View(GroupRequiredMixin, ListView):
     model = Material
-    template_name = 'gd/list_material_gd_archived.html'
+    template_name = 'gd_smda/list_material_gd_archived.html'
     context_object_name = 'list_material_gd_archived'
     allowed_groups = ['grLBA', 'grGD']
 
@@ -553,7 +553,7 @@ class ListMaterialArchived_GD_View(GroupRequiredMixin, ListView):
 
 class UpdateMaterial_GD_View(ComputedContextMixin, FormValidMixin_GD, GroupRequiredMixin, SuccessMessageMixin, UpdateView):
     model = Material
-    template_name = 'gd/update_material_gd.html'
+    template_name = 'gd_smda/update_material_gd_smda.html'
     form_class = MaterialForm_GD
     success_url = reverse_lazy('list_material_gd')
     success_message = "Das Material wurde erfolgreich aktualisiert."
@@ -666,7 +666,7 @@ class UpdateMaterial_GD_View(ComputedContextMixin, FormValidMixin_GD, GroupRequi
 
 class ListMaterial_SMDA_View(ComputedContextMixin, GroupRequiredMixin, ListView):
     model = Material
-    template_name = 'smda/list_material_smda.html'
+    template_name = 'gd_smda/list_material_gd_smda.html'
     allowed_groups = ['grLBA', 'grSMDA']
 
     def get_queryset(self, **kwargs):
@@ -685,8 +685,8 @@ class ListMaterial_SMDA_View(ComputedContextMixin, GroupRequiredMixin, ListView)
         list_material_smda = Material.objects.filter(is_transferred=True, is_archived=False)
 
         # Convert positions_nr to integers for sorting
-        context['list_material_smda_archived'] = sorted(list_material_smda_archived, key=lambda x: int(x.positions_nr))
-        context['list_material_smda'] = sorted(list_material_smda, key=lambda x: int(x.positions_nr))
+        context['list_material_archived'] = sorted(list_material_smda_archived, key=lambda x: int(x.positions_nr))
+        context['list_material'] = sorted(list_material_smda, key=lambda x: int(x.positions_nr))
         return context
 
     def post(self, request, *args, **kwargs):
@@ -725,7 +725,7 @@ class ListMaterial_SMDA_View(ComputedContextMixin, GroupRequiredMixin, ListView)
 
 class ListMaterialArchived_SMDA_View(GroupRequiredMixin, ListView):
     model = Material
-    template_name = 'smda/list_material_smda_archived.html'
+    template_name = 'gd_smda/list_material_smda_archived.html'
     context_object_name = 'list_material_smda_archived'
     allowed_groups = ['grLBA', 'grSMDA']
 
@@ -741,7 +741,7 @@ class ListMaterialArchived_SMDA_View(GroupRequiredMixin, ListView):
 
 class UpdateMaterial_SMDA_View(ComputedContextMixin, FormValidMixin_SMDA, GroupRequiredMixin, SuccessMessageMixin, UpdateView):
     model = Material
-    template_name = 'smda/update_material_smda.html'
+    template_name = 'gd_smda/update_material_gd_smda.html'
     form_class = MaterialForm_SMDA
     success_url = reverse_lazy('list_material_smda')
     success_message = "Das Material wurde erfolgreich aktualisiert."

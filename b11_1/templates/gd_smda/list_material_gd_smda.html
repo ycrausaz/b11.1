@@ -13,12 +13,12 @@
         {% endfor %}
     {% endif %}
 
-{% if list_material_gd|length == 0 and list_material_gd_transferred|length == 0 %}
+{% if list_material|length == 0 and list_material_transferred|length == 0 %}
 <hr>
     <h4>Momentan keine Angabe</h4>
 {% else %}
 
-{% if list_material_gd|length > 0 %}
+{% if list_material|length > 0 %}
 <hr>
 <form method="post" id="material-form-1">
     {% csrf_token %}
@@ -26,11 +26,11 @@
         <thead>
             <tr>
                 <th><input type="checkbox" class="select-all" data-form-id="1"></th>
-                <th>Offenes/e Material/ien ({{ list_material_gd|length }})</th>
+                <th>Offenes/e Material/ien ({{ list_material|length }})</th>
             </tr>
         </thead>
         <tbody>
-            {% for mat in list_material_gd %}
+            {% for mat in list_material %}
                 <tr>
                     <td><input type="checkbox" name="selected_materials" value="{{ mat.id }}" class="material-checkbox" data-form-id="1"></td>
                     <td>{{ mat.positions_nr }} <a href="{% url 'update_material_gd' mat.id %}">{{ mat.kurztext_de }}</a> ({{ mat.hersteller }})</td>
@@ -91,7 +91,7 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 {% endif %}
 
-{% if list_material_gd_archived|length > 0 %}
+{% if list_material_archived|length > 0 %}
 <hr>
 <form method="post" id="material-form-1">
     {% csrf_token %}
@@ -99,11 +99,11 @@ document.addEventListener('DOMContentLoaded', function() {
         <thead>
             <tr>
                 <th><input type="checkbox" class="select-all" data-form-id="2"></th>
-                <th>Archivierte/s Material/ien ({{ list_material_gd_archived|length }})</th>
+                <th>Archivierte/s Material/ien ({{ list_material_archived|length }})</th>
             </tr>
         </thead>
         <tbody>
-            {% for mat in list_material_gd_archived %}
+            {% for mat in list_material_archived %}
                 <tr>
                     <td><input type="checkbox" name="selected_materials" value="{{ mat.id }}" class="material-checkbox" data-form-id="2"></td>
                     <td>{{ mat.positions_nr }} <a href="{% url 'show_material_gd' mat.id %}">{{ mat.kurztext_de }}</a> ({{ mat.hersteller }})</td>
