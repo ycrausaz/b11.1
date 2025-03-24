@@ -153,3 +153,18 @@ class MaterialForm_IL(BaseTemplateForm, SplitterReadOnlyReadWriteFields):
                         value = getattr(instance, field_name)
                         if value:
                             self.fields[field_name].initial = value.idx
+
+        # Add tooltips
+        from django.utils.translation import get_language
+        tooltips = HelpTooltip.objects.all()
+        current_language = get_language()
+        for field_name, field in self.fields.items():
+            tooltip = tooltips.filter(field_name=field_name).first()
+            if tooltip:
+                # Get help content in current language
+                help_content_field = f'help_content_{current_language}'
+                if hasattr(tooltip, help_content_field) and getattr(tooltip, help_content_field):
+                    field.help_text = getattr(tooltip, help_content_field)
+                # Fallback to German
+                elif hasattr(tooltip, 'help_content_de') and tooltip.help_content_de:
+                    field.help_text = tooltip.help_content_de

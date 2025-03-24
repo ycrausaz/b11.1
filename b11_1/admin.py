@@ -2,6 +2,7 @@
 
 from django.contrib import admin
 from .models import *
+
 @admin.register(Material)
 class MaterialAdmin(admin.ModelAdmin):
     list_display = ('positions_nr', 'kurztext_de', 'kurztext_fr', 'kurztext_en', 'grunddatentext_de_1_zeile')
@@ -9,26 +10,55 @@ class MaterialAdmin(admin.ModelAdmin):
 
 @admin.register(HelpTooltip)
 class HelpTooltipAdmin(admin.ModelAdmin):
-    list_display = ('field_name', 'has_tooltip', 'has_inline_help')
-    search_fields = ('field_name', 'content', 'inline_help')
+    list_display = ('field_name', 'has_tooltip_de', 'has_tooltip_fr', 'has_tooltip_en',
+                   'has_inline_help_de', 'has_inline_help_fr', 'has_inline_help_en')
+    search_fields = ('field_name', 'help_content_de', 'help_content_fr', 'help_content_en',
+                     'inline_help_de', 'inline_help_fr', 'inline_help_en')
+    fieldsets = (
+        (None, {
+            'fields': ('field_name',)
+        }),
+        ('German Content', {
+            'fields': ('help_content_de', 'inline_help_de'),
+        }),
+        ('French Content', {
+            'fields': ('help_content_fr', 'inline_help_fr'),
+        }),
+        ('English Content', {
+            'fields': ('help_content_en', 'inline_help_en'),
+        }),
+    )
 
-    def has_tooltip(self, obj):
-        return bool(obj.content)
-    has_tooltip.boolean = True
+    def has_tooltip_de(self, obj):
+        return bool(obj.help_content_de)
+    has_tooltip_de.boolean = True
+    has_tooltip_de.short_description = "Has Tooltip (DE)"
 
-    def has_inline_help(self, obj):
-        return bool(obj.inline_help)
-    has_inline_help.boolean = True
+    def has_tooltip_fr(self, obj):
+        return bool(obj.help_content_fr)
+    has_tooltip_fr.boolean = True
+    has_tooltip_fr.short_description = "Has Tooltip (FR)"
 
-#    fieldsets = (
-#        (None, {
-#            'fields': ('field_name',)
-#        }),
-#        ('Help Content', {
-#            'fields': ('content', 'inline_help'),
-#            'description': 'Content is shown in tooltip, inline help is displayed directly under the field label'
-#        }),
-#    )
+    def has_tooltip_en(self, obj):
+        return bool(obj.help_content_en)
+    has_tooltip_en.boolean = True
+    has_tooltip_en.short_description = "Has Tooltip (EN)"
+
+    def has_inline_help_de(self, obj):
+        return bool(obj.inline_help_de)
+    has_inline_help_de.boolean = True
+    has_inline_help_de.short_description = "Has Inline (DE)"
+
+    def has_inline_help_fr(self, obj):
+        return bool(obj.inline_help_fr)
+    has_inline_help_fr.boolean = True
+    has_inline_help_fr.short_description = "Has Inline (FR)"
+
+    def has_inline_help_en(self, obj):
+        return bool(obj.inline_help_en)
+    has_inline_help_en.boolean = True
+    has_inline_help_en.short_description = "Has Inline (EN)"
+
 
 @admin.register(Profile)
 class ProfileAdmin(admin.ModelAdmin):

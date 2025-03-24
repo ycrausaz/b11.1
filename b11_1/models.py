@@ -43,7 +43,7 @@ class Profile(models.Model):
         ('approved', 'Approved'),
         ('rejected', 'Rejected')
     ]
-    
+
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     username = models.CharField(max_length=50, unique=True, null=True, blank=True)
     firm = models.CharField(max_length=100, null=True, blank=True)
@@ -63,11 +63,41 @@ class Profile(models.Model):
 
 class HelpTooltip(models.Model):
     field_name = models.CharField(max_length=100, unique=True)
-    content = models.TextField(blank=True, null=True)
-    inline_help = models.TextField(blank=True, null=True)
+    help_content_de = models.TextField(blank=True, null=True, verbose_name=_("Help content (German)"))
+    help_content_fr = models.TextField(blank=True, null=True, verbose_name=_("Help content (French)"))
+    help_content_en = models.TextField(blank=True, null=True, verbose_name=_("Help content (English)"))
+    inline_help_de = models.TextField(blank=True, null=True, verbose_name=_("Inline help (German)"))
+    inline_help_fr = models.TextField(blank=True, null=True, verbose_name=_("Inline help (French)"))
+    inline_help_en = models.TextField(blank=True, null=True, verbose_name=_("Inline help (English)"))
 
     def __str__(self):
         return f"Help for {self.field_name}"
+
+    def get_help_content(self, language_code=None):
+        """Get the help content in the specified language"""
+        if not language_code:
+            from django.utils.translation import get_language
+            language_code = get_language()
+
+        attr_name = f"help_content_{language_code}"
+        if hasattr(self, attr_name) and getattr(self, attr_name):
+            return getattr(self, attr_name)
+
+        # Fallback to German if translation is missing
+        return self.help_content_de or ""
+
+    def get_inline_help(self, language_code=None):
+        """Get the inline help in the specified language"""
+        if not language_code:
+            from django.utils.translation import get_language
+            language_code = get_language()
+
+        attr_name = f"inline_help_{language_code}"
+        if hasattr(self, attr_name) and getattr(self, attr_name):
+            return getattr(self, attr_name)
+
+        # Fallback to German if translation is missing
+        return self.inline_help_de or ""
 
     class Meta:
         app_label = 'b11_1'
