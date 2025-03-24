@@ -28,15 +28,15 @@
                             {% if not field.is_hidden %}
                                 <tr>
                                     <td>
-    {% with label_with_tooltip=field|add_tooltip %}
-        {{ label_with_tooltip|safe }}:
-        {% if field.field.required %}
-            <span class="required">*</span>
-        {% elif field|is_conditional_required %}
-            <span class="required conditional-required" id="{{ field.name }}_required">*</span>
-        {% endif %}
-        {{ field|get_inline_help }}
-    {% endwith %}
+                                        {% with label_with_tooltip=field|add_tooltip %}
+                                            {{ label_with_tooltip|safe }}:
+                                            {% if field.field.required %}
+                                                <span class="required">*</span>
+                                            {% elif field|is_conditional_required %}
+                                                <span class="required conditional-required" id="{{ field.name }}_required">*</span>
+                                            {% endif %}
+                                            {{ field|get_inline_help }}
+                                        {% endwith %}
                                     </td>
                                     <td>
                                         {{ field }}
