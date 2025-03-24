@@ -9,7 +9,26 @@ class MaterialAdmin(admin.ModelAdmin):
 
 @admin.register(HelpTooltip)
 class HelpTooltipAdmin(admin.ModelAdmin):
-    list_display = ('field_name',)
+    list_display = ('field_name', 'has_tooltip', 'has_inline_help')
+    search_fields = ('field_name', 'content', 'inline_help')
+    
+    def has_tooltip(self, obj):
+        return bool(obj.content)
+    has_tooltip.boolean = True
+    
+    def has_inline_help(self, obj):
+        return bool(obj.inline_help)
+    has_inline_help.boolean = True
+    
+    fieldsets = (
+        (None, {
+            'fields': ('field_name',)
+        }),
+        ('Help Content', {
+            'fields': ('content', 'inline_help'),
+            'description': 'Content is shown in tooltip, inline help is displayed directly under the field label'
+        }),
+    )
 
 @admin.register(Profile)
 class ProfileAdmin(admin.ModelAdmin):

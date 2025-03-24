@@ -232,3 +232,12 @@ label[data-bs-toggle="tooltip"] {
     margin: 0 auto;
     box-sizing: border-box;  /* Include padding and border in the width */
 }
+
+.field-inline-help {
+    font-size: 0.85em;
+    font-style: italic;
+    color: #6c757d;
+    margin-top: 0.25rem;
+    display: block;
+    line-height: 1.2;
+}
