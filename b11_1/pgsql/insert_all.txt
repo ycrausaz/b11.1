@@ -7680,7 +7680,7 @@ insert into "b11_1_g_partner" ("cage_code","gp_nummer","kreditor_nr","name") val
 ('S4885','1000043359','0002005204','Zwicky & Co AG'),
 ('S8089','1000057754','0002169323','ZYXEL COMMUNICATION CORPORATION');
 insert into "b11_1_gefahrgutkennzeichen" (idx, text, explanation) values (1, 'V01', 'Gefahrstoff'),(2, 'V02', 'Gefahrgut'),(3, 'V03', 'Radioaktiv');
-\copy b11_1_helptooltip (field_name, content) FROM 'b11_1/pgsql/help.csv' WITH (FORMAT csv, DELIMITER '|', QUOTE '"', ESCAPE '"', HEADER);
+\copy b11_1_helptooltip (field_name, content, inline_help) FROM 'b11_1/pgsql/help.csv' WITH (FORMAT csv, DELIMITER '|', QUOTE '"', ESCAPE '"', HEADER);
 insert into "b11_1_materialart" (idx, text, explanation) values (1, 'V001', 'Dienstleistung'),(2, 'V002', 'Fertigungshilfsmittel'),(3, 'V003', 'Halbfabrikat'),(4, 'V005', 'Betriebs- und Prüfmittel'),(5, 'V006', 'Betriebsstoff'),(6, 'V007', 'Konfigurierbares Material'),(7, 'V008', 'Munition'),(8, 'V009', 'Nicht Lager Artikel'),(9, 'V010', 'Systemmaterial'),(10, 'V011', 'Konfigurierbares Fahrzeug'),(11, 'V012', 'Verpackung'),(12, 'V013', 'Verpflegung'),(13, 'V014', 'Fremdprodukt'),(14, 'V015', 'Fertigprodukt'),(15, 'V016', 'Sanitätsmaterial'),(16, 'V017', 'Service für SLA'),(17, 'V099', 'MDG (Darf nur von der RUAG verwendet werden)');
 insert into "b11_1_materialeinstufungnachzuva" (idx, text) values (1, 'SSB'),(2, 'HSB'),(3, 'ESB'),(4, 'UAM');
 insert into "b11_1_rueckfuehrungscode" (idx, text, explanation) values (1, 'F', 'Verbrauchsmaterial nur Zustandscode F'), (2, 'R', 'Verbrauchsmaterial mit Rückgabepflicht'),(3, 'N', 'keine Rückgabepflicht'),(4, 'V', 'Verbrauchsmaterial');
