@@ -867,8 +867,9 @@ class UpdateMaterial_SMDA_View(ComputedContextMixin, FormValidMixin_SMDA, GroupR
             form.add_error(None, error_msg)
             return self.render_to_response(self.get_context_data(form=form))
 
-class Logging_View(ListView):
+class Logging_View(GroupRequiredMixin, ListView):
     template_name = 'admin/logging.html'
+    allowed_groups = ['grAdmin'] 
 
     def get(self, request, *args, **kwargs):
         with connection.cursor() as cursor:
