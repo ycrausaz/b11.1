@@ -1,7 +1,9 @@
 <!-- In add_material_il.html -->
 {% extends "base_generic.html" %}
 {% load i18n %}
+{% load custom_filters %}
 
+{% load help_tags %}
 {% block content %}
     <h1>{% trans "New Material" %}</h1>
     <br/>
@@ -16,21 +18,21 @@
 
     <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
-
         <table>
             {% for field in form %}
                 {% if not field.is_hidden %}
                     <tr>
-                        <td>
-                            <label for="{{ field.id_for_label }}">
-                                {{ field.label }}:
-                                {% if field.field.required %}
-                                    <span class="required">*</span>
-                                {% elif field.name == 'cage_code' or field.name == 'hersteller_name' or field.name == 'hersteller_adresse' or field.name == 'hersteller_plz' or field.name == 'hersteller_ort' %}
-                                    <span class="required conditional-required" id="{{ field.name }}_required">*</span>
-                                {% endif %}
-                            </label>
-                        </td>
+<td>
+    {% with label_with_tooltip=field|add_tooltip %}
+        {{ label_with_tooltip|safe }}:
+        {% if field.field.required %}
+            <span class="required">*</span>
+        {% elif field.name == 'cage_code' or field.name == 'hersteller_name' or field.name == 'hersteller_adresse' or field.name == 'hersteller_plz' or field.name == 'hersteller_ort' %}
+            <span class="required conditional-required" id="{{ field.name }}_required">*</span>
+        {% endif %}
+        {{ field|get_inline_help }}
+    {% endwith %}
+</td>
                         <td>
                             {{ field }}
                             {% if field.errors %}
