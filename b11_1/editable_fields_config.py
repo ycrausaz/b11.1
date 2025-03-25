@@ -37,7 +37,7 @@ EDITABLE_FIELDS_IL = [
 #'waehrung', #AI
 'preiseinheit', #AJ
 'lagerfaehigkeit', #AK
-'exportkontrollauflage', #AL
+#'exportkontrollauflage', #AL
 'cage_code', #AM
 'hersteller_name', #AN
 'hersteller_adresse', #AO
