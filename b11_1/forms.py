@@ -5,6 +5,8 @@ from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.password_validation import validate_password
 from django.contrib.auth.forms import SetPasswordForm
 from .models import *
+from bootstrap_datepicker_plus.widgets import DatePickerInput
+from django.utils.translation import gettext_lazy as _
 
 class CustomPasswordResetForm(SetPasswordForm):
     def clean_new_password2(self):
@@ -104,7 +106,7 @@ class UserRegistrationForm(forms.ModelForm):
         max_length=50,
         widget=forms.TextInput(attrs={'class': 'form-control'})
     )
-    
+
     class Meta:
         model = Profile
         fields = ['username', 'firm', 'first_name', 'last_name', 'role', 'country', 'email', 'phone']
@@ -117,3 +119,29 @@ class UserRegistrationForm(forms.ModelForm):
             'email': forms.EmailInput(attrs={'class': 'form-control'}),
             'phone': forms.TextInput(attrs={'class': 'form-control'}),
         }
+
+class LogDateFilterForm(forms.Form):
+    start_date = forms.DateField(
+        label=_('Start Date'),
+        required=False,
+        widget=DatePickerInput(
+            options={
+                'format': 'DD.MM.YYYY',
+                'showClose': True,
+                'showClear': True,
+                'showTodayButton': True,
+            }
+        )
+    )
+    end_date = forms.DateField(
+        label=_('End Date'),
+        required=False,
+        widget=DatePickerInput(
+            options={
+                'format': 'DD.MM.YYYY',
+                'showClose': True,
+                'showClear': True,
+                'showTodayButton': True,
+            }
+        )
+    )

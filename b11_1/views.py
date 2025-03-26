@@ -276,7 +276,7 @@ class AddMaterial_IL_View(FormValidMixin_IL, GroupRequiredMixin, SuccessMessageM
             with transaction.atomic():
                 # Start by validating the form data
                 self.object = form.save(commit=False)
-                
+
                 # Get new files and comments
                 files = self.request.FILES.getlist('attachment_files[]')
                 comments = self.request.POST.getlist('attachment_comments[]')
@@ -296,7 +296,7 @@ class AddMaterial_IL_View(FormValidMixin_IL, GroupRequiredMixin, SuccessMessageM
                             )
                             # Validate the attachment
                             attachment.full_clean()
-                            
+
                             # Try to save file to S3 first
                             try:
                                 # Note: Don't save to database yet
@@ -306,9 +306,9 @@ class AddMaterial_IL_View(FormValidMixin_IL, GroupRequiredMixin, SuccessMessageM
                                 logger.error(error_msg)
                                 form.add_error(None, error_msg)
                                 return self.render_to_response(self.get_context_data(form=form))
-                            
+
                             new_attachments.append(attachment)
-                            
+
                         except ValidationError as e:
                             error_msg = f"Validation error for file {file.name}: {str(e)}"
                             logger.error(error_msg)
@@ -318,14 +318,14 @@ class AddMaterial_IL_View(FormValidMixin_IL, GroupRequiredMixin, SuccessMessageM
                 # If we got here, all S3 operations were successful
                 # Now save the material object
                 self.object.save()
-                
+
                 # And save all new attachments to database
                 for attachment in new_attachments:
                     attachment.save()
 
                 # Log the successful creation
                 logger.info(f"Material '{self.object.kurztext_de}' wurde durch '{self.request.user.username}' erstellt.")
-                
+
                 return super().form_valid(form)
 
         except ValidationError as e:
@@ -335,16 +335,16 @@ class AddMaterial_IL_View(FormValidMixin_IL, GroupRequiredMixin, SuccessMessageM
                     attachment.file.delete(save=False)
                 except (BotoCoreError, ClientError) as s3_error:
                     logger.error(f"Failed to clean up file {attachment.file.name} after error: {str(s3_error)}")
-            
+
             form.add_error(None, str(e))
             return self.render_to_response(self.get_context_data(form=form))
-            
+
         except (BotoCoreError, ClientError) as e:
             error_msg = f"Failed to upload file to storage: {str(e)}"
             logger.error(error_msg)
             form.add_error(None, error_msg)
             return self.render_to_response(self.get_context_data(form=form))
-            
+
         except Exception as e:
             error_msg = f"Unexpected error: {str(e)}"
             logger.error(error_msg)
@@ -872,13 +872,32 @@ class Logging_View(GroupRequiredMixin, ListView):
     allowed_groups = ['grAdmin'] 
 
     def get(self, request, *args, **kwargs):
+        # Create an instance of the date filter form
+        from .forms import LogDateFilterForm
+        form = LogDateFilterForm(request.GET)
+
+        # Default query with no date filters
+        date_filter_sql = ""
+
+        # Apply date filters if the form is valid
+        if form.is_valid():
+            start_date = form.cleaned_data.get('start_date')
+            end_date = form.cleaned_data.get('end_date')
+
+            if start_date and end_date:
+                date_filter_sql = f"WHERE timestamp >= '{start_date}' AND timestamp <= '{end_date} 23:59:59'"
+            elif start_date:
+                date_filter_sql = f"WHERE timestamp >= '{start_date}'"
+            elif end_date:
+                date_filter_sql = f"WHERE timestamp <= '{end_date} 23:59:59'"
+
         with connection.cursor() as cursor:
             # First query: Get the number of materials
             cursor.execute("SELECT COUNT(*) FROM b11_1_material")
             nb_materials = cursor.fetchone()[0]
 
-            # Second query: Get all log entries
-            cursor.execute("SELECT * FROM b11_1_log_entries ORDER BY timestamp DESC")
+            # Second query: Get filtered log entries
+            cursor.execute(f"SELECT * FROM b11_1_log_entries {date_filter_sql} ORDER BY timestamp DESC")
             rows = cursor.fetchall()
 
             # Get column names from cursor description
@@ -893,6 +912,7 @@ class Logging_View(GroupRequiredMixin, ListView):
             'nb_materials': nb_materials,
             'nb_log_entries': nb_log_entries,
             'log_entries': log_entries,
+            'form': form,
         }
         return render(request, self.template_name, context)
 
