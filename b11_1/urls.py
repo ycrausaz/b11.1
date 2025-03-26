@@ -3,7 +3,7 @@
 from django.views.i18n import JavaScriptCatalog
 from django.urls import include, path
 from . import views
-from .views import (CustomLoginView, UserLogout, CustomPasswordChangeView, CustomPasswordResetConfirmView, ListMaterial_IL_View, AddMaterial_IL_View, UpdateMaterial_IL_View, ListMaterial_GD_View, ListMaterialArchived_GD_View, UpdateMaterial_GD_View, ListMaterial_SMDA_View, ListMaterialArchived_SMDA_View, UpdateMaterial_SMDA_View, Logging_View, ExcelImportView, RegisterView, CompleteRegistrationView, PendingRegistrationsView, ApproveRegistrationView, RejectRegistrationView)
+from .views import (CustomLoginView, UserLogout, CustomPasswordChangeView, CustomPasswordResetConfirmView, ListMaterial_IL_View, AddMaterial_IL_View, UpdateMaterial_IL_View, ListMaterial_GD_View, ListMaterialArchived_GD_View, UpdateMaterial_GD_View, ListMaterial_SMDA_View, ListMaterialArchived_SMDA_View, UpdateMaterial_SMDA_View, Logging_View, ExcelImportView, RegisterView, CompleteRegistrationView, PendingRegistrationsView, ApproveRegistrationView, RejectRegistrationView, ExportLogsView)
 from django.contrib.auth.decorators import login_required
 from django.conf.urls import handler403
 from b11_1.views import custom_permission_denied_view
@@ -21,6 +21,7 @@ urlpatterns = [
     path('', views.home, name='home'),
     path('admin/logging', Logging_View.as_view(), name='logging'),
     path('admin/import-excel', ExcelImportView.as_view(), name='import_excel'),
+    path('admin/export-logs/', ExportLogsView.as_view(), name='export_logs'),
     path('login_user', CustomLoginView.as_view(), name='login_user'),
     path('logout_user', UserLogout.as_view(), name='logout_user'),
     path('password_change', CustomPasswordChangeView.as_view(), name='password_change'),

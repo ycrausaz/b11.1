@@ -54,6 +54,7 @@ from .forms import UserRegistrationForm
 from django.db import transaction
 from django.core.exceptions import ValidationError
 from botocore.exceptions import BotoCoreError, ClientError
+from .log_export_utils import export_logs_to_excel
 import logging
 
 logger = logging.getLogger(__name__)
@@ -162,6 +163,57 @@ class CustomLoginView(LoginView):
 
     def get(self, request, *args, **kwargs):
         return render(request, 'admin/login_user.html', {})
+
+class ExportLogsView(GroupRequiredMixin, View):
+    """
+    View for exporting log entries to Excel with date filtering
+    """
+    allowed_groups = ['grAdmin']
+
+    def get(self, request, *args, **kwargs):
+        from datetime import datetime
+        
+        # Get date filter parameters
+        raw_start_date = request.GET.get('start_date')
+        raw_end_date = request.GET.get('end_date')
+        
+        # Initialize date variables
+        start_date = None
+        end_date = None
+        
+        # Parse start date if provided
+        if raw_start_date:
+            try:
+                formats_to_try = ['%Y-%m-%d', '%d.%m.%Y']
+                for date_format in formats_to_try:
+                    try:
+                        start_date = datetime.strptime(raw_start_date, date_format).date()
+                        break
+                    except ValueError:
+                        continue
+            except Exception as e:
+                logger.error(f"Error parsing start_date '{raw_start_date}': {e}")
+        
+        # Parse end date if provided
+        if raw_end_date:
+            try:
+                formats_to_try = ['%Y-%m-%d', '%d.%m.%Y']
+                for date_format in formats_to_try:
+                    try:
+                        end_date = datetime.strptime(raw_end_date, date_format).date()
+                        break
+                    except ValueError:
+                        continue
+            except Exception as e:
+                logger.error(f"Error parsing end_date '{raw_end_date}': {e}")
+        
+        # Generate Excel file and return as response
+        response = export_logs_to_excel(start_date, end_date)
+        
+        # Log the export action
+        logger.info(f"Log entries exported to Excel by {request.user.username} (date range: {start_date} to {end_date})")
+        
+        return response
 
 class CustomPasswordChangeView(PasswordChangeView):
     form_class = CustomPasswordChangeForm
@@ -276,7 +328,7 @@ class AddMaterial_IL_View(FormValidMixin_IL, GroupRequiredMixin, SuccessMessageM
             with transaction.atomic():
                 # Start by validating the form data
                 self.object = form.save(commit=False)
-                
+
                 # Get new files and comments
                 files = self.request.FILES.getlist('attachment_files[]')
                 comments = self.request.POST.getlist('attachment_comments[]')
@@ -296,7 +348,7 @@ class AddMaterial_IL_View(FormValidMixin_IL, GroupRequiredMixin, SuccessMessageM
                             )
                             # Validate the attachment
                             attachment.full_clean()
-                            
+
                             # Try to save file to S3 first
                             try:
                                 # Note: Don't save to database yet
@@ -306,9 +358,9 @@ class AddMaterial_IL_View(FormValidMixin_IL, GroupRequiredMixin, SuccessMessageM
                                 logger.error(error_msg)
                                 form.add_error(None, error_msg)
                                 return self.render_to_response(self.get_context_data(form=form))
-                            
+
                             new_attachments.append(attachment)
-                            
+
                         except ValidationError as e:
                             error_msg = f"Validation error for file {file.name}: {str(e)}"
                             logger.error(error_msg)
@@ -318,14 +370,14 @@ class AddMaterial_IL_View(FormValidMixin_IL, GroupRequiredMixin, SuccessMessageM
                 # If we got here, all S3 operations were successful
                 # Now save the material object
                 self.object.save()
-                
+
                 # And save all new attachments to database
                 for attachment in new_attachments:
                     attachment.save()
 
                 # Log the successful creation
                 logger.info(f"Material '{self.object.kurztext_de}' wurde durch '{self.request.user.username}' erstellt.")
-                
+
                 return super().form_valid(form)
 
         except ValidationError as e:
@@ -335,16 +387,16 @@ class AddMaterial_IL_View(FormValidMixin_IL, GroupRequiredMixin, SuccessMessageM
                     attachment.file.delete(save=False)
                 except (BotoCoreError, ClientError) as s3_error:
                     logger.error(f"Failed to clean up file {attachment.file.name} after error: {str(s3_error)}")
-            
+
             form.add_error(None, str(e))
             return self.render_to_response(self.get_context_data(form=form))
-            
+
         except (BotoCoreError, ClientError) as e:
             error_msg = f"Failed to upload file to storage: {str(e)}"
             logger.error(error_msg)
             form.add_error(None, error_msg)
             return self.render_to_response(self.get_context_data(form=form))
-            
+
         except Exception as e:
             error_msg = f"Unexpected error: {str(e)}"
             logger.error(error_msg)
@@ -876,22 +928,22 @@ class Logging_View(GroupRequiredMixin, ListView):
         # Create an instance of the date filter form
         from .forms import LogDateFilterForm
         form = LogDateFilterForm(request.GET)
-        
+
         # Default query with no date filters
         date_filter_sql = ""
-        
+
         # Apply date filters if the form is valid
         if form.is_valid():
             start_date = form.cleaned_data.get('start_date')
             end_date = form.cleaned_data.get('end_date')
-            
+
             if start_date and end_date:
                 date_filter_sql = f"WHERE timestamp >= '{start_date}' AND timestamp <= '{end_date} 23:59:59'"
             elif start_date:
                 date_filter_sql = f"WHERE timestamp >= '{start_date}'"
             elif end_date:
                 date_filter_sql = f"WHERE timestamp <= '{end_date} 23:59:59'"
-        
+
         with connection.cursor() as cursor:
             # First query: Get the number of materials
             cursor.execute("SELECT COUNT(*) FROM b11_1_material")
@@ -912,7 +964,7 @@ class Logging_View(GroupRequiredMixin, ListView):
         page_number = request.GET.get('page', 1)
         paginator = Paginator(log_entries, self.paginate_by)
         page_obj = paginator.get_page(page_number)
-        
+
         # Context data to pass to the template
         context = {
             'nb_materials': nb_materials,
