@@ -40,7 +40,9 @@ class FormValidMixin_IL:
     """
 
     def form_invalid(self, form):
-        form.add_error(None, "Es gibt einen oder mehreren Fehler im Formular.")
+        # Only add the generic error if there are no non-field errors already
+        if not form.non_field_errors():
+            form.add_error(None, "Es gibt einen oder mehreren Fehler im Formular.")
         return super().form_invalid(form)
 
     def form_valid(self, form):
@@ -123,6 +125,20 @@ class FormValidMixin_IL:
         item.waehrung = "CHF"
         print("item.waehrung = " + item.waehrung)
 
+        # Instandsetzbar
+        expected_value = "6" if item.instandsetzbar else "0"
+        try:
+            spare_part_class = SparePartClassCode.objects.get(text=expected_value)
+            # Set the spare_part_class_code field to the found object
+            item.spare_part_class_code = spare_part_class
+            print(f"item.spare_part_class_code set to {spare_part_class.text} (idx={spare_part_class.idx})")
+
+        except SparePartClassCode.DoesNotExist:
+            # Add a non-field error instead of a field-specific error
+            error_msg = f"Die Wert '{expected_value}' für Spare Part Class Code wurde nicht gefunden."
+            form.add_error(None, error_msg)
+            print(f"Error: {error_msg}")
+
         if form.errors:
             return self.form_invalid(form)
 
@@ -136,7 +152,9 @@ class FormValidMixin_GD:
     """
 
     def form_invalid(self, form):
-        form.add_error(None, "Es gibt einen oder mehreren Fehler im Formular.")
+        # Only add the generic error if there are no non-field errors already
+        if not form.non_field_errors():
+            form.add_error(None, "Es gibt einen oder mehreren Fehler im Formular.")
         return super().form_invalid(form)
 
     def form_valid(self, form):
@@ -184,7 +202,9 @@ class FormValidMixin_SMDA:
     """
 
     def form_invalid(self, form):
-        form.add_error(None, "Es gibt einen oder mehreren Fehler im Formular.")
+        # Only add the generic error if there are no non-field errors already
+        if not form.non_field_errors():
+            form.add_error(None, "Es gibt einen oder mehreren Fehler im Formular.")
         return super().form_invalid(form)
 
     def form_valid(self, form):
