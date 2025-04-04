@@ -108,7 +108,7 @@ def process_produkthierarchie(value):
         return None
 
     # Convert to string and strip whitespace
-    value = str(value).strip().zfill(4)
+    value = str(int(value)).strip().zfill(4)
 
     return value
 
