@@ -40,9 +40,7 @@ class FormValidMixin_IL:
     """
 
     def form_invalid(self, form):
-        # Only add the generic error if there are no non-field errors already
-        if not form.non_field_errors():
-            form.add_error(None, "Es gibt einen oder mehreren Fehler im Formular.")
+        form.add_error(None, "Es gibt einen oder mehreren Fehler im Formular.")
         return super().form_invalid(form)
 
     def form_valid(self, form):
@@ -152,9 +150,7 @@ class FormValidMixin_GD:
     """
 
     def form_invalid(self, form):
-        # Only add the generic error if there are no non-field errors already
-        if not form.non_field_errors():
-            form.add_error(None, "Es gibt einen oder mehreren Fehler im Formular.")
+        form.add_error(None, "Es gibt einen oder mehreren Fehler im Formular.")
         return super().form_invalid(form)
 
     def form_valid(self, form):
@@ -202,9 +198,7 @@ class FormValidMixin_SMDA:
     """
 
     def form_invalid(self, form):
-        # Only add the generic error if there are no non-field errors already
-        if not form.non_field_errors():
-            form.add_error(None, "Es gibt einen oder mehreren Fehler im Formular.")
+        form.add_error(None, "Es gibt einen oder mehreren Fehler im Formular.")
         return super().form_invalid(form)
 
     def form_valid(self, form):
