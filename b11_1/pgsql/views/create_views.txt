@@ -64,7 +64,7 @@ CREATE OR REPLACE VIEW mara_mara
     a.warengruppe AS matkl,
     ''::text AS bismt,
     a.bruttogewicht AS brgew,
-    a.bestellmengeneinheit AS bstme,
+    l.text AS bstme,
     f.text AS spart,
         CASE
             WHEN a.chargenpflicht = false THEN 'N'::text
@@ -85,9 +85,9 @@ CREATE OR REPLACE VIEW mara_mara
     j.text AS tempb,
     k.text AS zzsonderablauf,
     '2'::text AS "IPRKZ",
-    a.externe_warengruppe as extwg,
+    a.externe_warengruppe AS extwg,
         CASE
-            WHEN a.kennzeichen_komplexes_system = true then 'X'::text
+            WHEN a.kennzeichen_komplexes_system = true THEN 'X'::text
             ELSE ''::text
         END AS zzkomsys
    FROM b11_1_material a
@@ -100,6 +100,7 @@ CREATE OR REPLACE VIEW mara_mara
      LEFT JOIN b11_1_sparepartclasscode i ON i.idx = a.spare_part_class_code_id
      LEFT JOIN b11_1_temperaturbedingung j ON j.idx = a.temperaturbedingung_id
      LEFT JOIN b11_1_sonderablauf k ON k.idx = a.sonderablauf_id
+     LEFT JOIN b11_1_bestellmengeneinheit l ON l.idx = a.bestellmengeneinheit_id
   WHERE a.is_transferred = true;
 CREATE OR REPLACE VIEW mara_ausp_merkmale
  AS
@@ -133,19 +134,19 @@ CREATE OR REPLACE VIEW mara_ausp_merkmale
                 CASE
                     WHEN a.mietrelevanz = true THEN 'X'::text
                     ELSE ''::text
-                END as v_miet_relevanz,
-            a.nachschubklasse as v_nachschubklasse,
+                END AS v_miet_relevanz,
+            a.nachschubklasse AS v_nachschubklasse,
             a.preis AS v_bewertungspreis,
             a.waehrung AS v_waehrung,
             a.preiseinheit AS v_preiseinheit,
             to_char(CURRENT_DATE::timestamp with time zone, 'DD.MM.YYYY'::text) AS v_gueltigab,
             a.lagerfaehigkeit AS v_lagerfaehigkeit,
-            c.text as zuteilung,
-            d.text as auspraegung
+            c.text AS zuteilung,
+            d.text AS auspraegung
            FROM b11_1_material a
              LEFT JOIN b11_1_uebersetzungsstatus b ON b.idx = a.uebersetzungsstatus_id
-             LEFT JOIN b11_1_zuteilung c on c.idx = a.zuteilung_id
-             LEFT JOIN b11_1_auspraegung d on d.idx = a.auspraegung_id
+             LEFT JOIN b11_1_zuteilung c ON c.idx = a.zuteilung_id
+             LEFT JOIN b11_1_auspraegung d ON d.idx = a.auspraegung_id
           WHERE a.is_transferred = true
         )
  SELECT original_query.tmp_id,
@@ -210,13 +211,6 @@ UNION ALL
     original_query.v_apm AS atwrt,
     'V_APM'::text AS atnam
    FROM original_query
---UNION ALL
--- SELECT original_query.tmp_id,
---    original_query.source_id,
---    original_query.klart,
---    original_query.v_cheops AS atwrt,
---    'V_CHEOPS'::text AS atnam
---   FROM original_query
 UNION ALL
  SELECT original_query.tmp_id,
     original_query.source_id,
@@ -264,9 +258,9 @@ UNION ALL
     original_query.source_id,
     original_query.klart,
         CASE
-            WHEN original_query.zuteilung = 'BM' THEN original_query.auspraegung
+            WHEN original_query.zuteilung::text = 'BM'::text THEN original_query.auspraegung::text
             ELSE ''::text
-        END AS atwart,
+        END AS atwrt,
     'V_BETRIEBSMITTEL'::text AS atnam
    FROM original_query
 UNION ALL
@@ -274,9 +268,9 @@ UNION ALL
     original_query.source_id,
     original_query.klart,
         CASE
-            WHEN original_query.zuteilung = 'TRP' THEN original_query.auspraegung
+            WHEN original_query.zuteilung::text = 'TRP'::text THEN original_query.auspraegung::text
             ELSE ''::text
-        END AS atwart,
+        END AS atwrt,
     'V_SONDERBETRIEBSMITTEL_TRP'::text AS atnam
    FROM original_query
 UNION ALL
@@ -284,9 +278,9 @@ UNION ALL
     original_query.source_id,
     original_query.klart,
         CASE
-            WHEN original_query.zuteilung = 'MKZ' THEN original_query.auspraegung
+            WHEN original_query.zuteilung::text = 'MKZ'::text THEN original_query.auspraegung::text
             ELSE ''::text
-        END AS atwart,
+        END AS atwrt,
     'V_SONDERBETRIEBSMITTEL_MKZ'::text AS atnam
    FROM original_query
 UNION ALL
@@ -294,9 +288,9 @@ UNION ALL
     original_query.source_id,
     original_query.klart,
         CASE
-            WHEN original_query.zuteilung = 'PRD' THEN original_query.auspraegung
+            WHEN original_query.zuteilung::text = 'PRD'::text THEN original_query.auspraegung::text
             ELSE ''::text
-        END AS atwart,
+        END AS atwrt,
     'V_SONDERBETRIEBSMITTEL_PRD'::text AS atnam
    FROM original_query
 UNION ALL
@@ -457,6 +451,7 @@ CREATE OR REPLACE VIEW marc_werksdaten
     c.text AS fevor,
         CASE
             WHEN a.orderbuchpflicht = true THEN 'X'::text
+            ELSE NULL::text
         END AS kordb
    FROM b11_1_material a
      LEFT JOIN b11_1_werkzuordnung_1 b ON a.werkzuordnung_1_id = b.idx
@@ -473,7 +468,7 @@ CREATE OR REPLACE VIEW mbew_buchhaltung
     a.preis AS stprs,
     a.preiseinheit AS peinh,
     f.text AS bklas,
-    a.preisermittlung as mlast
+    a.preisermittlung AS mlast
    FROM b11_1_material a
      LEFT JOIN b11_1_werkzuordnung_1 b ON a.werkzuordnung_1_id = b.idx
      LEFT JOIN b11_1_bewertungsklasse f ON a.bewertungsklasse_id = f.idx
@@ -491,7 +486,7 @@ CREATE OR REPLACE VIEW mvke_verkaufsdaten
  AS
  SELECT a.id AS tmp_id,
     a.positions_nr AS source_id,
-    a.verkaufsorg as vkorg,
+    a.verkaufsorg AS vkorg,
     a.vertriebsweg AS vtweg,
     c.text AS mtpos
    FROM b11_1_material a

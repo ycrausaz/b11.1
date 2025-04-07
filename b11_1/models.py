@@ -119,6 +119,10 @@ class Basismengeneinheit(BaseIdxModel):
     class Meta:
         app_label = 'b11_1'
 
+class Bestellmengeneinheit(BaseIdxModel):
+    class Meta:
+        app_label = 'b11_1'
+
 class Materialart(BaseIdxModel):
     class Meta:
         app_label = 'b11_1'
@@ -226,7 +230,7 @@ class Material(models.Model):
     gefahrgutkennzeichen = models.ForeignKey(Gefahrgutkennzeichen, to_field='idx', null=True, blank=True, on_delete=models.DO_NOTHING, verbose_name=_("Gefahrgutkennzeichen"))
     instandsetzbar = models.BooleanField(null=True, blank=True, verbose_name=_("Instandsetzbar"))
     chargenpflicht = models.BooleanField(null=True, blank=True, verbose_name=_("Chargenpflicht"))
-    bestellmengeneinheit = models.IntegerField(null=True, blank=True, verbose_name=_("Bestellmengeneinheit"))
+    bestellmengeneinheit = models.ForeignKey(Bestellmengeneinheit, to_field='idx', null=True, blank=True, on_delete=models.DO_NOTHING, verbose_name=_("Bestellmengeneinheit"))
     mindestbestellmenge = models.IntegerField(null=True, blank=True, verbose_name=_("Mindestbestellmenge"))
     lieferzeit = models.IntegerField(null=True, blank=True, verbose_name=_("Lieferzeit"))
     einheit_l_b_h = models.CharField(null=True, blank=True, max_length=40, verbose_name=_("Einheit L / B / H"))

@@ -134,7 +134,9 @@ FIELD_MAPPING = {
     'bestellmengeneinheit': {
         'tab': 'Input_Lieferant',
         'column': 'AA',
-        'type': 'simple'
+        'type': 'fk',
+        'model': Bestellmengeneinheit,
+        'lookup_field': 'text'
     },
     'mindestbestellmenge': {
         'tab': 'Input_Lieferant',

@@ -54,10 +54,6 @@ class FormValidMixin_IL:
         if item.nettogewicht is not None and item.nettogewicht <= 0:
             form.add_error('nettogewicht', "Das Nettogewicht muss positiv sein.")
 
-        # Bestellmengeneinheit
-        if item.bestellmengeneinheit is not None and item.bestellmengeneinheit <= 0:
-            form.add_error('bestellmengeneinheit', "Die Bestellmengeneinheit muss positiv sein.")
-
         # Mindestbestellmenge
         if item.mindestbestellmenge is not None and item.mindestbestellmenge <= 0:
             form.add_error('mindestbestellmenge', "Die Mindestbestellmenge muss positiv sein.")

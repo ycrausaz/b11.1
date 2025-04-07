@@ -251,7 +251,7 @@ def drop_views_mara_ausp_merkmale(apps, schema_editor):
 # 3
 def create_views_mara_mara(apps, schema_editor):
     view_sql = '''
-CREATE OR REPLACE VIEW mara_mara
+CREATE OR REPLACE VIEW public.mara_mara
  AS
  SELECT a.id AS tmp_id,
     a.positions_nr AS source_id,
@@ -279,7 +279,7 @@ CREATE OR REPLACE VIEW mara_mara
     a.warengruppe AS matkl,
     ''::text AS bismt,
     a.bruttogewicht AS brgew,
-    a.bestellmengeneinheit AS bstme,
+    l.text AS bstme,
     f.text AS spart,
         CASE
             WHEN a.chargenpflicht = false THEN 'N'::text
@@ -315,6 +315,7 @@ CREATE OR REPLACE VIEW mara_mara
      LEFT JOIN b11_1_sparepartclasscode i ON i.idx = a.spare_part_class_code_id
      LEFT JOIN b11_1_temperaturbedingung j ON j.idx = a.temperaturbedingung_id
      LEFT JOIN b11_1_sonderablauf k ON k.idx = a.sonderablauf_id
+     LEFT JOIN b11_1_bestellmengeneinheit l ON l.idx = a.bestellmengeneinheit_id
   WHERE a.is_transferred = true;
         '''
     schema_editor.execute(view_sql)

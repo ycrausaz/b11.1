@@ -84,6 +84,14 @@ class BasismengeneinheitAdmin(admin.ModelAdmin):
         return bool(obj.explanation)
     has_explanation.boolean = True
 
+@admin.register(Bestellmengeneinheit)
+class BestellmengeneinheitAdmin(admin.ModelAdmin):
+    list_display = ('text', 'has_explanation')
+
+    def has_explanation(self, obj):
+        return bool(obj.explanation)
+    has_explanation.boolean = True
+
 @admin.register(Materialart)
 class MaterialartAdmin(admin.ModelAdmin):
     list_display = ('text', 'has_explanation')
