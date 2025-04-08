@@ -182,6 +182,36 @@ class FormValidMixin_GD:
             item.materialzustandsverwaltung = 2
         print("item.materialzustandsverwaltung = " + str(item.materialzustandsverwaltung))
 
+        # Preissteuerung (same code in 'FormValidMixin_SMDA')
+        if item.materialart_grunddaten:
+            materialart_text = item.materialart_grunddaten.text
+
+            # Check if materialart_grunddaten is in the first group (should set to "V")
+            v_group_1 = ["V003", "V005", "V006", "V012", "V013", "V016"]
+
+            # Check if materialart_grunddaten is in the second group (should set to "S" unless werkzuordnung_1 is "800")
+            s_group = ["V008", "V009", "V010", "V014", "V015", "V017"]
+
+            # Special case group (materialart in s_group and werkzuordnung_1 is "0800" should be "V")
+            special_case_group = ["V008", "V009", "V010"]
+
+            if materialart_text in v_group_1:
+                item.preissteuerung = "V"
+            elif materialart_text in s_group:
+                # Default for s_group is "S"
+                item.preissteuerung = "S"
+
+                # Special case: if materialart is in special_case_group and werkzuordnung_1 is "0800"
+                if materialart_text in special_case_group and item.werkzuordnung_1 and item.werkzuordnung_1.text == "0800":
+                    item.preissteuerung = "V"
+            else:
+                # Default value if none of the conditions match
+                item.preissteuerung = ""
+        else:
+            # Handle the case where materialart_grunddaten is None
+            item.preissteuerung = ""
+        print("item.preissteuerung = " + item.preissteuerung)
+
         if form.errors:
             return self.form_invalid(form)
 
@@ -216,8 +246,34 @@ class FormValidMixin_SMDA:
             item.auszeichnungsfeld = "R"
         print("item.auszeichnungsfeld = " + str(item.auszeichnungsfeld))
 
-        # Preissteuerung
-        item.preissteuerung = "<< TBD >>"
+        # Preissteuerung (same code in 'FormValidMixin_GD')
+        if item.materialart_grunddaten:
+            materialart_text = item.materialart_grunddaten.text
+
+            # Check if materialart_grunddaten is in the first group (should set to "V")
+            v_group_1 = ["V003", "V005", "V006", "V012", "V013", "V016"]
+
+            # Check if materialart_grunddaten is in the second group (should set to "S" unless werkzuordnung_1 is "800")
+            s_group = ["V008", "V009", "V010", "V014", "V015", "V017"]
+
+            # Special case group (materialart in s_group and werkzuordnung_1 is "0800" should be "V")
+            special_case_group = ["V008", "V009", "V010"]
+
+            if materialart_text in v_group_1:
+                item.preissteuerung = "V"
+            elif materialart_text in s_group:
+                # Default for s_group is "S"
+                item.preissteuerung = "S"
+
+                # Special case: if materialart is in special_case_group and werkzuordnung_1 is "0800"
+                if materialart_text in special_case_group and item.werkzuordnung_1 and item.werkzuordnung_1.text == "0800":
+                    item.preissteuerung = "V"
+            else:
+                # Default value if none of the conditions match
+                item.preissteuerung = ""
+        else:
+            # Handle the case where materialart_grunddaten is None
+            item.preissteuerung = ""
         print("item.preissteuerung = " + item.preissteuerung)
 
         # Preisermittlung
