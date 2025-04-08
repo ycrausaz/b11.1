@@ -1,4 +1,4 @@
-CREATE OR REPLACE VIEW public.mara_mara
+CREATE OR REPLACE VIEW mara_mara
  AS
  SELECT a.id AS tmp_id,
     a.positions_nr AS source_id,

@@ -58,10 +58,6 @@ CREATE OR REPLACE VIEW mara_ausp_merkmale
                     ELSE ''::text
                 END AS v_apm,
                 CASE
-                    WHEN a.verteilung_cheops = true THEN 'X'::text
-                    ELSE ''::text
-                END AS v_cheops,
-                CASE
                     WHEN a.verteilung_svsaa = true THEN 'X'::text
                     ELSE ''::text
                 END AS v_svsaa,
@@ -251,7 +247,7 @@ def drop_views_mara_ausp_merkmale(apps, schema_editor):
 # 3
 def create_views_mara_mara(apps, schema_editor):
     view_sql = '''
-CREATE OR REPLACE VIEW public.mara_mara
+CREATE OR REPLACE VIEW mara_mara
  AS
  SELECT a.id AS tmp_id,
     a.positions_nr AS source_id,

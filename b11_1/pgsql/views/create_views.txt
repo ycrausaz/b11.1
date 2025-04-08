@@ -124,10 +124,6 @@ CREATE OR REPLACE VIEW mara_ausp_merkmale
                     ELSE ''::text
                 END AS v_apm,
                 CASE
-                    WHEN a.verteilung_cheops = true THEN 'X'::text
-                    ELSE ''::text
-                END AS v_cheops,
-                CASE
                     WHEN a.verteilung_svsaa = true THEN 'X'::text
                     ELSE ''::text
                 END AS v_svsaa,
