@@ -26,6 +26,59 @@ def generate_random_string(length=16):
     letters = string.ascii_uppercase  # Use uppercase letters only
     return ''.join(random.choice(letters) for i in range(length))
 
+def update_df(df, view, sheet_name, export_type):
+    # Drop the 'tmp_id' column if it exists
+    if 'TMP_ID' in df.columns:
+        df = df.drop(columns=['TMP_ID'])
+    
+    # Pad 'SOURCE_ID' column values to 3 digits with leading zeros and sort by 'SOURCE_ID'
+    if 'SOURCE_ID' in df.columns: # makeLastUpdate_2
+        df['SOURCE_ID'] = df['SOURCE_ID'].astype(str).str.zfill(3)
+        df = df.sort_values(by='SOURCE_ID')
+    
+    # Transform MFRPN column if it exists
+    if 'ZZFUEHR_MAT' in df.columns:
+        # Apply transformation to convert NNNN.NNNN to 0000000000NNNNNNNN
+        df['ZZFUEHR_MAT'] = df['ZZFUEHR_MAT'].apply(
+            lambda x: '0000000000' + x.replace('.', '') 
+            if isinstance(x, str) and '.' in x 
+            else x
+        )
+    
+    # Format dimension columns (LAENG, BREIT, HOEHE) to have 3 decimal places
+    for dimension_col in ['LAENG', 'BREIT', 'HOEHE']:
+        if dimension_col in df.columns:
+            # First ensure values are converted to float
+            df[dimension_col] = pd.to_numeric(df[dimension_col], errors='coerce')
+            # Format to display exactly 3 decimal places
+            df[dimension_col] = df[dimension_col].apply(
+                lambda x: f"{x:.3f}" if pd.notnull(x) else x
+            )
+    
+    # Filter out records with null values in specified columns for specific views
+    if view == 'MARC_Werksdaten' and 'WERKS' in df.columns: # makeLastUpdate_3
+        df = df.dropna(subset=['WERKS'])
+    elif view == 'MBEW_Buchhaltung' and 'BWKEY' in df.columns: # makeLastUpdate_4
+        df = df.dropna(subset=['BWKEY'])
+    elif view == 'CKMLCR_material_ledger_preise' and 'BWKEY' in df.columns: # makeLastUpdate_7
+        df = df.dropna(subset=['BWKEY'])
+    elif view == 'MARA_MARA' and 'V_LAGERFAEHIGKEIT' in df.columns:
+        df = df.dropna(subset=['V_LAGERFAEHIGKEIT']) # makeLastUpdate_1
+    elif view == 'MARA_AUSP_Merkmale' and 'V_CHEOPS' in df.columns:
+        df = df.dropna(subset=['V_CHEOPS']) # makeLastUpdate_10
+
+    if export_type == "RUAG":
+        if view == 'MARA_MARA' and 'BEGRU' in df.columns: # makeLastUpdate_RUAG_3
+            df['BEGRU'] = "3000"
+        if view == 'MARA_MARA' and 'SPART' in df.columns: # makeLastUpdate_RUAG_3
+            df['SPART'] = "V0"
+        if view == 'MARA_MARA' and 'MTART' in df.columns: # makeLastUpdate_RUAG_3
+            df['MTART'] = "V099"
+        if view == 'MARA_AUSP_Merkmale' and 'V_ZERTFLUG' in df.columns: # makeLastUpdate_RUAG_4
+            df['V_ZERTFLUG'] = "J"
+
+    return df
+
 def export_to_excel(materials, export_type):
     """
     Exports the provided materials to an Excel file with multiple sheets,
@@ -90,41 +143,8 @@ def export_to_excel(materials, export_type):
                 # Convert headers to capital letters
                 df.columns = [col.upper() for col in df.columns]
 
-                # Drop the 'tmp_id' column if it exists
-                if 'TMP_ID' in df.columns:
-                    df = df.drop(columns=['TMP_ID'])
-
-                # Pad 'SOURCE_ID' column values to 3 digits with leading zeros and sort by 'SOURCE_ID'
-                if 'SOURCE_ID' in df.columns:
-                    df['SOURCE_ID'] = df['SOURCE_ID'].astype(str).str.zfill(3)
-                    df = df.sort_values(by='SOURCE_ID')
-
-                # Transform MFRPN column if it exists
-                if 'ZZFUEHR_MAT' in df.columns:
-                    # Apply transformation to convert NNNN.NNNN to 0000000000NNNNNNNN
-                    df['ZZFUEHR_MAT'] = df['ZZFUEHR_MAT'].apply(
-                        lambda x: '0000000000' + x.replace('.', '') 
-                        if isinstance(x, str) and '.' in x 
-                        else x
-                    )
-
-                # Format dimension columns (LAENG, BREIT, HOEHE) to have 3 decimal places
-                for dimension_col in ['LAENG', 'BREIT', 'HOEHE']:
-                    if dimension_col in df.columns:
-                        # First ensure values are converted to float
-                        df[dimension_col] = pd.to_numeric(df[dimension_col], errors='coerce')
-                        # Format to display exactly 3 decimal places
-                        df[dimension_col] = df[dimension_col].apply(
-                            lambda x: f"{x:.3f}" if pd.notnull(x) else x
-                        )
-
-                # Filter out records with null values in specified columns for specific views
-                if view == 'MARC_Werksdaten' and 'WERKS' in df.columns:
-                    df = df.dropna(subset=['WERKS'])
-                elif view == 'MBEW_Buchhaltung' and 'BWKEY' in df.columns:
-                    df = df.dropna(subset=['BWKEY'])
-                elif view == 'CKMLCR_material_ledger_preise' and 'BWKEY' in df.columns:
-                    df = df.dropna(subset=['BWKEY'])
+                # Applay a the modifications to the dataframe
+                update_df(df, view, sheet_name, export_type)
 
                 # Write the DataFrame to a specific sheet, including headers
                 df.to_excel(writer, sheet_name=sheet_name, index=False)
