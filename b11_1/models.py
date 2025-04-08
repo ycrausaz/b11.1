@@ -219,7 +219,7 @@ class Material(models.Model):
     basismengeneinheit = models.ForeignKey(Basismengeneinheit, to_field='idx', null=True, blank=True, on_delete=models.DO_NOTHING, verbose_name=_("Basismengeneinheit"))
     bruttogewicht = models.FloatField(null=True, blank=True, verbose_name=_("Bruttogewicht"))
     gewichtseinheit = models.CharField(null=True, blank=True, max_length=40, verbose_name=_("Gewichtseinheit"))
-    nettogewicht = models.IntegerField(null=True, blank=True, verbose_name=_("Nettogewicht"))
+    nettogewicht = models.FloatField(null=True, blank=True, verbose_name=_("Nettogewicht"))
     groesse_abmessung = models.IntegerField(null=True, blank=True, verbose_name=_("Grösse / Abmessung"))
     ean_upc_code = models.CharField(null=True, blank=True, max_length=40, verbose_name=_("EAN / UPC Code"))
     nato_stock_number = models.CharField(null=True, blank=True, max_length=40, verbose_name=_("Nato Stock Number"))
