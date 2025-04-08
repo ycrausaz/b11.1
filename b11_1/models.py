@@ -295,7 +295,7 @@ class Material(models.Model):
     zuteilung = models.ForeignKey(Zuteilung, to_field='idx', null=True, blank=True, on_delete=models.DO_NOTHING, verbose_name=_("Zuteilung"))
     auspraegung = models.ForeignKey(Auspraegung, to_field='idx', null=True, blank=True, on_delete=models.DO_NOTHING, verbose_name=_("Ausprägung"))
     preissteuerung = models.CharField(null=True, blank=True, max_length=40, verbose_name=_("Preissteuerung"))
-    preisermittlung = models.CharField(null=True, blank=True, max_length=30, verbose_name=_("Preisermittlung"))
+    preisermittlung = models.IntegerField(null=True, blank=True, verbose_name=_("Preisermittlung"))
 
     def delete(self, *args, **kwargs):
         # First, delete all attachment files from storage
