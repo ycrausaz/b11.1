@@ -143,8 +143,8 @@ def export_to_excel(materials, export_type):
                 # Convert headers to capital letters
                 df.columns = [col.upper() for col in df.columns]
 
-                # Applay a the modifications to the dataframe
-                update_df(df, view, sheet_name, export_type)
+                # Applay a the modifications and business rules to the dataframe
+                df = update_df(df, view, sheet_name, export_type)
 
                 # Write the DataFrame to a specific sheet, including headers
                 df.to_excel(writer, sheet_name=sheet_name, index=False)
