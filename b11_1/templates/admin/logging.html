@@ -43,7 +43,8 @@
                 <tr>
                     <th>#</th>
                     <th>ID</th>
-                    <th>Timestamp</th>
+                    <th>Date</th>
+                    <th>Time</th>
                     <th>Level</th>
                     <th>Message</th>
                 </tr>
@@ -53,7 +54,8 @@
                     <tr>
                         <td>{{ log_entries.start_index|add:forloop.counter0 }}</td>
                         <td>{{ entry.id }}</td>
-                        <td>{{ entry.timestamp|date:'d.m.Y - H:i:s' }}</td>
+                        <td>{{ entry.timestamp|date:'d.m.Y' }}</td>
+                        <td>{{ entry.timestamp|date:'H:i:s' }}</td>
                         <td>{{ entry.level }}</td>
                         <td>{{ entry.message }}</td>
                     </tr>
