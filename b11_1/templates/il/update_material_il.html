@@ -19,7 +19,7 @@
     <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
         <table>
-            {% for field in form %}
+            {% for field in form.get_normal_fields %}
                 {% if not field.is_hidden %}
                     <tr>
 <td>
