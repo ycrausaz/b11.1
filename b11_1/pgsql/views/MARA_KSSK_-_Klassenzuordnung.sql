@@ -10,7 +10,7 @@ CREATE OR REPLACE VIEW mara_kssk_klassenzuordnung
  SELECT source_data.tmp_id,
     source_data.source_id,
     source_data.klart,
-    'V_VERTEILUNG_PSD'::text AS class
+    'V_VERTEILUNG'::text AS class
    FROM source_data
 UNION ALL
  SELECT source_data.tmp_id,
@@ -28,7 +28,13 @@ UNION ALL
  SELECT source_data.tmp_id,
     source_data.source_id,
     source_data.klart,
-    'V_VERTEILUNG'::text AS class
+    'V_VERTEILUNG_PSD'::text AS class
+   FROM source_data
+UNION ALL
+ SELECT source_data.tmp_id,
+    source_data.source_id,
+    source_data.klart,
+    'V_VERTEILUNG_RUAG'::text AS class
    FROM source_data
 UNION ALL
  SELECT source_data.tmp_id,
