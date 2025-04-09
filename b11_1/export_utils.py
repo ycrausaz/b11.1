@@ -67,6 +67,17 @@ def update_df(df, view, sheet_name, export_type):
     elif view == 'MARA_AUSP_Merkmale' and 'V_CHEOPS' in df.columns:
         df = df.dropna(subset=['V_CHEOPS']) # makeLastUpdate_10
 
+    # Add handling for MARA_AUSP_Merkmale view to convert V_NACHSCHUBKLASSE from float to int
+    if view == 'MARA_AUSP_Merkmale' and 'ATNAM' in df.columns and 'ATWRT' in df.columns:
+        # Create a mask to identify rows where ATNAM is 'V_NACHSCHUBKLASSE'
+        nachschubklasse_mask = df['ATNAM'] == 'V_NACHSCHUBKLASSE'
+
+        # For those rows, convert ATWRT to float first (to handle potential strings)
+        # then to int, but only if the value can be converted
+        df.loc[nachschubklasse_mask, 'ATWRT'] = df.loc[nachschubklasse_mask, 'ATWRT'].apply(
+            lambda x: str(int(float(x))) if isinstance(x, str) and x.replace('.', '', 1).isdigit() else x
+        )
+
     if export_type == "RUAG":
         if view == 'MARA_MARA' and 'BEGRU' in df.columns: # makeLastUpdate_RUAG_3
             df['BEGRU'] = "3000"
