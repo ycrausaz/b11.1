@@ -50,8 +50,6 @@ class MaterialForm_SMDA(BaseTemplateForm, SplitterReadOnlyReadWriteFields):
             'spare_part_class_code',
             'materialeinstufung_nach_zuva',
             'bewertungsklasse',
-            'zuteilung',
-            'auspraegung',
         ]
         computed_fields = [
             'verkaufsorg',
