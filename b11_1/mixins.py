@@ -116,7 +116,8 @@ class FormValidMixin_IL:
         print("item.einheit_l_b_h = " + item.einheit_l_b_h)
 
         # Währung
-        item.waehrung = "CHF"
+        if item.preis is not None:
+            item.waehrung = "CHF"
         print("item.waehrung = " + item.waehrung)
 
         # Instandsetzbar
@@ -166,6 +167,10 @@ class FormValidMixin_GD:
             item.geschaeftspartner = lookup_value
         print("item.geschaeftspartner = " + item.geschaeftspartner)
 
+        # Verteilung PSD
+        item.verteilung_an_psd = True
+        print("item.verteilung_an_psd = " + str(item.verteilung_an_psd))
+
         # Revision Fremd
         item.revision_fremd = form.cleaned_data['revision']
         print("item.revision_fremd = " + str(item.revision_fremd))
@@ -179,7 +184,7 @@ class FormValidMixin_GD:
         if item.chargenpflicht:
             item.materialzustandsverwaltung = 2
         else:
-            item.materialzustandsverwaltung = 2
+            item.materialzustandsverwaltung = 1
         print("item.materialzustandsverwaltung = " + str(item.materialzustandsverwaltung))
 
         # Preissteuerung (same code in 'FormValidMixin_SMDA')
@@ -240,6 +245,11 @@ class FormValidMixin_SMDA:
         # Vertriebsweg
         item.vertriebsweg = "V0"
         print("item.vertriebsweg = " + item.vertriebsweg)
+
+        # Allgemeine Positionstypengruppe
+        allgemeine_positionstypengruppe = AllgemeinePositionstypengruppe.objects.get(text="NORM")
+        item.allgemeine_positionstypengruppe = allgemeine_positionstypengruppe
+        print(f"allgemeine_positionstypengruppe set to '{allgemeine_positionstypengruppe.text}'")
 
         # Auszeichnungsfeld
         if item.verteilung_apm_kerda == True:
