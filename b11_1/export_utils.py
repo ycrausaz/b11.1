@@ -30,12 +30,12 @@ def update_df(df, view, sheet_name, export_type):
     # Drop the 'tmp_id' column if it exists
     if 'TMP_ID' in df.columns:
         df = df.drop(columns=['TMP_ID'])
-    
+
     # Pad 'SOURCE_ID' column values to 3 digits with leading zeros and sort by 'SOURCE_ID'
     if 'SOURCE_ID' in df.columns: # makeLastUpdate_2
         df['SOURCE_ID'] = df['SOURCE_ID'].astype(str).str.zfill(3)
         df = df.sort_values(by='SOURCE_ID')
-    
+
     # Transform MFRPN column if it exists
     if 'ZZFUEHR_MAT' in df.columns:
         # Apply transformation to convert NNNN.NNNN to 0000000000NNNNNNNN
@@ -44,7 +44,7 @@ def update_df(df, view, sheet_name, export_type):
             if isinstance(x, str) and '.' in x 
             else x
         )
-    
+
     # Format dimension columns (LAENG, BREIT, HOEHE) to have 3 decimal places
     for dimension_col in ['LAENG', 'BREIT', 'HOEHE']:
         if dimension_col in df.columns:
@@ -54,7 +54,7 @@ def update_df(df, view, sheet_name, export_type):
             df[dimension_col] = df[dimension_col].apply(
                 lambda x: f"{x:.3f}" if pd.notnull(x) else x
             )
-    
+
     # Filter out records with null values in specified columns for specific views
     if view == 'MARC_Werksdaten' and 'WERKS' in df.columns: # makeLastUpdate_3
         df = df.dropna(subset=['WERKS'])
@@ -78,6 +78,17 @@ def update_df(df, view, sheet_name, export_type):
             lambda x: str(int(float(x))) if isinstance(x, str) and x.replace('.', '', 1).isdigit() else x
         )
 
+    # Filter out records with V_VERTEILUNG_PSD or V_VERTEILUNG_RUAG where TMP_X is not 'X'
+    if view == 'MARA_KSSK_Klassenzuordnung' and 'CLASS' in df.columns and 'TMP_X' in df.columns:
+        # Create a condition to identify rows to keep:
+        # 1. Either CLASS is not one of the special values
+        # 2. Or CLASS is one of the special values but TMP_X is 'X'
+        condition = ~((df['CLASS'].isin(['V_VERTEILUNG_PSD', 'V_VERTEILUNG_RUAG'])) &
+                      (df['TMP_X'] != 'X'))
+
+        # Filter the dataframe
+        df = df[condition]
+
     if export_type == "RUAG":
         if view == 'MARA_MARA' and 'BEGRU' in df.columns: # makeLastUpdate_RUAG_3
             df['BEGRU'] = "3000"
@@ -87,6 +98,10 @@ def update_df(df, view, sheet_name, export_type):
             df['MTART'] = "V099"
         if view == 'MARA_AUSP_Merkmale' and 'V_ZERTFLUG' in df.columns: # makeLastUpdate_RUAG_4
             df['V_ZERTFLUG'] = "J"
+
+    # Drop the 'tmp_x' column if it exists
+    if view == 'MARA_KSSK_Klassenzuordnung' and 'TMP_X' in df.columns:
+        df = df.drop(columns=['TMP_X'])
 
     return df
 
