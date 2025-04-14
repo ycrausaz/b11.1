@@ -7,26 +7,97 @@ from django.contrib.auth.forms import SetPasswordForm
 from .models import *
 from bootstrap_datepicker_plus.widgets import DatePickerInput
 from django.utils.translation import gettext_lazy as _
+from django.core.exceptions import ValidationError
+import logging
+
+logger = logging.getLogger(__name__)
 
 class CustomPasswordResetForm(SetPasswordForm):
-    def clean_new_password2(self):
-        password2 = self.cleaned_data.get('new_password2')
-        user = self.user
-        try:
-            validate_password(password2, user)
-        except forms.ValidationError as error:
-            self.add_error('new_password2', error)
-        return password2
+    """
+    Custom form for resetting passwords with enhanced validation
+    """
+    def clean_new_password1(self):
+        password = self.cleaned_data.get('new_password1')
+        # Password needs to have at least 8 characters
+        if len(password) < 8:
+            raise ValidationError(_("Password must be at least 8 characters long."))
+        
+        # Password needs to have at least one uppercase letter
+        if not any(char.isupper() for char in password):
+            raise ValidationError(_("Password must contain at least one uppercase letter."))
+        
+        # Password needs to have at least one lowercase letter
+        if not any(char.islower() for char in password):
+            raise ValidationError(_("Password must contain at least one lowercase letter."))
+        
+        # Password needs to have at least one digit
+        if not any(char.isdigit() for char in password):
+            raise ValidationError(_("Password must contain at least one digit."))
+        
+        # Password needs to have at least one special character
+        special_characters = r"[~!@#$%^&*()_+{}\":;'[\]]"
+        if not bool(re.search(special_characters, password)):
+            raise ValidationError(_("Password must contain at least one special character (~!@#$%^&*()_+{}\":;'[])."))
+        
+        return password
 
 class CustomPasswordChangeForm(PasswordChangeForm):
-    def clean_new_password2(self):
-        password2 = self.cleaned_data.get('new_password2')
-        user = self.user
-        try:
-            validate_password(password2, user)
-        except forms.ValidationError as error:
-            self.add_error('new_password2', error)
-        return password2
+    """
+    Custom form for changing password
+    """
+    pass
+
+class EmailVerificationForm(forms.Form):
+    """
+    Form for initial email verification step
+    """
+    email = forms.EmailField(
+        required=True,
+        widget=forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Enter your email'})
+    )
+    recaptcha_token = forms.CharField(required=False, widget=forms.HiddenInput())
+    
+    def clean_email(self):
+        email = self.cleaned_data.get('email')
+        
+        # Check if email already exists in User model
+        if User.objects.filter(email=email).exists():
+            raise ValidationError(_("A user with this email already exists."))
+        
+        return email
+    
+    def clean_recaptcha_token(self):
+        token = self.cleaned_data.get('recaptcha_token', '')
+        
+        # If we're in development mode, bypass reCAPTCHA verification
+        if getattr(settings, 'BYPASS_RECAPTCHA', False):
+            logger.debug("DEVELOPMENT MODE: Bypassing reCAPTCHA verification")
+            return token
+        
+        # Verify reCAPTCHA
+        self.verify_recaptcha(token)
+        return token
+    
+    def verify_recaptcha(self, token):
+        # Skip verification in development mode
+        if getattr(settings, 'BYPASS_RECAPTCHA', False):
+            return
+            
+        # Verify reCAPTCHA with Google's API
+        data = {
+            'secret': settings.RECAPTCHA_PRIVATE_KEY,
+            'response': token
+        }
+        response = requests.post('https://www.google.com/recaptcha/api/siteverify', data=data)
+        result = response.json()
+        
+        if not result.get('success', False):
+            raise ValidationError(_("reCAPTCHA verification failed. Please try again."))
+        
+        # Check the score
+        score = result.get('score', 0)
+        if score < settings.RECAPTCHA_REQUIRED_SCORE:
+            raise ValidationError(_("reCAPTCHA score too low. Please try again."))
 
 class CustomBooleanChoiceField(forms.TypedChoiceField):
     BOOLEAN_CHOICES = (
@@ -102,23 +173,62 @@ class BaseTemplateForm(forms.ModelForm):
         return instance
 
 class UserRegistrationForm(forms.ModelForm):
-    username = forms.CharField(
-        max_length=50,
-        widget=forms.TextInput(attrs={'class': 'form-control'})
-    )
-
+    """
+    Form for user registration
+    """
+    recaptcha_token = forms.CharField(required=False, widget=forms.HiddenInput())
+    
     class Meta:
         model = Profile
-        fields = ['username', 'firm', 'first_name', 'last_name', 'role', 'country', 'email', 'phone']
+        fields = ['username', 'first_name', 'last_name', 'firm', 'role', 'country', 'phone']
         widgets = {
-            'firm': forms.TextInput(attrs={'class': 'form-control'}),
+            'username': forms.TextInput(attrs={'class': 'form-control'}),
             'first_name': forms.TextInput(attrs={'class': 'form-control'}),
             'last_name': forms.TextInput(attrs={'class': 'form-control'}),
+            'firm': forms.TextInput(attrs={'class': 'form-control'}),
             'role': forms.TextInput(attrs={'class': 'form-control'}),
             'country': forms.TextInput(attrs={'class': 'form-control'}),
-            'email': forms.EmailInput(attrs={'class': 'form-control'}),
             'phone': forms.TextInput(attrs={'class': 'form-control'}),
         }
+    
+    def clean_username(self):
+        username = self.cleaned_data.get('username')
+        if User.objects.filter(username=username).exists():
+            raise ValidationError(_("This username is already taken."))
+        return username
+    
+    def clean_recaptcha_token(self):
+        token = self.cleaned_data.get('recaptcha_token', '')
+        
+        # If we're in development mode, bypass reCAPTCHA verification
+        if getattr(settings, 'BYPASS_RECAPTCHA', False):
+            logger.debug("DEVELOPMENT MODE: Bypassing reCAPTCHA verification")
+            return token
+        
+        # Verify reCAPTCHA
+        self.verify_recaptcha(token)
+        return token
+    
+    def verify_recaptcha(self, token):
+        # Skip verification in development mode
+        if getattr(settings, 'BYPASS_RECAPTCHA', False):
+            return
+            
+        # Verify reCAPTCHA with Google's API
+        data = {
+            'secret': settings.RECAPTCHA_PRIVATE_KEY,
+            'response': token
+        }
+        response = requests.post('https://www.google.com/recaptcha/api/siteverify', data=data)
+        result = response.json()
+        
+        if not result.get('success', False):
+            raise ValidationError(_("reCAPTCHA verification failed. Please try again."))
+        
+        # Check the score
+        score = result.get('score', 0)
+        if score < settings.RECAPTCHA_REQUIRED_SCORE:
+            raise ValidationError(_("reCAPTCHA score too low. Please try again."))
 
 class LogDateFilterForm(forms.Form):
     start_date = forms.DateField(

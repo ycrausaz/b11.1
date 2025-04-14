@@ -1,3 +1,5 @@
+{# admin/pending_registrations.html #}
+
 {% extends "base_generic.html" %}
 
 {% block content %}
@@ -24,7 +26,7 @@
             <tr>
                 <td>{{ profile.username }}</td>
                 <td>{{ profile.first_name }} {{ profile.last_name }}</td>
-                <td><a href="mailto:{{ profile.email }}">{{ profile.email }}</a></td>
+                <td><a href="mailto:{{ profile.email }}" target=”_blank”>{{ profile.email }}</a></td>
                 <td>{{ profile.firm }}</td>
                 <td>{{ profile.role }}</td>
                 <td>{{ profile.registration_date|date:"d.m.Y H:i" }}</td>
@@ -87,6 +89,8 @@
             {% endfor %}
         </tbody>
     </table>
+
+    {% include "pagination.html" %}
 
     {% else %}
 

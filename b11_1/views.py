@@ -30,6 +30,7 @@ from .mixins import FormValidMixin_IL, FormValidMixin_GD, FormValidMixin_SMDA
 from django.template import RequestContext
 from .forms import CustomPasswordChangeForm
 from .forms import CustomPasswordResetForm
+from .forms import EmailVerificationForm
 from b11_1.models import Profile, Material
 from django.contrib.auth.models import User, Group
 from django.core.exceptions import ObjectDoesNotExist
@@ -103,6 +104,225 @@ def custom_permission_denied_view(request, exception=None):
 
 def home(request):
    return redirect('login_user')
+
+class PreRegisterView(FormView):
+    """
+    Initial view for email verification
+    """
+    template_name = 'registration/pre_register.html'
+    form_class = EmailVerificationForm
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['email'] = self.request.session.get('verified_email')
+        context['recaptcha_site_key'] = getattr(settings, 'RECAPTCHA_PUBLIC_KEY', 'dummy_key')
+        context['settings'] = settings  # Pass settings to template
+        return context
+    
+    def form_valid(self, form):
+        email = form.cleaned_data['email']
+        
+        # Generate verification token
+        verification_token = get_random_string(64)
+        
+        # Store token in session for validation later
+        self.request.session['email_verification'] = {
+            'email': email,
+            'token': verification_token,
+            'expires': (timezone.now() + timedelta(hours=24)).isoformat()
+        }
+        
+        # Generate verification link
+        current_site = get_current_site(self.request)
+        verification_link = f"http://{current_site.domain}{reverse('verify_email')}?email={email}&token={verification_token}"
+        
+        # Prepare email context
+        email_context = {
+            'verification_link': verification_link,
+            'expiry_date': (timezone.now() + timedelta(hours=24)).strftime('%Y-%m-%d %H:%M:%S'),
+        }
+        
+        # Render email template
+        email_body = render_to_string('registration/email/verification_email.html', email_context)
+        
+        # In development environment - print details to console instead of sending email
+        print("\n" + "="*80)
+        print("DEVELOPMENT MODE: Email Verification")
+        print("="*80)
+        print(f"To: {email}")
+        print(f"Subject: Verify your email address")
+        print("-"*80)
+        print(email_body)
+        print("-"*80)
+        print(f"VERIFICATION LINK: {verification_link}")
+        print("="*80 + "\n")
+        
+        # Log the verification link for easy access
+        logger.info(f"Verification link for {email}: {verification_link}")
+        
+        # Add success message
+        messages.success(self.request, "Verification email sent! Please check your inbox to continue registration. (In development mode, check the console output for the verification link)")
+        
+        return redirect('login_user')
+
+class VerifyEmailView(View):
+    """
+    Email verification handler
+    """
+    def get(self, request):
+        email = request.GET.get('email')
+        token = request.GET.get('token')
+        
+        # Get verification data from session
+        verification_data = request.session.get('email_verification', {})
+        
+        # Debug info
+        print("\n" + "="*80)
+        print("DEBUG: Email Verification Attempt")
+        print(f"Email in URL: {email}")
+        print(f"Token in URL: {token}")
+        print(f"Session verification data: {verification_data}")
+        print("="*80 + "\n")
+        
+        if not verification_data:
+            messages.error(request, "Verification link is invalid or has expired. (Session data not found)")
+            return redirect('pre_register')
+        
+        # Verify token and email
+        stored_email = verification_data.get('email')
+        stored_token = verification_data.get('token')
+        expires = verification_data.get('expires')
+        
+        print("\n" + "="*80)
+        print("DEBUG: Verification Comparison")
+        print(f"Stored email: {stored_email} | Matches: {stored_email == email}")
+        print(f"Stored token: {stored_token} | Matches: {stored_token == token}")
+        
+        if expires:
+            expiry_time = timezone.datetime.fromisoformat(expires)
+            is_expired = timezone.now() > expiry_time
+            print(f"Expiry time: {expiry_time} | Expired: {is_expired}")
+        else:
+            print("No expiry time found")
+        print("="*80 + "\n")
+        
+        if (stored_email != email or 
+            stored_token != token or
+            (expires and timezone.now() > timezone.datetime.fromisoformat(expires))):
+            
+            messages.error(request, "Verification link is invalid or has expired. (Data mismatch)")
+            return redirect('pre_register')
+        
+        # Log successful verification
+        logger.info(f"Email verification successful for: {email}")
+        
+        # Store verified email in the session (mark it as verified)
+        self.request.session['verified_email'] = email
+        self.request.session.modified = True
+
+        # Add these debug lines
+        print("\n" + "="*80)
+        print("DEBUG: Session after storing verified_email")
+        print(f"verified_email in session: {self.request.session.get('verified_email')}")
+        print(f"Full session data: {dict(self.request.session)}")
+        print(f"Session key: {self.request.session.session_key}")
+        print("="*80 + "\n")
+        
+        # Redirect to registration form without email parameter
+        return redirect('register')
+
+class RegisterView(FormView):
+    """
+    Main registration form view
+    """
+    template_name = 'registration/register.html'
+    form_class = UserRegistrationForm
+
+    # In RegisterView class, add this method:
+    def get(self, request, *args, **kwargs):
+        # Debug the session data when rendering the form
+        print("\n" + "="*80)
+        print("DEBUG: RegisterView.get method called")
+        print(f"Session key: {request.session.session_key}")
+        print(f"verified_email in session: {request.session.get('verified_email')}")
+        print(f"Full session data: {dict(request.session)}")
+        print("="*80 + "\n")
+        
+        form = self.get_form()
+        return self.render_to_response(self.get_context_data(form=form))
+
+    def dispatch(self, request, *args, **kwargs):
+        # Check if email is in session
+        if not request.session.get('verified_email'):
+            messages.error(request, "Please verify your email address first.")
+            return redirect('pre_register')
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        
+        # Try getting from session first
+        email_from_session = self.request.session.get('verified_email')
+        
+        # If not in session, check if it might be in GET params (as fallback)
+        email_from_url = self.request.GET.get('verified_email')
+        
+        # Debug information
+        print("\n" + "="*80)
+        print(f"Email from session: {email_from_session}")
+        print(f"Email from URL param: {email_from_url}")
+        print("="*80 + "\n")
+        
+        # Use session value if available, otherwise try URL param
+        email = email_from_session or email_from_url
+        
+        context['email'] = email
+        context['recaptcha_site_key'] = getattr(settings, 'RECAPTCHA_PUBLIC_KEY', 'dummy_key')
+        context['settings'] = settings
+        
+        return context
+    
+    def form_valid(self, form):
+        try:
+            with transaction.atomic():
+                email = self.request.session.get('verified_email')
+                
+                # Create user (inactive until approved)
+                user = User.objects.create(
+                    username=form.cleaned_data['username'],
+                    email=email,
+                    first_name=form.cleaned_data['first_name'],
+                    last_name=form.cleaned_data['last_name'],
+                    is_active=False
+                )
+                
+                # Create profile
+                profile = form.save(commit=False)
+                profile.user = user
+                profile.email = email
+                profile.registration_token = get_random_string(50)
+                profile.token_expiry = timezone.now() + timedelta(days=2)
+                profile.status = 'pending'
+                profile.save()
+                
+                # Clear verification data from session
+                if 'email_verification' in self.request.session:
+                    del self.request.session['email_verification']
+                    
+                # Add this cleanup code here
+                if 'verified_email' in self.request.session:
+                    del self.request.session['verified_email']
+                self.request.session.modified = True
+                
+                messages.success(self.request, 'Registration submitted successfully! Please wait for administrator approval.')
+                logger.info(f"New user registration pending approval: {user.username}")
+                
+                return redirect('login_user')
+                
+        except Exception as e:
+            logger.error(f"Error during registration: {str(e)}")
+            messages.error(self.request, f"An error occurred during registration: {str(e)}")
+            return self.form_invalid(form)
 
 class CustomLoginView(LoginView):
     template_name = 'admin/login_user.html'
@@ -976,41 +1196,95 @@ class Logging_View(GroupRequiredMixin, ListView):
         }
         return render(request, self.template_name, context)
 
-class RegisterView(View):
+class RegisterView(FormView):
     template_name = 'registration/register.html'
+    form_class = UserRegistrationForm
 
-    def get(self, request):
-        form = UserRegistrationForm()
-        return render(request, self.template_name, {'form': form})
+    def dispatch(self, request, *args, **kwargs):
+        # Debug the session at the very beginning
+        print("\n" + "="*80)
+        print("DEBUG: RegisterView.dispatch method called")
+        print(f"Session key: {request.session.session_key}")
+        print(f"verified_email in session: {request.session.get('verified_email')}")
+        print(f"Full session data: {dict(request.session)}")
+        print("="*80 + "\n")
+        
+        # Check if email is in session
+        if not request.session.get('verified_email'):
+            messages.error(request, "Please verify your email address first.")
+            return redirect('pre_register')
+        return super().dispatch(request, *args, **kwargs)
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        
+        # Make sure we're explicitly getting the email from the session
+        email = self.request.session.get('verified_email', '')
+        
+        print("\n" + "="*80)
+        print("DEBUG: RegisterView.get_context_data method called")
+        print(f"Email retrieved from session: '{email}'")
+        print(f"Full context keys: {context.keys()}")
+        print("="*80 + "\n")
+        
+        # Explicitly add it to the context
+        context['email'] = email
+        context['recaptcha_site_key'] = getattr(settings, 'RECAPTCHA_PUBLIC_KEY', 'dummy_key')
+        context['settings'] = settings  # Pass settings to template
+        return context
+
+    def get(self, request, *args, **kwargs):
+        # Additional debug for the get method
+        print("\n" + "="*80)
+        print("DEBUG: RegisterView.get method called")
+        print(f"verified_email in session: {request.session.get('verified_email')}")
+        print("="*80 + "\n")
+        
+        # Call the standard get method
+        return super().get(request, *args, **kwargs)
 
     def post(self, request):
         form = UserRegistrationForm(request.POST)
         if form.is_valid():
             submitted_username = form.cleaned_data['username']
-
+            
+            # Get email from session instead of form
+            email = request.session.get('verified_email')
+            
             user = User.objects.create(
                 username=submitted_username,
-                email=form.cleaned_data['email'],
+                email=email,  # Use the email from session
                 first_name=form.cleaned_data['first_name'],
                 last_name=form.cleaned_data['last_name'],
                 is_active=False
             )
-
+    
             profile = form.save(commit=False)
             profile.user = user
             profile.username = submitted_username
+            profile.email = email  # Also set email in profile
             profile.registration_token = get_random_string(50)
             profile.token_expiry = timezone.now() + timedelta(days=2)
             profile.status = 'pending'  # Set initial status
             profile.save()
-
+            
+            # Clear verification data from session
+            if 'email_verification' in request.session:
+                del request.session['email_verification']
+            if 'verified_email' in request.session:
+                del request.session['verified_email']
+            request.session.modified = True
+    
             messages.success(request, 'Registration submitted successfully! Please wait for administrator approval.')
             logger.info(f"New user registration pending approval: {submitted_username}")
             return redirect('login_user')
-
-        return render(request, self.template_name, {'form': form})
+    
+        return render(request, self.template_name, {'form': form, 'email': request.session.get('verified_email')})
 
 class CompleteRegistrationView(View):
+    """
+    Modified to include better debug information
+    """
     template_name = 'registration/complete_registration.html'
 
     def get(self, request, token):
@@ -1020,6 +1294,13 @@ class CompleteRegistrationView(View):
                 token_expiry__gt=timezone.now(),
                 user__is_active=False
             )
+            
+            # Debug info
+            print("\n" + "="*80)
+            print(f"DEVELOPMENT MODE: Registration completion request for {profile.username}")
+            print(f"Token valid until: {profile.token_expiry}")
+            print("="*80 + "\n")
+            
             return render(request, self.template_name, {'token': token})
         except Profile.DoesNotExist:
             messages.error(request, 'Invalid or expired registration link.')
@@ -1036,8 +1317,6 @@ class CompleteRegistrationView(View):
             password = request.POST.get('password')
             if password:
                 user = profile.user
-                # Remove this line as we want to keep the original username
-                # user.username = profile.email  # This was causing the issue
                 user.set_password(password)
                 user.is_active = True
                 user.save()
@@ -1045,6 +1324,12 @@ class CompleteRegistrationView(View):
                 profile.registration_token = None
                 profile.token_expiry = None
                 profile.save()
+
+                # Debug successful registration completion
+                print("\n" + "="*80)
+                print(f"DEVELOPMENT MODE: Registration successfully completed for {user.username}")
+                print(f"User is now active and can log in with the password they set")
+                print("="*80 + "\n")
 
                 messages.success(request, 'Registration completed! You can now login.')
                 return redirect('login_user')

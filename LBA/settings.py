@@ -27,6 +27,18 @@ DEBUG = os.environ.get('DEBUG', 'True') == 'True'
 ALLOWED_HOSTS = ["*"]
 CSRF_TRUSTED_ORIGINS=["https://*.aldryn.io"]
 
+## reCAPTCHA configuration
+#RECAPTCHA_PUBLIC_KEY = 'your_site_key'  # Replace with your site key
+#RECAPTCHA_PRIVATE_KEY = 'your_secret_key'  # Replace with your secret key
+#RECAPTCHA_REQUIRED_SCORE = 0.5  # Threshold score (0.0 to 1.0)
+
+DEBUG = True
+# Development settings for reCAPTCHA (bypassed)
+RECAPTCHA_PUBLIC_KEY = 'dummy_public_key'
+RECAPTCHA_PRIVATE_KEY = 'dummy_private_key'
+RECAPTCHA_REQUIRED_SCORE = 0.5
+BYPASS_RECAPTCHA = True
+
 # Application definition
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -37,6 +49,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'b11_1',
     'storages',
+#    'captcha',
     'bootstrap_datepicker_plus',
 ]
 
@@ -249,3 +262,8 @@ EMAIL_USE_TLS = os.environ.get('EMAIL_USE_TLS', 'True') == 'True'
 EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER', 'yann.crausaz@gmail.com')
 EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', '')
 DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL', 'yann.crausaz@gmail.com')
+
+# Make sure you have these settings in your settings.py file
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'
+SESSION_COOKIE_AGE = 1209600  # 2 weeks in seconds
+SESSION_SAVE_EVERY_REQUEST = True  # Important - save the session on every request

@@ -1,3 +1,5 @@
+{# admin/login_user.html #}
+
 {% extends "base_generic.html" %}
 {% load static %}
 
@@ -31,7 +33,7 @@
     </div>
 
     <input type="submit" value="Login" class="btn btn-secondary">
-    <a href="{% url 'register' %}" class="btn btn-secondary">Zugriff beantragen</a>    
+    <a href="{% url 'pre_register' %}" class="btn btn-secondary">Zugriff beantragen</a>    
 </form>
 
 <script>

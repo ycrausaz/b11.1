@@ -1,4 +1,4 @@
-{# registration/register.html #}
+{# registration/pre_register.html #}
 
 {% extends "base_generic.html" %}
 {% load static %}
@@ -8,20 +8,8 @@
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
-
-<!-- At the top of your form in register.html -->
-<div class="alert alert-info">
-    <p>Debug Info:</p>
-    <ul>
-        <li>Email from context = "{{ email }}"</li>
-        <li>Email directly from session = "{{ request.session.verified_email }}"</li>
-        <li>Session ID = "{{ request.session.session_key }}"</li>
-        <li>Request path = "{{ request.path }}"</li>
-    </ul>
-</div>
-
                 <div class="card-header">
-                    <h2 class="text-center">Complete Registration</h2>
+                    <h2 class="text-center">Registration - Email Verification</h2>
                 </div>
                 <div class="card-body">
                     {% if messages %}
@@ -34,41 +22,25 @@
                     </div>
                     {% endif %}
 
+                    <p class="mb-4">Please enter your email address to start the registration process. A verification link will be sent to your email.</p>
+
                     <form method="post" novalidate>
                         {% csrf_token %}
-                        
-                        {# Email field - readonly and pre-filled from session #}
                         <div class="form-group mb-3">
-                            <label for="id_email" class="form-label">
-                                Email <span class="required">*</span>
-                            </label>
-                            <input type="email" name="email" id="id_email" value="{{ email }}" class="form-control" readonly>
-                        </div>
-                        
-                        {% for field in form %}
-                            {% if field.name != 'email' and field.name != 'recaptcha_token' %}
-                            <div class="form-group mb-3">
-                                <label for="{{ field.id_for_label }}" class="form-label">
-                                    {{ field.label }}{% if field.field.required %}<span class="required">*</span>{% endif %}
-                                </label>
-                                {{ field }}
-                                {% if field.errors %}
-                                <div class="alert alert-danger mt-1">
-                                    {{ field.errors }}
-                                </div>
-                                {% endif %}
-                                {% if field.help_text %}
-                                <small class="form-text text-muted">{{ field.help_text }}</small>
-                                {% endif %}
+                            <label for="email" class="form-label">Email Address <span class="required">*</span></label>
+                            <input type="email" name="email" id="email" class="form-control" required>
+                            {% if form.email.errors %}
+                            <div class="alert alert-danger mt-1">
+                                {{ form.email.errors }}
                             </div>
                             {% endif %}
-                        {% endfor %}
+                        </div>
                         
                         {# reCAPTCHA v3 - hidden input - present but not actually used in development #}
                         <input type="hidden" name="recaptcha_token" id="recaptchaToken" value="development_token">
                         
                         <div class="d-grid gap-2">
-                            <button type="submit" class="btn btn-primary">Register</button>
+                            <button type="submit" class="btn btn-primary">Send Verification Email</button>
                         </div>
                     </form>
                     
@@ -91,7 +63,7 @@
         form.addEventListener('submit', function(event) {
             event.preventDefault();
             
-            grecaptcha.execute('{{ recaptcha_site_key }}', {action: 'register'})
+            grecaptcha.execute('{{ recaptcha_site_key }}', {action: 'pre_register'})
                 .then(function(token) {
                     document.getElementById('recaptchaToken').value = token;
                     form.submit();

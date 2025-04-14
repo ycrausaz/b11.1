@@ -3,7 +3,7 @@
 from django.views.i18n import JavaScriptCatalog
 from django.urls import include, path
 from . import views
-from .views import (CustomLoginView, UserLogout, CustomPasswordChangeView, CustomPasswordResetConfirmView, ListMaterial_IL_View, AddMaterial_IL_View, UpdateMaterial_IL_View, ListMaterial_GD_View, ListMaterialArchived_GD_View, UpdateMaterial_GD_View, ListMaterial_SMDA_View, ListMaterialArchived_SMDA_View, UpdateMaterial_SMDA_View, Logging_View, ExcelImportView, RegisterView, CompleteRegistrationView, PendingRegistrationsView, ApproveRegistrationView, RejectRegistrationView, ExportLogsView)
+from .views import (CustomLoginView, UserLogout, CustomPasswordChangeView, CustomPasswordResetConfirmView, ListMaterial_IL_View, AddMaterial_IL_View, UpdateMaterial_IL_View, ListMaterial_GD_View, ListMaterialArchived_GD_View, UpdateMaterial_GD_View, ListMaterial_SMDA_View, ListMaterialArchived_SMDA_View, UpdateMaterial_SMDA_View, Logging_View, ExcelImportView, RegisterView, CompleteRegistrationView, PendingRegistrationsView, ApproveRegistrationView, RejectRegistrationView, ExportLogsView, PreRegisterView, VerifyEmailView)
 from django.contrib.auth.decorators import login_required
 from django.conf.urls import handler403
 from b11_1.views import custom_permission_denied_view
@@ -72,17 +72,13 @@ urlpatterns = [
          name='update_material_smda'),
 
     # Registration paths
-    path('register', RegisterView.as_view(), name='register'),
-    path('complete-registration/<str:token>',
-         CompleteRegistrationView.as_view(),
-         name='complete_registration'),
-    path('admin/pending-registrations/',
-         PendingRegistrationsView.as_view(),
-         name='pending_registrations'),
-    path('admin/approve-registration/<int:profile_id>/',
-         ApproveRegistrationView.as_view(),
-         name='approve_registration'),
-    path('admin/reject-registration/<int:profile_id>/',
-         RejectRegistrationView.as_view(),
-         name='reject_registration'),
+    path('registration/register/', RegisterView.as_view(), name='register'),
+    path('registration/pre-register/', PreRegisterView.as_view(), name='pre_register'),
+    path('registration/email/verify-email/', VerifyEmailView.as_view(), name='verify_email'),
+    path('registration/complete-registration/<str:token>/', CompleteRegistrationView.as_view(), name='complete_registration'),
+
+    # Admin registration management
+    path('admin/pending-registrations/', PendingRegistrationsView.as_view(), name='pending_registrations'),
+    path('admin/approve-registration/<int:profile_id>/', ApproveRegistrationView.as_view(), name='approve_registration'),
+    path('admin/reject-registration/<int:profile_id>/', RejectRegistrationView.as_view(), name='reject_registration'),
 ]
