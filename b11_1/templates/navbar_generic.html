@@ -5,7 +5,7 @@
   <div class="container-fluid">
 
 {% if user|has_group:"grIL" %}
-    <div class="navbar-brand">LBA - Beilage 11.1 (für {{ user }})</div>
+    <div class="navbar-brand">LBA - Beilage 11.1 (Benutzer: '{{ user }}' / Gruppe: '{{ user|get_user_group }}')</div>
 {% endif %}
 
 {% if user|has_group:"grGD" %}

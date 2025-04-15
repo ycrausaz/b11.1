@@ -10,3 +10,12 @@ def has_group(user, group_names):
         return user.groups.filter(name__in=group_names_list).exists()
     return False
 
+@register.filter(name='get_user_group')
+def get_user_group(user):
+    if user.is_authenticated:
+        groups = user.groups.all()
+        if groups:
+            # Return the name of the first group
+            # You can modify this if users can belong to multiple groups
+            return groups[0].name
+    return ""
