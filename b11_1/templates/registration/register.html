@@ -8,20 +8,8 @@
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
-
-<!-- At the top of your form in register.html -->
-<div class="alert alert-info">
-    <p>Debug Info:</p>
-    <ul>
-        <li>Email from context = "{{ email }}"</li>
-        <li>Email directly from session = "{{ request.session.verified_email }}"</li>
-        <li>Session ID = "{{ request.session.session_key }}"</li>
-        <li>Request path = "{{ request.path }}"</li>
-    </ul>
-</div>
-
                 <div class="card-header">
-                    <h2 class="text-center">Complete Registration</h2>
+                    <h2 class="text-center">Complete Registration for<br/><b>{{ email }}</b></h2>
                 </div>
                 <div class="card-body">
                     {% if messages %}
@@ -38,7 +26,7 @@
                         {% csrf_token %}
                         
                         {# Email field - readonly and pre-filled from session #}
-                        <div class="form-group mb-3">
+                        <div class="form-group mb-3" style="display: none;">
                             <label for="id_email" class="form-label">
                                 Email <span class="required">*</span>
                             </label>

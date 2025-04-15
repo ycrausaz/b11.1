@@ -177,6 +177,27 @@ class UserRegistrationForm(forms.ModelForm):
     Form for user registration
     """
     recaptcha_token = forms.CharField(required=False, widget=forms.HiddenInput())
+
+    username = forms.CharField(
+        max_length=50,
+        widget=forms.TextInput(attrs={'class': 'form-control'})
+    )
+    first_name = forms.CharField(
+        max_length=50,
+        widget=forms.TextInput(attrs={'class': 'form-control'})
+    )
+    last_name = forms.CharField(
+        max_length=50,
+        widget=forms.TextInput(attrs={'class': 'form-control'})
+    )
+    firm = forms.CharField(
+        max_length=50,
+        widget=forms.TextInput(attrs={'class': 'form-control'})
+    )
+    country = forms.CharField(
+        max_length=50,
+        widget=forms.TextInput(attrs={'class': 'form-control'})
+    )
     
     class Meta:
         model = Profile
