@@ -161,7 +161,7 @@ class PreRegisterView(FormView):
         logger.info(f"Verification link for {email}: {verification_link}")
         
         # Add success message
-        messages.success(self.request, "Verification email sent! Please check your inbox to continue registration. (In development mode, check the console output for the verification link)")
+        messages.success(self.request, "Verification email sent! Please check your inbox to continue registration.")
         
         return redirect('login_user')
 
