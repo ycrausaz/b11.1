@@ -18,4 +18,4 @@ def get_user_group(user):
             # Return the name of the first group
             # You can modify this if users can belong to multiple groups
             return groups[0].name
-    return ""
+    return " - "
