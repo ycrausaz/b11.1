@@ -19,6 +19,41 @@ class GroupRequiredMixin(LoginRequiredMixin):
             raise PermissionDenied  # Raise an error if the user is not in the required groups
         return super().dispatch(request, *args, **kwargs)
 
+class DynamicGroupRequiredMixin(LoginRequiredMixin):
+    """
+    A flexible permission mixin that supports:
+    1. Explicitly allowed groups (like the original GroupRequiredMixin)
+    2. Dynamically created company groups for IL views
+    """
+    allowed_groups = []
+    allow_company_groups = False  # Set to True for IL views that company groups should access
+    
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return self.handle_no_permission()
+        
+        user_groups = list(request.user.groups.values_list('name', flat=True))
+        
+        # Check if user belongs to any explicitly allowed groups
+        explicit_access = any(group in self.allowed_groups for group in user_groups)
+        
+        # Check if user belongs to a dynamically created company group
+        company_group_access = False
+        if self.allow_company_groups:
+            # System groups that we know aren't company groups
+            system_groups = ['grGD', 'grSMDA', 'grLBA', 'grAdmin']
+            
+            # If user has any groups that aren't in the system groups list,
+            # they must be in a company group
+            company_group_access = any(group not in system_groups for group in user_groups)
+            
+        # Grant access if user has either explicit or company group access
+        if explicit_access or company_group_access:
+            return super().dispatch(request, *args, **kwargs)
+        
+        # Deny access otherwise
+        raise PermissionDenied
+
 class grIL_GroupRequiredMixin(GroupRequiredMixin):
     group_required = 'grIL'
 
@@ -34,6 +69,7 @@ class grLBA_GroupRequiredMixin(GroupRequiredMixin):
 class grAdmin_GroupRequiredMixin(GroupRequiredMixin):
     group_required = 'grAdmin'
 
+# The rest of your mixin classes remain unchanged...
 class FormValidMixin_IL:
     """
     Mixin to handle the common form_valid logic for CreateView and UpdateView.

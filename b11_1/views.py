@@ -12,7 +12,7 @@ from .forms_smda import MaterialForm_SMDA
 from django.contrib.messages.views import SuccessMessageMixin
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
 from django.urls import reverse_lazy
-from .mixins import grIL_GroupRequiredMixin, GroupRequiredMixin, grAdmin_GroupRequiredMixin, ComputedContextMixin
+from .mixins import grIL_GroupRequiredMixin, GroupRequiredMixin, grAdmin_GroupRequiredMixin, ComputedContextMixin, DynamicGroupRequiredMixin
 import pandas as pd
 from django.shortcuts import render
 from django.http import HttpResponse
@@ -56,6 +56,7 @@ from django.db import transaction
 from django.core.exceptions import ValidationError
 from botocore.exceptions import BotoCoreError, ClientError
 from .log_export_utils import export_logs_to_excel
+from django.http import HttpResponseRedirect
 import logging
 
 logger = logging.getLogger(__name__)
@@ -367,21 +368,29 @@ class CustomLoginView(LoginView):
         profile, created = Profile.objects.get_or_create(user=self.request.user)
         profile.failed_login_attempts = 0  # Reset failed attempts on successful login
         profile.save()
+        
         if profile.is_first_login:
             return redirect('password_change')
-        if self.request.user.groups.filter(name='grIL').exists():
-            return redirect('list_material_il')
-        elif self.request.user.groups.filter(name='grGD').exists():
-            return redirect('list_material_gd')
-        elif self.request.user.groups.filter(name='grSMDA').exists():
-            return redirect('list_material_smda')
-        elif self.request.user.groups.filter(name='grLBA').exists():
-            return redirect('list_material_gd')
-        elif self.request.user.groups.filter(name='grAdmin').exists():
-            return redirect('logging')
+            
+        # Get all user groups
+        user_groups = self.request.user.groups.values_list('name', flat=True)
+        
+        # System groups
+        system_groups = ['grGD', 'grSMDA', 'grLBA', 'grAdmin']
+        
+        # Check for system groups first
+        if 'grGD' in user_groups:
+            return HttpResponseRedirect(reverse('list_material_gd'))
+        elif 'grSMDA' in user_groups:
+            return HttpResponseRedirect(reverse('list_material_smda'))
+        elif 'grLBA' in user_groups:
+            return HttpResponseRedirect(reverse('list_material_gd'))
+        elif 'grAdmin' in user_groups:
+            return HttpResponseRedirect(reverse('logging'))
         else:
-            # Default redirection for users with other groups
-            return redirect('list_material_il')  # or any other appropriate default
+            # If user doesn't belong to any system groups, they must be in a company group
+            # Redirect them to the IL material list
+            return HttpResponseRedirect(reverse('list_material_il'))
 
     def get(self, request, *args, **kwargs):
         return render(request, 'admin/login_user.html', {})
@@ -478,13 +487,16 @@ class UserLogout(View):
         logout(request)
         return redirect('login_user')
 
-class ListMaterial_IL_View(GroupRequiredMixin, ListView):
+# Updated ListMaterial_IL_View class
+class ListMaterial_IL_View(DynamicGroupRequiredMixin, ListView):
     model = Material
     template_name = 'il/list_material_il.html'
-    allowed_groups = ['grIL']
+    allowed_groups = []  # No explicit groups since grIL doesn't exist
+    allow_company_groups = True  # Allow dynamically created company groups
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        print("*** self.request.user = ", self.request.user)
         list_material_il = Material.objects.filter(is_transferred=False, hersteller=self.request.user, transfer_date__isnull=True)
         list_material_il_transferred = Material.objects.filter(is_transferred=True, hersteller=self.request.user, transfer_date__isnull=False)
         list_material_il_returned = Material.objects.filter(is_transferred=False, hersteller=self.request.user, transfer_date__isnull=False)
@@ -527,13 +539,16 @@ class ListMaterial_IL_View(GroupRequiredMixin, ListView):
 
         return redirect(reverse('list_material_il'))
 
-class AddMaterial_IL_View(FormValidMixin_IL, GroupRequiredMixin, SuccessMessageMixin, CreateView):
+
+# Updated AddMaterial_IL_View class
+class AddMaterial_IL_View(FormValidMixin_IL, DynamicGroupRequiredMixin, SuccessMessageMixin, CreateView):
     model = Material
     template_name = 'il/add_material_il.html'
     form_class = MaterialForm_IL
     success_url = reverse_lazy('list_material_il')
     success_message = "Das Material wurde erfolgreich hinzugefügt."
-    allowed_groups = ['grIL']
+    allowed_groups = []  # No explicit groups since grIL doesn't exist
+    allow_company_groups = True  # Allow dynamically created company groups
 
     def post(self, request, *args, **kwargs):
         if "cancel" in request.POST:
@@ -625,13 +640,16 @@ class AddMaterial_IL_View(FormValidMixin_IL, GroupRequiredMixin, SuccessMessageM
             form.add_error(None, error_msg)
             return self.render_to_response(self.get_context_data(form=form))
 
-class UpdateMaterial_IL_View(FormValidMixin_IL, GroupRequiredMixin, SuccessMessageMixin, UpdateView):
+
+# Updated UpdateMaterial_IL_View class
+class UpdateMaterial_IL_View(FormValidMixin_IL, DynamicGroupRequiredMixin, SuccessMessageMixin, UpdateView):
     model = Material
     template_name = 'il/update_material_il.html'
     form_class = MaterialForm_IL
     success_url = reverse_lazy('list_material_il')
     success_message = "Das Material wurde erfolgreich aktualisiert."
-    allowed_groups = ['grIL']
+    allowed_groups = []  # No explicit groups since grIL doesn't exist
+    allow_company_groups = True  # Allow dynamically created company groups
 
     def post(self, request, *args, **kwargs):
         if "cancel" in request.POST:
@@ -699,6 +717,11 @@ class UpdateMaterial_IL_View(FormValidMixin_IL, GroupRequiredMixin, SuccessMessa
                                 # Note: Don't save to database yet
                                 attachment.file.save(file.name, file, save=False)
                             except (BotoCoreError, ClientError) as e:
+                                error_msg = f"Failed to upload file {file.name} to storage: {str(e)}"
+                                logger.error(error_msg)
+# Find the incomplete method in UpdateMaterial_IL_View and complete it
+# This should be added after line 626 (where the method was cut off)
+
                                 error_msg = f"Failed to upload file {file.name} to storage: {str(e)}"
                                 logger.error(error_msg)
                                 form.add_error(None, error_msg)
@@ -1285,7 +1308,7 @@ class RegisterView(FormView):
 
 class CompleteRegistrationView(View):
     """
-    Modified to include better debug information
+    Modified to include better debug information and prevent form resubmission on refresh
     """
     template_name = 'registration/complete_registration.html'
 
@@ -1323,6 +1346,7 @@ class CompleteRegistrationView(View):
                 user.is_active = True
                 user.save()
 
+                # Important change: Clear registration token and expiry
                 profile.registration_token = None
                 profile.token_expiry = None
                 profile.save()
@@ -1334,6 +1358,9 @@ class CompleteRegistrationView(View):
                 print("="*80 + "\n")
 
                 messages.success(request, 'Registration completed! You can now login.')
+                
+                # Return a redirect instead of rendering directly
+                # This prevents form resubmission on refresh
                 return redirect('login_user')
             else:
                 messages.error(request, 'Please provide a password.')
@@ -1364,39 +1391,35 @@ class ApproveRegistrationView(grAdmin_GroupRequiredMixin, View):
             profile.status = 'approved'
             profile.save()
 
-            # Extract firm name from email
+            # Extract company name from email
             email = profile.email
             domain = email.split('@')[-1]  # Get the domain part after @
+            
             # Handle more complex domains
             domain_parts = domain.split('.')
             if len(domain_parts) >= 2:
                 # For domains like company.com, subdomain.company.com, etc.
                 # Take the second-to-last part as the company name
-                firm_name = domain_parts[-2].capitalize()
+                company_name = domain_parts[-2].capitalize()
             else:
                 # Fallback for unusual domains
-                firm_name = domain_parts[0].capitalize()
+                company_name = domain_parts[0].capitalize()
 
-            # Try to get the group, or create it if it doesn't exist
-            group_name = firm_name
+            # Try to get the company group, or create it if it doesn't exist
             try:
-                firm_group, created = Group.objects.get_or_create(name=group_name)
+                company_group, created = Group.objects.get_or_create(name=company_name)
                 if created:
-                    logger.info(f"Created new group '{group_name}' for domain {domain}")
+                    logger.info(f"Created new company group '{company_name}' for domain {domain}")
 
-                # Add user to the firm's group
-                user.groups.add(firm_group)
-                logger.info(f"User {profile.username} added to group '{group_name}'")
+                # Add user to the company group
+                user.groups.add(company_group)
+                logger.info(f"User {profile.username} added to company group '{company_name}'")
+                
+                messages.success(request, f'Registration for {profile.username} has been approved and assigned to group {company_name}.')
 
             except Exception as e:
-                logger.error(f"Error assigning user {profile.username} to group '{group_name}': {str(e)}")
-                # Fallback to grIL group if there's an error with firm group
-                try:
-                    il_group = Group.objects.get(name='grIL')
-                    user.groups.add(il_group)
-                    logger.warning(f"Assigned user {profile.username} to fallback group 'grIL' due to error")
-                except Group.DoesNotExist:
-                    logger.error(f"Group 'grIL' not found when approving user {profile.username}")
+                logger.error(f"Error assigning user {profile.username} to group '{company_name}': {str(e)}")
+                messages.error(request, f"Error assigning user to group. See logs for details.")
 
             # Send approval email
             registration_link = request.build_absolute_uri(
@@ -1407,6 +1430,7 @@ class ApproveRegistrationView(grAdmin_GroupRequiredMixin, View):
                 'username': profile.username,
                 'registration_link': registration_link,
                 'expiry_date': profile.token_expiry,
+                'company_name': company_name  # Include company name in email context
             }
 
             email_body = render_to_string('registration/email/registration_approved_email.html', email_context)
@@ -1423,8 +1447,7 @@ class ApproveRegistrationView(grAdmin_GroupRequiredMixin, View):
             print("[ApproveRegistrationView] Mail sent!")
             print("email_body = ", email_body)
 
-            messages.success(request, f'Registration for {profile.username} has been approved and assigned to group {group_name}.')
-            logger.info(f"Registration approved for user: {profile.username}, assigned to group: {group_name}")
+            logger.info(f"Registration approved for user: {profile.username}, assigned to group: {company_name}")
 
         except Profile.DoesNotExist:
             messages.error(request, 'Profile not found.')
