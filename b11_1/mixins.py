@@ -104,7 +104,7 @@ class FormValidMixin_IL:
                 item.nato_versorgungs_nr = match.group(1).replace('-', '')
 
         # Hersteller
-        item.hersteller = self.request.user.username
+        item.hersteller = self.request.user.email
         print("item.hersteller = " + item.hersteller)
 
         # Gewichtseinheit

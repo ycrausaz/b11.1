@@ -178,7 +178,7 @@ class UserRegistrationForm(forms.ModelForm):
     """
     recaptcha_token = forms.CharField(required=False, widget=forms.HiddenInput())
 
-    username = forms.CharField(
+    email = forms.CharField(
         max_length=50,
         widget=forms.TextInput(attrs={'class': 'form-control'})
     )
@@ -201,9 +201,9 @@ class UserRegistrationForm(forms.ModelForm):
     
     class Meta:
         model = Profile
-        fields = ['username', 'first_name', 'last_name', 'firm', 'role', 'country', 'phone']
+        fields = ['email', 'first_name', 'last_name', 'firm', 'role', 'country', 'phone']
         widgets = {
-            'username': forms.TextInput(attrs={'class': 'form-control'}),
+            'email': forms.TextInput(attrs={'class': 'form-control'}),
             'first_name': forms.TextInput(attrs={'class': 'form-control'}),
             'last_name': forms.TextInput(attrs={'class': 'form-control'}),
             'firm': forms.TextInput(attrs={'class': 'form-control'}),

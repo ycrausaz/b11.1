@@ -89,10 +89,10 @@ class ExcelImportView(GroupRequiredMixin, FormView):
 
         if success:
             messages.success(self.request, message)
-            logger.info(f"Import from '{excel_file}' by '{self.request.user.username}' successful.")
+            logger.info(f"Import from '{excel_file}' by '{self.request.user.email}' successful.")
         else:
             messages.error(self.request, message)
-            logger.warn(f"Error when importing '{excel_file}' by '{self.request.user.username}'.")
+            logger.warn(f"Error when importing '{excel_file}' by '{self.request.user.email}'.")
             return self.form_invalid(form)
 
         return super().form_valid(form)
@@ -289,8 +289,7 @@ class RegisterView(FormView):
                 
                 # Create user (inactive until approved)
                 user = User.objects.create(
-                    username=form.cleaned_data['username'],
-                    email=email,
+                    email=email,  # Set email to email
                     first_name=form.cleaned_data['first_name'],
                     last_name=form.cleaned_data['last_name'],
                     is_active=False
@@ -315,7 +314,7 @@ class RegisterView(FormView):
                 self.request.session.modified = True
                 
                 messages.success(self.request, 'Registration submitted successfully! Please wait for administrator approval.')
-                logger.info(f"New user registration pending approval: {user.username}")
+                logger.info(f"New user registration pending approval: {email}")
                 
                 return redirect('login_user')
                 
@@ -328,14 +327,17 @@ class CustomLoginView(LoginView):
     template_name = 'admin/login_user.html'
 
     def form_invalid(self, form):
-        username = form.cleaned_data.get('username')
+        email = form.cleaned_data.get('username')
+        print("email = ", str(email))
         try:
-            user = User.objects.get(username=username)
+            user = User.objects.get(email=email)
+            print("user = ", str(user))
             profile = user.profile
             profile.failed_login_attempts += 1
             profile.save()
 
             if profile.failed_login_attempts >= 3:
+                # Rest of your code remains the same but replace email with email
                 current_site = get_current_site(self.request)
                 mail_subject = 'Reset your password'
                 uid = urlsafe_base64_encode(force_bytes(user.pk))
@@ -344,7 +346,7 @@ class CustomLoginView(LoginView):
                 reset_url = f'http://{current_site.domain}{reset_link}'
                 message = f'It seems you have failed to login 3 times. Please reset your password using the following link:\n{reset_url}'
 #                send_mail(mail_subject, message, settings.DEFAULT_FROM_EMAIL, [user.email])
-                logger.info(f'Password reset email sent to user: {username}')
+                logger.info(f'Password reset email sent to user: {email}')
                 logger.info(message)
 
                 messages.warning(
@@ -356,15 +358,16 @@ class CustomLoginView(LoginView):
                 profile.failed_login_attempts = 0
                 profile.save()
             else:
-                messages.error(self.request, "Benutzername und/oder Passwort ungültig.")
+                messages.error(self.request, "Email und/oder Passwort ungültig.")
         except User.DoesNotExist:
-            messages.error(self.request, "Benutzername und/oder Passwort ungültig.")
+            messages.error(self.request, "Email und/oder Passwort ungültig.")
 
         return self.render_to_response(self.get_context_data(form=form))
 
     def form_valid(self, form):
         response = super().form_valid(form)
         profile, created = Profile.objects.get_or_create(user=self.request.user)
+        print("profile = ", str(profile))
         profile.failed_login_attempts = 0  # Reset failed attempts on successful login
         profile.save()
         if profile.is_first_login:
@@ -431,7 +434,7 @@ class ExportLogsView(GroupRequiredMixin, View):
         response = export_logs_to_excel(start_date, end_date)
         
         # Log the export action
-        logger.info(f"Log entries exported to Excel by {request.user.username} (date range: {start_date} to {end_date})")
+        logger.info(f"Log entries exported to Excel by {request.user.email} (date range: {start_date} to {end_date})")
         
         return response
 
@@ -446,7 +449,7 @@ class CustomPasswordChangeView(PasswordChangeView):
         user = form.save()
         user.profile.is_first_login = False
         user.profile.save()
-        logger.info(f'User {user.username} changed his password.')
+        logger.info(f'User {user.email} changed his password.')
         return response
 
     def form_invalid(self, form):
@@ -513,15 +516,15 @@ class ListMaterial_IL_View(GroupRequiredMixin, ListView):
             if action == 'transfer':
                 selected_materials.update(is_transferred=True, transfer_date=timezone.now())
                 for material in selected_materials:
-                    logger.info("Material '" + material.kurztext_de + "' durch '" + request.user.username + "' übermittelt.")
+                    logger.info("Material '" + material.kurztext_de + "' durch '" + request.user.email + "' übermittelt.")
             elif action == 'delete':
                 for material in selected_materials:
-                    logger.info("Material '" + material.kurztext_de + "' durch '" + request.user.username + "' gelöscht.")
+                    logger.info("Material '" + material.kurztext_de + "' durch '" + request.user.email + "' gelöscht.")
                 selected_materials.delete()
             elif action == 'archive':
                 selected_materials.update(is_archived=True)
                 for material in selected_materials:
-                    logger.info("Material '" + material.kurztext_de + "' durch '" + request.user.username + "' archiviert.")
+                    logger.info("Material '" + material.kurztext_de + "' durch '" + request.user.email + "' archiviert.")
 
         return redirect(reverse('list_material_il'))
 
@@ -535,7 +538,7 @@ class AddMaterial_IL_View(FormValidMixin_IL, GroupRequiredMixin, SuccessMessageM
 
     def post(self, request, *args, **kwargs):
         if "cancel" in request.POST:
-            logger.info(f"Erstellung von Material durch '{request.user.username}' abgebrochen.")
+            logger.info(f"Erstellung von Material durch '{request.user.email}' abgebrochen.")
             return redirect('list_material_il')
 
         form = self.get_form()
@@ -596,7 +599,7 @@ class AddMaterial_IL_View(FormValidMixin_IL, GroupRequiredMixin, SuccessMessageM
                     attachment.save()
 
                 # Log the successful creation
-                logger.info(f"Material '{self.object.kurztext_de}' wurde durch '{self.request.user.username}' erstellt.")
+                logger.info(f"Material '{self.object.kurztext_de}' wurde durch '{self.request.user.email}' erstellt.")
 
                 return super().form_valid(form)
 
@@ -635,7 +638,7 @@ class UpdateMaterial_IL_View(FormValidMixin_IL, GroupRequiredMixin, SuccessMessa
         if "cancel" in request.POST:
             # Log the cancellation action
             self.object = self.get_object()
-            logger.info(f"Bearbeitung von Material '{self.object.kurztext_de}' durch '{request.user.username}' abgebrochen.")
+            logger.info(f"Bearbeitung von Material '{self.object.kurztext_de}' durch '{request.user.email}' abgebrochen.")
             return redirect('list_material_il')
 
         # Get the existing object
@@ -719,7 +722,7 @@ class UpdateMaterial_IL_View(FormValidMixin_IL, GroupRequiredMixin, SuccessMessa
                     attachment.save()
 
                 # Log the successful update
-                logger.info(f"Material '{self.object.kurztext_de}' wurde durch '{self.request.user.username}' aktualisiert.")
+                logger.info(f"Material '{self.object.kurztext_de}' wurde durch '{self.request.user.email}' aktualisiert.")
 
                 return super().form_valid(form)
 
@@ -783,26 +786,26 @@ class ListMaterial_GD_View(ComputedContextMixin, GroupRequiredMixin, ListView):
                 transfer_comment = request.POST.get('transfer_comment', '')
                 selected_materials.update(is_transferred=False, transfer_date=timezone.now(), transfer_comment=transfer_comment)
                 for material in selected_materials:
-                    logger.info("Material '" + material.kurztext_de + "' durch '" + request.user.username + "' übermittelt.")
+                    logger.info("Material '" + material.kurztext_de + "' durch '" + request.user.email + "' übermittelt.")
             elif action == 'archive':
                 selected_materials.update(is_archived=True)
                 for material in selected_materials:
-                    logger.info("Material '" + material.kurztext_de + "' durch '" + request.user.username + "' archiviert.")
+                    logger.info("Material '" + material.kurztext_de + "' durch '" + request.user.email + "' archiviert.")
             elif action == 'unarchive':
                 selected_materials.update(is_archived=False)
                 for material in selected_materials:
-                    logger.info("Material '" + material.kurztext_de + "' durch '" + request.user.username + "' unarchiviert.")
+                    logger.info("Material '" + material.kurztext_de + "' durch '" + request.user.email + "' unarchiviert.")
             elif action == 'delete':
                 for material in selected_materials:
-                    logger.info("Material '" + material.kurztext_de + "' durch '" + request.user.username + "' gelöscht.")
+                    logger.info("Material '" + material.kurztext_de + "' durch '" + request.user.email + "' gelöscht.")
                     material.delete()
             elif action == 'export_lba':
                 for material in selected_materials:
-                    logger.info("Material '" + material.kurztext_de + "' durch '" + request.user.username + "' exportiert (LBA).")
+                    logger.info("Material '" + material.kurztext_de + "' durch '" + request.user.email + "' exportiert (LBA).")
                 return export_to_excel(selected_materials, 'LBA')
             elif action == 'export_ruag':
                 for material in selected_materials:
-                    logger.info("Material '" + material.kurztext_de + "' durch '" + request.user.username + "' exportiert (RUAG).")
+                    logger.info("Material '" + material.kurztext_de + "' durch '" + request.user.email + "' exportiert (RUAG).")
                 return export_to_excel(selected_materials, 'RUAG')
 
         return redirect(reverse('list_material_gd'))
@@ -909,7 +912,7 @@ class UpdateMaterial_GD_View(ComputedContextMixin, FormValidMixin_GD, GroupRequi
                     attachment.save()
 
                 # Log the successful update
-                logger.info(f"Material '{self.object.kurztext_de}' wurde durch '{self.request.user.username}' aktualisiert.")
+                logger.info(f"Material '{self.object.kurztext_de}' wurde durch '{self.request.user.email}' aktualisiert.")
 
                 return super().form_valid(form)
 
@@ -971,26 +974,26 @@ class ListMaterial_SMDA_View(ComputedContextMixin, GroupRequiredMixin, ListView)
             if action == 'transfer':
                 selected_materials.update(is_transferred=False, transfer_date=timezone.now())
                 for material in selected_materials:
-                    logger.info("Material '" + material.kurztext_de + "' durch '" + request.user.username + "' übermittelt.")
+                    logger.info("Material '" + material.kurztext_de + "' durch '" + request.user.email + "' übermittelt.")
             elif action == 'archive':
                 selected_materials.update(is_archived=True)
                 for material in selected_materials:
-                    logger.info("Material '" + material.kurztext_de + "' durch '" + request.user.username + "' archiviert.")
+                    logger.info("Material '" + material.kurztext_de + "' durch '" + request.user.email + "' archiviert.")
             elif action == 'unarchive':
                 selected_materials.update(is_archived=False)
                 for material in selected_materials:
-                    logger.info("Material '" + material.kurztext_de + "' durch '" + request.user.username + "' unarchiviert.")
+                    logger.info("Material '" + material.kurztext_de + "' durch '" + request.user.email + "' unarchiviert.")
             elif action == 'delete':
                 for material in selected_materials:
-                    logger.info("Material '" + material.kurztext_de + "' durch '" + request.user.username + "' gelöscht.")
+                    logger.info("Material '" + material.kurztext_de + "' durch '" + request.user.email + "' gelöscht.")
                 selected_materials.delete()
             elif action == 'export_lba':
                 for material in selected_materials:
-                    logger.info("Material '" + material.kurztext_de + "' durch '" + request.user.username + "' exportiert (LBA).")
+                    logger.info("Material '" + material.kurztext_de + "' durch '" + request.user.email + "' exportiert (LBA).")
                 return export_to_excel(selected_materials, 'LBA')
             elif action == 'export_ruag':
                 for material in selected_materials:
-                    logger.info("Material '" + material.kurztext_de + "' durch '" + request.user.username + "' exportiert (RUAG).")
+                    logger.info("Material '" + material.kurztext_de + "' durch '" + request.user.email + "' exportiert (RUAG).")
                 return export_to_excel(selected_materials, 'RUAG')
 
         return redirect(reverse('list_material_smda'))
@@ -1028,7 +1031,7 @@ class UpdateMaterial_SMDA_View(ComputedContextMixin, FormValidMixin_SMDA, GroupR
         if "cancel" in request.POST:
             # Log the cancellation action
             self.object = self.get_object()
-            logger.info(f"Bearbeitung von Material '{self.object.kurztext_de}' durch '{request.user.username}' abgebrochen.")
+            logger.info(f"Bearbeitung von Material '{self.object.kurztext_de}' durch '{request.user.email}' abgebrochen.")
             return redirect('list_material_smda')
 
         # Get the existing object
@@ -1112,7 +1115,7 @@ class UpdateMaterial_SMDA_View(ComputedContextMixin, FormValidMixin_SMDA, GroupR
                     attachment.save()
 
                 # Log the successful update
-                logger.info(f"Material '{self.object.kurztext_de}' wurde durch '{self.request.user.username}' aktualisiert.")
+                logger.info(f"Material '{self.object.kurztext_de}' wurde durch '{self.request.user.email}' aktualisiert.")
 
                 return super().form_valid(form)
 
@@ -1246,14 +1249,13 @@ class RegisterView(FormView):
     def post(self, request):
         form = UserRegistrationForm(request.POST)
         if form.is_valid():
-            submitted_username = form.cleaned_data['username']
+            submitted_email = form.cleaned_data['email']
             
             # Get email from session instead of form
             email = request.session.get('verified_email')
             
             user = User.objects.create(
-                username=submitted_username,
-                email=email,  # Use the email from session
+                email=submitted_email,
                 first_name=form.cleaned_data['first_name'],
                 last_name=form.cleaned_data['last_name'],
                 is_active=False
@@ -1261,7 +1263,7 @@ class RegisterView(FormView):
     
             profile = form.save(commit=False)
             profile.user = user
-            profile.username = submitted_username
+            profile.email = submitted_email
             profile.email = email  # Also set email in profile
             profile.registration_token = get_random_string(50)
             profile.token_expiry = timezone.now() + timedelta(days=2)
@@ -1276,7 +1278,7 @@ class RegisterView(FormView):
             request.session.modified = True
     
             messages.success(request, 'Registration submitted successfully! Please wait for administrator approval.')
-            logger.info(f"New user registration pending approval: {submitted_username}")
+            logger.info(f"New user registration pending approval: {submitted_email}")
             return redirect('login_user')
     
         return render(request, self.template_name, {'form': form, 'email': request.session.get('verified_email')})
@@ -1297,7 +1299,7 @@ class CompleteRegistrationView(View):
             
             # Debug info
             print("\n" + "="*80)
-            print(f"DEVELOPMENT MODE: Registration completion request for {profile.username}")
+            print(f"DEVELOPMENT MODE: Registration completion request for {profile.email}")
             print(f"Token valid until: {profile.token_expiry}")
             print("="*80 + "\n")
             
@@ -1327,7 +1329,7 @@ class CompleteRegistrationView(View):
 
                 # Debug successful registration completion
                 print("\n" + "="*80)
-                print(f"DEVELOPMENT MODE: Registration successfully completed for {user.username}")
+                print(f"DEVELOPMENT MODE: Registration successfully completed for {user.email}")
                 print(f"User is now active and can log in with the password they set")
                 print("="*80 + "\n")
 
@@ -1353,34 +1355,32 @@ class PendingRegistrationsView(grAdmin_GroupRequiredMixin, ListView):
 class ApproveRegistrationView(grAdmin_GroupRequiredMixin, View):
     allowed_groups = ['grAdmin']
 
-    def post(self, request, profile_id):
+def post(self, request, profile_id):
+    try:
+        profile = Profile.objects.get(id=profile_id, status='pending')
+        user = profile.user
+
+        # Approve the user
+        profile.status = 'approved'
+        profile.save()
+
+        # Add user to grIL group
         try:
-            profile = Profile.objects.get(id=profile_id, status='pending')
-            user = profile.user
+            il_group = Group.objects.get(name='grIL')
+            user.groups.add(il_group)
+        except Group.DoesNotExist:
+            logger.error(f"Group 'grIL' not found when approving user {profile.email}")
 
-            # Approve the user
-            profile.status = 'approved'
-            profile.save()
+        # Send approval email
+        registration_link = request.build_absolute_uri(
+            reverse('complete_registration', args=[profile.registration_token])
+        )
 
-            # Add user to grIL group
-            try:
-                il_group = Group.objects.get(name='grIL')
-                user.groups.add(il_group)
-            except Group.DoesNotExist:
-                logger.error(f"Group 'grIL' not found when approving user {profile.username}")
-
-            # Send approval email
-            registration_link = request.build_absolute_uri(
-                reverse('complete_registration', args=[profile.registration_token])
-            )
-
-            email_context = {
-                'username': profile.username,
-                'registration_link': registration_link,
-                'expiry_date': profile.token_expiry,
-            }
-
-            email_body = render_to_string('registration/email/registration_approved_email.html', email_context)
+        email_context = {
+            'email': profile.email,
+            'registration_link': registration_link,
+            'expiry_date': profile.token_expiry,
+        }
 
 #            send_mail(
 #                'Your registration has been approved',
@@ -1389,16 +1389,17 @@ class ApproveRegistrationView(grAdmin_GroupRequiredMixin, View):
 #                [profile.email],
 #                fail_silently=False,
 #            )
-            print("[ApproveRegistrationView] Mail sent!")
-            print("email_body = ", email_body)
 
-            messages.success(request, f'Registration for {profile.username} has been approved.')
-            logger.info(f"Registration approved for user: {profile.username}")
+        email_body = render_to_string('registration/email/registration_approved_email.html', email_context)
 
-        except Profile.DoesNotExist:
-            messages.error(request, 'Profile not found.')
+        # Send email code
+        messages.success(request, f'Registration for {profile.email} has been approved.')
+        logger.info(f"Registration approved for user: {profile.email}")
 
-        return redirect('pending_registrations')
+    except Profile.DoesNotExist:
+        messages.error(request, 'Profile not found.')
+
+    return redirect('pending_registrations')
 
 class RejectRegistrationView(grAdmin_GroupRequiredMixin, View):
     allowed_groups = ['grAdmin']
@@ -1419,7 +1420,7 @@ class RejectRegistrationView(grAdmin_GroupRequiredMixin, View):
 
             # Send rejection email
             email_context = {
-                'username': profile.username,
+                'email': profile.email,
                 'rejection_reason': rejection_reason,
             }
 
@@ -1438,8 +1439,8 @@ class RejectRegistrationView(grAdmin_GroupRequiredMixin, View):
             # Delete the associated User object
             profile.user.delete()
 
-            messages.success(request, f'Registration for {profile.username} has been rejected.')
-            logger.info(f"Registration rejected for user: {profile.username}")
+            messages.success(request, f'Registration for {profile.email} has been rejected.')
+            logger.info(f"Registration rejected for user: {profile.email}")
 
         except Profile.DoesNotExist:
             messages.error(request, 'Profile not found.')

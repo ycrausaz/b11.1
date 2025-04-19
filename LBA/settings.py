@@ -263,7 +263,4 @@ EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER', 'yann.crausaz@gmail.com')
 EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', '')
 DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL', 'yann.crausaz@gmail.com')
 
-# Make sure you have these settings in your settings.py file
-SESSION_ENGINE = 'django.contrib.sessions.backends.db'
-SESSION_COOKIE_AGE = 1209600  # 2 weeks in seconds
-SESSION_SAVE_EVERY_REQUEST = True  # Important - save the session on every request
+AUTHENTICATION_BACKENDS = ['b11_1.backends.EmailBackend']

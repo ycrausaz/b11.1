@@ -45,13 +45,12 @@ class Profile(models.Model):
     ]
 
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    username = models.CharField(max_length=50, unique=True, null=True, blank=True)
     firm = models.CharField(max_length=100, null=True, blank=True)
     first_name = models.CharField(max_length=50, null=True, blank=True)
     last_name = models.CharField(max_length=50, null=True, blank=True)
     role = models.CharField(max_length=50, null=True, blank=True)
     country = models.CharField(max_length=50, null=True, blank=True)
-    email = models.EmailField(null=True, blank=True)
+    email = models.EmailField(unique=True, null=False, blank=False)
     phone = models.CharField(max_length=20, null=True, blank=True)
     is_first_login = models.BooleanField(default=True)
     failed_login_attempts = models.IntegerField(default=0)
