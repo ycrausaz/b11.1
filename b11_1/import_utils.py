@@ -22,13 +22,32 @@ def column_letter_to_index(letter):
 def get_tab_data(excel_file):
     """
     Read all required tabs from the Excel file and return their DataFrames.
+    Also reads cell B1 from the Input_Lieferant tab to get the system name.
     Skips rows where positions_nr (column B) or kurztext_de (column D) is empty.
     """
     unique_tabs = {mapping['tab'] for mapping in field_mapping.values()}
     tab_data = {}
+    systemname = None  # Initialize the systemname variable
 
     try:
-        # First, read columns B and D from Input_Lieferant to determine valid rows
+        # First, read the B1 cell from Input_Lieferant tab to get the systemname
+        try:
+            header_df = pd.read_excel(
+                excel_file,
+                sheet_name='Input_Lieferant',
+                nrows=1,  # Read only the first row
+                usecols='B',  # Read only column B
+                header=None
+            )
+            if not header_df.empty and not pd.isna(header_df.iloc[0, 0]):
+                systemname = str(header_df.iloc[0, 0]).strip()
+                logger.info(f"Found system name in cell B1: {systemname}")
+            else:
+                logger.warning("Cell B1 in Input_Lieferant tab is empty or not found")
+        except Exception as e:
+            logger.error(f"Error reading system name from cell B1: {str(e)}")
+            
+        # Now read columns B and D from Input_Lieferant to determine valid rows
         initial_df = pd.read_excel(
             excel_file,
             sheet_name='Input_Lieferant',
@@ -96,6 +115,9 @@ def get_tab_data(excel_file):
         logger.error(f"Error determining valid rows from Input_Lieferant tab: {str(e)}")
         raise ValueError(f"Error determining valid rows from Input_Lieferant tab: {str(e)}")
 
+    # Store the systemname in the tab_data dictionary
+    tab_data['systemname'] = systemname
+    
     return tab_data
 
 # Define special field processors
@@ -227,6 +249,9 @@ def import_from_excel(excel_file, request, il_user):
     """
     try:
         tab_data = get_tab_data(excel_file)
+        
+        # Get the system name from tab_data
+        systemname = tab_data.pop('systemname', None)
 
         materials_created = 0
         materials_updated = 0
@@ -295,6 +320,10 @@ def import_from_excel(excel_file, request, il_user):
                     
                     # Set hersteller to the IL user's email
                     material.hersteller = il_user.email
+                    
+                    # Set the Systemname from cell B1
+                    if systemname:
+                        material.systemname = systemname
                     
                     # Set additional fields
                     material.is_transferred = True

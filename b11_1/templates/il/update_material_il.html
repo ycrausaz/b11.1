@@ -5,7 +5,7 @@
 <!-- templates/update_material_il.html -->
 {% load help_tags %}
 {% block content %}
-    <h1>{% trans "Material aktualisieren" %}</h1>
+    <h1>{% trans "Material aktualisieren" %}: {{ object.systemname }}</h1>
     <br/>
 
     {% if form.non_field_errors %}
@@ -28,6 +28,8 @@
         {% if field.field.required %}
             <span class="required">*</span>
         {% elif field.name == 'cage_code' or field.name == 'hersteller_name' or field.name == 'hersteller_adresse' or field.name == 'hersteller_plz' or field.name == 'hersteller_ort' %}
+            <span class="required conditional-required" id="{{ field.name }}_required">*</span>
+        {% elif field.name == 'systemname' %}
             <span class="required conditional-required" id="{{ field.name }}_required">*</span>
         {% endif %}
         {{ field|get_inline_help }}
