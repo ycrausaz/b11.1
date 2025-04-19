@@ -486,7 +486,7 @@ class ListMaterial_IL_View(GroupRequiredMixin, ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        list_material_il = Material.objects.filter(is_transferred=False, hersteller=self.request.user, transfer_date__isnull=True)
+        list_material_il = Material.objects.filter(is_transferred=False, hersteller=self.request.user.email, transfer_date__isnull=True)
         list_material_il_transferred = Material.objects.filter(is_transferred=True, hersteller=self.request.user, transfer_date__isnull=False)
         list_material_il_returned = Material.objects.filter(is_transferred=False, hersteller=self.request.user, transfer_date__isnull=False)
 
@@ -535,16 +535,6 @@ class AddMaterial_IL_View(FormValidMixin_IL, GroupRequiredMixin, SuccessMessageM
     success_url = reverse_lazy('list_material_il')
     success_message = "Das Material wurde erfolgreich hinzugefügt."
     allowed_groups = ['grIL']
-
-    def post(self, request, *args, **kwargs):
-        if "cancel" in request.POST:
-            logger.info(f"Erstellung von Material durch '{request.user.email}' abgebrochen.")
-            return redirect('list_material_il')
-
-        form = self.get_form()
-        if form.is_valid():
-            return self.form_valid(form)
-        return self.form_invalid(form)
 
     def form_valid(self, form):
         try:
@@ -633,21 +623,6 @@ class UpdateMaterial_IL_View(FormValidMixin_IL, GroupRequiredMixin, SuccessMessa
     success_url = reverse_lazy('list_material_il')
     success_message = "Das Material wurde erfolgreich aktualisiert."
     allowed_groups = ['grIL']
-
-    def post(self, request, *args, **kwargs):
-        if "cancel" in request.POST:
-            # Log the cancellation action
-            self.object = self.get_object()
-            logger.info(f"Bearbeitung von Material '{self.object.kurztext_de}' durch '{request.user.email}' abgebrochen.")
-            return redirect('list_material_il')
-
-        # Get the existing object
-        self.object = self.get_object()
-        form = self.get_form()
-
-        if form.is_valid():
-            return self.form_valid(form)
-        return self.form_invalid(form)
 
     def form_valid(self, form):
         try:
@@ -771,7 +746,7 @@ class ListMaterial_GD_View(ComputedContextMixin, GroupRequiredMixin, ListView):
 
         # Convert positions_nr to integers for sorting
         context['list_material_archived'] = sorted(list_material_gd_archived, key=lambda x: int(x.positions_nr))
-        context['list_material'] = sorted(list_material_gd, key=lambda x: int(x.positions_nr))
+        context['list_material'] = sorted(list_material_gd, key=lambda x: int(x.id))
         return context
 
     def post(self, request, *args, **kwargs):
@@ -961,7 +936,7 @@ class ListMaterial_SMDA_View(ComputedContextMixin, GroupRequiredMixin, ListView)
 
         # Convert positions_nr to integers for sorting
         context['list_material_archived'] = sorted(list_material_smda_archived, key=lambda x: int(x.positions_nr))
-        context['list_material'] = sorted(list_material_smda, key=lambda x: int(x.positions_nr))
+        context['list_material'] = sorted(list_material_smda, key=lambda x: int(x.id))
         return context
 
     def post(self, request, *args, **kwargs):
@@ -1026,21 +1001,6 @@ class UpdateMaterial_SMDA_View(ComputedContextMixin, FormValidMixin_SMDA, GroupR
         kwargs = super().get_form_kwargs()
         kwargs['editable_fields'] = EDITABLE_FIELDS_SMDA
         return kwargs
-
-    def post(self, request, *args, **kwargs):
-        if "cancel" in request.POST:
-            # Log the cancellation action
-            self.object = self.get_object()
-            logger.info(f"Bearbeitung von Material '{self.object.kurztext_de}' durch '{request.user.email}' abgebrochen.")
-            return redirect('list_material_smda')
-
-        # Get the existing object
-        self.object = self.get_object()
-        form = self.get_form()
-
-        if form.is_valid():
-            return self.form_valid(form)
-        return self.form_invalid(form)
 
     def form_valid(self, form):
         try:
