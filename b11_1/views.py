@@ -1355,33 +1355,38 @@ class PendingRegistrationsView(grAdmin_GroupRequiredMixin, ListView):
 class ApproveRegistrationView(grAdmin_GroupRequiredMixin, View):
     allowed_groups = ['grAdmin']
 
-def post(self, request, profile_id):
-    try:
-        profile = Profile.objects.get(id=profile_id, status='pending')
-        user = profile.user
-
-        # Approve the user
-        profile.status = 'approved'
-        profile.save()
-
-        # Add user to grIL group
+    def post(self, request, profile_id):
+        print("post()")
         try:
-            il_group = Group.objects.get(name='grIL')
-            user.groups.add(il_group)
-        except Group.DoesNotExist:
-            logger.error(f"Group 'grIL' not found when approving user {profile.email}")
+            profile = Profile.objects.get(id=profile_id, status='pending')
+            print("profile = ", str(profile))
+            user = profile.user
 
-        # Send approval email
-        registration_link = request.build_absolute_uri(
-            reverse('complete_registration', args=[profile.registration_token])
-        )
+            # Approve the user
+            profile.status = 'approved'
+            profile.save()
 
-        email_context = {
-            'email': profile.email,
-            'registration_link': registration_link,
-            'expiry_date': profile.token_expiry,
-        }
+            # Add user to grIL group
+            try:
+                il_group = Group.objects.get(name='grIL')
+                user.groups.add(il_group)
+            except Group.DoesNotExist:
+                logger.error(f"Group 'grIL' not found when approving user {profile.email}")
 
+            # Send approval email
+            registration_link = request.build_absolute_uri(
+                reverse('complete_registration', args=[profile.registration_token])
+            )
+
+            email_context = {
+                'email': profile.email,
+                'registration_link': registration_link,
+                'expiry_date': profile.token_expiry,
+            }
+
+            email_body = render_to_string('registration/email/registration_approved_email.html', email_context)
+
+            # Send email code
 #            send_mail(
 #                'Your registration has been approved',
 #                email_body,
@@ -1389,17 +1394,14 @@ def post(self, request, profile_id):
 #                [profile.email],
 #                fail_silently=False,
 #            )
+            logger.info(email_body)
+            messages.success(request, f'Registration for {profile.email} has been approved.')
+            logger.info(f"Registration approved for user: {profile.email}")
 
-        email_body = render_to_string('registration/email/registration_approved_email.html', email_context)
+        except Profile.DoesNotExist:
+            messages.error(request, 'Profile not found.')
 
-        # Send email code
-        messages.success(request, f'Registration for {profile.email} has been approved.')
-        logger.info(f"Registration approved for user: {profile.email}")
-
-    except Profile.DoesNotExist:
-        messages.error(request, 'Profile not found.')
-
-    return redirect('pending_registrations')
+        return redirect('pending_registrations')
 
 class RejectRegistrationView(grAdmin_GroupRequiredMixin, View):
     allowed_groups = ['grAdmin']
