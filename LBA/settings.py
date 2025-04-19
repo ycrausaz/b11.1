@@ -63,6 +63,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'b11_1.middleware.LoginPathMiddleware',
 ]
 
 ROOT_URLCONF = 'LBA.urls'
@@ -263,4 +264,7 @@ EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER', 'yann.crausaz@gmail.com')
 EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', '')
 DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL', 'yann.crausaz@gmail.com')
 
-AUTHENTICATION_BACKENDS = ['b11_1.backends.EmailBackend']
+AUTHENTICATION_BACKENDS = [
+    'b11_1.backends.EmailBackend',
+    'b11_1.backends.UsernameBackend',
+]

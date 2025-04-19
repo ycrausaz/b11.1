@@ -327,10 +327,10 @@ class CustomLoginView(LoginView):
     template_name = 'admin/login_user.html'
 
     def form_invalid(self, form):
-        email = form.cleaned_data.get('username')
-        print("email = ", str(email))
+        username_field = form.cleaned_data.get('username')
+        print("email = ", str(username_field))
         try:
-            user = User.objects.get(email=email)
+            user = User.objects.get(email=username_field)
             print("user = ", str(user))
             profile = user.profile
             profile.failed_login_attempts += 1

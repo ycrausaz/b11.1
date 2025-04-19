@@ -16,3 +16,15 @@ class LanguageMiddleware(MiddlewareMixin):
         else:
             translation.activate('de')  # Default language
         request.LANGUAGE_CODE = translation.get_language()
+
+class LoginPathMiddleware:
+    def __init__(self, get_response):
+        self.get_response = get_response
+
+    def __call__(self, request):
+        # Add a flag to the request to indicate the login path
+        if request.path.startswith('/admin/'):
+            request.is_admin_login = True
+        else:
+            request.is_admin_login = False
+        return self.get_response(request)
