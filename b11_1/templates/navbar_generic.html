@@ -1,3 +1,5 @@
+<!-- templates/navbar_generic.html -->
+
 {% load i18n %} 
 {% load group_tags %}
 
@@ -5,7 +7,7 @@
   <div class="container-fluid">
 
 {% if user|has_group:"grIL" %}
-    <div class="navbar-brand">LBA - Beilage 11.1 (für {{ user }})</div>
+    <div class="navbar-brand">LBA - Beilage 11.1 (Benutzer: {{ user.email }} / Firma: {{ user.profile.firm }})</div>
 {% endif %}
 
 {% if user|has_group:"grGD" %}
