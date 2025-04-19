@@ -165,7 +165,7 @@
 
         <div class="same-width" style="margin-top: 20px;">
             <input type="submit" value="{% trans "Änderungen speichern" %}" class="btn btn-primary">
-            <button type="submit" name="cancel" class="btn btn-secondary">{% trans "Zurück ohne Speichern" %}</button>
+            <button type="button" class="btn btn-secondary" onclick="window.location.href='{% url 'list_material_smda' %}'">{% trans "Zurück ohne Speichern" %}</button>
         </div>
     </form>
 

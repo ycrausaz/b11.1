@@ -487,8 +487,8 @@ class ListMaterial_IL_View(GroupRequiredMixin, ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         list_material_il = Material.objects.filter(is_transferred=False, hersteller=self.request.user.email, transfer_date__isnull=True)
-        list_material_il_transferred = Material.objects.filter(is_transferred=True, hersteller=self.request.user, transfer_date__isnull=False)
-        list_material_il_returned = Material.objects.filter(is_transferred=False, hersteller=self.request.user, transfer_date__isnull=False)
+        list_material_il_transferred = Material.objects.filter(is_transferred=True, hersteller=self.request.user.email, transfer_date__isnull=False)
+        list_material_il_returned = Material.objects.filter(is_transferred=False, hersteller=self.request.user.email, transfer_date__isnull=False)
 
         print("len(list_material_il_transferred) = ", len(list_material_il_transferred))
         print("len(list_material_il_returned) = ", len(list_material_il_returned))

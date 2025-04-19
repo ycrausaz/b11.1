@@ -1,7 +1,7 @@
 # editable_fields_config.py
 
 EDITABLE_FIELDS_IL = [
-'positions_nr', #B
+#'positions_nr', #B
 'referenznummer_leiferant', #C
 'kurztext_de', #D
 'kurztext_fr', #E
