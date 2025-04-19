@@ -1,3 +1,5 @@
+# views.py
+
 from django.contrib.auth.views import LoginView, PasswordChangeView
 from django.shortcuts import render, redirect
 from django.core.paginator import Paginator
@@ -60,8 +62,7 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-
-class ExcelUploadForm(grAdmin_GroupRequiredMixin, forms.Form):
+class ExcelUploadForm(forms.Form):
     """
     Form for uploading Excel files with material data.
     """
@@ -73,6 +74,20 @@ class ExcelUploadForm(grAdmin_GroupRequiredMixin, forms.Form):
             'accept': '.xlsx'
         })
     )
+    
+    il_user = forms.ModelChoiceField(
+        queryset=User.objects.filter(groups__name='grIL'),
+        label='Assign to IL User',
+        help_text='Select the IL user who will be assigned as "hersteller" (required)',
+        widget=forms.Select(attrs={'class': 'form-control select2'}),
+        required=True,
+        error_messages={'required': 'Please select an IL user to continue'}
+    )
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Set up the queryset to show email as display value
+        self.fields['il_user'].label_from_instance = lambda obj: obj.email
 
 class ExcelImportView(GroupRequiredMixin, FormView):
     """
@@ -85,11 +100,13 @@ class ExcelImportView(GroupRequiredMixin, FormView):
 
     def form_valid(self, form):
         excel_file = form.cleaned_data['excel_file']
-        success, message, created, updated = import_from_excel(excel_file, self.request)
+        il_user = form.cleaned_data['il_user']  # Get the selected user
+        
+        success, message, created, updated = import_from_excel(excel_file, self.request, il_user)
 
         if success:
             messages.success(self.request, message)
-            logger.info(f"Import from '{excel_file}' by '{self.request.user.email}' successful.")
+            logger.info(f"Import from '{excel_file}' by '{self.request.user.email}' successful. Assigned to IL user: {il_user.email}")
         else:
             messages.error(self.request, message)
             logger.warn(f"Error when importing '{excel_file}' by '{self.request.user.email}'.")

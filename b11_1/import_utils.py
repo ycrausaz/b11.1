@@ -219,15 +219,17 @@ def process_additional_fields(material, row_data):
         logger.error(f"Error processing additional fields for material {material.positions_nr}: {str(e)}")
         raise
 
-def import_from_excel(excel_file, request=None):
+def import_from_excel(excel_file, request, il_user):
     """
     Process the uploaded Excel file and create new Material objects.
+    Requires il_user parameter to set as hersteller.
     Returns a tuple of (success_status, message, created_count, updated_count)
     """
     try:
         tab_data = get_tab_data(excel_file)
 
         materials_created = 0
+        materials_updated = 0
         errors = []
 
         # Get the number of rows from the first tab
@@ -272,14 +274,33 @@ def import_from_excel(excel_file, request=None):
             # Only process the row if there were no errors
             if not row_has_error and material_data:
                 try:
-                    # Create new Material object
-                    material = Material.objects.create(**material_data)
-
-                    # Process additional fields not in Excel
-                    process_additional_fields(material, material_data)
-
-                    materials_created += 1
-                    logger.info(f"Created new material from row {excel_row}")
+                    # Check if material with this positions_nr already exists
+                    positions_nr = material_data.get('positions_nr')
+                    material = None
+                    
+                    if positions_nr:
+                        material = Material.objects.filter(positions_nr=positions_nr).first()
+                    
+                    if material:
+                        # Update existing material
+                        for field, value in material_data.items():
+                            setattr(material, field, value)
+                        materials_updated += 1
+                        logger.info(f"Updated existing material from row {excel_row}")
+                    else:
+                        # Create new Material object
+                        material = Material(**material_data)
+                        materials_created += 1
+                        logger.info(f"Created new material from row {excel_row}")
+                    
+                    # Set hersteller to the IL user's email
+                    material.hersteller = il_user.email
+                    
+                    # Set additional fields
+                    material.is_transferred = True
+                    
+                    # Save the material
+                    material.save()
 
                 except Exception as e:
                     error_msg = f"Error saving material at row {excel_row}: {str(e)}"
@@ -291,11 +312,11 @@ def import_from_excel(excel_file, request=None):
         if errors:
             error_message = "Import completed with errors. Please check the error messages above."
             logger.error(f"Excel import completed with {len(errors)} errors")
-            return False, error_message, materials_created, 0
+            return False, error_message, materials_created, materials_updated
         else:
-            success_message = f'Successfully processed Excel file. Created: {materials_created} materials.'
-            logger.info(f'Excel import completed. Created: {materials_created} materials.')
-            return True, success_message, materials_created, 0
+            success_message = f'Successfully processed Excel file. Created: {materials_created}, Updated: {materials_updated} materials.'
+            logger.info(f'Excel import completed. Created: {materials_created}, Updated: {materials_updated} materials.')
+            return True, success_message, materials_created, materials_updated
 
     except Exception as e:
         error_message = f'Error processing Excel file: {str(e)}'

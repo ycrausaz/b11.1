@@ -1,4 +1,4 @@
-<!-- templates/excel_import.html -->
+<!-- templates/admin/excel_import.html -->
 {% extends 'base_generic.html' %}
 
 {% block content %}
@@ -21,32 +21,44 @@
                         </div>
                         {% endif %}
                         
-                        {% for field in form %}
+                        <!-- File Upload Field -->
                         <div class="form-group mb-3">
-                            <label for="{{ field.id_for_label }}" class="form-label">
-                                {{ field.label }}
+                            <label for="{{ form.excel_file.id_for_label }}" class="form-label">
+                                {{ form.excel_file.label }} <span class="text-danger">*</span>
                             </label>
                             
-                            {{ field.errors }}
+                            {{ form.excel_file.errors }}
                             
-                            {% if field.field.widget.input_type == 'file' %}
-                                <input type="file" 
-                                       name="{{ field.html_name }}" 
-                                       id="{{ field.id_for_label }}"
-                                       class="form-control">
-                            {% else %}
-                                {{ field }}
-                            {% endif %}
+                            <input type="file" 
+                                   name="{{ form.excel_file.html_name }}" 
+                                   id="{{ form.excel_file.id_for_label }}"
+                                   class="form-control">
                             
-                            {% if field.help_text %}
+                            {% if form.excel_file.help_text %}
                             <small class="form-text text-muted">
-                                {{ field.help_text }}
+                                {{ form.excel_file.help_text }}
                             </small>
                             {% endif %}
                         </div>
-                        {% endfor %}
                         
-                        <button type="submit" class="btn btn-primary">Import Data</button>
+                        <!-- IL User Dropdown Field -->
+                        <div class="form-group mb-3">
+                            <label for="{{ form.il_user.id_for_label }}" class="form-label">
+                                {{ form.il_user.label }} <span class="text-danger">*</span>
+                            </label>
+                            
+                            {{ form.il_user.errors }}
+                            
+                            {{ form.il_user }}
+                            
+                            {% if form.il_user.help_text %}
+                            <small class="form-text text-muted">
+                                {{ form.il_user.help_text }}
+                            </small>
+                            {% endif %}
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary" id="import-submit-btn" disabled>Import Data</button>
                     </form>
                 </div>
             </div>
@@ -63,4 +75,47 @@
         </div>
     </div>
 </div>
+
+<script>
+    $(document).ready(function() {
+        // Initialize select2 on the IL user dropdown
+        $('#{{ form.il_user.id_for_label }}').select2({
+            theme: 'bootstrap-5',
+            placeholder: 'Select an IL user',
+            allowClear: true,
+            width: '100%'
+        });
+        
+        // Function to check if form can be submitted
+        function checkFormValidity() {
+            // Enable the button only if an IL user is selected
+            var ilUserSelected = $('#{{ form.il_user.id_for_label }}').val() !== null && 
+                                $('#{{ form.il_user.id_for_label }}').val() !== '';
+            
+            // Also check that a file is selected
+            var fileSelected = $('#{{ form.excel_file.id_for_label }}').val() !== '';
+            
+            // Enable or disable the button based on both conditions
+            $('#import-submit-btn').prop('disabled', !(ilUserSelected && fileSelected));
+        }
+        
+        // Check form validity on initial load
+        checkFormValidity();
+        
+        // Check when IL user selection changes
+        $('#{{ form.il_user.id_for_label }}').on('change', function() {
+            checkFormValidity();
+        });
+        
+        // Check when file selection changes
+        $('#{{ form.excel_file.id_for_label }}').on('change', function() {
+            checkFormValidity();
+        });
+        
+        // Handle select2 specific events
+        $('#{{ form.il_user.id_for_label }}').on('select2:select select2:unselect', function() {
+            checkFormValidity();
+        });
+    });
+</script>
 {% endblock %}
