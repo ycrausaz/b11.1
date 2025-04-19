@@ -33,7 +33,7 @@
             {% for mat in list_material %}
                 <tr>
                     <td><input type="checkbox" name="selected_materials" value="{{ mat.id }}" class="material-checkbox" data-form-id="1"></td>
-                    <td>{{ mat.systemname }}: <a href="{% url 'update_material_smda' mat.id %}">{{ mat.kurztext_de }}</a> ({{ mat.hersteller }})</td>
+                    <td>{{ mat.systemname }}: <a href="{% url 'update_material_smda' mat.id %}">{{ mat.get_localized_kurztext }}</a> ({{ mat.hersteller }})</td>
                 </tr>
             {% endfor %}
         </tbody>

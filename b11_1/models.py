@@ -297,6 +297,19 @@ class Material(models.Model):
     preissteuerung = models.CharField(null=True, blank=True, max_length=40, verbose_name=_("Preissteuerung"))
     preisermittlung = models.IntegerField(null=True, blank=True, verbose_name=_("Preisermittlung"))
 
+    def get_localized_kurztext(self):
+        """Returns the kurztext in the current language, falling back to German if not available"""
+        from django.utils.translation import get_language
+        
+        current_language = get_language()
+        if current_language == 'fr' and self.kurztext_fr:
+            return self.kurztext_fr
+        elif current_language == 'en' and self.kurztext_en:
+            return self.kurztext_en
+        
+        # Default to German
+        return self.kurztext_de
+
     def delete(self, *args, **kwargs):
         # First, delete all attachment files from storage
         for attachment in self.attachments.all():
