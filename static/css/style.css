@@ -241,3 +241,13 @@ label[data-bs-toggle="tooltip"] {
     display: block;
     line-height: 1.2;
 }
+
+.section-header {
+    background-color: #f2f2f2;
+    font-weight: bold;
+    padding: 8px;
+}
+
+.section-header td {
+    text-align: left;
+}

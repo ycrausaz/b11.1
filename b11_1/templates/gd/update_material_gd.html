@@ -57,7 +57,7 @@
 
                         <tr><td colspan="2"><hr></td></tr>
 
-                        <tr><td colspan="2"><strong>Berechnete Felder</strong></td></tr>
+                        <tr class="section-header"><td colspan="2"><strong>Berechnete Felder</strong></td></tr>
                         {% for field in form.get_computed_fields %}
                             {% if not field.is_hidden %}
                                 <tr>
@@ -79,7 +79,7 @@
                 <div class="mytitle">Stammdaten</div>
                 <div class="content">
                     <table>
-                        <tr><td colspan="2"><strong>Daten Lieferant</strong></td></tr>
+                        <tr class="section-header"><td colspan="2"><strong>Daten Lieferant</strong></td></tr>
                         {% for field in form.get_readonly_fields %}
                             {% if field.name|is_in_il_fields %}
                                 {% if not field.is_hidden %}
@@ -111,7 +111,7 @@
 
                         <tr><td colspan="2"><hr></td></tr>
             
-                        <tr><td colspan="2"><strong>Daten SYMM</strong></td></tr>
+                        <tr class="section-header"><td colspan="2"><strong>Daten SYMM</strong></td></tr>
                         {% for field in form.get_readonly_fields %}
                             {% if field.name|is_in_smda_fields %}
                                 {% if not field.is_hidden %}
