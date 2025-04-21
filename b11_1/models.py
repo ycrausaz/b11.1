@@ -296,6 +296,7 @@ class Material(models.Model):
     auspraegung = models.ForeignKey(Auspraegung, to_field='idx', null=True, blank=True, on_delete=models.DO_NOTHING, verbose_name=_("Ausprägung"))
     preissteuerung = models.CharField(null=True, blank=True, max_length=40, verbose_name=_("Preissteuerung"))
     preisermittlung = models.IntegerField(null=True, blank=True, verbose_name=_("Preisermittlung"))
+    repararaturlokation = models.CharField(null=True, blank=True, max_length=40, verbose_name=_("Repararaturlokation"))
 
     def get_localized_kurztext(self):
         """Returns the kurztext in the current language, falling back to German if not available"""

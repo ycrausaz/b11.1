@@ -101,6 +101,7 @@ EDITABLE_FIELDS_SMDA = [
 'kennziffer_bamf', #AD
 'next_higher_assembly', #AE
 'externe_warengruppe', #AF
+'repararaturlokation', #AG
 #'transfer_comment',
 ]
 

@@ -511,6 +511,11 @@ FIELD_MAPPING = {
         'column': 'AF',
         'type': 'simple'
     },
+    'repararaturlokation': {
+        'tab': 'Systemmanager - Datenassistent',
+        'column': 'AG',
+        'type': 'simple'
+    },
 # End SMDA
 }
 
