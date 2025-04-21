@@ -584,7 +584,7 @@ class AddMaterial_IL_View(FormValidMixin_IL, GroupRequiredMixin, SuccessMessageM
                                 # Note: Don't save to database yet
                                 attachment.file.save(file.name, file, save=False)
                             except (BotoCoreError, ClientError) as e:
-                                error_msg = f"Failed to upload file {file.name} to storage: {str(e)}"
+                                error_msg = f"Failed to upload file '{file.name}' to storage."
                                 logger.error(error_msg)
                                 form.add_error(None, error_msg)
                                 return self.render_to_response(self.get_context_data(form=form))
@@ -622,7 +622,7 @@ class AddMaterial_IL_View(FormValidMixin_IL, GroupRequiredMixin, SuccessMessageM
             return self.render_to_response(self.get_context_data(form=form))
 
         except (BotoCoreError, ClientError) as e:
-            error_msg = f"Failed to upload file to storage: {str(e)}"
+            error_msg = f"Failed to upload file to storage."
             logger.error(error_msg)
             form.add_error(None, error_msg)
             return self.render_to_response(self.get_context_data(form=form))
@@ -692,7 +692,7 @@ class UpdateMaterial_IL_View(FormValidMixin_IL, GroupRequiredMixin, SuccessMessa
                                 # Note: Don't save to database yet
                                 attachment.file.save(file.name, file, save=False)
                             except (BotoCoreError, ClientError) as e:
-                                error_msg = f"Failed to upload file {file.name} to storage: {str(e)}"
+                                error_msg = f"Failed to upload file '{file.name}' to storage."
                                 logger.error(error_msg)
                                 form.add_error(None, error_msg)
                                 return self.render_to_response(self.get_context_data(form=form))
@@ -730,7 +730,7 @@ class UpdateMaterial_IL_View(FormValidMixin_IL, GroupRequiredMixin, SuccessMessa
             return self.render_to_response(self.get_context_data(form=form))
 
         except (BotoCoreError, ClientError) as e:
-            error_msg = f"Failed to upload file to storage: {str(e)}"
+            error_msg = f"Failed to upload file to storage."
             logger.error(error_msg)
             form.add_error(None, error_msg)
             return self.render_to_response(self.get_context_data(form=form))
@@ -882,7 +882,7 @@ class UpdateMaterial_GD_View(ComputedContextMixin, FormValidMixin_GD, GroupRequi
                                 # Note: Don't save to database yet
                                 attachment.file.save(file.name, file, save=False)
                             except (BotoCoreError, ClientError) as e:
-                                error_msg = f"Failed to upload file {file.name} to storage: {str(e)}"
+                                error_msg = f"Failed to upload file '{file.name}' to storage."
                                 logger.error(error_msg)
                                 form.add_error(None, error_msg)
                                 return self.render_to_response(self.get_context_data(form=form))
@@ -920,7 +920,7 @@ class UpdateMaterial_GD_View(ComputedContextMixin, FormValidMixin_GD, GroupRequi
             return self.render_to_response(self.get_context_data(form=form))
 
         except (BotoCoreError, ClientError) as e:
-            error_msg = f"Failed to upload file to storage: {str(e)}"
+            error_msg = f"Failed to upload file to storage."
             logger.error(error_msg)
             form.add_error(None, error_msg)
             return self.render_to_response(self.get_context_data(form=form))
@@ -1070,7 +1070,7 @@ class UpdateMaterial_SMDA_View(ComputedContextMixin, FormValidMixin_SMDA, GroupR
                                 # Note: Don't save to database yet
                                 attachment.file.save(file.name, file, save=False)
                             except (BotoCoreError, ClientError) as e:
-                                error_msg = f"Failed to upload file {file.name} to storage: {str(e)}"
+                                error_msg = f"Failed to upload file '{file.name}' to storage."
                                 logger.error(error_msg)
                                 form.add_error(None, error_msg)
                                 return self.render_to_response(self.get_context_data(form=form))
@@ -1108,7 +1108,7 @@ class UpdateMaterial_SMDA_View(ComputedContextMixin, FormValidMixin_SMDA, GroupR
             return self.render_to_response(self.get_context_data(form=form))
 
         except (BotoCoreError, ClientError) as e:
-            error_msg = f"Failed to upload file to storage: {str(e)}"
+            error_msg = f"Failed to upload file to storage."
             logger.error(error_msg)
             form.add_error(None, error_msg)
             return self.render_to_response(self.get_context_data(form=form))
