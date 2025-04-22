@@ -67,8 +67,8 @@ class ExcelUploadForm(forms.Form):
     Form for uploading Excel files with material data.
     """
     excel_file = forms.FileField(
-        label='Select Excel File',
-        help_text='Upload an Excel file containing material data (.xlsx format)',
+        label='Excel-Datei auswählen',
+        help_text='Eine Excel-Datei mit Materialien (.xlsx format) hochladen',
         widget=forms.FileInput(attrs={
             'class': 'form-control',
             'accept': '.xlsx'
@@ -77,11 +77,11 @@ class ExcelUploadForm(forms.Form):
     
     il_user = forms.ModelChoiceField(
         queryset=User.objects.filter(groups__name='grIL'),
-        label='Assign to IL User',
-        help_text='Select the IL user who will be assigned as "hersteller" (required)',
+        label='Zuweisung',
+        help_text='Wählen Sie den Benutzer aus, der als Hersteller zugewiesen werden soll (erforderlich).',
         widget=forms.Select(attrs={'class': 'form-control select2'}),
         required=True,
-        error_messages={'required': 'Please select an IL user to continue'}
+        error_messages={'obligatorisch': 'Bitte wählen Sie einen IL-Benutzer, um fortzufahren.'}
     )
     
     def __init__(self, *args, **kwargs):

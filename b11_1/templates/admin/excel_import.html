@@ -7,7 +7,7 @@
         <div class="col-md-8 offset-md-2">
             <div class="card">
                 <div class="card-header">
-                    <h2 class="mb-0">Import Material Data</h2>
+                    <h2 class="mb-0">Beilage 11.1 als Excel-Datei importieren</h2>
                 </div>
                 <div class="card-body">
                     <form method="post" enctype="multipart/form-data" class="form">
@@ -58,7 +58,7 @@
                             {% endif %}
                         </div>
                         
-                        <button type="submit" class="btn btn-primary" id="import-submit-btn" disabled>Import Data</button>
+                        <button type="submit" class="btn btn-primary" id="import-submit-btn" disabled>Datei importieren</button>
                     </form>
                 </div>
             </div>
@@ -81,7 +81,7 @@
         // Initialize select2 on the IL user dropdown
         $('#{{ form.il_user.id_for_label }}').select2({
             theme: 'bootstrap-5',
-            placeholder: 'Select an IL user',
+            placeholder: 'Einen Benutzer auswählen',
             allowClear: true,
             width: '100%'
         });
