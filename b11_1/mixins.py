@@ -298,10 +298,15 @@ class FormValidMixin_SMDA:
         print("item.auspraegung_id = " + str(item.auspraegung_id))
         auspraegung = item.auspraegung
         print("auspraegung = " + str(auspraegung))
-        if zuteilung.text == "MKZ" and (auspraegung.text == "02" or auspraegung.text == "03" or auspraegung.text == "04"):
-            form.add_error('auspraegung', "Die Ausprägung mit 'MKZ' muss '01' sein.")
-        if zuteilung.text == "PRD" and (auspraegung.text == "03" or auspraegung.text == "04"):
-            form.add_error('auspraegung', "Die Ausprägung mit 'PRD' muss '01' oder '02' sein.")
+        if zuteilung is None and auspraegung is not None:
+            form.add_error('zuteilung', "Die Zuteilung muss definiert sein.")
+        if zuteilung is not None and auspraegung is None:
+            form.add_error('auspraegung', "Die Ausprägung muss definiert sein.")
+        if zuteilung is not None and auspraegung is not None:
+            if zuteilung.text == "MKZ" and (auspraegung.text == "02" or auspraegung.text == "03" or auspraegung.text == "04"):
+                form.add_error('auspraegung', "Die Ausprägung mit 'MKZ' muss '01' sein.")
+            if zuteilung.text == "PRD" and (auspraegung.text == "03" or auspraegung.text == "04"):
+                form.add_error('auspraegung', "Die Ausprägung mit 'PRD' muss '01' oder '02' sein.")
 
         if form.errors:
             return self.form_invalid(form)
