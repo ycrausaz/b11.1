@@ -23,7 +23,7 @@ class LoginPathMiddleware:
 
     def __call__(self, request):
         # Add a flag to the request to indicate the login path
-        if request.path.startswith('/admin/'):
+        if request.path.startswith('/main_admin/'):
             request.is_admin_login = True
         else:
             request.is_admin_login = False
