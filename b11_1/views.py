@@ -306,6 +306,7 @@ class RegisterView(FormView):
                 
                 # Create user (inactive until approved)
                 user = User.objects.create(
+                    username=email,  # Set username to email
                     email=email,  # Set email to email
                     first_name=form.cleaned_data['first_name'],
                     last_name=form.cleaned_data['last_name'],
@@ -1232,6 +1233,7 @@ class RegisterView(FormView):
             email = request.session.get('verified_email')
             
             user = User.objects.create(
+                username=email,  # Set username to email
                 email=submitted_email,
                 first_name=form.cleaned_data['first_name'],
                 last_name=form.cleaned_data['last_name'],
