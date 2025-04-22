@@ -1,0 +1,11 @@
+1. define headers for "help.txt": "Field"|"Help_DE"|"Inline_help_DE"|"Help_FR"|"Inline_help_FR"|"Help_EN"|"Inline_help_EN"
+2. fill in information: column "Field" <= members of the model class 'Material'
+3. pip install xlsx2csv
+4. xlsx2csv -d "|" help.xlsx raw.csv
+5. vim raw.csv:
+5.1. :%s/\([^|]*\)|/"\1"|/g
+5.2. :%s/|\([^"][^|]*\)/|"\1"/g
+5.3. :wq
+6. cp raw.csv help.csv
+7: PostgeSQL: delete from b11_1_helptooltip;
+8: PostgeSQL: \i /Users/yann/Prog/Python/LBA-b11-1/b11_1/pgsql/insert_helptooltips.txt;
