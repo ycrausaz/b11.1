@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-18 09:37+0100\n"
+"POT-Creation-Date: 2025-04-23 19:38+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -30,636 +30,759 @@ msgstr ""
 msgid "English"
 msgstr ""
 
-#: symm/models.py:16
+#: b11_1/forms.py:23
+msgid "Password must be at least 8 characters long."
+msgstr ""
+
+#: b11_1/forms.py:27
+msgid "Password must contain at least one uppercase letter."
+msgstr ""
+
+#: b11_1/forms.py:31
+msgid "Password must contain at least one lowercase letter."
+msgstr ""
+
+#: b11_1/forms.py:35
+msgid "Password must contain at least one digit."
+msgstr ""
+
+#: b11_1/forms.py:40
+msgid ""
+"Password must contain at least one special character (~!@#$"
+"%^&*()_+{}\":;'[])."
+msgstr ""
+
+#: b11_1/forms.py:65
+msgid "A user with this email already exists."
+msgstr ""
+
+#: b11_1/forms.py:95 b11_1/forms.py:247
+msgid "reCAPTCHA verification failed. Please try again."
+msgstr ""
+
+#: b11_1/forms.py:100 b11_1/forms.py:252
+msgid "reCAPTCHA score too low. Please try again."
+msgstr ""
+
+#: b11_1/forms.py:218
+msgid "This username is already taken."
+msgstr ""
+
+#: b11_1/forms.py:256 b11_1/templates/admin/logging.html:15
+msgid "Start Date"
+msgstr ""
+
+#: b11_1/forms.py:268 b11_1/templates/admin/logging.html:19
+msgid "End Date"
+msgstr ""
+
+#: b11_1/models.py:16
 msgid "ID"
 msgstr ""
 
-#: symm/models.py:172
+#: b11_1/models.py:65
+msgid "Help content (German)"
+msgstr ""
+
+#: b11_1/models.py:66
+msgid "Help content (French)"
+msgstr ""
+
+#: b11_1/models.py:67
+msgid "Help content (English)"
+msgstr ""
+
+#: b11_1/models.py:68
+msgid "Inline help (German)"
+msgstr ""
+
+#: b11_1/models.py:69
+msgid "Inline help (French)"
+msgstr ""
+
+#: b11_1/models.py:70
+msgid "Inline help (English)"
+msgstr ""
+
+#: b11_1/models.py:206
 msgid "Transfer Comment"
 msgstr ""
 
-#: symm/models.py:173
+#: b11_1/models.py:207
+msgid "Systemname"
+msgstr ""
+
+#: b11_1/models.py:208
 msgid "Positions-Nr."
 msgstr ""
 
-#: symm/models.py:174
+#: b11_1/models.py:209
+msgid "Referenz-Nr. Lieferant"
+msgstr ""
+
+#: b11_1/models.py:210
 msgid "Kurztext DE"
 msgstr ""
 
-#: symm/models.py:175
+#: b11_1/models.py:211
 msgid "Kurztext FR"
 msgstr ""
 
-#: symm/models.py:176
+#: b11_1/models.py:212
 msgid "Kurztext EN"
 msgstr ""
 
-#: symm/models.py:177
+#: b11_1/models.py:213
 msgid "Grunddatentext DE - 1. Zeile"
 msgstr ""
 
-#: symm/models.py:178
+#: b11_1/models.py:214
 msgid "Grunddatentext DE - 2. Zeile"
 msgstr ""
 
-#: symm/models.py:179
+#: b11_1/models.py:215
 msgid "Grunddatentext FR - 1. Zeile"
 msgstr ""
 
-#: symm/models.py:180
+#: b11_1/models.py:216
 msgid "Grunddatentext FR - 2. Zeile"
 msgstr ""
 
-#: symm/models.py:181
+#: b11_1/models.py:217
 msgid "Grunddatentext EN - 1. Zeile"
 msgstr ""
 
-#: symm/models.py:182
+#: b11_1/models.py:218
 msgid "Grunddatentext EN - 2. Zeile"
 msgstr ""
 
-#: symm/models.py:183
+#: b11_1/models.py:219
 msgid "Basismengeneinheit"
 msgstr ""
 
-#: symm/models.py:184
+#: b11_1/models.py:220
 msgid "Bruttogewicht"
 msgstr ""
 
-#: symm/models.py:185
+#: b11_1/models.py:221
 msgid "Gewichtseinheit"
 msgstr ""
 
-#: symm/models.py:186
+#: b11_1/models.py:222
 msgid "Nettogewicht"
 msgstr ""
 
-#: symm/models.py:187
+#: b11_1/models.py:223
 msgid "Grösse / Abmessung"
 msgstr ""
 
-#: symm/models.py:188
+#: b11_1/models.py:224
 msgid "EAN / UPC Code"
 msgstr ""
 
-#: symm/models.py:189
+#: b11_1/models.py:225
 msgid "Nato Stock Number"
 msgstr ""
 
-#: symm/models.py:190
+#: b11_1/models.py:226
 msgid "NSN Gruppe / Klasse"
 msgstr ""
 
-#: symm/models.py:191
+#: b11_1/models.py:227
 msgid "Nato Versorgungs-Nr."
 msgstr ""
 
-#: symm/models.py:192
+#: b11_1/models.py:228
 msgid "Herstellerteilenummer"
 msgstr ""
 
-#: symm/models.py:193
+#: b11_1/models.py:229
 msgid "Normbezeichnung"
 msgstr ""
 
-#: symm/models.py:194
+#: b11_1/models.py:230
 msgid "Gefahrgutkennzeichen"
 msgstr ""
 
-#: symm/models.py:195
+#: b11_1/models.py:231
 msgid "Instandsetzbar"
 msgstr ""
 
-#: symm/models.py:196
+#: b11_1/models.py:232
 msgid "Chargenpflicht"
 msgstr ""
 
-#: symm/models.py:197
+#: b11_1/models.py:233
 msgid "Bestellmengeneinheit"
 msgstr ""
 
-#: symm/models.py:198
+#: b11_1/models.py:234
 msgid "Mindestbestellmenge"
 msgstr ""
 
-#: symm/models.py:199
+#: b11_1/models.py:235
 msgid "Lieferzeit"
 msgstr ""
 
-#: symm/models.py:200
+#: b11_1/models.py:236
 msgid "Einheit L / B / H"
 msgstr ""
 
-#: symm/models.py:201
+#: b11_1/models.py:237
 msgid "Länge"
 msgstr ""
 
-#: symm/models.py:202
+#: b11_1/models.py:238
 msgid "Breite"
 msgstr ""
 
-#: symm/models.py:203
+#: b11_1/models.py:239
 msgid "Höhe"
 msgstr ""
 
-#: symm/models.py:204
+#: b11_1/models.py:240
 msgid "Preis"
 msgstr ""
 
-#: symm/models.py:205
+#: b11_1/models.py:241
 msgid "Währung"
 msgstr ""
 
-#: symm/models.py:206
+#: b11_1/models.py:242
 msgid "Preiseinheit"
 msgstr ""
 
-#: symm/models.py:207
+#: b11_1/models.py:243
 msgid "Lagerfähigkeit"
 msgstr ""
 
-#: symm/models.py:208
+#: b11_1/models.py:244
 msgid "Exportkontrollauflage"
 msgstr ""
 
-#: symm/models.py:209
+#: b11_1/models.py:245
 msgid "CAGE Code"
 msgstr ""
 
-#: symm/models.py:210
+#: b11_1/models.py:246
 msgid "Hersteller Name"
 msgstr ""
 
-#: symm/models.py:211
+#: b11_1/models.py:247
 msgid "Hersteller Adresse"
 msgstr ""
 
-#: symm/models.py:212
+#: b11_1/models.py:248
 msgid "Hersteller PLZ "
 msgstr ""
 
-#: symm/models.py:213
+#: b11_1/models.py:249
 msgid "Hersteller Ort"
 msgstr ""
 
-#: symm/models.py:214
+#: b11_1/models.py:250
 msgid "Revision"
 msgstr ""
 
-#: symm/models.py:215
+#: b11_1/models.py:251
 msgid "Bemerkung"
 msgstr ""
 
-#: symm/models.py:216
+#: b11_1/models.py:252
 msgid "BEGRU"
 msgstr ""
 
-#: symm/models.py:217
+#: b11_1/models.py:253
 msgid "Materialart"
 msgstr ""
 
-#: symm/models.py:218
+#: b11_1/models.py:254
 msgid "Sparte"
 msgstr ""
 
-#: symm/models.py:219
+#: b11_1/models.py:255
 msgid "Produkthierarchie"
 msgstr ""
 
-#: symm/models.py:220
+#: b11_1/models.py:256
 msgid "Materialzustandsverwaltung"
 msgstr ""
 
-#: symm/models.py:221
+#: b11_1/models.py:257
 msgid "Rückführungscode"
 msgstr ""
 
-#: symm/models.py:222
+#: b11_1/models.py:258
 msgid "Serialnummerprofil"
 msgstr ""
 
-#: symm/models.py:223
+#: b11_1/models.py:259
 msgid "Spare Part Class Code"
 msgstr ""
 
-#: symm/models.py:224
+#: b11_1/models.py:260
 msgid "Geschäftspartner"
 msgstr ""
 
-#: symm/models.py:225
+#: b11_1/models.py:261
 msgid "Warengruppe"
 msgstr ""
 
-#: symm/models.py:226
+#: b11_1/models.py:262
+msgid "Externe Warengruppe"
+msgstr ""
+
+#: b11_1/models.py:263
 msgid "Übersetzungsstatus"
 msgstr ""
 
-#: symm/models.py:227
+#: b11_1/models.py:264
 msgid "Endbevorratet"
 msgstr ""
 
-#: symm/models.py:228
+#: b11_1/models.py:265
 msgid "Revision Fremd"
 msgstr ""
 
-#: symm/models.py:229
+#: b11_1/models.py:266
 msgid "Revision Eigen"
 msgstr ""
 
-#: symm/models.py:230
+#: b11_1/models.py:267
 msgid "Zertifiziert für Flug"
 msgstr ""
 
-#: symm/models.py:231
+#: b11_1/models.py:268
 msgid "A-Nummer"
 msgstr ""
 
-#: symm/models.py:232
+#: b11_1/models.py:269
 msgid "Verteilung an PSD"
 msgstr ""
 
-#: symm/models.py:233
+#: b11_1/models.py:270
 msgid "Verteilung an RUAG"
 msgstr ""
 
-#: symm/models.py:234
+#: b11_1/models.py:271
 msgid "Werkzuordnung"
 msgstr ""
 
-#: symm/models.py:235
+#: b11_1/models.py:272
 msgid "Werkzuordnung (2)"
 msgstr ""
 
-#: symm/models.py:236
+#: b11_1/models.py:273
 msgid "Werkzuordnung (3)"
 msgstr ""
 
-#: symm/models.py:237
+#: b11_1/models.py:274
 msgid "Werkzuordnung (4)"
 msgstr ""
 
-#: symm/models.py:238
+#: b11_1/models.py:275
 msgid "Allgemeine Positionstypengruppe"
 msgstr ""
 
-#: symm/models.py:239
+#: b11_1/models.py:276
 msgid "Verkaufsorg."
 msgstr ""
 
-#: symm/models.py:240
+#: b11_1/models.py:277
 msgid "Vertriebsweg"
 msgstr ""
 
-#: symm/models.py:241
+#: b11_1/models.py:278
 msgid "Führendes Material"
 msgstr ""
 
-#: symm/models.py:242
+#: b11_1/models.py:279
 msgid "Auszeichnungsfeld"
 msgstr ""
 
-#: symm/models.py:243
+#: b11_1/models.py:280
 msgid "Fertigungssteuerer"
 msgstr ""
 
-#: symm/models.py:244
+#: b11_1/models.py:281
 msgid "Kennzeichen komplexes System"
 msgstr ""
 
-#: symm/models.py:245
+#: b11_1/models.py:282
 msgid "Sonderablauf"
 msgstr ""
 
-#: symm/models.py:246
+#: b11_1/models.py:283
 msgid "Temperaturbedingung"
 msgstr ""
 
-#: symm/models.py:247
+#: b11_1/models.py:284
 msgid "Bewertungsklasse"
 msgstr ""
 
-#: symm/models.py:248
+#: b11_1/models.py:285
 msgid "Systemmanager"
 msgstr ""
 
-#: symm/models.py:249
+#: b11_1/models.py:286
 msgid "Kennziffer BAMF"
 msgstr ""
 
-#: symm/models.py:250
+#: b11_1/models.py:287
 msgid "Mietrelevanz"
 msgstr ""
 
-#: symm/models.py:251
+#: b11_1/models.py:288
 msgid "Next Higher Assembly"
 msgstr ""
 
-#: symm/models.py:252
+#: b11_1/models.py:289
 msgid "Nachschubklasse"
 msgstr ""
 
-#: symm/models.py:253
+#: b11_1/models.py:290
 msgid "Materialeinstufung nach ZUVA"
 msgstr ""
 
-#: symm/models.py:254
+#: b11_1/models.py:291
 msgid "Orderbuchpflicht"
 msgstr ""
 
-#: symm/models.py:255
+#: b11_1/models.py:292
 msgid "Verteilung APM Kerda"
 msgstr ""
 
-#: symm/models.py:256
+#: b11_1/models.py:293
 msgid "Verteilung SVSAA"
 msgstr ""
 
-#: symm/models.py:257
+#: b11_1/models.py:294
 msgid "Verteilung CHEOPS"
 msgstr ""
 
-#: symm/models.py:258
+#: b11_1/models.py:295
 msgid "Zuteilung"
 msgstr ""
 
-#: symm/models.py:259
+#: b11_1/models.py:296
 msgid "Ausprägung"
 msgstr ""
 
-#: symm/models.py:260
+#: b11_1/models.py:297
 msgid "Preissteuerung"
 msgstr ""
 
-#: symm/models.py:261
+#: b11_1/models.py:298
 msgid "Preisermittlung"
 msgstr ""
 
-#: symm/templates/gd/update_material_gd.html:8
-#: symm/templates/il/update_material_il.html:8
-#: symm/templates/smda/update_material_smda.html:8
+#: b11_1/models.py:299
+msgid "Repararaturlokation"
+msgstr ""
+
+#: b11_1/templates/admin/logging.html:10
+msgid "Filter Log Entries"
+msgstr ""
+
+#: b11_1/templates/admin/logging.html:23
+msgid "Apply Filter"
+msgstr ""
+
+#: b11_1/templates/admin/logging.html:24
+msgid "Reset"
+msgstr ""
+
+#: b11_1/templates/admin/logging.html:26
+msgid "Export"
+msgstr ""
+
+#: b11_1/templates/admin/login_user.html:28
+msgid "login_email"
+msgstr "Adresse email"
+
+#: b11_1/templates/admin/login_user.html:32
+msgid "login_password"
+msgstr "Mot de passe"
+
+#: b11_1/templates/admin/login_user.html:37
+msgid "Zugriff beantragen"
+msgstr "Déposer une demande d'accès"
+
+#: b11_1/templates/gd/update_material_gd.html:9
+#: b11_1/templates/il/update_material_il.html:8
+#: b11_1/templates/smda/update_material_smda.html:9
 msgid "Material aktualisieren"
 msgstr "Mettre à jour le matériel"
 
-#: symm/templates/gd/update_material_gd.html:169
-#: symm/templates/il/update_material_il.html:122
-#: symm/templates/smda/update_material_smda.html:169
-msgid "Änderungen speichern"
-msgstr "Sauvegarder les modifications"
-
-#: symm/templates/gd/update_material_gd.html:170
-#: symm/templates/il/add_material_il.html:76
-#: symm/templates/il/update_material_il.html:123
-#: symm/templates/smda/update_material_smda.html:170
-msgid "Zurück ohne Speichern"
-msgstr "Retour sans sauvegarder"
-
-#: symm/templates/il/add_material_il.html:6
-msgid "New Material"
-msgstr "Nouveau matériel"
-
-#: symm/templates/il/add_material_il.html:51
-msgid "Attachments"
-msgstr ""
-
-#: symm/templates/il/add_material_il.html:61
-#: symm/templates/il/update_material_il.html:108
-msgid "Comment"
-msgstr ""
-
-#: symm/templates/il/add_material_il.html:70
-#: symm/templates/il/update_material_il.html:117
-msgid "Add Another Attachment"
-msgstr ""
-
-#: symm/templates/il/add_material_il.html:75
-msgid "Save"
-msgstr "Sauvegarder"
-
-#: symm/templates/il/list_material_il.html:6
-msgid "Materialliste"
-msgstr "Liste de matériel"
-
-#: symm/templates/il/list_material_il.html:19
-msgid "Momentan keine Angabe"
-msgstr "Actuellement aucune entrée"
-
-#: symm/templates/il/list_material_il.html:30
-msgid "Offenes/e Material/ien"
-msgstr "Matériel(s) ouvert(s)"
-
-#: symm/templates/il/list_material_il.html:72
-msgid "Übermitteln an die LBA"
-msgstr ""
-
-#: symm/templates/il/list_material_il.html:73
-msgid "Löschen"
-msgstr ""
-
-#: symm/templates/il/update_material_il.html:51
-msgid "Berechnete Felder"
-msgstr ""
-
-#: symm/templates/il/update_material_il.html:72
+#: b11_1/templates/gd/update_material_gd.html:152
+#: b11_1/templates/il/update_material_il.html:77
+#: b11_1/templates/smda/update_material_smda.html:152
 msgid "Existing Attachments"
 msgstr ""
 
-#: symm/templates/il/update_material_il.html:86
+#: b11_1/templates/gd/update_material_gd.html:166
+#: b11_1/templates/il/update_material_il.html:91
+#: b11_1/templates/smda/update_material_smda.html:166
 #: venv/lib/python3.12/site-packages/django/forms/formsets.py:499
 msgid "Delete"
 msgstr ""
 
-#: symm/templates/il/update_material_il.html:98
+#: b11_1/templates/gd/update_material_gd.html:178
+#: b11_1/templates/il/update_material_il.html:103
+#: b11_1/templates/smda/update_material_smda.html:178
 msgid "New Attachments"
 msgstr ""
 
-#: symm/templates/navbar_generic.html:36
+#: b11_1/templates/gd/update_material_gd.html:188
+#: b11_1/templates/il/add_material_il.html:65
+#: b11_1/templates/il/update_material_il.html:113
+#: b11_1/templates/smda/update_material_smda.html:188
+msgid "Comment"
+msgstr ""
+
+#: b11_1/templates/gd/update_material_gd.html:197
+#: b11_1/templates/il/add_material_il.html:74
+#: b11_1/templates/il/update_material_il.html:122
+#: b11_1/templates/smda/update_material_smda.html:197
+msgid "Add Another Attachment"
+msgstr ""
+
+#: b11_1/templates/gd/update_material_gd.html:203
+#: b11_1/templates/il/update_material_il.html:127
+#: b11_1/templates/smda/update_material_smda.html:203
+msgid "Änderungen speichern"
+msgstr "Sauvegarder les modifications"
+
+#: b11_1/templates/gd/update_material_gd.html:204
+#: b11_1/templates/il/add_material_il.html:80
+#: b11_1/templates/il/update_material_il.html:128
+#: b11_1/templates/smda/update_material_smda.html:204
+msgid "Zurück ohne Speichern"
+msgstr "Retour sans sauvegarder"
+
+#: b11_1/templates/il/add_material_il.html:8
+msgid "New Material"
+msgstr "Nouveau matériel"
+
+#: b11_1/templates/il/add_material_il.html:55
+msgid "Attachments"
+msgstr ""
+
+#: b11_1/templates/il/add_material_il.html:79
+msgid "Save"
+msgstr "Sauvegarder"
+
+#: b11_1/templates/il/list_material_il.html:6
+msgid "Materialliste"
+msgstr "Liste de matériel"
+
+#: b11_1/templates/il/list_material_il.html:19
+msgid "Momentan keine Angabe"
+msgstr "Actuellement aucune entrée"
+
+#: b11_1/templates/il/list_material_il.html:30
+msgid "Offenes/e Material/ien"
+msgstr "Matériel(s) ouvert(s)"
+
+#: b11_1/templates/il/list_material_il.html:72
+msgid "Übermitteln an die LBA"
+msgstr ""
+
+#: b11_1/templates/il/list_material_il.html:73
+msgid "Löschen"
+msgstr ""
+
+#: b11_1/templates/il/update_material_il.html:56
+msgid "Berechnete Felder"
+msgstr ""
+
+#: b11_1/templates/navbar_generic.html:38
 msgid "Material_nav"
 msgstr "Matériel"
 
-#: symm/templates/navbar_generic.html:39
+#: b11_1/templates/navbar_generic.html:41
 msgid "Materialliste_nav"
 msgstr "Liste de matériel"
 
-#: symm/templates/navbar_generic.html:40
+#: b11_1/templates/navbar_generic.html:42
 msgid "Neues Material definieren_nav"
 msgstr "Définir un nouveau matériel"
 
-#: symm/templates/navbar_generic.html:45
+#: b11_1/templates/navbar_generic.html:47
 msgid "Account_nav"
 msgstr "Compte"
 
-#: venv/lib/python3.12/site-packages/click/_termui_impl.py:518
+#: venv/lib/python3.12/site-packages/click/_termui_impl.py:556
 #, python-brace-format
 msgid "{editor}: Editing failed"
 msgstr ""
 
-#: venv/lib/python3.12/site-packages/click/_termui_impl.py:522
+#: venv/lib/python3.12/site-packages/click/_termui_impl.py:560
 #, python-brace-format
 msgid "{editor}: Editing failed: {e}"
 msgstr ""
 
-#: venv/lib/python3.12/site-packages/click/core.py:1120
+#: venv/lib/python3.12/site-packages/click/core.py:1124
 msgid "Aborted!"
 msgstr ""
 
-#: venv/lib/python3.12/site-packages/click/core.py:1309
-#: venv/lib/python3.12/site-packages/click/decorators.py:559
-msgid "Show this message and exit."
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/click/core.py:1340
-#: venv/lib/python3.12/site-packages/click/core.py:1370
+#: venv/lib/python3.12/site-packages/click/core.py:1349
+#: venv/lib/python3.12/site-packages/click/core.py:1379
 #, python-brace-format
 msgid "(Deprecated) {text}"
 msgstr ""
 
-#: venv/lib/python3.12/site-packages/click/core.py:1387
+#: venv/lib/python3.12/site-packages/click/core.py:1396
 msgid "Options"
 msgstr ""
 
-#: venv/lib/python3.12/site-packages/click/core.py:1413
+#: venv/lib/python3.12/site-packages/click/core.py:1422
 #, python-brace-format
 msgid "Got unexpected extra argument ({args})"
 msgid_plural "Got unexpected extra arguments ({args})"
 msgstr[0] ""
 msgstr[1] ""
 
-#: venv/lib/python3.12/site-packages/click/core.py:1429
+#: venv/lib/python3.12/site-packages/click/core.py:1438
 msgid "DeprecationWarning: The command {name!r} is deprecated."
 msgstr ""
 
-#: venv/lib/python3.12/site-packages/click/core.py:1636
+#: venv/lib/python3.12/site-packages/click/core.py:1645
 msgid "Commands"
 msgstr ""
 
-#: venv/lib/python3.12/site-packages/click/core.py:1668
+#: venv/lib/python3.12/site-packages/click/core.py:1677
 msgid "Missing command."
 msgstr ""
 
-#: venv/lib/python3.12/site-packages/click/core.py:1746
+#: venv/lib/python3.12/site-packages/click/core.py:1755
 msgid "No such command {name!r}."
 msgstr ""
 
-#: venv/lib/python3.12/site-packages/click/core.py:2310
+#: venv/lib/python3.12/site-packages/click/core.py:2313
 msgid "Value must be an iterable."
 msgstr ""
 
-#: venv/lib/python3.12/site-packages/click/core.py:2331
+#: venv/lib/python3.12/site-packages/click/core.py:2334
 #, python-brace-format
 msgid "Takes {nargs} values but 1 was given."
 msgid_plural "Takes {nargs} values but {len} were given."
 msgstr[0] ""
 msgstr[1] ""
 
-#: venv/lib/python3.12/site-packages/click/core.py:2778
+#: venv/lib/python3.12/site-packages/click/core.py:2783
 #, python-brace-format
 msgid "env var: {var}"
 msgstr ""
 
-#: venv/lib/python3.12/site-packages/click/core.py:2808
+#: venv/lib/python3.12/site-packages/click/core.py:2813
 msgid "(dynamic)"
 msgstr ""
 
-#: venv/lib/python3.12/site-packages/click/core.py:2821
+#: venv/lib/python3.12/site-packages/click/core.py:2828
 #, python-brace-format
 msgid "default: {default}"
 msgstr ""
 
-#: venv/lib/python3.12/site-packages/click/core.py:2834
+#: venv/lib/python3.12/site-packages/click/core.py:2841
 msgid "required"
 msgstr ""
 
-#: venv/lib/python3.12/site-packages/click/decorators.py:465
+#: venv/lib/python3.12/site-packages/click/decorators.py:457
 #, python-format
 msgid "%(prog)s, version %(version)s"
 msgstr ""
 
-#: venv/lib/python3.12/site-packages/click/decorators.py:528
+#: venv/lib/python3.12/site-packages/click/decorators.py:520
 msgid "Show the version and exit."
 msgstr ""
 
-#: venv/lib/python3.12/site-packages/click/exceptions.py:44
-#: venv/lib/python3.12/site-packages/click/exceptions.py:80
+#: venv/lib/python3.12/site-packages/click/decorators.py:541
+msgid "Show this message and exit."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/click/exceptions.py:49
+#: venv/lib/python3.12/site-packages/click/exceptions.py:88
 #, python-brace-format
 msgid "Error: {message}"
 msgstr ""
 
-#: venv/lib/python3.12/site-packages/click/exceptions.py:72
+#: venv/lib/python3.12/site-packages/click/exceptions.py:80
 #, python-brace-format
 msgid "Try '{command} {option}' for help."
 msgstr ""
 
-#: venv/lib/python3.12/site-packages/click/exceptions.py:121
+#: venv/lib/python3.12/site-packages/click/exceptions.py:129
 #, python-brace-format
 msgid "Invalid value: {message}"
 msgstr ""
 
-#: venv/lib/python3.12/site-packages/click/exceptions.py:123
+#: venv/lib/python3.12/site-packages/click/exceptions.py:131
 #, python-brace-format
 msgid "Invalid value for {param_hint}: {message}"
 msgstr ""
 
-#: venv/lib/python3.12/site-packages/click/exceptions.py:179
+#: venv/lib/python3.12/site-packages/click/exceptions.py:187
 msgid "Missing argument"
 msgstr ""
 
-#: venv/lib/python3.12/site-packages/click/exceptions.py:181
+#: venv/lib/python3.12/site-packages/click/exceptions.py:189
 msgid "Missing option"
 msgstr ""
 
-#: venv/lib/python3.12/site-packages/click/exceptions.py:183
+#: venv/lib/python3.12/site-packages/click/exceptions.py:191
 msgid "Missing parameter"
 msgstr ""
 
-#: venv/lib/python3.12/site-packages/click/exceptions.py:185
+#: venv/lib/python3.12/site-packages/click/exceptions.py:193
 #, python-brace-format
 msgid "Missing {param_type}"
 msgstr ""
 
-#: venv/lib/python3.12/site-packages/click/exceptions.py:192
+#: venv/lib/python3.12/site-packages/click/exceptions.py:200
 #, python-brace-format
 msgid "Missing parameter: {param_name}"
 msgstr ""
 
-#: venv/lib/python3.12/site-packages/click/exceptions.py:212
+#: venv/lib/python3.12/site-packages/click/exceptions.py:220
 #, python-brace-format
 msgid "No such option: {name}"
 msgstr ""
 
-#: venv/lib/python3.12/site-packages/click/exceptions.py:224
+#: venv/lib/python3.12/site-packages/click/exceptions.py:232
 #, python-brace-format
 msgid "Did you mean {possibility}?"
 msgid_plural "(Possible options: {possibilities})"
 msgstr[0] ""
 msgstr[1] ""
 
-#: venv/lib/python3.12/site-packages/click/exceptions.py:262
+#: venv/lib/python3.12/site-packages/click/exceptions.py:270
 msgid "unknown error"
 msgstr ""
 
-#: venv/lib/python3.12/site-packages/click/exceptions.py:269
+#: venv/lib/python3.12/site-packages/click/exceptions.py:277
 msgid "Could not open file {filename!r}: {message}"
 msgstr ""
 
-#: venv/lib/python3.12/site-packages/click/parser.py:231
+#: venv/lib/python3.12/site-packages/click/parser.py:233
 msgid "Argument {name!r} takes {nargs} values."
 msgstr ""
 
-#: venv/lib/python3.12/site-packages/click/parser.py:413
+#: venv/lib/python3.12/site-packages/click/parser.py:415
 msgid "Option {name!r} does not take a value."
 msgstr ""
 
-#: venv/lib/python3.12/site-packages/click/parser.py:474
+#: venv/lib/python3.12/site-packages/click/parser.py:476
 msgid "Option {name!r} requires an argument."
 msgid_plural "Option {name!r} requires {nargs} arguments."
 msgstr[0] ""
 msgstr[1] ""
 
-#: venv/lib/python3.12/site-packages/click/shell_completion.py:319
+#: venv/lib/python3.12/site-packages/click/shell_completion.py:326
 msgid "Shell completion is not supported for Bash versions older than 4.4."
 msgstr ""
 
-#: venv/lib/python3.12/site-packages/click/shell_completion.py:326
+#: venv/lib/python3.12/site-packages/click/shell_completion.py:333
 msgid "Couldn't detect Bash version, shell completion is not supported."
 msgstr ""
 
@@ -688,80 +811,79 @@ msgstr ""
 msgid "Press any key to continue..."
 msgstr ""
 
-#: venv/lib/python3.12/site-packages/click/types.py:266
+#: venv/lib/python3.12/site-packages/click/types.py:267
 #, python-brace-format
 msgid ""
 "Choose from:\n"
 "\t{choices}"
 msgstr ""
 
-#: venv/lib/python3.12/site-packages/click/types.py:298
+#: venv/lib/python3.12/site-packages/click/types.py:299
 msgid "{value!r} is not {choice}."
 msgid_plural "{value!r} is not one of {choices}."
 msgstr[0] ""
 msgstr[1] ""
 
-#: venv/lib/python3.12/site-packages/click/types.py:392
+#: venv/lib/python3.12/site-packages/click/types.py:393
 msgid "{value!r} does not match the format {format}."
 msgid_plural "{value!r} does not match the formats {formats}."
 msgstr[0] ""
 msgstr[1] ""
 
-#: venv/lib/python3.12/site-packages/click/types.py:414
+#: venv/lib/python3.12/site-packages/click/types.py:415
 msgid "{value!r} is not a valid {number_type}."
 msgstr ""
 
-#: venv/lib/python3.12/site-packages/click/types.py:470
+#: venv/lib/python3.12/site-packages/click/types.py:471
 #, python-brace-format
 msgid "{value} is not in the range {range}."
 msgstr ""
 
-#: venv/lib/python3.12/site-packages/click/types.py:611
+#: venv/lib/python3.12/site-packages/click/types.py:612
 msgid "{value!r} is not a valid boolean."
 msgstr ""
 
-#: venv/lib/python3.12/site-packages/click/types.py:635
+#: venv/lib/python3.12/site-packages/click/types.py:636
 msgid "{value!r} is not a valid UUID."
 msgstr ""
 
-#: venv/lib/python3.12/site-packages/click/types.py:822
+#: venv/lib/python3.12/site-packages/click/types.py:826
 msgid "file"
 msgstr ""
 
-#: venv/lib/python3.12/site-packages/click/types.py:824
+#: venv/lib/python3.12/site-packages/click/types.py:828
 msgid "directory"
 msgstr ""
 
-#: venv/lib/python3.12/site-packages/click/types.py:826
+#: venv/lib/python3.12/site-packages/click/types.py:830
 msgid "path"
 msgstr ""
 
-#: venv/lib/python3.12/site-packages/click/types.py:877
+#: venv/lib/python3.12/site-packages/click/types.py:881
 msgid "{name} {filename!r} does not exist."
 msgstr ""
 
-#: venv/lib/python3.12/site-packages/click/types.py:886
+#: venv/lib/python3.12/site-packages/click/types.py:890
 msgid "{name} {filename!r} is a file."
 msgstr ""
 
-#: venv/lib/python3.12/site-packages/click/types.py:894
-#, python-brace-format
-msgid "{name} '{filename}' is a directory."
+#: venv/lib/python3.12/site-packages/click/types.py:898
+msgid "{name} {filename!r} is a directory."
 msgstr ""
 
-#: venv/lib/python3.12/site-packages/click/types.py:903
+#: venv/lib/python3.12/site-packages/click/types.py:907
 msgid "{name} {filename!r} is not readable."
 msgstr ""
 
-#: venv/lib/python3.12/site-packages/click/types.py:912
+#: venv/lib/python3.12/site-packages/click/types.py:916
 msgid "{name} {filename!r} is not writable."
 msgstr ""
 
-#: venv/lib/python3.12/site-packages/click/types.py:921
+#: venv/lib/python3.12/site-packages/click/types.py:925
 msgid "{name} {filename!r} is not executable."
 msgstr ""
 
-#: venv/lib/python3.12/site-packages/click/types.py:988
+#: venv/lib/python3.12/site-packages/click/types.py:992
 #, python-brace-format
 msgid "{len_type} values are required, but {len_value} was given."
 msgid_plural "{len_type} values are required, but {len_value} were given."
@@ -810,84 +932,84 @@ msgstr ""
 msgid "Enter a valid domain name."
 msgstr ""
 
-#: venv/lib/python3.12/site-packages/django/core/validators.py:152
+#: venv/lib/python3.12/site-packages/django/core/validators.py:155
 #: venv/lib/python3.12/site-packages/django/forms/fields.py:768
 msgid "Enter a valid URL."
 msgstr ""
 
-#: venv/lib/python3.12/site-packages/django/core/validators.py:213
+#: venv/lib/python3.12/site-packages/django/core/validators.py:216
 msgid "Enter a valid integer."
 msgstr ""
 
-#: venv/lib/python3.12/site-packages/django/core/validators.py:224
+#: venv/lib/python3.12/site-packages/django/core/validators.py:227
 msgid "Enter a valid email address."
 msgstr ""
 
 #. Translators: "letters" means latin letters: a-z and A-Z.
-#: venv/lib/python3.12/site-packages/django/core/validators.py:307
+#: venv/lib/python3.12/site-packages/django/core/validators.py:310
 msgid ""
 "Enter a valid “slug” consisting of letters, numbers, underscores or hyphens."
 msgstr ""
 
-#: venv/lib/python3.12/site-packages/django/core/validators.py:315
+#: venv/lib/python3.12/site-packages/django/core/validators.py:318
 msgid ""
 "Enter a valid “slug” consisting of Unicode letters, numbers, underscores, or "
 "hyphens."
 msgstr ""
 
-#: venv/lib/python3.12/site-packages/django/core/validators.py:327
-#: venv/lib/python3.12/site-packages/django/core/validators.py:336
-#: venv/lib/python3.12/site-packages/django/core/validators.py:350
+#: venv/lib/python3.12/site-packages/django/core/validators.py:330
+#: venv/lib/python3.12/site-packages/django/core/validators.py:339
+#: venv/lib/python3.12/site-packages/django/core/validators.py:353
 #: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2215
 #, python-format
 msgid "Enter a valid %(protocol)s address."
 msgstr ""
 
-#: venv/lib/python3.12/site-packages/django/core/validators.py:329
+#: venv/lib/python3.12/site-packages/django/core/validators.py:332
 msgid "IPv4"
 msgstr ""
 
-#: venv/lib/python3.12/site-packages/django/core/validators.py:338
-#: venv/lib/python3.12/site-packages/django/utils/ipv6.py:30
+#: venv/lib/python3.12/site-packages/django/core/validators.py:341
+#: venv/lib/python3.12/site-packages/django/utils/ipv6.py:43
 msgid "IPv6"
 msgstr ""
 
-#: venv/lib/python3.12/site-packages/django/core/validators.py:352
+#: venv/lib/python3.12/site-packages/django/core/validators.py:355
 msgid "IPv4 or IPv6"
 msgstr ""
 
-#: venv/lib/python3.12/site-packages/django/core/validators.py:393
+#: venv/lib/python3.12/site-packages/django/core/validators.py:396
 msgid "Enter only digits separated by commas."
 msgstr ""
 
-#: venv/lib/python3.12/site-packages/django/core/validators.py:399
+#: venv/lib/python3.12/site-packages/django/core/validators.py:402
 #, python-format
 msgid "Ensure this value is %(limit_value)s (it is %(show_value)s)."
 msgstr ""
 
-#: venv/lib/python3.12/site-packages/django/core/validators.py:434
+#: venv/lib/python3.12/site-packages/django/core/validators.py:437
 #, python-format
 msgid "Ensure this value is less than or equal to %(limit_value)s."
 msgstr ""
 
-#: venv/lib/python3.12/site-packages/django/core/validators.py:443
+#: venv/lib/python3.12/site-packages/django/core/validators.py:446
 #, python-format
 msgid "Ensure this value is greater than or equal to %(limit_value)s."
 msgstr ""
 
-#: venv/lib/python3.12/site-packages/django/core/validators.py:452
+#: venv/lib/python3.12/site-packages/django/core/validators.py:455
 #, python-format
 msgid "Ensure this value is a multiple of step size %(limit_value)s."
 msgstr ""
 
-#: venv/lib/python3.12/site-packages/django/core/validators.py:459
+#: venv/lib/python3.12/site-packages/django/core/validators.py:462
 #, python-format
 msgid ""
 "Ensure this value is a multiple of step size %(limit_value)s, starting from "
 "%(offset)s, e.g. %(offset)s, %(valid_value1)s, %(valid_value2)s, and so on."
 msgstr ""
 
-#: venv/lib/python3.12/site-packages/django/core/validators.py:491
+#: venv/lib/python3.12/site-packages/django/core/validators.py:494
 #, python-format
 msgid ""
 "Ensure this value has at least %(limit_value)d character (it has "
@@ -898,7 +1020,7 @@ msgid_plural ""
 msgstr[0] ""
 msgstr[1] ""
 
-#: venv/lib/python3.12/site-packages/django/core/validators.py:509
+#: venv/lib/python3.12/site-packages/django/core/validators.py:512
 #, python-format
 msgid ""
 "Ensure this value has at most %(limit_value)d character (it has "
@@ -909,27 +1031,27 @@ msgid_plural ""
 msgstr[0] ""
 msgstr[1] ""
 
-#: venv/lib/python3.12/site-packages/django/core/validators.py:532
+#: venv/lib/python3.12/site-packages/django/core/validators.py:535
 #: venv/lib/python3.12/site-packages/django/forms/fields.py:359
 #: venv/lib/python3.12/site-packages/django/forms/fields.py:398
 msgid "Enter a number."
 msgstr ""
 
-#: venv/lib/python3.12/site-packages/django/core/validators.py:534
+#: venv/lib/python3.12/site-packages/django/core/validators.py:537
 #, python-format
 msgid "Ensure that there are no more than %(max)s digit in total."
 msgid_plural "Ensure that there are no more than %(max)s digits in total."
 msgstr[0] ""
 msgstr[1] ""
 
-#: venv/lib/python3.12/site-packages/django/core/validators.py:539
+#: venv/lib/python3.12/site-packages/django/core/validators.py:542
 #, python-format
 msgid "Ensure that there are no more than %(max)s decimal place."
 msgid_plural "Ensure that there are no more than %(max)s decimal places."
 msgstr[0] ""
 msgstr[1] ""
 
-#: venv/lib/python3.12/site-packages/django/core/validators.py:544
+#: venv/lib/python3.12/site-packages/django/core/validators.py:547
 #, python-format
 msgid ""
 "Ensure that there are no more than %(max)s digit before the decimal point."
@@ -938,23 +1060,23 @@ msgid_plural ""
 msgstr[0] ""
 msgstr[1] ""
 
-#: venv/lib/python3.12/site-packages/django/core/validators.py:615
+#: venv/lib/python3.12/site-packages/django/core/validators.py:618
 #, python-format
 msgid ""
 "File extension “%(extension)s” is not allowed. Allowed extensions are: "
 "%(allowed_extensions)s."
 msgstr ""
 
-#: venv/lib/python3.12/site-packages/django/core/validators.py:677
+#: venv/lib/python3.12/site-packages/django/core/validators.py:680
 msgid "Null characters are not allowed."
 msgstr ""
 
-#: venv/lib/python3.12/site-packages/django/db/models/base.py:1571
+#: venv/lib/python3.12/site-packages/django/db/models/base.py:1572
 #: venv/lib/python3.12/site-packages/django/forms/models.py:908
 msgid "and"
 msgstr ""
 
-#: venv/lib/python3.12/site-packages/django/db/models/base.py:1573
+#: venv/lib/python3.12/site-packages/django/db/models/base.py:1574
 #, python-format
 msgid "%(model_name)s with this %(field_labels)s already exists."
 msgstr ""
@@ -1314,11 +1436,11 @@ msgstr ""
 msgid "Enter a complete value."
 msgstr ""
 
-#: venv/lib/python3.12/site-packages/django/forms/fields.py:1329
+#: venv/lib/python3.12/site-packages/django/forms/fields.py:1332
 msgid "Enter a valid UUID."
 msgstr ""
 
-#: venv/lib/python3.12/site-packages/django/forms/fields.py:1359
+#: venv/lib/python3.12/site-packages/django/forms/fields.py:1362
 msgid "Enter a valid JSON."
 msgstr ""
 
@@ -1757,7 +1879,7 @@ msgctxt "alt. month"
 msgid "December"
 msgstr ""
 
-#: venv/lib/python3.12/site-packages/django/utils/ipv6.py:8
+#: venv/lib/python3.12/site-packages/django/utils/ipv6.py:20
 msgid "This is not a valid IPv6 address."
 msgstr ""
 
