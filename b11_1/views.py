@@ -388,8 +388,8 @@ class CustomLoginView(LoginView):
         print("profile = ", str(profile))
         profile.failed_login_attempts = 0  # Reset failed attempts on successful login
         profile.save()
-        if profile.is_first_login:
-            return redirect('password_change')
+#        if profile.is_first_login:
+#            return redirect('password_change')
         if self.request.user.groups.filter(name='grIL').exists():
             return redirect('list_material_il')
         elif self.request.user.groups.filter(name='grGD').exists():
@@ -465,7 +465,7 @@ class CustomPasswordChangeView(PasswordChangeView):
         messages.success(self.request, "Your password has been changed successfully.")
         response = super().form_valid(form)
         user = form.save()
-        user.profile.is_first_login = False
+#        user.profile.is_first_login = False
         user.profile.save()
         logger.info(f'User {user.email} changed his password.')
         return response
@@ -1264,7 +1264,7 @@ class RegisterView(FormView):
 
 class CompleteRegistrationView(View):
     """
-    Modified to include better debug information
+    Modified to include password confirmation and validation
     """
     template_name = 'registration/complete_registration.html'
 
@@ -1275,13 +1275,13 @@ class CompleteRegistrationView(View):
                 token_expiry__gt=timezone.now(),
                 user__is_active=False
             )
-            
+
             # Debug info
             print("\n" + "="*80)
             print(f"DEVELOPMENT MODE: Registration completion request for {profile.email}")
             print(f"Token valid until: {profile.token_expiry}")
             print("="*80 + "\n")
-            
+
             return render(request, self.template_name, {'token': token})
         except Profile.DoesNotExist:
             messages.error(request, 'Invalid or expired registration link.')
@@ -1296,26 +1296,48 @@ class CompleteRegistrationView(View):
             )
 
             password = request.POST.get('password')
-            if password:
-                user = profile.user
-                user.set_password(password)
-                user.is_active = True
-                user.save()
+            confirm_password = request.POST.get('confirm_password')
 
-                profile.registration_token = None
-                profile.token_expiry = None
-                profile.save()
-
-                # Debug successful registration completion
-                print("\n" + "="*80)
-                print(f"DEVELOPMENT MODE: Registration successfully completed for {user.email}")
-                print(f"User is now active and can log in with the password they set")
-                print("="*80 + "\n")
-
-                messages.success(request, 'Registration completed! You can now login.')
-                return redirect('login_user')
-            else:
+            # Server-side validation (even though we have client-side validation)
+            if not password:
                 messages.error(request, 'Please provide a password.')
+                return render(request, self.template_name, {'token': token})
+
+            if password != confirm_password:
+                messages.error(request, 'Passwords do not match.')
+                return render(request, self.template_name, {'token': token})
+
+            # Validate password complexity
+            if len(password) < 8:
+                messages.error(request, 'Password must be at least 8 characters long.')
+                return render(request, self.template_name, {'token': token})
+
+            if not any(char.isupper() for char in password):
+                messages.error(request, 'Password must contain at least one uppercase letter.')
+                return render(request, self.template_name, {'token': token})
+
+            if not any(char.islower() for char in password):
+                messages.error(request, 'Password must contain at least one lowercase letter.')
+                return render(request, self.template_name, {'token': token})
+
+            # All validations passed, set the password
+            user = profile.user
+            user.set_password(password)
+            user.is_active = True
+            user.save()
+
+            profile.registration_token = None
+            profile.token_expiry = None
+            profile.save()
+
+            # Debug successful registration completion
+            print("\n" + "="*80)
+            print(f"DEVELOPMENT MODE: Registration successfully completed for {user.email}")
+            print(f"User is now active and can log in with the password they set")
+            print("="*80 + "\n")
+
+            messages.success(request, 'Registration completed! You can now login.')
+            return redirect('login_user')
 
         except Profile.DoesNotExist:
             messages.error(request, 'Invalid or expired registration link.')

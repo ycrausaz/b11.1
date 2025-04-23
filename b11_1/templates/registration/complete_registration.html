@@ -1,17 +1,120 @@
-{# registration/complete_registration.html #}
-
 {% extends "base_generic.html" %}
 
 {% block content %}
 <div class="container mt-5">
     <h2>Complete Registration</h2>
-    <form method="post">
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <form method="post" id="registration-form">
         {% csrf_token %}
-        <div class="form-group">
+        <div class="form-group mb-3">
             <label for="password">Choose your password:</label>
-            <input type="password" name="password" class="form-control" required>
+            <input type="password" name="password" id="password" class="form-control" required>
         </div>
-        <button type="submit" class="btn btn-primary">Complete Registration</button>
+        <div class="form-group mb-3">
+            <label for="confirm_password">Confirm your password:</label>
+            <input type="password" name="confirm_password" id="confirm_password" class="form-control" required>
+        </div>
+
+        <div class="card mb-3">
+            <div class="card-header">Password Requirements</div>
+            <div class="card-body">
+                <ul class="list-group">
+                    <li class="list-group-item" id="length-check">
+                        <span class="text-danger">✗</span> At least 8 characters
+                    </li>
+                    <li class="list-group-item" id="uppercase-check">
+                        <span class="text-danger">✗</span> At least one uppercase letter
+                    </li>
+                    <li class="list-group-item" id="lowercase-check">
+                        <span class="text-danger">✗</span> At least one lowercase letter
+                    </li>
+                    <li class="list-group-item" id="match-check">
+                        <span class="text-danger">✗</span> Passwords match
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary" id="submit-btn" disabled>Complete Registration</button>
     </form>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const passwordField = document.getElementById('password');
+    const confirmPasswordField = document.getElementById('confirm_password');
+    const submitButton = document.getElementById('submit-btn');
+
+    const lengthCheck = document.getElementById('length-check');
+    const uppercaseCheck = document.getElementById('uppercase-check');
+    const lowercaseCheck = document.getElementById('lowercase-check');
+    const matchCheck = document.getElementById('match-check');
+
+    function validatePassword() {
+        const password = passwordField.value;
+        const confirmPassword = confirmPasswordField.value;
+
+        // Validate length
+        if (password.length >= 8) {
+            lengthCheck.innerHTML = '<span class="text-success">✓</span> At least 8 characters';
+            lengthCheck.classList.add('list-group-item-success');
+        } else {
+            lengthCheck.innerHTML = '<span class="text-danger">✗</span> At least 8 characters';
+            lengthCheck.classList.remove('list-group-item-success');
+        }
+
+        // Validate uppercase
+        if (/[A-Z]/.test(password)) {
+            uppercaseCheck.innerHTML = '<span class="text-success">✓</span> At least one uppercase letter';
+            uppercaseCheck.classList.add('list-group-item-success');
+        } else {
+            uppercaseCheck.innerHTML = '<span class="text-danger">✗</span> At least one uppercase letter';
+            uppercaseCheck.classList.remove('list-group-item-success');
+        }
+
+        // Validate lowercase
+        if (/[a-z]/.test(password)) {
+            lowercaseCheck.innerHTML = '<span class="text-success">✓</span> At least one lowercase letter';
+            lowercaseCheck.classList.add('list-group-item-success');
+        } else {
+            lowercaseCheck.innerHTML = '<span class="text-danger">✗</span> At least one lowercase letter';
+            lowercaseCheck.classList.remove('list-group-item-success');
+        }
+
+        // Validate matching passwords
+        if (password && password === confirmPassword) {
+            matchCheck.innerHTML = '<span class="text-success">✓</span> Passwords match';
+            matchCheck.classList.add('list-group-item-success');
+        } else {
+            matchCheck.innerHTML = '<span class="text-danger">✗</span> Passwords match';
+            matchCheck.classList.remove('list-group-item-success');
+        }
+
+        // Enable submit button if all checks pass
+        if (password.length >= 8 &&
+            /[A-Z]/.test(password) &&
+            /[a-z]/.test(password) &&
+            password === confirmPassword) {
+            submitButton.disabled = false;
+        } else {
+            submitButton.disabled = true;
+        }
+    }
+
+    // Add event listeners
+    passwordField.addEventListener('input', validatePassword);
+    confirmPasswordField.addEventListener('input', validatePassword);
+
+    // Initial validation
+    validatePassword();
+});
+</script>
 {% endblock %}
