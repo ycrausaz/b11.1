@@ -345,63 +345,125 @@ class RegisterView(FormView):
 class CustomLoginView(LoginView):
     template_name = 'admin/login_user.html'
 
-    def form_invalid(self, form):
-        username_field = form.cleaned_data.get('username')
-        print("email = ", str(username_field))
-        try:
-            user = User.objects.get(email=username_field)
-            print("user = ", str(user))
-            profile = user.profile
-            profile.failed_login_attempts += 1
-            profile.save()
-
-            if profile.failed_login_attempts >= 3:
-                # Rest of your code remains the same but replace email with email
-                current_site = get_current_site(self.request)
-                mail_subject = 'Reset your password'
-                uid = urlsafe_base64_encode(force_bytes(user.pk))
-                token = default_token_generator.make_token(user)
-                reset_link = reverse('password_reset_confirm', kwargs={'uidb64': uid, 'token': token})
-                reset_url = f'http://{current_site.domain}{reset_link}'
-                message = f'It seems you have failed to login 3 times. Please reset your password using the following link:\n{reset_url}'
-#                send_mail(mail_subject, message, settings.DEFAULT_FROM_EMAIL, [user.email])
-                logger.info(f'Password reset email sent to user: {email}')
-                logger.info(message)
-
-                messages.warning(
-                    self.request,
-                    "You have entered an incorrect password 3 times. "
-                    "A password reset link has been sent to your email."
-                )
-
-                profile.failed_login_attempts = 0
-                profile.save()
-            else:
-                messages.error(self.request, "Email und/oder Passwort ungültig.")
-        except User.DoesNotExist:
-            messages.error(self.request, "Email und/oder Passwort ungültig.")
-
-        return self.render_to_response(self.get_context_data(form=form))
-
     def form_valid(self, form):
-        response = super().form_valid(form)
-        profile, created = Profile.objects.get_or_create(user=self.request.user)
-        print("profile = ", str(profile))
-        profile.failed_login_attempts = 0  # Reset failed attempts on successful login
-        profile.save()
-#        if profile.is_first_login:
-#            return redirect('password_change')
-        if self.request.user.groups.filter(name='grIL').exists():
-            return redirect('list_material_il')
-        elif self.request.user.groups.filter(name='grGD').exists():
-            return redirect('list_material_gd')
-        elif self.request.user.groups.filter(name='grSMDA').exists():
-            return redirect('list_material_smda')
-        elif self.request.user.groups.filter(name='grLBA').exists():
-            return redirect('list_material_gd')
-        elif self.request.user.groups.filter(name='grAdmin').exists():
-            return redirect('logging')
-        return response
+        # Get the authenticated user
+        user = form.get_user()
+
+        # Check the user's profile status
+        try:
+            profile = user.profile
+
+            # Check if status is 'pending'
+            if profile.status == 'pending':
+                messages.error(
+                    self.request,
+                    "Your account is pending approval. Please wait for an administrator to approve your registration."
+                )
+                logger.info(f"Login attempt from pending user: {user.email}")
+                return self.render_to_response(self.get_context_data(form=form))
+
+            # Check if status is 'rejected'
+            elif profile.status == 'rejected':
+                messages.error(
+                    self.request,
+                    f"Your registration has been rejected."
+                )
+                logger.info(f"Login attempt from rejected user: {user.email}")
+                return self.render_to_response(self.get_context_data(form=form))
+
+            # If status is 'approved', proceed with login
+            elif profile.status == 'approved':
+                # Normal login flow for approved users
+                response = super().form_valid(form)
+                profile.failed_login_attempts = 0  # Reset failed attempts on successful login
+                profile.save()
+
+                # Your existing redirection logic
+                if self.request.user.groups.filter(name='grIL').exists():
+                    return redirect('list_material_il')
+                elif self.request.user.groups.filter(name='grGD').exists():
+                    return redirect('list_material_gd')
+                elif self.request.user.groups.filter(name='grSMDA').exists():
+                    return redirect('list_material_smda')
+                elif self.request.user.groups.filter(name='grLBA').exists():
+                    return redirect('list_material_gd')
+                elif self.request.user.groups.filter(name='grAdmin').exists():
+                    return redirect('logging')
+
+                return response
+
+            # Handle unexpected status values
+            else:
+                messages.error(
+                    self.request,
+                    "Your account has an unknown status. Please contact an administrator."
+                )
+                logger.warning(f"Login attempt from user with unknown status '{profile.status}': {user.email}")
+                return self.render_to_response(self.get_context_data(form=form))
+
+        except Profile.DoesNotExist:
+            # Handle users without profiles
+            messages.error(
+                self.request,
+                "Account configuration issue. Please contact the administrator."
+            )
+            logger.error(f"User without profile attempted login: {user.email}")
+            return self.render_to_response(self.get_context_data(form=form))
+
+    def form_invalid(self, form):
+        """
+        Handle invalid login attempts without showing duplicate error messages
+        """
+        username_field = form.cleaned_data.get('username')
+
+        # First check if this is a user in our system with a special status
+        if username_field:
+            try:
+                user = User.objects.get(email=username_field)
+
+                # If user exists, check their profile status
+                try:
+                    profile = user.profile
+
+                    # If the password is incorrect, handle failed attempts
+                    profile.failed_login_attempts += 1
+                    profile.save()
+
+                    # If too many failed attempts, send password reset link
+                    if profile.failed_login_attempts >= 3:
+                        current_site = get_current_site(self.request)
+                        mail_subject = 'Reset your password'
+                        uid = urlsafe_base64_encode(force_bytes(user.pk))
+                        token = default_token_generator.make_token(user)
+                        reset_link = reverse('password_reset_confirm', kwargs={'uidb64': uid, 'token': token})
+                        reset_url = f'http://{current_site.domain}{reset_link}'
+                        message = f'It seems you have failed to login 3 times. Please reset your password using the following link:\n{reset_url}'
+                        # Uncomment to enable sending emails
+                        # send_mail(mail_subject, message, settings.DEFAULT_FROM_EMAIL, [user.email])
+                        logger.info(f'Password reset email sent to user: {user.email}')
+                        logger.info(message)
+
+                        messages.warning(
+                            self.request,
+                            "You have entered an incorrect password 3 times. "
+                            "A password reset link has been sent to your email."
+                        )
+
+                        profile.failed_login_attempts = 0
+                        profile.save()
+                        return self.render_to_response(self.get_context_data(form=form))
+
+                except Profile.DoesNotExist:
+                    # User exists but profile doesn't
+                    logger.error(f"User without profile attempted login: {username_field}")
+
+            except User.DoesNotExist:
+                # User doesn't exist
+                pass
+
+        # For all other cases, show the standard error message
+        messages.error(self.request, "Email und/oder Passwort ungültig.")
+        return self.render_to_response(self.get_context_data(form=form))
 
     def get(self, request, *args, **kwargs):
         return render(request, 'admin/login_user.html', {})
