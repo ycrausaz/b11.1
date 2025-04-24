@@ -1,56 +1,55 @@
+{# admin/password_change.html #}
+
 {% extends "base_generic.html" %}
 
 {% block content %}
-<div class="container mt-5">
-    <h2>Complete Registration</h2>
+<h1>Password Change</h1>
+  {% if messages %}
+    <ul class="messages">
+      {% for message in messages %}
+        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
 
-    {% if messages %}
-        {% for message in messages %}
-            <div class="alert alert-{{ message.tags }}">
-                {{ message }}
-            </div>
-        {% endfor %}
-    {% endif %}
+    <div class="card mb-3">
+      <div class="card-header">Password Requirements</div>
+      <div class="card-body">
+        <ul class="list-group">
+          <li class="list-group-item" id="length-check">
+            <span class="text-danger">✗</span> At least 8 characters
+          </li>
+          <li class="list-group-item" id="uppercase-check">
+            <span class="text-danger">✗</span> At least one uppercase letter
+          </li>
+          <li class="list-group-item" id="lowercase-check">
+            <span class="text-danger">✗</span> At least one lowercase letter
+          </li>
+          <li class="list-group-item" id="match-check">
+            <span class="text-danger">✗</span> Passwords match
+          </li>
+        </ul>
+      </div>
+    </div>
 
-    <form method="post" id="registration-form">
-        {% csrf_token %}
-        <div class="form-group mb-3">
-            <label for="password">Choose your password:</label>
-            <input type="password" name="password" id="password" class="form-control" required>
-        </div>
-        <div class="form-group mb-3">
-            <label for="confirm_password">Confirm your password:</label>
-            <input type="password" name="confirm_password" id="confirm_password" class="form-control" required>
-        </div>
-
-        <div class="card mb-3">
-            <div class="card-header">Password Requirements</div>
-            <div class="card-body">
-                <ul class="list-group">
-                    <li class="list-group-item" id="length-check">
-                        <span class="text-danger">✗</span> At least 8 characters
-                    </li>
-                    <li class="list-group-item" id="uppercase-check">
-                        <span class="text-danger">✗</span> At least one uppercase letter
-                    </li>
-                    <li class="list-group-item" id="lowercase-check">
-                        <span class="text-danger">✗</span> At least one lowercase letter
-                    </li>
-                    <li class="list-group-item" id="match-check">
-                        <span class="text-danger">✗</span> Passwords match
-                    </li>
-                </ul>
-            </div>
-        </div>
-
-        <button type="submit" class="btn btn-primary" id="submit-btn" disabled>Complete Registration</button>
-    </form>
-</div>
+    <br/>
+    <button type="submit" id="submit-btn">Change my password</button>
+  </form>
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    const passwordField = document.getElementById('password');
-    const confirmPasswordField = document.getElementById('confirm_password');
+document.addEventListener("DOMContentLoaded", function() {
+    // Focus on first field
+    const focusField = document.getElementById("focusField");
+    if (focusField) {
+        focusField.focus();
+    }
+
+    // Password validation logic from complete_registration.html
+    const passwordField = document.getElementById('id_new_password1');
+    const confirmPasswordField = document.getElementById('id_new_password2');
     const submitButton = document.getElementById('submit-btn');
 
     const lengthCheck = document.getElementById('length-check');
@@ -110,11 +109,16 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Add event listeners
-    passwordField.addEventListener('input', validatePassword);
-    confirmPasswordField.addEventListener('input', validatePassword);
+    if (passwordField && confirmPasswordField) {
+        passwordField.addEventListener('input', validatePassword);
+        confirmPasswordField.addEventListener('input', validatePassword);
 
-    // Initial validation
-    validatePassword();
+        // Disable the submit button initially
+        submitButton.disabled = true;
+
+        // Initial validation
+        validatePassword();
+    }
 });
 </script>
 {% endblock %}

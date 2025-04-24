@@ -12,6 +12,67 @@ import logging
 
 logger = logging.getLogger(__name__)
 
+# In forms.py - Update the widget IDs
+class RegistrationPasswordForm(forms.Form):
+    """Form for setting password during registration"""
+    new_password1 = forms.CharField(
+        label=_("New password"),
+        widget=forms.PasswordInput(attrs={'class': 'form-control', 'id': 'id_new_password1'}),
+        strip=False,
+    )
+    new_password2 = forms.CharField(
+        label=_("Confirm new password"),
+        widget=forms.PasswordInput(attrs={'class': 'form-control', 'id': 'id_new_password2'}),
+        strip=False,
+    )
+
+    def __init__(self, user=None, *args, **kwargs):
+        self.user = user
+        super().__init__(*args, **kwargs)
+
+    def clean(self):
+        cleaned_data = super().clean()
+
+        # This ensures the individual field cleaners are called
+        if 'new_password1' in cleaned_data:
+            self.clean_new_password1()
+        if 'new_password2' in cleaned_data:
+            self.clean_new_password2()
+
+        return cleaned_data
+
+    def clean_new_password1(self):
+        print("clean_new_password1 called")  # Debug message
+        password = self.cleaned_data.get('new_password1')
+
+        errors = []
+
+        # Validation rules
+        if len(password) < 8:
+            errors.append(_("Password must be at least 8 characters long."))
+
+        if not any(char.isupper() for char in password):
+            errors.append(_("Password must contain at least one uppercase letter."))
+
+        if not any(char.islower() for char in password):
+            errors.append(_("Password must contain at least one lowercase letter."))
+
+        # Raise all errors if any
+        if errors:
+            for error in errors:
+                print(f"Validation error: {error}")  # Debug message
+            raise ValidationError(errors)
+
+        return password
+
+    def clean_new_password2(self):
+        print("clean_new_password2")
+        password1 = self.cleaned_data.get('new_password1')
+        password2 = self.cleaned_data.get('new_password2')
+        if password1 and password2 and password1 != password2:
+            raise ValidationError(_("The two password fields didn't match."))
+        return password2
+
 class CustomPasswordResetForm(SetPasswordForm):
     """
     Custom form for resetting passwords with enhanced validation

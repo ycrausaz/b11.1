@@ -1,6 +1,6 @@
 # views.py
 
-from django.contrib.auth.views import LoginView, PasswordChangeView
+from django.contrib.auth.views import LoginView, PasswordChangeView, PasswordResetConfirmView
 from django.shortcuts import render, redirect
 from django.core.paginator import Paginator
 from django.views.generic import ListView, DetailView
@@ -33,6 +33,7 @@ from django.template import RequestContext
 from .forms import CustomPasswordChangeForm
 from .forms import CustomPasswordResetForm
 from .forms import EmailVerificationForm
+from .forms import RegistrationPasswordForm
 from b11_1.models import Profile, Material
 from django.contrib.auth.models import User, Group
 from django.core.exceptions import ObjectDoesNotExist
@@ -1262,87 +1263,52 @@ class RegisterView(FormView):
     
         return render(request, self.template_name, {'form': form, 'email': request.session.get('verified_email')})
 
-class CompleteRegistrationView(View):
-    """
-    Modified to include password confirmation and validation
-    """
-    template_name = 'registration/complete_registration.html'
+class CompleteRegistrationView(FormView):
+    template_name = 'admin/password_change.html'
+    form_class = RegistrationPasswordForm
+    success_url = reverse_lazy('login_user')
 
-    def get(self, request, token):
+    def dispatch(self, request, *args, **kwargs):
+        token = kwargs.get('token')
         try:
-            profile = Profile.objects.get(
+            self.profile = Profile.objects.get(
                 registration_token=token,
                 token_expiry__gt=timezone.now(),
                 user__is_active=False
             )
-
-            # Debug info
-            print("\n" + "="*80)
-            print(f"DEVELOPMENT MODE: Registration completion request for {profile.email}")
-            print(f"Token valid until: {profile.token_expiry}")
-            print("="*80 + "\n")
-
-            return render(request, self.template_name, {'token': token})
+            # Store the user in the view instance
+            self.user = self.profile.user
+            return super().dispatch(request, *args, **kwargs)
         except Profile.DoesNotExist:
             messages.error(request, 'Invalid or expired registration link.')
             return redirect('login_user')
 
-    def post(self, request, token):
-        try:
-            profile = Profile.objects.get(
-                registration_token=token,
-                token_expiry__gt=timezone.now(),
-                user__is_active=False
-            )
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        # Pass the user to the form
+        kwargs['user'] = self.user
+        return kwargs
 
-            password = request.POST.get('password')
-            confirm_password = request.POST.get('confirm_password')
+    def form_valid(self, form):
+        # Set the new password
+        self.user.set_password(form.cleaned_data['new_password1'])
+        self.user.is_active = True
+        self.user.save()
 
-            # Server-side validation (even though we have client-side validation)
-            if not password:
-                messages.error(request, 'Please provide a password.')
-                return render(request, self.template_name, {'token': token})
+        # Update the profile
+        self.profile.registration_token = None
+        self.profile.token_expiry = None
+        self.profile.save()
 
-            if password != confirm_password:
-                messages.error(request, 'Passwords do not match.')
-                return render(request, self.template_name, {'token': token})
+        messages.success(self.request, 'Registration completed! You can now login.')
+        return super().form_valid(form)
 
-            # Validate password complexity
-            if len(password) < 8:
-                messages.error(request, 'Password must be at least 8 characters long.')
-                return render(request, self.template_name, {'token': token})
-
-            if not any(char.isupper() for char in password):
-                messages.error(request, 'Password must contain at least one uppercase letter.')
-                return render(request, self.template_name, {'token': token})
-
-            if not any(char.islower() for char in password):
-                messages.error(request, 'Password must contain at least one lowercase letter.')
-                return render(request, self.template_name, {'token': token})
-
-            # All validations passed, set the password
-            user = profile.user
-            user.set_password(password)
-            user.is_active = True
-            user.save()
-
-            profile.registration_token = None
-            profile.token_expiry = None
-            profile.save()
-
-            # Debug successful registration completion
-            print("\n" + "="*80)
-            print(f"DEVELOPMENT MODE: Registration successfully completed for {user.email}")
-            print(f"User is now active and can log in with the password they set")
-            print("="*80 + "\n")
-
-            messages.success(request, 'Registration completed! You can now login.')
-            return redirect('login_user')
-
-        except Profile.DoesNotExist:
-            messages.error(request, 'Invalid or expired registration link.')
-
-        return render(request, self.template_name, {'token': token})
+    def form_invalid(self, form):
+        # Display form errors as messages
+        for field, errors in form.errors.items():
+            for error in errors:
+                messages.error(self.request, error)
+        return super().form_invalid(form)
 
 class PendingRegistrationsView(grAdmin_GroupRequiredMixin, ListView):
     model = Profile
