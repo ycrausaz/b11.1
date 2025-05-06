@@ -249,98 +249,98 @@ class VerifyEmailView(View):
         # Redirect to registration form without email parameter
         return redirect('register')
 
-class RegisterView(FormView):
-    """
-    Main registration form view
-    """
-    template_name = 'registration/register.html'
-    form_class = UserRegistrationForm
-
-    # In RegisterView class, add this method:
-    def get(self, request, *args, **kwargs):
-        # Debug the session data when rendering the form
-        print("\n" + "="*80)
-        print("DEBUG: RegisterView.get method called")
-        print(f"Session key: {request.session.session_key}")
-        print(f"verified_email in session: {request.session.get('verified_email')}")
-        print(f"Full session data: {dict(request.session)}")
-        print("="*80 + "\n")
-        
-        form = self.get_form()
-        return self.render_to_response(self.get_context_data(form=form))
-
-    def dispatch(self, request, *args, **kwargs):
-        # Check if email is in session
-        if not request.session.get('verified_email'):
-            messages.error(request, "Please verify your email address first.")
-            return redirect('pre_register')
-        return super().dispatch(request, *args, **kwargs)
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        
-        # Try getting from session first
-        email_from_session = self.request.session.get('verified_email')
-        
-        # If not in session, check if it might be in GET params (as fallback)
-        email_from_url = self.request.GET.get('verified_email')
-        
-        # Debug information
-        print("\n" + "="*80)
-        print(f"Email from session: {email_from_session}")
-        print(f"Email from URL param: {email_from_url}")
-        print("="*80 + "\n")
-        
-        # Use session value if available, otherwise try URL param
-        email = email_from_session or email_from_url
-        
-        context['email'] = email
-        context['recaptcha_site_key'] = getattr(settings, 'RECAPTCHA_PUBLIC_KEY', 'dummy_key')
-        context['settings'] = settings
-        
-        return context
-    
-    def form_valid(self, form):
-        try:
-            with transaction.atomic():
-                email = self.request.session.get('verified_email')
-                
-                # Create user (inactive until approved)
-                user = User.objects.create(
-                    username=email,  # Set username to email
-                    email=email,  # Set email to email
-                    first_name=form.cleaned_data['first_name'],
-                    last_name=form.cleaned_data['last_name'],
-                    is_active=False
-                )
-                
-                # Create profile
-                profile = form.save(commit=False)
-                profile.user = user
-                profile.email = email
-                profile.registration_token = get_random_string(50)
-                profile.token_expiry = timezone.now() + timedelta(days=2)
-                profile.status = 'pending'
-                profile.save()
-                
-                # Clear verification data from session
-                if 'email_verification' in self.request.session:
-                    del self.request.session['email_verification']
-                    
-                # Add this cleanup code here
-                if 'verified_email' in self.request.session:
-                    del self.request.session['verified_email']
-                self.request.session.modified = True
-                
-                messages.success(self.request, 'Registration submitted successfully! Please wait for administrator approval.')
-                logger.info(f"New user registration pending approval: {email}")
-                
-                return redirect('login_user')
-                
-        except Exception as e:
-            logger.error(f"Error during registration: {str(e)}")
-            messages.error(self.request, f"An error occurred during registration: {str(e)}")
-            return self.form_invalid(form)
+#class RegisterView(FormView):
+#    """
+#    Main registration form view
+#    """
+#    template_name = 'registration/register.html'
+#    form_class = UserRegistrationForm
+#
+#    # In RegisterView class, add this method:
+#    def get(self, request, *args, **kwargs):
+#        # Debug the session data when rendering the form
+#        print("\n" + "="*80)
+#        print("DEBUG: RegisterView.get method called")
+#        print(f"Session key: {request.session.session_key}")
+#        print(f"verified_email in session: {request.session.get('verified_email')}")
+#        print(f"Full session data: {dict(request.session)}")
+#        print("="*80 + "\n")
+#        
+#        form = self.get_form()
+#        return self.render_to_response(self.get_context_data(form=form))
+#
+#    def dispatch(self, request, *args, **kwargs):
+#        # Check if email is in session
+#        if not request.session.get('verified_email'):
+#            messages.error(request, "Please verify your email address first.")
+#            return redirect('pre_register')
+#        return super().dispatch(request, *args, **kwargs)
+#
+#    def get_context_data(self, **kwargs):
+#        context = super().get_context_data(**kwargs)
+#        
+#        # Try getting from session first
+#        email_from_session = self.request.session.get('verified_email')
+#        
+#        # If not in session, check if it might be in GET params (as fallback)
+#        email_from_url = self.request.GET.get('verified_email')
+#        
+#        # Debug information
+#        print("\n" + "="*80)
+#        print(f"Email from session: {email_from_session}")
+#        print(f"Email from URL param: {email_from_url}")
+#        print("="*80 + "\n")
+#        
+#        # Use session value if available, otherwise try URL param
+#        email = email_from_session or email_from_url
+#        
+#        context['email'] = email
+#        context['recaptcha_site_key'] = getattr(settings, 'RECAPTCHA_PUBLIC_KEY', 'dummy_key')
+#        context['settings'] = settings
+#        
+#        return context
+#    
+#    def form_valid(self, form):
+#        try:
+#            with transaction.atomic():
+#                email = self.request.session.get('verified_email')
+#                
+#                # Create user (inactive until approved)
+#                user = User.objects.create(
+#                    username=email,  # Set username to email
+#                    email=email,  # Set email to email
+#                    first_name=form.cleaned_data['first_name'],
+#                    last_name=form.cleaned_data['last_name'],
+#                    is_active=False
+#                )
+#                
+#                # Create profile
+#                profile = form.save(commit=False)
+#                profile.user = user
+#                profile.email = email
+#                profile.registration_token = get_random_string(50)
+#                profile.token_expiry = timezone.now() + timedelta(days=2)
+#                profile.status = 'pending'
+#                profile.save()
+#                
+#                # Clear verification data from session
+#                if 'email_verification' in self.request.session:
+#                    del self.request.session['email_verification']
+#                    
+#                # Add this cleanup code here
+#                if 'verified_email' in self.request.session:
+#                    del self.request.session['verified_email']
+#                self.request.session.modified = True
+#                
+#                messages.success(self.request, 'Registration submitted successfully! Please wait for administrator approval.')
+#                logger.info(f"New user registration pending approval: {email}")
+#                
+#                return redirect('login_user')
+#                
+#        except Exception as e:
+#            logger.error(f"Error during registration: {str(e)}")
+#            messages.error(self.request, f"An error occurred during registration: {str(e)}")
+#            return self.form_invalid(form)
 
 class CustomLoginView(LoginView):
     template_name = 'admin/login_user.html'
