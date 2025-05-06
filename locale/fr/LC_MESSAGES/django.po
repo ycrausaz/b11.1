@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-06 13:30+0200\n"
+"POT-Creation-Date: 2025-05-06 15:55+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -627,6 +627,22 @@ msgstr "Définir un nouveau matériel"
 #: b11_1/templates/navbar_generic.html:47
 msgid "Account_nav"
 msgstr "Compte"
+
+#: b11_1/templates/registration/pre_register.html:13
+msgid "Registration - Email Verification"
+msgstr "Inscription - Vérification de l'adresse e-mail"
+
+#: b11_1/templates/registration/pre_register.html:26
+msgid "Please enter"
+msgstr "Veuillez saisir votre adresse électronique pour lancer la procédure d'enregistrement. Un lien de vérification vous sera envoyé par courriel."
+
+#: b11_1/templates/registration/pre_register.html:32
+msgid "Email Address"
+msgstr "Adresse électronique"
+
+#: b11_1/templates/registration/pre_register.html:46
+msgid "Send Verification Email"
+msgstr "Envoyer un e-mail de vérification"
 
 #: venv/lib/python3.12/site-packages/click/_termui_impl.py:556
 #, python-brace-format

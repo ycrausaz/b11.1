@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-06 13:30+0200\n"
+"POT-Creation-Date: 2025-05-06 15:55+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -628,6 +628,22 @@ msgstr "Neues Material definieren"
 msgid "Account_nav"
 msgstr "Account"
 
+#: b11_1/templates/registration/pre_register.html:13
+msgid "Registration - Email Verification"
+msgstr "Registrierung - E-Mail-Bestätigung"
+
+#: b11_1/templates/registration/pre_register.html:26
+msgid "Please enter"
+msgstr "Bitte geben Sie Ihre E-Mail-Adresse ein, um den Registrierungsprozess zu starten. Ein Verifizierungslink wird an Ihre E-Mail gesendet."
+
+#: b11_1/templates/registration/pre_register.html:32
+msgid "Email Address"
+msgstr "E-Mail Adresse"
+
+#: b11_1/templates/registration/pre_register.html:46
+msgid "Send Verification Email"
+msgstr "Bestätigungs-E-Mail senden"
+
 #: venv/lib/python3.12/site-packages/click/_termui_impl.py:556
 #, python-brace-format
 msgid "{editor}: Editing failed"
@@ -1219,7 +1235,7 @@ msgstr ""
 
 #: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1915
 msgid "Email address"
-msgstr ""
+msgstr "E-Mail-Adresse"
 
 #: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1940
 msgid "File path"

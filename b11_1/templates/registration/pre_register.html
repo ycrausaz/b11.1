@@ -1,6 +1,7 @@
 {# registration/pre_register.html #}
 
 {% extends "base_generic.html" %}
+{% load i18n %}
 {% load static %}
 
 {% block content %}
@@ -9,7 +10,7 @@
         <div class="col-md-8">
             <div class="card">
                 <div class="card-header">
-                    <h2 class="text-center">Registration - Email Verification</h2>
+                    <h2 class="text-center">{% trans "Registration - Email Verification" %}</h2>
                 </div>
                 <div class="card-body">
                     {% if messages %}
@@ -22,12 +23,12 @@
                     </div>
                     {% endif %}
 
-                    <p class="mb-4">Please enter your email address to start the registration process. A verification link will be sent to your email.</p>
+                    <p class="mb-4">{% trans "Please enter" %}</p>
 
                     <form method="post" novalidate>
                         {% csrf_token %}
                         <div class="form-group mb-3">
-                            <label for="email" class="form-label">Email Address <span class="required">*</span></label>
+                            <label for="email" class="form-label">{% trans "Email Address"%}<span class="required">*</span></label>
                             <input type="email" name="email" id="email" class="form-control" required>
                             {% if form.email.errors %}
                             <div class="alert alert-danger mt-1">
@@ -40,7 +41,7 @@
                         <input type="hidden" name="recaptcha_token" id="recaptchaToken" value="development_token">
                         
                         <div class="d-grid gap-2">
-                            <button type="submit" class="btn btn-primary">Send Verification Email</button>
+                            <button type="submit" class="btn btn-primary">{% trans "Send Verification Email" %}</button>
                         </div>
                     </form>
                     
