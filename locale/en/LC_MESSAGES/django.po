@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-04-23 19:38+0200\n"
+"POT-Creation-Date: 2025-05-06 13:30+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -30,49 +30,65 @@ msgstr ""
 msgid "English"
 msgstr ""
 
-#: b11_1/forms.py:23
+#: b11_1/forms.py:20
+#, fuzzy
+#| msgid "login_password"
+msgid "New password"
+msgstr "Password"
+
+#: b11_1/forms.py:25
+#, fuzzy
+#| msgid "login_password"
+msgid "Confirm new password"
+msgstr "Password"
+
+#: b11_1/forms.py:53 b11_1/forms.py:85
 msgid "Password must be at least 8 characters long."
 msgstr ""
 
-#: b11_1/forms.py:27
+#: b11_1/forms.py:56 b11_1/forms.py:89
 msgid "Password must contain at least one uppercase letter."
 msgstr ""
 
-#: b11_1/forms.py:31
+#: b11_1/forms.py:59 b11_1/forms.py:93
 msgid "Password must contain at least one lowercase letter."
 msgstr ""
 
-#: b11_1/forms.py:35
+#: b11_1/forms.py:74
+msgid "The two password fields didn't match."
+msgstr ""
+
+#: b11_1/forms.py:97
 msgid "Password must contain at least one digit."
 msgstr ""
 
-#: b11_1/forms.py:40
+#: b11_1/forms.py:102
 msgid ""
 "Password must contain at least one special character (~!@#$"
 "%^&*()_+{}\":;'[])."
 msgstr ""
 
-#: b11_1/forms.py:65
+#: b11_1/forms.py:127
 msgid "A user with this email already exists."
 msgstr ""
 
-#: b11_1/forms.py:95 b11_1/forms.py:247
+#: b11_1/forms.py:157 b11_1/forms.py:309
 msgid "reCAPTCHA verification failed. Please try again."
 msgstr ""
 
-#: b11_1/forms.py:100 b11_1/forms.py:252
+#: b11_1/forms.py:162 b11_1/forms.py:314
 msgid "reCAPTCHA score too low. Please try again."
 msgstr ""
 
-#: b11_1/forms.py:218
+#: b11_1/forms.py:280
 msgid "This username is already taken."
 msgstr ""
 
-#: b11_1/forms.py:256 b11_1/templates/admin/logging.html:15
+#: b11_1/forms.py:318 b11_1/templates/admin/logging.html:15
 msgid "Start Date"
 msgstr ""
 
-#: b11_1/forms.py:268 b11_1/templates/admin/logging.html:19
+#: b11_1/forms.py:330 b11_1/templates/admin/logging.html:19
 msgid "End Date"
 msgstr ""
 
@@ -518,7 +534,7 @@ msgstr "Update material"
 #: b11_1/templates/il/update_material_il.html:77
 #: b11_1/templates/smda/update_material_smda.html:152
 msgid "Existing Attachments"
-msgstr ""
+msgstr "Existing attachments"
 
 #: b11_1/templates/gd/update_material_gd.html:166
 #: b11_1/templates/il/update_material_il.html:91
@@ -531,7 +547,7 @@ msgstr ""
 #: b11_1/templates/il/update_material_il.html:103
 #: b11_1/templates/smda/update_material_smda.html:178
 msgid "New Attachments"
-msgstr ""
+msgstr "New attachments"
 
 #: b11_1/templates/gd/update_material_gd.html:188
 #: b11_1/templates/il/add_material_il.html:65
