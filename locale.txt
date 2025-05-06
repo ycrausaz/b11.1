@@ -1,0 +1,2 @@
+vim locale/de/LC_MESSAGES/django.po locale/fr/LC_MESSAGES/django.po locale/en/LC_MESSAGES/django.po
+django-admin compilemessages; python manage.py runserver
