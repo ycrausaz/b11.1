@@ -106,7 +106,7 @@ document.addEventListener('DOMContentLoaded', function() {
             {% for mat in list_material_archived %}
                 <tr>
                     <td><input type="checkbox" name="selected_materials" value="{{ mat.id }}" class="material-checkbox" data-form-id="2"></td>
-                    <td>{{ mat.positions_nr }} <a href="{% url 'show_material_gd' mat.id %}">{{ mat.kurztext_de }}</a> ({{ mat.hersteller }})</td>
+                    <td><a href="{% url 'show_material_gd' mat.id %}">{{ mat.kurztext_de }}</a> ({{ mat.hersteller }})</td>
                 </tr>
             {% endfor %}
         </tbody>
