@@ -3,7 +3,7 @@
 from django.views.i18n import JavaScriptCatalog
 from django.urls import include, path
 from . import views
-from .views import (CustomLoginView, UserLogout, CustomPasswordChangeView, CustomPasswordResetConfirmView, ListMaterial_IL_View, AddMaterial_IL_View, UpdateMaterial_IL_View, ListMaterial_GD_View, ListMaterialArchived_GD_View, UpdateMaterial_GD_View, ListMaterial_SMDA_View, ListMaterialArchived_SMDA_View, UpdateMaterial_SMDA_View, Logging_View, ExcelImportView, RegisterView, CompleteRegistrationView, PendingRegistrationsView, ApproveRegistrationView, RejectRegistrationView, ExportLogsView, PreRegisterView, VerifyEmailView)
+from .views import (CustomLoginView, UserLogout, CustomPasswordChangeView, CustomPasswordResetConfirmView, ListMaterial_IL_View, AddMaterial_IL_View, UpdateMaterial_IL_View, ListMaterial_GD_View, ListMaterialArchived_GD_View, UpdateMaterial_GD_View, ShowMaterial_GD_View, ListMaterial_SMDA_View, ListMaterialArchived_SMDA_View, UpdateMaterial_SMDA_View, ShowMaterial_SMDA_View, Logging_View, ExcelImportView, RegisterView, CompleteRegistrationView, PendingRegistrationsView, ApproveRegistrationView, RejectRegistrationView, ExportLogsView, PreRegisterView, VerifyEmailView)
 from django.contrib.auth.decorators import login_required
 from django.conf.urls import handler403
 from b11_1.views import custom_permission_denied_view
@@ -59,6 +59,7 @@ urlpatterns = [
     path('update_material_gd/<int:pk>',
          login_required(UpdateMaterial_GD_View.as_view()),
          name='update_material_gd'),
+    path('show_material_gd/<int:pk>', login_required(ShowMaterial_GD_View.as_view()), name='show_material_gd'),
 
     # Material SMDA paths
     path('list_material_smda',
@@ -70,6 +71,7 @@ urlpatterns = [
     path('update_material_smda/<int:pk>',
          login_required(UpdateMaterial_SMDA_View.as_view()),
          name='update_material_smda'),
+    path('show_material_smda/<int:pk>', login_required(ShowMaterial_SMDA_View.as_view()), name='show_material_smda'),
 
     # Registration paths
     path('registration/register/', RegisterView.as_view(), name='register'),
