@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-06 15:55+0200\n"
+"POT-Creation-Date: 2025-05-07 17:39+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -44,23 +44,23 @@ msgstr "Mot de passe"
 
 #: b11_1/forms.py:53 b11_1/forms.py:85
 msgid "Password must be at least 8 characters long."
-msgstr ""
+msgstr "Le mot de passe doit comporter au moins 8 caractères."
 
 #: b11_1/forms.py:56 b11_1/forms.py:89
 msgid "Password must contain at least one uppercase letter."
-msgstr ""
+msgstr "Le mot de passe doit contenir au moins une lettre majuscule."
 
 #: b11_1/forms.py:59 b11_1/forms.py:93
 msgid "Password must contain at least one lowercase letter."
-msgstr ""
+msgstr "Le mot de passe doit contenir au moins une lettre minuscule."
 
 #: b11_1/forms.py:74
 msgid "The two password fields didn't match."
-msgstr ""
+msgstr "Les deux champs du mot de passe ne correspondent pas."
 
 #: b11_1/forms.py:97
 msgid "Password must contain at least one digit."
-msgstr ""
+msgstr "Le mot de passe doit contenir au moins un chiffre."
 
 #: b11_1/forms.py:102
 msgid ""
@@ -524,6 +524,36 @@ msgstr "Mot de passe"
 msgid "Zugriff beantragen"
 msgstr "Déposer une demande d'accès"
 
+#: b11_1/templates/admin/password_change.html:7
+msgid "Password Change"
+msgstr "Changement de mot de passe"
+
+#: b11_1/templates/admin/password_change.html:20
+msgid "Password Requirements"
+msgstr "Exigences en matière de mot de passe"
+
+#: b11_1/templates/admin/password_change.html:24
+msgid " At least 8 characters"
+msgstr " Au moins 8 caractères"
+
+#: b11_1/templates/admin/password_change.html:27
+msgid " At least one uppercase letter"
+msgstr " Au moins une lettre majuscule"
+
+#: b11_1/templates/admin/password_change.html:30
+msgid " At least one lowercase letter"
+msgstr " Au moins une lettre minuscule"
+
+#: b11_1/templates/admin/password_change.html:33
+msgid " Passwords match"
+msgstr " Les mots de passe correspondent"
+
+#: b11_1/templates/admin/password_change.html:40
+#, fuzzy
+#| msgid "login_password"
+msgid "Change my password"
+msgstr "Mot de passe"
+
 #: b11_1/templates/gd/update_material_gd.html:9
 #: b11_1/templates/il/update_material_il.html:8
 #: b11_1/templates/smda/update_material_smda.html:9
@@ -634,15 +664,21 @@ msgstr "Inscription - Vérification de l'adresse e-mail"
 
 #: b11_1/templates/registration/pre_register.html:26
 msgid "Please enter"
-msgstr "Veuillez saisir votre adresse électronique pour lancer la procédure d'enregistrement. Un lien de vérification vous sera envoyé par courriel."
+msgstr ""
+"Veuillez saisir votre adresse électronique pour lancer la procédure "
+"d'enregistrement. Un lien de vérification vous sera envoyé par courriel."
 
-#: b11_1/templates/registration/pre_register.html:32
+#: b11_1/templates/registration/pre_register.html:31
 msgid "Email Address"
 msgstr "Adresse électronique"
 
-#: b11_1/templates/registration/pre_register.html:46
+#: b11_1/templates/registration/pre_register.html:44
 msgid "Send Verification Email"
 msgstr "Envoyer un e-mail de vérification"
+
+#: b11_1/templates/registration/register.html:12
+msgid "Complete Registration for"
+msgstr ""
 
 #: venv/lib/python3.12/site-packages/click/_termui_impl.py:556
 #, python-brace-format
