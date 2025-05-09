@@ -141,7 +141,6 @@ env.bak/
 venv.bak/
 venv_LBA*
 venv_*
-*_venv
 
 # Spyder project settings
 .spyderproject
