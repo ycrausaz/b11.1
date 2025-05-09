@@ -835,6 +835,20 @@ class UpdateMaterial_IL_View(FormValidMixin_IL, GroupRequiredMixin, SuccessMessa
             form.add_error(None, error_msg)
             return self.render_to_response(self.get_context_data(form=form))
 
+class ShowMaterial_IL_View(ComputedContextMixin, GroupRequiredMixin, SuccessMessageMixin, DetailView):
+    model = Material
+    template_name = 'il/show_material_il.html'
+    form_class = MaterialForm_IL
+    allowed_groups = ['grLBA', 'grIL']
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['form'] = self.form_class(instance=self.object)
+        return context    
+
+    def post(self, request, *args, **kwargs):
+        return redirect('list_material_il')
+
 class ListMaterial_GD_View(ComputedContextMixin, GroupRequiredMixin, ListView):
     model = Material
     template_name = 'gd/list_material_gd.html'

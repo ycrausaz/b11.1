@@ -1,0 +1,44 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+    <h1>Material anschauen</h1>
+    <br/>
+    {% if submitted %}
+      <div class="alert alert-success" role="alert">
+          Das Material wurde aktualisiert
+      </div>
+    {% endif %}
+
+<form method="post">
+    {% csrf_token %}
+    <table>
+        {% for field in form %}
+                <tr>
+                    <td>
+                        <label for="{{ field.id_for_label }}">
+                            {{ field.label }}:
+                            {% if field.field.required %}
+                                <span class="required">*</span>
+                            {% endif %}
+                        </label>
+                    </td>
+                    <td>
+                        {{ field.value|default_if_none:"" }}  <!-- Render field as plain text -->
+                        {% for error in field.errors %}
+                            <div class="error">
+                                <p>{{ error }}</p>
+                            </div>
+                        {% endfor %}
+                    </td>
+                </tr>
+        {% endfor %}
+    </table>
+    <br/>
+    <input type="button" value="Zurück" class="btn btn-secondary" onClick="javascript:history.go(-1);">
+</form>
+
+<br/>
+
+   
+{% endblock %}
+

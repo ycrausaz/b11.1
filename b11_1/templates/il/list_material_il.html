@@ -91,7 +91,7 @@
             {% for mat in list_material_il_transferred %}
                 <tr>
                     <td><input type="checkbox" name="selected_materials" value="{{ mat.id }}" class="material-checkbox" data-form-id="3"></td>
-                    <td>{{ mat.systemname }}: {{ mat.kurztext_de }} (übermittelt: {{ mat.transfer_date|date:"d.m.Y - H:i" }})</td>
+                    <td>{{ mat.systemname }}: <a href="{% url 'show_material_il' mat.id %}">{{ mat.get_localized_kurztext }}</a> (übermittelt: {{ mat.transfer_date|date:"d.m.Y - H:i" }})</td>
                 </tr>
             {% endfor %}
         </tbody>
