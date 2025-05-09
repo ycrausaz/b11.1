@@ -30,6 +30,7 @@ class MaterialForm_IL(BaseTemplateForm, SplitterReadOnlyReadWriteFields):
         model = Material
         fields = EDITABLE_FIELDS_IL
         required_fields = [
+            'systemname',
             'kurztext_de',
             'kurztext_fr',
             'kurztext_en',
