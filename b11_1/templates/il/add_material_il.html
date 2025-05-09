@@ -20,7 +20,7 @@
         {% csrf_token %}
         <table>
             {% for field in form %}
-                {% if not field.is_hidden %}
+                {% if not field.is_hidden and field.name != 'is_finished' %}
                     <tr>
 <td>
     {% with label_with_tooltip=field|add_tooltip %}
@@ -44,7 +44,7 @@
                             {% endif %}
                         </td>
                     </tr>
-                {% else %}
+                {% elif field.is_hidden %}
                     {{ field }}
                 {% endif %}
             {% endfor %}
