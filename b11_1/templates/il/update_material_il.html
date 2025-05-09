@@ -29,8 +29,6 @@
                                     <span class="required">*</span>
                                 {% elif field.name == 'cage_code' or field.name == 'hersteller_name' or field.name == 'hersteller_adresse' or field.name == 'hersteller_plz' or field.name == 'hersteller_ort' %}
                                     <span class="required conditional-required" id="{{ field.name }}_required">*</span>
-                                {% elif field.name == 'systemname' %}
-                                    <span class="required conditional-required" id="{{ field.name }}_required">*</span>
                                 {% endif %}
                                 {{ field|get_inline_help }}
                             {% endwith %}
@@ -59,7 +57,7 @@
                     <tr>
                         <td>
                             <label for="{{ field.id_for_label }}">
-                                {{ field.label }}:
+                                {% trans field.label %}:
                             </label>
                         </td>
                         <td>

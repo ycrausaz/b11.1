@@ -16,7 +16,7 @@ from .editable_fields_config import *
 class MaterialForm_GD(BaseTemplateForm, SplitterReadOnlyReadWriteFields):
 
     revision_fremd = forms.CharField(
-        label='Revision Fremd.',
+        label='Revision Fremd',
         required=False,
         disabled=True  # This marks it as disabled for BaseTemplateForm
     )

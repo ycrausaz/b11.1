@@ -63,7 +63,7 @@
                                 <tr>
                                     <td>
                                         <label for="{{ field.id_for_label }}">
-                                            {{ field.label }}:
+                                            {% trans field.label %}:
                                         </label>
                                     </td>
                                     <td>
@@ -113,7 +113,7 @@
             
                         <tr class="section-header"><td colspan="2"><strong>Daten SYMM</strong></td></tr>
                         {% for field in form.get_readonly_fields %}
-                            {% if field.name|is_in_gd_fields %}
+                            {% if field.name|is_in_smda_fields %}
                                 {% if not field.is_hidden %}
                                     <tr>
                                         <td>
