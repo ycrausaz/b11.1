@@ -12,3 +12,6 @@ SQLAlchemy==2.0.31
 xlsxwriter
 openpyxl
 django-recaptcha
+deepl
+polib
+requests

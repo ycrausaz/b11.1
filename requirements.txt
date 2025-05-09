@@ -42,6 +42,8 @@ click-aliases==1.0.5
     # via divio-cli
 cryptography==43.0.1
     # via azure-storage-blob
+deepl==1.22.0
+    # via -r requirements.in
 divio-cli==4.0.2
     # via -r requirements.in
 dj-database-url==2.2.0
@@ -51,13 +53,18 @@ django==5.1.2
     #   -r requirements.in
     #   dj-database-url
     #   django-bootstrap-datepicker-plus
+    #   django-recaptcha
     #   django-storages
 django-bootstrap-datepicker-plus==5.0.5
+    # via -r requirements.in
+django-recaptcha==4.1.0
     # via -r requirements.in
 django-storages==1.14.4
     # via -r requirements.in
 editor==1.6.6
     # via inquirer
+et-xmlfile==2.0.0
+    # via openpyxl
 giturl==0.1.3
     # via divio-cli
 greenlet==3.0.3
@@ -76,11 +83,15 @@ jmespath==1.0.1
     #   botocore
 numpy==1.26.4
     # via pandas
+openpyxl==3.1.5
+    # via -r requirements.in
 packaging==23.2
     # via
     #   divio-cli
     #   gunicorn
 pandas==2.2.1
+    # via -r requirements.in
+polib==1.2.0
     # via -r requirements.in
 psycopg[binary]==3.1.20
     # via -r requirements.in
@@ -109,7 +120,9 @@ readchar==4.2.0
     # via inquirer
 requests==2.32.3
     # via
+    #   -r requirements.in
     #   azure-core
+    #   deepl
     #   divio-cli
 runs==1.2.2
     # via editor
@@ -158,4 +171,3 @@ xmod==1.8.1
     # via
     #   editor
     #   runs
-django-recaptcha

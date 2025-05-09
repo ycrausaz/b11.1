@@ -1,3 +1,5 @@
-django-admin makemessages -l de ; django-admin makemessages -l fr ; django-admin makemessages -l en;
+django-admin makemessages -l de -l fr -l en -i '*venv*'
 vim locale/de/LC_MESSAGES/django.po locale/fr/LC_MESSAGES/django.po locale/en/LC_MESSAGES/django.po
-django-admin compilemessages; python manage.py runserver
+python manage.py auto_translate_sqlite_tm --languages fr en --api-key 5bf40475-4272-4c70-94c4-502b4a9fbb33:fx
+django-admin compilemessages
+python manage.py runserver
