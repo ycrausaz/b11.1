@@ -32,7 +32,7 @@
         </thead>
         <tbody>
             {% for mat in list_material_il %}
-                <tr>
+                <tr {% if mat.is_finished %}class="table-success"{% endif %}>
                     <td><input type="checkbox" name="selected_materials" value="{{ mat.id }}" class="material-checkbox" data-form-id="1"></td>
                     <td>{{ mat.systemname }}: <a href="{% url 'update_material_il' mat.id %}">{{ mat.get_localized_kurztext }}</a></td>
                 </tr>
@@ -60,7 +60,7 @@
         </thead>
         <tbody>
             {% for mat in list_material_il_returned %}
-                <tr>
+                <tr {% if mat.is_finished %}class="table-success"{% endif %}>
                     <td><input type="checkbox" name="selected_materials" value="{{ mat.id }}" class="material-checkbox" data-form-id="2"></td>
                     <td>{{ mat.systemname }}: <a href="{% url 'update_material_il' mat.id %}">{{ mat.kurztext_de }}</a></td>
                     <td>{{ mat.transfer_comment }}</td>

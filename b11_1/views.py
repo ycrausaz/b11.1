@@ -595,9 +595,39 @@ class ListMaterial_IL_View(GroupRequiredMixin, ListView):
         if selected_material_ids and action:
             selected_materials = Material.objects.filter(id__in=selected_material_ids)
             if action == 'transfer':
-                selected_materials.update(is_transferred=True, transfer_date=timezone.now())
-                for material in selected_materials:
-                    logger.info("Material '" + material.kurztext_de + "' durch '" + request.user.email + "' übermittelt.")
+                # Only transfer materials that are marked as finished
+                finished_materials = Material.objects.filter(
+                    id__in=selected_material_ids,
+                    is_finished=True
+                )
+                
+                # Count how many materials were selected vs. how many are finished
+                total_selected = len(selected_material_ids)
+                total_finished = finished_materials.count()
+                
+                # Update only the finished materials
+                if total_finished > 0:
+                    finished_materials.update(is_transferred=True, transfer_date=timezone.now())
+                    for material in finished_materials:
+                        logger.info("Material '" + material.kurztext_de + "' durch '" + request.user.email + "' übermittelt.")
+                    
+                    # Add a message to inform the user
+                    if total_finished < total_selected:
+                        messages.warning(
+                            request,
+                            f"{total_finished} Material(ien) wurden übermittelt. {total_selected - total_finished} Material(ien) waren nicht als 'abgeschlossen' markiert und wurden nicht übermittelt."
+                        )
+                    else:
+                        messages.success(
+                            request,
+                            f"{total_finished} Material(ien) wurden erfolgreich übermittelt."
+                        )
+                else:
+                    # If no materials were finished, show a warning
+                    messages.warning(
+                        request,
+                        "Keine Materialien wurden übermittelt, da keines als fertig markiert war."
+                    )
             elif action == 'delete':
                 for material in selected_materials:
                     logger.info("Material '" + material.kurztext_de + "' durch '" + request.user.email + "' gelöscht.")

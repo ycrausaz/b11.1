@@ -3,6 +3,7 @@
 EDITABLE_FIELDS_IL = [
 #'positions_nr', #B
 'systemname',
+'is_finished',
 'referenznummer_leiferant', #C
 'kurztext_de', #D
 'kurztext_fr', #E

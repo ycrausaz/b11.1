@@ -26,6 +26,11 @@ class MaterialForm_IL(BaseTemplateForm, SplitterReadOnlyReadWriteFields):
         disabled=True
     )
 
+#    is_finished = forms.BooleanField(
+#        label='Fertig',
+#        required=False,
+#    )
+
     class Meta(BaseTemplateForm.Meta):
         model = Material
         fields = EDITABLE_FIELDS_IL

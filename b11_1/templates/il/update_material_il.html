@@ -20,21 +20,21 @@
         {% csrf_token %}
         <table>
             {% for field in form.get_normal_fields %}
-                {% if not field.is_hidden %}
+                {% if not field.is_hidden and field.name != 'is_finished' %}
                     <tr>
-<td>
-    {% with label_with_tooltip=field|add_tooltip %}
-        {{ label_with_tooltip|safe }}:
-        {% if field.field.required %}
-            <span class="required">*</span>
-        {% elif field.name == 'cage_code' or field.name == 'hersteller_name' or field.name == 'hersteller_adresse' or field.name == 'hersteller_plz' or field.name == 'hersteller_ort' %}
-            <span class="required conditional-required" id="{{ field.name }}_required">*</span>
-        {% elif field.name == 'systemname' %}
-            <span class="required conditional-required" id="{{ field.name }}_required">*</span>
-        {% endif %}
-        {{ field|get_inline_help }}
-    {% endwith %}
-</td>
+                        <td>
+                            {% with label_with_tooltip=field|add_tooltip %}
+                                {{ label_with_tooltip|safe }}:
+                                {% if field.field.required %}
+                                    <span class="required">*</span>
+                                {% elif field.name == 'cage_code' or field.name == 'hersteller_name' or field.name == 'hersteller_adresse' or field.name == 'hersteller_plz' or field.name == 'hersteller_ort' %}
+                                    <span class="required conditional-required" id="{{ field.name }}_required">*</span>
+                                {% elif field.name == 'systemname' %}
+                                    <span class="required conditional-required" id="{{ field.name }}_required">*</span>
+                                {% endif %}
+                                {{ field|get_inline_help }}
+                            {% endwith %}
+                        </td>
                         <td>
                             {{ field }}
                             {% if field.errors %}
@@ -46,7 +46,7 @@
                             {% endif %}
                         </td>
                     </tr>
-                {% else %}
+                {% elif field.is_hidden %}
                     {{ field }}
                 {% endif %}
             {% endfor %}
@@ -121,6 +121,28 @@
                 <button type="button" class="btn btn-secondary" id="add-attachment">
                     {% trans "Add Another Attachment" %}
                 </button>
+            </div>
+        </div>
+
+        <div class="card mt-4 mb-4">
+            <div class="card-header bg-primary text-white">
+                <h5>{% trans "Material Status" %}</h5>
+            </div>
+            <div class="card-body">
+                <div class="form-check form-switch">
+                    <input class="form-check-input" type="checkbox" id="id_is_finished" name="is_finished" {% if form.instance.is_finished %}checked{% endif %}>
+                    <label class="form-check-label" for="id_is_finished">
+                        <strong>{% trans "Material ist fertig" %}</strong>
+                        <small class="text-muted">{% trans "Markieren Sie dieses Kästchen, wenn das Material fertig ist und übermittelt werden kann." %}</small>
+                    </label>
+                    {% if form.is_finished.errors %}
+                        <div class="error">
+                            {% for error in form.is_finished.errors %}
+                                <p>{{ error }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
             </div>
         </div>
 

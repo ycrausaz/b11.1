@@ -203,6 +203,7 @@ class Material(models.Model):
     is_transferred = models.BooleanField(null=True, blank=False, default=False)
     is_archived = models.BooleanField(null=True, blank=False, default=False)
     transfer_date = models.DateTimeField(null=True, blank=True)
+    is_finished = models.BooleanField(default=False, verbose_name=_("Fertig"))
     transfer_comment = models.TextField(null=True, blank=True, max_length=4096, verbose_name=_("Transfer Comment"))
     systemname = models.CharField(null=True, blank=True, max_length=40, verbose_name=_("Systemname"))
     positions_nr = models.IntegerField(null=True, blank=True, verbose_name=_("Positions-Nr."))
