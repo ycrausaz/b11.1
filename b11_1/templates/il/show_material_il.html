@@ -13,24 +13,18 @@
     {% csrf_token %}
     <table>
         {% for field in form %}
+            {% if field.name != 'is_finished' %}
                 <tr>
                     <td>
                         <label for="{{ field.id_for_label }}">
                             {{ field.label }}:
-                            {% if field.field.required %}
-                                <span class="required">*</span>
-                            {% endif %}
                         </label>
                     </td>
                     <td>
                         {{ field.value|default_if_none:"" }}  <!-- Render field as plain text -->
-                        {% for error in field.errors %}
-                            <div class="error">
-                                <p>{{ error }}</p>
-                            </div>
-                        {% endfor %}
                     </td>
                 </tr>
+            {% endif %}
         {% endfor %}
     </table>
     <br/>
