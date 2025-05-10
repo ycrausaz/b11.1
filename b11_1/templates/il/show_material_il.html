@@ -1,13 +1,9 @@
 {% extends "base_generic.html" %}
+{% load custom_filters %}
 
 {% block content %}
     <h1>Material anschauen</h1>
     <br/>
-    {% if submitted %}
-      <div class="alert alert-success" role="alert">
-          Das Material wurde aktualisiert
-      </div>
-    {% endif %}
 
 <form method="post">
     {% csrf_token %}
@@ -21,7 +17,7 @@
                         </label>
                     </td>
                     <td>
-                        {{ field.value|default_if_none:"" }}  <!-- Render field as plain text -->
+                        {{ form.instance|get_display_value:field.name }}
                     </td>
                 </tr>
             {% endif %}
@@ -32,7 +28,4 @@
 </form>
 
 <br/>
-
-   
 {% endblock %}
-
