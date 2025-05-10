@@ -884,7 +884,7 @@ class ListMaterial_GD_View(ComputedContextMixin, GroupRequiredMixin, ListView):
             selected_materials = Material.objects.filter(id__in=selected_material_ids)
             if action == 'transfer':
                 transfer_comment = request.POST.get('transfer_comment', '')
-                selected_materials.update(is_transferred=False, transfer_date=timezone.now(), transfer_comment=transfer_comment)
+                selected_materials.update(is_transferred=False, transfer_date=timezone.now(), transfer_comment=transfer_comment, is_finished=False)
                 for material in selected_materials:
                     logger.info("Material '" + material.kurztext_de + "' (" + material.systemname + "') durch '" + request.user.email + "' dem Hersteller zur Nacharbeit übermittelt (Begründung: '" + transfer_comment + "')")
             elif action == 'archive':
@@ -1087,7 +1087,7 @@ class ListMaterial_SMDA_View(ComputedContextMixin, GroupRequiredMixin, ListView)
             selected_materials = Material.objects.filter(id__in=selected_material_ids)
             if action == 'transfer':
                 transfer_comment = request.POST.get('transfer_comment', '')
-                selected_materials.update(is_transferred=False, transfer_date=timezone.now(), transfer_comment=transfer_comment)
+                selected_materials.update(is_transferred=False, transfer_date=timezone.now(), transfer_comment=transfer_comment, is_finished=False)
                 for material in selected_materials:
                     logger.info("Material '" + material.kurztext_de + "' (" + material.systemname + "') durch '" + request.user.email + "' dem Hersteller zur Nacharbeit übermittelt (Begründung: '" + transfer_comment + "')")
             elif action == 'archive':
