@@ -306,17 +306,9 @@ def import_from_excel(excel_file, request, il_user):
                     if positions_nr:
                         material = Material.objects.filter(positions_nr=positions_nr).first()
                     
-                    if material:
-                        # Update existing material
-                        for field, value in material_data.items():
-                            setattr(material, field, value)
-                        materials_updated += 1
-                        logger.info(f"Updated existing material from row {excel_row}")
-                    else:
-                        # Create new Material object
-                        material = Material(**material_data)
-                        materials_created += 1
-                        logger.info(f"Created new material from row {excel_row}")
+                    material = Material(**material_data)
+                    materials_created += 1
+                    logger.info(f"Created new material from row {excel_row}")
                     
                     # Set hersteller to the IL user's email
                     material.hersteller = il_user.email

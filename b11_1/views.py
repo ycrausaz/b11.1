@@ -870,8 +870,8 @@ class ListMaterial_GD_View(ComputedContextMixin, GroupRequiredMixin, ListView):
         list_material_gd = Material.objects.filter(is_transferred=True, is_archived=False)
 
         # Convert positions_nr to integers for sorting
-        context['list_material_archived'] = sorted(list_material_gd_archived, key=lambda x: int(x.positions_nr))
-        context['list_material'] = sorted(list_material_gd, key=lambda x: int(x.id))
+        context['list_material_archived'] = sorted(list_material_gd_archived, key=lambda x: (int(x.positions_nr) if x.positions_nr is not None else float('inf'), x.kurztext_de or ''))
+        context['list_material'] = sorted(list_material_gd, key=lambda x: (int(x.positions_nr) if x.positions_nr is not None else float('inf'), x.kurztext_de or ''))
         return context
 
     def post(self, request, *args, **kwargs):
@@ -1074,8 +1074,8 @@ class ListMaterial_SMDA_View(ComputedContextMixin, GroupRequiredMixin, ListView)
         list_material_smda = Material.objects.filter(is_transferred=True, is_archived=False)
 
         # Convert positions_nr to integers for sorting
-        context['list_material_archived'] = sorted(list_material_smda_archived, key=lambda x: int(x.positions_nr))
-        context['list_material'] = sorted(list_material_smda, key=lambda x: int(x.id))
+        context['list_material_archived'] = sorted(list_material_smda_archived, key=lambda x: (int(x.positions_nr) if x.positions_nr is not None else float('inf'), x.kurztext_de or ''))
+        context['list_material'] = sorted(list_material_smda, key=lambda x: (int(x.positions_nr) if x.positions_nr is not None else float('inf'), x.kurztext_de or ''))
         return context
 
     def post(self, request, *args, **kwargs):
