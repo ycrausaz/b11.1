@@ -25,6 +25,11 @@ class MaterialForm_IL(BaseTemplateForm, SplitterReadOnlyReadWriteFields):
         required=False,
         disabled=True
     )
+    einheit_l_b_h = forms.CharField(
+        label='Einheit L / B / H',
+        required=False,
+        disabled=True
+    )
 
 #    is_finished = forms.BooleanField(
 #        label='Fertig',
@@ -64,6 +69,7 @@ class MaterialForm_IL(BaseTemplateForm, SplitterReadOnlyReadWriteFields):
         computed_fields = [
             'gewichtseinheit',
             'waehrung',
+            'einheit_l_b_h',
         ]
 
         # Set up foreign key fields with their querysets and required status
