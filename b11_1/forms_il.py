@@ -30,6 +30,16 @@ class MaterialForm_IL(BaseTemplateForm, SplitterReadOnlyReadWriteFields):
         required=False,
         disabled=True
     )
+    nsn_gruppe_klasse = forms.CharField(
+        label='NSN Gruppe / Klasse',
+        required=False,
+        disabled=True
+    )
+    nato_versorgungs_nr = forms.CharField(
+        label='Nato Versorgungs-Nr.',
+        required=False,
+        disabled=True
+    )
 
 #    is_finished = forms.BooleanField(
 #        label='Fertig',
@@ -70,6 +80,8 @@ class MaterialForm_IL(BaseTemplateForm, SplitterReadOnlyReadWriteFields):
             'gewichtseinheit',
             'waehrung',
             'einheit_l_b_h',
+            'nsn_gruppe_klasse',
+            'nato_versorgungs_nr',
         ]
 
         # Set up foreign key fields with their querysets and required status
