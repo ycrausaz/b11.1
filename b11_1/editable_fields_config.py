@@ -75,8 +75,8 @@ EDITABLE_FIELDS_GD = [
 EDITABLE_FIELDS_SMDA = [
 'werkzuordnung_1', #C
 'werkzuordnung_2', #D
-'werkzuordnung_3', #E
-'werkzuordnung_4', #F
+#'werkzuordnung_3', #E
+#'werkzuordnung_4', #F
 'allgemeine_positionstypengruppe', #G
 'spare_part_class_code', #H
 'fertigungssteuerer', #I
