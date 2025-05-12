@@ -43,7 +43,7 @@ class RegistrationPasswordForm(forms.Form):
         return cleaned_data
 
     def clean_new_password1(self):
-        print("clean_new_password1 called")  # Debug message
+#        print("clean_new_password1 called")  # Debug message
         password = self.cleaned_data.get('new_password1')
 
         errors = []
@@ -67,7 +67,7 @@ class RegistrationPasswordForm(forms.Form):
         return password
 
     def clean_new_password2(self):
-        print("clean_new_password2")
+#        print("clean_new_password2")
         password1 = self.cleaned_data.get('new_password1')
         password2 = self.cleaned_data.get('new_password2')
         if password1 and password2 and password1 != password2:
