@@ -105,20 +105,20 @@ class FormValidMixin_IL:
 
         # Hersteller
         item.hersteller = self.request.user.email
-        print("item.hersteller = " + item.hersteller)
+#        print("item.hersteller = " + item.hersteller)
 
         # Gewichtseinheit
         item.gewichtseinheit = "KG"
-        print("item.gewichtseinheit = " + item.gewichtseinheit)
+#        print("item.gewichtseinheit = " + item.gewichtseinheit)
 
         # Einheit L / B / H
         item.einheit_l_b_h = "MM"
-        print("item.einheit_l_b_h = " + item.einheit_l_b_h)
+#        print("item.einheit_l_b_h = " + item.einheit_l_b_h)
 
         # Währung
         if item.preis is not None:
             item.waehrung = "CHF"
-        print("item.waehrung = " + item.waehrung)
+#        print("item.waehrung = " + item.waehrung)
 
         # Instandsetzbar
         expected_value = "6" if item.instandsetzbar else "0"
@@ -126,13 +126,13 @@ class FormValidMixin_IL:
             spare_part_class = SparePartClassCode.objects.get(text=expected_value)
             # Set the spare_part_class_code field to the found object
             item.spare_part_class_code = spare_part_class
-            print(f"item.spare_part_class_code set to {spare_part_class.text} (idx={spare_part_class.idx})")
+#            print(f"item.spare_part_class_code set to {spare_part_class.text} (idx={spare_part_class.idx})")
 
         except SparePartClassCode.DoesNotExist:
             # Add a non-field error instead of a field-specific error
             error_msg = f"Die Wert '{expected_value}' für Spare Part Class Code wurde nicht gefunden."
             form.add_error(None, error_msg)
-            print(f"Error: {error_msg}")
+#            print(f"Error: {error_msg}")
 
         if form.errors:
             return self.form_invalid(form)
@@ -156,36 +156,36 @@ class FormValidMixin_GD:
         # Geschäftspartner
         if item.geschaeftspartner is None:
             key = form.cleaned_data['cage_code']
-            print("key = " + str(key))
+#            print("key = " + str(key))
             try:
                 lookup_record = G_Partner.objects.get(cage_code=key)
                 lookup_value = lookup_record.gp_nummer
-                print("lookup_value = " + lookup_value)
+#                print("lookup_value = " + lookup_value)
             except G_Partner.DoesNotExist:
                 lookup_value = ""
-                print("No lookup")
+#                print("No lookup")
             item.geschaeftspartner = lookup_value
-        print("item.geschaeftspartner = " + item.geschaeftspartner)
+#        print("item.geschaeftspartner = " + item.geschaeftspartner)
 
         # Verteilung PSD
         item.verteilung_an_psd = True
-        print("item.verteilung_an_psd = " + str(item.verteilung_an_psd))
+#        print("item.verteilung_an_psd = " + str(item.verteilung_an_psd))
 
         # Revision Fremd
         item.revision_fremd = form.cleaned_data['revision']
-        print("item.revision_fremd = " + str(item.revision_fremd))
+#        print("item.revision_fremd = " + str(item.revision_fremd))
 
         # Produkthierarchie
         if item.produkthierarchie is not None and len(item.produkthierarchie) != 4:
             form.add_error('produkthierarchie', "Die Produkthierarchie muss eine 4-Stellen Nummer ('0' left-padded).")
 
         # Materialzustandsverwaltung
-        print("item.chargenpflicht = " + str(item.chargenpflicht))
+#        print("item.chargenpflicht = " + str(item.chargenpflicht))
         if item.chargenpflicht:
             item.materialzustandsverwaltung = 2
         else:
             item.materialzustandsverwaltung = 1
-        print("item.materialzustandsverwaltung = " + str(item.materialzustandsverwaltung))
+#        print("item.materialzustandsverwaltung = " + str(item.materialzustandsverwaltung))
 
         # Preissteuerung (same code in 'FormValidMixin_SMDA')
         if item.materialart_grunddaten:
@@ -215,7 +215,7 @@ class FormValidMixin_GD:
         else:
             # Handle the case where materialart_grunddaten is None
             item.preissteuerung = ""
-        print("item.preissteuerung = " + item.preissteuerung)
+#        print("item.preissteuerung = " + item.preissteuerung)
 
         if form.errors:
             return self.form_invalid(form)
@@ -240,21 +240,21 @@ class FormValidMixin_SMDA:
             item.verkaufsorg = "A100"
         else:
             item.verkaufsorg = "M100"
-        print("item.verkaufsorg = " + item.verkaufsorg)
+#        print("item.verkaufsorg = " + item.verkaufsorg)
 
         # Vertriebsweg
         item.vertriebsweg = "V0"
-        print("item.vertriebsweg = " + item.vertriebsweg)
+#        print("item.vertriebsweg = " + item.vertriebsweg)
 
         # Allgemeine Positionstypengruppe
         allgemeine_positionstypengruppe = AllgemeinePositionstypengruppe.objects.get(text="NORM")
         item.allgemeine_positionstypengruppe = allgemeine_positionstypengruppe
-        print(f"allgemeine_positionstypengruppe set to '{allgemeine_positionstypengruppe.text}'")
+#        print(f"allgemeine_positionstypengruppe set to '{allgemeine_positionstypengruppe.text}'")
 
         # Auszeichnungsfeld
         if item.verteilung_apm_kerda == True:
             item.auszeichnungsfeld = "R"
-        print("item.auszeichnungsfeld = " + str(item.auszeichnungsfeld))
+#        print("item.auszeichnungsfeld = " + str(item.auszeichnungsfeld))
 
         # Preissteuerung (same code in 'FormValidMixin_GD')
         if item.materialart_grunddaten:
@@ -284,20 +284,20 @@ class FormValidMixin_SMDA:
         else:
             # Handle the case where materialart_grunddaten is None
             item.preissteuerung = ""
-        print("item.preissteuerung = " + item.preissteuerung)
+#        print("item.preissteuerung = " + item.preissteuerung)
 
         # Preisermittlung
         if item.preissteuerung is not None:
             item.preisermittlung = "2"
-        print("item.preisermittlung = " + item.preisermittlung)
+#        print("item.preisermittlung = " + item.preisermittlung)
 
         # Ausprägung
-        print("item.zuteilung_id = " + str(item.zuteilung_id))
+#        print("item.zuteilung_id = " + str(item.zuteilung_id))
         zuteilung = item.zuteilung
-        print("zuteilung = " + str(zuteilung))
-        print("item.auspraegung_id = " + str(item.auspraegung_id))
+#        print("zuteilung = " + str(zuteilung))
+#        print("item.auspraegung_id = " + str(item.auspraegung_id))
         auspraegung = item.auspraegung
-        print("auspraegung = " + str(auspraegung))
+#        print("auspraegung = " + str(auspraegung))
         if zuteilung is None and auspraegung is not None:
             form.add_error('zuteilung', "Die Zuteilung muss definiert sein.")
         if zuteilung is not None and auspraegung is None:
