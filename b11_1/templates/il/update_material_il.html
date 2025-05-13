@@ -24,7 +24,7 @@
                     <tr>
                         <td>
                             {% with label_with_tooltip=field|add_tooltip %}
-                                {{ label_with_tooltip|safe }}:
+                                {{ label_with_tooltip|safe }}
                                 {% if field.field.required %}
                                     <span class="required">*</span>
                                 {% elif field.name == 'cage_code' or field.name == 'hersteller_name' or field.name == 'hersteller_adresse' or field.name == 'hersteller_plz' or field.name == 'hersteller_ort' %}

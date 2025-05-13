@@ -30,7 +30,7 @@
                                 <tr>
                                     <td>
                                         {% with label_with_tooltip=field|add_tooltip %}
-                                            {{ label_with_tooltip|safe }}:
+                                            {{ label_with_tooltip|safe }}
                                             {% if field.field.required %}
                                                 <span class="required">*</span>
                                             {% elif field|is_conditional_required %}
@@ -63,7 +63,7 @@
                                 <tr>
                                     <td>
                                         <label for="{{ field.id_for_label }}">
-                                            {% trans field.label %}:
+                                            {% trans field.label %}
                                         </label>
                                     </td>
                                     <td>
@@ -86,7 +86,7 @@
                                     <tr>
                                         <td>
                                             <label for="{{ field.id_for_label }}">
-                                                {{ field.label }}:
+                                                {{ field.label }}
                                                 {% if field.field.required %}
                                                     <span class="required">*</span>
                                                 {% endif %}
@@ -118,7 +118,7 @@
                                     <tr>
                                         <td>
                                             <label for="{{ field.id_for_label }}">
-                                                {{ field.label }}:
+                                                {{ field.label }}
                                                 {% if field.field.required %}
                                                     <span class="required">*</span>
                                                 {% endif %}

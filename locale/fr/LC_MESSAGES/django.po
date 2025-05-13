@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-09 16:47+0200\n"
+"POT-Creation-Date: 2025-05-13 08:37+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -31,14 +31,10 @@ msgid "English"
 msgstr "Anglais"
 
 #: b11_1/forms.py:20
-#, fuzzy
-#| msgid "login_password"
 msgid "New password"
 msgstr "Nouveau mot de passe"
 
 #: b11_1/forms.py:25
-#, fuzzy
-#| msgid "login_password"
 msgid "Confirm new password"
 msgstr "Confirmer le nouveau mot de passe"
 
@@ -48,15 +44,15 @@ msgstr "Le mot de passe doit comporter au moins 8 caractères."
 
 #: b11_1/forms.py:56 b11_1/forms.py:89
 msgid "Password must contain at least one uppercase letter."
-msgstr "Le mot de passe doit contenir au moins une lettre majuscule."
+msgstr "Le mot de passe doit contenir au moins une lettre en uppercase."
 
 #: b11_1/forms.py:59 b11_1/forms.py:93
 msgid "Password must contain at least one lowercase letter."
-msgstr "Le mot de passe doit contenir au moins une lettre minuscule."
+msgstr "Le mot de passe doit contenir au moins une lettre en minuscule."
 
 #: b11_1/forms.py:74
 msgid "The two password fields didn't match."
-msgstr "Les deux champs du mot de passe ne correspondent pas."
+msgstr "Les deux champs de mot de passe ne correspondaient pas."
 
 #: b11_1/forms.py:97
 msgid "Password must contain at least one digit."
@@ -392,7 +388,7 @@ msgstr "Attribution de l'œuvre"
 
 #: b11_1/models.py:273
 msgid "Werkzuordnung (2)"
-msgstr "Attribution de division (2)"
+msgstr "Affectation des œuvres (2)"
 
 #: b11_1/models.py:274
 msgid "Werkzuordnung (3)"
@@ -408,7 +404,7 @@ msgstr "Groupe de types de poste général"
 
 #: b11_1/models.py:277
 msgid "Verkaufsorg."
-msgstr "Organisme de vente."
+msgstr "Organisme de vente"
 
 #: b11_1/models.py:278
 msgid "Vertriebsweg"
@@ -520,15 +516,15 @@ msgstr "Exportation"
 
 #: b11_1/templates/admin/login_user.html:28
 msgid "login_email"
-msgstr "Adresse email"
+msgstr "login_email"
 
 #: b11_1/templates/admin/login_user.html:32
 msgid "login_password"
-msgstr "Mot de passe"
+msgstr "login_password"
 
 #: b11_1/templates/admin/login_user.html:37
 msgid "Zugriff beantragen"
-msgstr "Déposer une demande d'accès"
+msgstr "Demander l'accès"
 
 #: b11_1/templates/admin/password_change.html:7
 msgid "Password Change"
@@ -548,23 +544,21 @@ msgstr " Au moins 8 caractères"
 #: b11_1/templates/admin/password_change.html:77
 #: b11_1/templates/admin/password_change.html:80
 msgid " At least one uppercase letter"
-msgstr " Au moins une lettre majuscule"
+msgstr " At least one uppercase letter"
 
 #: b11_1/templates/admin/password_change.html:30
 #: b11_1/templates/admin/password_change.html:86
 #: b11_1/templates/admin/password_change.html:89
 msgid " At least one lowercase letter"
-msgstr " Au moins une lettre minuscule"
+msgstr " At least one lowercase letter"
 
 #: b11_1/templates/admin/password_change.html:33
 #: b11_1/templates/admin/password_change.html:95
 #: b11_1/templates/admin/password_change.html:98
 msgid " Passwords match"
-msgstr " Les mots de passe correspondent"
+msgstr " Correspondance des mots de passe"
 
 #: b11_1/templates/admin/password_change.html:40
-#, fuzzy
-#| msgid "login_password"
 msgid "Change my password"
 msgstr "Changer mon mot de passe"
 
@@ -572,56 +566,56 @@ msgstr "Changer mon mot de passe"
 #: b11_1/templates/il/update_material_il.html:8
 #: b11_1/templates/smda/update_material_smda.html:9
 msgid "Material aktualisieren"
-msgstr "Mettre à jour le matériel"
+msgstr "Mettre à jour le matériel "
 
 #: b11_1/templates/gd/update_material_gd.html:152
-#: b11_1/templates/il/update_material_il.html:76
+#: b11_1/templates/il/update_material_il.html:75
 #: b11_1/templates/smda/update_material_smda.html:152
 msgid "Existing Attachments"
-msgstr "Pièces jointes actuelles"
+msgstr "Pièces jointes existantes"
 
 #: b11_1/templates/gd/update_material_gd.html:166
-#: b11_1/templates/il/update_material_il.html:90
+#: b11_1/templates/il/update_material_il.html:89
 #: b11_1/templates/smda/update_material_smda.html:166
 msgid "Delete"
 msgstr "Supprimer"
 
 #: b11_1/templates/gd/update_material_gd.html:178
-#: b11_1/templates/il/update_material_il.html:102
+#: b11_1/templates/il/update_material_il.html:101
 #: b11_1/templates/smda/update_material_smda.html:178
 msgid "New Attachments"
-msgstr "Nouvelle pièce jointe"
+msgstr "Nouvelles pièces jointes"
 
 #: b11_1/templates/gd/update_material_gd.html:188
 #: b11_1/templates/il/add_material_il.html:65
-#: b11_1/templates/il/update_material_il.html:112
+#: b11_1/templates/il/update_material_il.html:111
 #: b11_1/templates/smda/update_material_smda.html:188
 msgid "Comment"
 msgstr "Commentaire"
 
 #: b11_1/templates/gd/update_material_gd.html:197
 #: b11_1/templates/il/add_material_il.html:74
-#: b11_1/templates/il/update_material_il.html:121
+#: b11_1/templates/il/update_material_il.html:120
 #: b11_1/templates/smda/update_material_smda.html:197
 msgid "Add Another Attachment"
 msgstr "Ajouter une autre pièce jointe"
 
 #: b11_1/templates/gd/update_material_gd.html:203
-#: b11_1/templates/il/update_material_il.html:148
+#: b11_1/templates/il/update_material_il.html:147
 #: b11_1/templates/smda/update_material_smda.html:203
 msgid "Änderungen speichern"
-msgstr "Sauvegarder les modifications"
+msgstr "Enregistrer les modifications"
 
 #: b11_1/templates/gd/update_material_gd.html:204
 #: b11_1/templates/il/add_material_il.html:80
-#: b11_1/templates/il/update_material_il.html:149
+#: b11_1/templates/il/update_material_il.html:148
 #: b11_1/templates/smda/update_material_smda.html:204
 msgid "Zurück ohne Speichern"
-msgstr "Retour sans sauvegarder"
+msgstr "Retour sans sauvegarde"
 
 #: b11_1/templates/il/add_material_il.html:8
 msgid "New Material"
-msgstr "Nouveau matériel"
+msgstr "Nouveau matériau"
 
 #: b11_1/templates/il/add_material_il.html:55
 msgid "Attachments"
@@ -629,7 +623,7 @@ msgstr "Pièces jointes"
 
 #: b11_1/templates/il/add_material_il.html:79
 msgid "Save"
-msgstr "Sauvegarder"
+msgstr "Save"
 
 #: b11_1/templates/il/list_material_il.html:6
 msgid "Materialliste"
@@ -637,7 +631,7 @@ msgstr "Liste de matériel"
 
 #: b11_1/templates/il/list_material_il.html:19
 msgid "Momentan keine Angabe"
-msgstr "Actuellement aucune entrée"
+msgstr "Pas d'indication pour le moment"
 
 #: b11_1/templates/il/list_material_il.html:30
 msgid "Offenes/e Material/ien"
@@ -656,8 +650,6 @@ msgid "Löschen"
 msgstr "Supprimer"
 
 #: b11_1/templates/il/list_material_il.html:87
-#, fuzzy
-#| msgid "Offenes/e Material/ien"
 msgid "Übermittelte/s Material/ien"
 msgstr "Matériel(s) transmis"
 
@@ -665,19 +657,15 @@ msgstr "Matériel(s) transmis"
 msgid "Berechnete Felder"
 msgstr "Champs calculés"
 
-#: b11_1/templates/il/update_material_il.html:128
-#, fuzzy
-#| msgid "Material aktualisieren"
+#: b11_1/templates/il/update_material_il.html:127
 msgid "Material Status"
 msgstr "Statut du matériau"
 
-#: b11_1/templates/il/update_material_il.html:134
-#, fuzzy
-#| msgid "Materialliste"
+#: b11_1/templates/il/update_material_il.html:133
 msgid "Material ist fertig"
 msgstr "Le matériel est prêt"
 
-#: b11_1/templates/il/update_material_il.html:135
+#: b11_1/templates/il/update_material_il.html:134
 msgid ""
 "Markieren Sie dieses Kästchen, wenn das Material fertig ist und übermittelt "
 "werden kann."
@@ -685,29 +673,27 @@ msgstr "Cochez cette case si le matériel est prêt et peut être transmis."
 
 #: b11_1/templates/navbar_generic.html:38
 msgid "Material_nav"
-msgstr "Matériel"
+msgstr "Matériel_nav"
 
 #: b11_1/templates/navbar_generic.html:41
 msgid "Materialliste_nav"
-msgstr "Liste de matériel"
+msgstr "Liste de matériel_nav"
 
 #: b11_1/templates/navbar_generic.html:42
 msgid "Neues Material definieren_nav"
-msgstr "Définir un nouveau matériel"
+msgstr "Définir un nouveau matériau_nav"
 
 #: b11_1/templates/navbar_generic.html:47
 msgid "Account_nav"
-msgstr "Compte"
+msgstr "Compte_nav"
 
 #: b11_1/templates/registration/pre_register.html:13
 msgid "Registration - Email Verification"
-msgstr "Inscription - Vérification de l'adresse e-mail"
+msgstr "Inscription - Vérification des e-mails"
 
 #: b11_1/templates/registration/pre_register.html:26
 msgid "Please enter"
-msgstr ""
-"Veuillez saisir votre adresse électronique pour lancer la procédure "
-"d'enregistrement. Un lien de vérification vous sera envoyé par courriel."
+msgstr "Veuillez entrer"
 
 #: b11_1/templates/registration/pre_register.html:31
 msgid "Email Address"
@@ -720,1108 +706,3 @@ msgstr "Envoyer un e-mail de vérification"
 #: b11_1/templates/registration/register.html:13
 msgid "Complete Registration for"
 msgstr "Inscription complète pour"
-
-#, python-brace-format
-#~ msgid "{editor}: Editing failed"
-#~ msgstr "{editor} : Editing failed"
-
-#, python-brace-format
-#~ msgid "{editor}: Editing failed: {e}"
-#~ msgstr "{editor} : Editing failed : {e}"
-
-#~ msgid "Aborted!"
-#~ msgstr "Abordé !"
-
-#~ msgid "Show this message and exit."
-#~ msgstr "Afficher ce message et quitter."
-
-#, python-brace-format
-#~ msgid "(Deprecated) {text}"
-#~ msgstr "(Deprecated) {texte}"
-
-#~ msgid "Options"
-#~ msgstr "Options"
-
-#~ msgid "DeprecationWarning: The command {name!r} is deprecated."
-#~ msgstr "DeprecationWarning : La commande {nom!r} est dépréciée."
-
-#~ msgid "Commands"
-#~ msgstr "Commandes"
-
-#~ msgid "Missing command."
-#~ msgstr "Commande manquante."
-
-#~ msgid "No such command {name!r}."
-#~ msgstr "Aucune commande de ce type {nom!r}."
-
-#~ msgid "Value must be an iterable."
-#~ msgstr "La valeur doit être une valeur itérable."
-
-#, python-brace-format
-#~ msgid "env var: {var}"
-#~ msgstr "env var : {var}"
-
-#~ msgid "(dynamic)"
-#~ msgstr "(dynamique)"
-
-#, python-brace-format
-#~ msgid "default: {default}"
-#~ msgstr "par défaut : {default}"
-
-#~ msgid "required"
-#~ msgstr "required"
-
-#, python-format
-#~ msgid "%(prog)s, version %(version)s"
-#~ msgstr "%(prog)s, version %(version)s"
-
-#~ msgid "Show the version and exit."
-#~ msgstr "Afficher la version et sortir."
-
-#, python-brace-format
-#~ msgid "Error: {message}"
-#~ msgstr "Erreur : {message}"
-
-#, python-brace-format
-#~ msgid "Try '{command} {option}' for help."
-#~ msgstr "Essayez '{command} {option}' pour obtenir de l'aide."
-
-#, python-brace-format
-#~ msgid "Invalid value: {message}"
-#~ msgstr "Valeur invalide : {message}"
-
-#, python-brace-format
-#~ msgid "Invalid value for {param_hint}: {message}"
-#~ msgstr "Valeur invalide pour {param_hint} : {message}"
-
-#, fuzzy
-#~ msgid "Missing argument"
-#~ msgstr "Argument manquant"
-
-#~ msgid "Missing option"
-#~ msgstr "Option manquante"
-
-#~ msgid "Missing parameter"
-#~ msgstr "Paramètre manquant"
-
-#, python-brace-format
-#~ msgid "Missing {param_type}"
-#~ msgstr "Manquant {param_type}"
-
-#, python-brace-format
-#~ msgid "Missing parameter: {param_name}"
-#~ msgstr "Paramètre manquant : {nom_param}"
-
-#, python-brace-format
-#~ msgid "No such option: {name}"
-#~ msgstr "Aucune option de ce type : {nom}"
-
-#~ msgid "unknown error"
-#~ msgstr "erreur inconnue"
-
-#~ msgid "Could not open file {filename!r}: {message}"
-#~ msgstr "Impossible d'ouvrir le fichier {filename!r} : {message}"
-
-#~ msgid "Argument {name!r} takes {nargs} values."
-#~ msgstr "L'argument {nom!r} prend des valeurs {nargs}."
-
-#~ msgid "Option {name!r} does not take a value."
-#~ msgstr "L'option {nom!r} ne prend pas de valeur."
-
-#~ msgid "Shell completion is not supported for Bash versions older than 4.4."
-#~ msgstr ""
-#~ "L'achèvement du shell n'est pas pris en charge pour les versions de Bash "
-#~ "antérieures à la version 4.4."
-
-#~ msgid "Couldn't detect Bash version, shell completion is not supported."
-#~ msgstr "Couldn't detect Bash version, shell completion is not supported."
-
-#~ msgid "Repeat for confirmation"
-#~ msgstr "Répéter pour confirmer"
-
-#~ msgid "Error: The value you entered was invalid."
-#~ msgstr "Erreur : La valeur que vous avez saisie était invalide."
-
-#, python-brace-format
-#~ msgid "Error: {e.message}"
-#~ msgstr "Erreur : {e.message}"
-
-#, fuzzy
-#~ msgid "Error: The two entered values do not match."
-#~ msgstr "Erreur : Les deux valeurs saisies ne correspondent pas."
-
-#~ msgid "Error: invalid input"
-#~ msgstr "Erreur : entrée invalide"
-
-#~ msgid "Press any key to continue..."
-#~ msgstr "Appuyez sur n'importe quelle touche pour continuer..."
-
-#, python-brace-format
-#~ msgid ""
-#~ "Choose from:\n"
-#~ "\t{choices}"
-#~ msgstr ""
-#~ "Choisir parmi :\n"
-#~ "\t{choices}"
-
-#~ msgid "{value!r} is not a valid {number_type}."
-#~ msgstr "{value!r} n'est pas un {numéro_type} valide."
-
-#, python-brace-format
-#~ msgid "{value} is not in the range {range}."
-#~ msgstr "{valeur} n'est pas dans la gamme {range}."
-
-#~ msgid "{value!r} is not a valid boolean."
-#~ msgstr "{valeur!r} n'est pas un booléen valide."
-
-#~ msgid "{value!r} is not a valid UUID."
-#~ msgstr "{value!r} n'est pas un UUID valide."
-
-#~ msgid "file"
-#~ msgstr "fichier"
-
-#~ msgid "directory"
-#~ msgstr "répertoire"
-
-#~ msgid "path"
-#~ msgstr "chemin"
-
-#~ msgid "{name} {filename!r} does not exist."
-#~ msgstr "{nom} {filename!r} n'existe pas."
-
-#~ msgid "{name} {filename!r} is a file."
-#~ msgstr "{nom} {filename!r} est un fichier."
-
-#, python-brace-format
-#~ msgid "{name} '{filename}' is a directory."
-#~ msgstr "{nom} '{filename}' est un répertoire."
-
-#~ msgid "{name} {filename!r} is not readable."
-#~ msgstr "{nom} {filename!r} n'est pas lisible."
-
-#~ msgid "{name} {filename!r} is not writable."
-#~ msgstr "{nom} {nom de fichier!r} ne peut pas être écrit."
-
-#~ msgid "{name} {filename!r} is not executable."
-#~ msgstr "{nom} {nom de fichier!r} n'est pas exécutable."
-
-#~ msgid "Messages"
-#~ msgstr "Messages"
-
-#~ msgid "Site Maps"
-#~ msgstr "Plan du site"
-
-#~ msgid "Static Files"
-#~ msgstr "Fichiers statiques"
-
-#~ msgid "Syndication"
-#~ msgstr "Syndication"
-
-#~ msgid "…"
-#~ msgstr ".."
-
-#~ msgid "That page number is not an integer"
-#~ msgstr "Ce numéro de page n'est pas un entier"
-
-#~ msgid "That page number is less than 1"
-#~ msgstr "Ce numéro de page est inférieur à 1"
-
-#~ msgid "That page contains no results"
-#~ msgstr "That page contains no results"
-
-#~ msgid "Enter a valid value."
-#~ msgstr "Entrez une valeur valide."
-
-#~ msgid "Enter a valid domain name."
-#~ msgstr "Entrez un nom de domaine valide."
-
-#~ msgid "Enter a valid URL."
-#~ msgstr "Entrez une URL valide."
-
-#~ msgid "Enter a valid integer."
-#~ msgstr "Entrez un entier valide."
-
-#~ msgid "Enter a valid email address."
-#~ msgstr "Entrez une adresse e-mail valide."
-
-#~ msgid ""
-#~ "Enter a valid “slug” consisting of letters, numbers, underscores or hyphens."
-#~ msgstr ""
-#~ "Saisissez un \"slug\" valide composé de lettres, de chiffres, de sous-codes "
-#~ "ou d'hyphens."
-
-#~ msgid ""
-#~ "Enter a valid “slug” consisting of Unicode letters, numbers, underscores, or"
-#~ " hyphens."
-#~ msgstr ""
-#~ "Saisissez un \"slug\" valide composé de lettres Unicode, de chiffres, de "
-#~ "sous-codes ou d'hyphens."
-
-#, python-format
-#~ msgid "Enter a valid %(protocol)s address."
-#~ msgstr "Entrez une adresse valide %(protocol)s."
-
-#~ msgid "IPv4"
-#~ msgstr "IPv4"
-
-#~ msgid "IPv6"
-#~ msgstr "IPv6"
-
-#~ msgid "IPv4 or IPv6"
-#~ msgstr "IPv4 ou IPv6"
-
-#~ msgid "Enter only digits separated by commas."
-#~ msgstr "N'entrez que des chiffres séparés par des virgules."
-
-#, python-format
-#~ msgid "Ensure this value is %(limit_value)s (it is %(show_value)s)."
-#~ msgstr ""
-#~ "Assurez-vous que cette valeur est %(limit_value)s (c'est %(show_value)s)."
-
-#, python-format
-#~ msgid "Ensure this value is less than or equal to %(limit_value)s."
-#~ msgstr ""
-#~ "Assurez-vous que cette valeur est inférieure ou égale à %(limit_value)s."
-
-#, python-format
-#~ msgid "Ensure this value is greater than or equal to %(limit_value)s."
-#~ msgstr ""
-#~ "Assurez-vous que cette valeur est supérieure ou égale à %(limit_value)s."
-
-#, python-format
-#~ msgid "Ensure this value is a multiple of step size %(limit_value)s."
-#~ msgstr ""
-#~ "Assurez-vous que cette valeur est un multiple de la taille de l'étape "
-#~ "%(limit_value)s."
-
-#, python-format
-#~ msgid ""
-#~ "Ensure this value is a multiple of step size %(limit_value)s, starting from "
-#~ "%(offset)s, e.g. %(offset)s, %(valid_value1)s, %(valid_value2)s, and so on."
-#~ msgstr ""
-#~ "Assurez-vous que cette valeur est un multiple de la taille de l'étape "
-#~ "%(limit_value)s, en commençant par %(offset)s, par exemple %(offset)s, "
-#~ "%(valid_value1)s, %(valid_value2)s, et ainsi de suite."
-
-#~ msgid "Enter a number."
-#~ msgstr "Entrez un numéro."
-
-#, python-format
-#~ msgid ""
-#~ "File extension “%(extension)s” is not allowed. Allowed extensions are: "
-#~ "%(allowed_extensions)s."
-#~ msgstr ""
-#~ "L'extension de fichier \"%(extension)s\" n'est pas autorisée. Les extensions"
-#~ " autorisées sont : %(allowed_extensions)s."
-
-#~ msgid "Null characters are not allowed."
-#~ msgstr "Les caractères nuls ne sont pas autorisés."
-
-#~ msgid "and"
-#~ msgstr "et"
-
-#, python-format
-#~ msgid "%(model_name)s with this %(field_labels)s already exists."
-#~ msgstr "%(nom_du_modèle)s avec ce %(étiquettes_du_champ)s existe déjà."
-
-#, python-format
-#~ msgid "Constraint “%(name)s” is violated."
-#~ msgstr "La contrainte \"%(nom)s\" est violée."
-
-#, python-format
-#~ msgid "Value %(value)r is not a valid choice."
-#~ msgstr "Value %(valeur)r n'est pas un choix valide."
-
-#~ msgid "This field cannot be null."
-#~ msgstr "Ce champ ne peut pas être nul."
-
-#~ msgid "This field cannot be blank."
-#~ msgstr "Ce champ ne peut pas être laissé vide."
-
-#, python-format
-#~ msgid "%(model_name)s with this %(field_label)s already exists."
-#~ msgstr "%(nom_du_modèle)s avec ce %(étiquette_du_champ)s existe déjà."
-
-#, python-format
-#~ msgid ""
-#~ "%(field_label)s must be unique for %(date_field_label)s %(lookup_type)s."
-#~ msgstr ""
-#~ "%(field_label)s doit être unique pour %(date_field_label)s %(lookup_type)s."
-
-#, python-format
-#~ msgid "Field of type: %(field_type)s"
-#~ msgstr "Champ de type : %(field_type)s"
-
-#, python-format
-#~ msgid "“%(value)s” value must be either True or False."
-#~ msgstr "\"%(value)s\" valeur doit être soit True soit False."
-
-#, python-format
-#~ msgid "“%(value)s” value must be either True, False, or None."
-#~ msgstr "\"%(value)s\" valeur doit être soit True, False, ou None."
-
-#~ msgid "Boolean (Either True or False)"
-#~ msgstr "Boolean (Either True or False)"
-
-#, python-format
-#~ msgid "String (up to %(max_length)s)"
-#~ msgstr "Chaîne (jusqu'à %(max_length)s)"
-
-#~ msgid "String (unlimited)"
-#~ msgstr "Chaîne (illimitée)"
-
-#~ msgid "Comma-separated integers"
-#~ msgstr "Entiers séparés par des virgules"
-
-#, python-format
-#~ msgid ""
-#~ "“%(value)s” value has an invalid date format. It must be in YYYY-MM-DD "
-#~ "format."
-#~ msgstr ""
-#~ "la valeur \"%(value)s\" a un format de date invalide. Elle doit être au "
-#~ "format AAAA-MM-DD."
-
-#, python-format
-#~ msgid ""
-#~ "“%(value)s” value has the correct format (YYYY-MM-DD) but it is an invalid "
-#~ "date."
-#~ msgstr ""
-#~ "\"%(value)s\" valeur a le bon format (AAAA-MM-DD) mais c'est une date "
-#~ "invalide."
-
-#~ msgid "Date (without time)"
-#~ msgstr "Date (sans heure)"
-
-#, python-format
-#~ msgid ""
-#~ "“%(value)s” value has an invalid format. It must be in YYYY-MM-DD "
-#~ "HH:MM[:ss[.uuuuuu]][TZ] format."
-#~ msgstr ""
-#~ "la valeur \"%(value)s\" a un format invalide. Elle doit être au format YYYY-"
-#~ "MM-DD HH:MM[:ss[.uuuuu]][TZ]."
-
-#, python-format
-#~ msgid ""
-#~ "“%(value)s” value has the correct format (YYYY-MM-DD "
-#~ "HH:MM[:ss[.uuuuuu]][TZ]) but it is an invalid date/time."
-#~ msgstr ""
-#~ "la valeur \"%(value)s\" a le bon format (YYYY-MM-DD HH:MM[:ss[.uuuuu]][TZ]) "
-#~ "mais c'est une date/heure invalide."
-
-#~ msgid "Date (with time)"
-#~ msgstr "Date (avec heure)"
-
-#, python-format
-#~ msgid "“%(value)s” value must be a decimal number."
-#~ msgstr "\"%(value)s\" valeur doit être un nombre décimal."
-
-#~ msgid "Decimal number"
-#~ msgstr "Numéro décimal"
-
-#, python-format
-#~ msgid ""
-#~ "“%(value)s” value has an invalid format. It must be in [DD] "
-#~ "[[HH:]MM:]ss[.uuuuuu] format."
-#~ msgstr ""
-#~ "la valeur \"%(value)s\" a un format invalide. Elle doit être au format [DD] "
-#~ "[[HH :]MM :]ss[.uuuuu]."
-
-#~ msgid "Duration"
-#~ msgstr "Duration"
-
-#, fuzzy
-#~ msgid "Email address"
-#~ msgstr "Adresse électronique"
-
-#~ msgid "File path"
-#~ msgstr "Chemin de fichier"
-
-#, python-format
-#~ msgid "“%(value)s” value must be a float."
-#~ msgstr "\"%(value)s\" valeur doit être un float."
-
-#~ msgid "Floating point number"
-#~ msgstr "Numéro de point flottant"
-
-#, python-format
-#~ msgid "“%(value)s” value must be an integer."
-#~ msgstr "\"%(value)s\" valeur doit être un entier."
-
-#~ msgid "Integer"
-#~ msgstr "Entier"
-
-#~ msgid "Big (8 byte) integer"
-#~ msgstr "Big (8 octets) entier"
-
-#~ msgid "Small integer"
-#~ msgstr "Petit entier"
-
-#~ msgid "IPv4 address"
-#~ msgstr "Adresse IPv4"
-
-#, fuzzy
-#~ msgid "IP address"
-#~ msgstr "Adresse IP"
-
-#, fuzzy, python-format
-#~ msgid "“%(value)s” value must be either None, True or False."
-#~ msgstr "\"%(value)s\" valeur doit être soit True soit False."
-
-#~ msgid "Boolean (Either True, False or None)"
-#~ msgstr "Boolean (Either True, False or None)"
-
-#~ msgid "Positive big integer"
-#~ msgstr "Grand integer positif"
-
-#~ msgid "Positive integer"
-#~ msgstr "Intègre positif"
-
-#~ msgid "Positive small integer"
-#~ msgstr "Petit entier positif"
-
-#, python-format
-#~ msgid "Slug (up to %(max_length)s)"
-#~ msgstr "Slug (jusqu'à %(max_length)s)"
-
-#~ msgid "Text"
-#~ msgstr "Texte"
-
-#, fuzzy, python-format
-#~ msgid ""
-#~ "“%(value)s” value has an invalid format. It must be in HH:MM[:ss[.uuuuuu]] "
-#~ "format."
-#~ msgstr ""
-#~ "la valeur \"%(value)s\" a un format invalide. Elle doit être au format [DD] "
-#~ "[[HH :]MM :]ss[.uuuuu]."
-
-#, python-format
-#~ msgid ""
-#~ "“%(value)s” value has the correct format (HH:MM[:ss[.uuuuuu]]) but it is an "
-#~ "invalid time."
-#~ msgstr ""
-#~ "\"%(value)s\" value a le bon format (HH:MM[:ss[.uuuuu]]) mais c'est une "
-#~ "heure invalide."
-
-#~ msgid "Time"
-#~ msgstr "Time"
-
-#~ msgid "URL"
-#~ msgstr "URL"
-
-#~ msgid "Raw binary data"
-#~ msgstr "Données binaires brutes"
-
-#, python-format
-#~ msgid "“%(value)s” is not a valid UUID."
-#~ msgstr "\"%(value)s\" n'est pas un UUID valide."
-
-#~ msgid "Universally unique identifier"
-#~ msgstr "Identifiant unique universel"
-
-#~ msgid "File"
-#~ msgstr "Fichier"
-
-#~ msgid "Image"
-#~ msgstr "Image"
-
-#~ msgid "A JSON object"
-#~ msgstr "Un objet JSON"
-
-#~ msgid "Value must be valid JSON."
-#~ msgstr "La valeur doit être valide JSON."
-
-#, python-format
-#~ msgid "%(model)s instance with %(field)s %(value)r does not exist."
-#~ msgstr "l'instance %(model)s avec %(field)s %(value)r n'existe pas."
-
-#~ msgid "Foreign Key (type determined by related field)"
-#~ msgstr "Clé étrangère (type déterminé par le champ connexe)"
-
-#~ msgid "One-to-one relationship"
-#~ msgstr "Relation one-to-one"
-
-#, python-format
-#~ msgid "%(from)s-%(to)s relationship"
-#~ msgstr "relation %(de)s-%(à)s"
-
-#, python-format
-#~ msgid "%(from)s-%(to)s relationships"
-#~ msgstr "%(de)s-%(à)s relations"
-
-#~ msgid "Many-to-many relationship"
-#~ msgstr "Relation de l'homme à la femme"
-
-#~ msgid ":?.!"
-#~ msgstr ": ?.!"
-
-#~ msgid "This field is required."
-#~ msgstr "Ce champ est obligatoire."
-
-#~ msgid "Enter a whole number."
-#~ msgstr "Entrez un nombre entier."
-
-#~ msgid "Enter a valid date."
-#~ msgstr "Entrez une date valide."
-
-#~ msgid "Enter a valid time."
-#~ msgstr "Entrez une heure valide."
-
-#~ msgid "Enter a valid date/time."
-#~ msgstr "Entrez une date/heure valide."
-
-#~ msgid "Enter a valid duration."
-#~ msgstr "Entrez une durée valide."
-
-#, python-brace-format
-#~ msgid "The number of days must be between {min_days} and {max_days}."
-#~ msgstr "Le nombre de jours doit être compris entre {min_days} et {max_days}."
-
-#~ msgid "No file was submitted. Check the encoding type on the form."
-#~ msgstr ""
-#~ "Aucun fichier n'a été soumis. Vérifier le type d'encodage sur le formulaire."
-
-#~ msgid "No file was submitted."
-#~ msgstr "Aucun fichier n'a été soumis."
-
-#~ msgid "The submitted file is empty."
-#~ msgstr "Le fichier soumis est vide."
-
-#~ msgid "Please either submit a file or check the clear checkbox, not both."
-#~ msgstr ""
-#~ "Veuillez soit soumettre un fichier, soit cocher la case \"clear\", mais pas "
-#~ "les deux."
-
-#~ msgid ""
-#~ "Upload a valid image. The file you uploaded was either not an image or a "
-#~ "corrupted image."
-#~ msgstr ""
-#~ "Télécharger une image valide. Le fichier que vous avez téléchargé n'était "
-#~ "pas une image ou était une image corrompue."
-
-#, python-format
-#~ msgid "Select a valid choice. %(value)s is not one of the available choices."
-#~ msgstr ""
-#~ "Sélectionner un choix valide. %(valeur)s ne fait pas partie des choix "
-#~ "disponibles."
-
-#~ msgid "Enter a list of values."
-#~ msgstr "Entrez une liste de valeurs."
-
-#~ msgid "Enter a complete value."
-#~ msgstr "Entrez une valeur complète."
-
-#~ msgid "Enter a valid UUID."
-#~ msgstr "Entrez un UUID valide."
-
-#~ msgid "Enter a valid JSON."
-#~ msgstr "Entrez un JSON valide."
-
-#~ msgid ":"
-#~ msgstr ":"
-
-#, python-format
-#~ msgid "(Hidden field %(name)s) %(error)s"
-#~ msgstr "(Champ caché %(nom)s) %(erreur)s"
-
-#, python-format
-#~ msgid ""
-#~ "ManagementForm data is missing or has been tampered with. Missing fields: "
-#~ "%(field_names)s. You may need to file a bug report if the issue persists."
-#~ msgstr ""
-#~ "Les données ManagementForm sont manquantes ou ont été bloquées. Champs "
-#~ "manquants : %(noms_de_champs)s. Vous devrez peut-être envoyer un rapport de "
-#~ "bug si le problème persiste."
-
-#~ msgid "Order"
-#~ msgstr "Commande"
-
-#, python-format
-#~ msgid "Please correct the duplicate data for %(field)s."
-#~ msgstr "Veuillez corriger les données en double pour %(champ)s."
-
-#, python-format
-#~ msgid "Please correct the duplicate data for %(field)s, which must be unique."
-#~ msgstr ""
-#~ "Veuillez corriger les données en double pour %(champ)s, qui doivent être "
-#~ "uniques."
-
-#, python-format
-#~ msgid ""
-#~ "Please correct the duplicate data for %(field_name)s which must be unique "
-#~ "for the %(lookup)s in %(date_field)s."
-#~ msgstr ""
-#~ "Veuillez corriger les données en double pour %(nom_du_champ)s qui doivent "
-#~ "être uniques pour les %(recherche)s dans %(champ_date)s."
-
-#~ msgid "Please correct the duplicate values below."
-#~ msgstr "Veuillez corriger les valeurs en double ci-dessous."
-
-#~ msgid "The inline value did not match the parent instance."
-#~ msgstr "La valeur en ligne ne correspondait pas à l'instance parentale."
-
-#~ msgid ""
-#~ "Select a valid choice. That choice is not one of the available choices."
-#~ msgstr ""
-#~ "Sélectionner un choix valide. Ce choix ne fait pas partie des choix "
-#~ "disponibles."
-
-#, python-format
-#~ msgid "“%(pk)s” is not a valid value."
-#~ msgstr "\"%(pk)s\" n'est pas une valeur valide."
-
-#, python-format
-#~ msgid ""
-#~ "%(datetime)s couldn’t be interpreted in time zone %(current_timezone)s; it "
-#~ "may be ambiguous or it may not exist."
-#~ msgstr ""
-#~ "%(datetime)s n'a pas pu être interprété dans le fuseau horaire "
-#~ "%(current_timezone)s ; il peut être ambigu ou il peut ne pas exister."
-
-#~ msgid "Clear"
-#~ msgstr "Clear"
-
-#~ msgid "Currently"
-#~ msgstr "Actuellement"
-
-#~ msgid "Change"
-#~ msgstr "Changement"
-
-#~ msgid "Unknown"
-#~ msgstr "Inconnu"
-
-#~ msgid "Yes"
-#~ msgstr "Yes"
-
-#~ msgid "No"
-#~ msgstr "No"
-
-#~ msgid "yes,no,maybe"
-#~ msgstr "yes,no,maybe"
-
-#, python-format
-#~ msgid "%s KB"
-#~ msgstr "%s KB"
-
-#, python-format
-#~ msgid "%s MB"
-#~ msgstr "%s MB"
-
-#, python-format
-#~ msgid "%s GB"
-#~ msgstr "%s GB"
-
-#, python-format
-#~ msgid "%s TB"
-#~ msgstr "%s TB"
-
-#, python-format
-#~ msgid "%s PB"
-#~ msgstr "%s PB"
-
-#~ msgid "p.m."
-#~ msgstr "p.m."
-
-#~ msgid "a.m."
-#~ msgstr "a.m."
-
-#~ msgid "PM"
-#~ msgstr "PM"
-
-#~ msgid "AM"
-#~ msgstr "AM"
-
-#~ msgid "midnight"
-#~ msgstr "midnight"
-
-#~ msgid "noon"
-#~ msgstr "noon"
-
-#~ msgid "Monday"
-#~ msgstr "Lundi"
-
-#~ msgid "Tuesday"
-#~ msgstr "Tuesday"
-
-#~ msgid "Wednesday"
-#~ msgstr "Wednesday"
-
-#~ msgid "Thursday"
-#~ msgstr "Thursday"
-
-#~ msgid "Friday"
-#~ msgstr "Friday"
-
-#~ msgid "Saturday"
-#~ msgstr "Saturday"
-
-#~ msgid "Sunday"
-#~ msgstr "Sunday"
-
-#~ msgid "Mon"
-#~ msgstr "Mon"
-
-#~ msgid "Tue"
-#~ msgstr "Tue"
-
-#~ msgid "Wed"
-#~ msgstr "Wed"
-
-#~ msgid "Thu"
-#~ msgstr "Thu"
-
-#~ msgid "Fri"
-#~ msgstr "Fri"
-
-#~ msgid "Sat"
-#~ msgstr "Sat"
-
-#~ msgid "Sun"
-#~ msgstr "Sun"
-
-#~ msgid "January"
-#~ msgstr "Janvier"
-
-#~ msgid "February"
-#~ msgstr "Février"
-
-#~ msgid "March"
-#~ msgstr "March"
-
-#~ msgid "April"
-#~ msgstr "Avril"
-
-#~ msgid "May"
-#~ msgstr "May"
-
-#~ msgid "June"
-#~ msgstr "June"
-
-#~ msgid "July"
-#~ msgstr "Juillet"
-
-#~ msgid "August"
-#~ msgstr "Août"
-
-#~ msgid "September"
-#~ msgstr "Septembre"
-
-#~ msgid "October"
-#~ msgstr "Octobre"
-
-#~ msgid "November"
-#~ msgstr "Novembre"
-
-#~ msgid "December"
-#~ msgstr "Décembre"
-
-#~ msgid "jan"
-#~ msgstr "jan"
-
-#~ msgid "feb"
-#~ msgstr "feb"
-
-#~ msgid "mar"
-#~ msgstr "mar"
-
-#~ msgid "apr"
-#~ msgstr "apr"
-
-#~ msgid "may"
-#~ msgstr "may"
-
-#~ msgid "jun"
-#~ msgstr "jun"
-
-#~ msgid "jul"
-#~ msgstr "jul"
-
-#~ msgid "aug"
-#~ msgstr "aug"
-
-#~ msgid "sep"
-#~ msgstr "sep"
-
-#~ msgid "oct"
-#~ msgstr "oct"
-
-#~ msgid "nov"
-#~ msgstr "nov"
-
-#~ msgid "dec"
-#~ msgstr "fr"
-
-#~ msgctxt "abbrev. month"
-#~ msgid "Jan."
-#~ msgstr "Jan."
-
-#~ msgctxt "abbrev. month"
-#~ msgid "Feb."
-#~ msgstr "Feb."
-
-#~ msgctxt "abbrev. month"
-#~ msgid "March"
-#~ msgstr "March"
-
-#~ msgctxt "abbrev. month"
-#~ msgid "April"
-#~ msgstr "Avril"
-
-#~ msgctxt "abbrev. month"
-#~ msgid "May"
-#~ msgstr "May"
-
-#~ msgctxt "abbrev. month"
-#~ msgid "June"
-#~ msgstr "June"
-
-#~ msgctxt "abbrev. month"
-#~ msgid "July"
-#~ msgstr "Juillet"
-
-#~ msgctxt "abbrev. month"
-#~ msgid "Aug."
-#~ msgstr "Aug."
-
-#~ msgctxt "abbrev. month"
-#~ msgid "Sept."
-#~ msgstr "Sept."
-
-#~ msgctxt "abbrev. month"
-#~ msgid "Oct."
-#~ msgstr "Oct."
-
-#~ msgctxt "abbrev. month"
-#~ msgid "Nov."
-#~ msgstr "Nov."
-
-#~ msgctxt "abbrev. month"
-#~ msgid "Dec."
-#~ msgstr "Dec."
-
-#, fuzzy
-#~ msgctxt "alt. month"
-#~ msgid "January"
-#~ msgstr "Janvier"
-
-#, fuzzy
-#~ msgctxt "alt. month"
-#~ msgid "February"
-#~ msgstr "Février"
-
-#~ msgctxt "alt. month"
-#~ msgid "March"
-#~ msgstr "March"
-
-#~ msgctxt "alt. month"
-#~ msgid "April"
-#~ msgstr "Avril"
-
-#~ msgctxt "alt. month"
-#~ msgid "May"
-#~ msgstr "May"
-
-#~ msgctxt "alt. month"
-#~ msgid "June"
-#~ msgstr "June"
-
-#~ msgctxt "alt. month"
-#~ msgid "July"
-#~ msgstr "Juillet"
-
-#~ msgctxt "alt. month"
-#~ msgid "August"
-#~ msgstr "Août"
-
-#~ msgctxt "alt. month"
-#~ msgid "September"
-#~ msgstr "Septembre"
-
-#~ msgctxt "alt. month"
-#~ msgid "October"
-#~ msgstr "Octobre"
-
-#~ msgctxt "alt. month"
-#~ msgid "November"
-#~ msgstr "Novembre"
-
-#~ msgctxt "alt. month"
-#~ msgid "December"
-#~ msgstr "Décembre"
-
-#~ msgid "This is not a valid IPv6 address."
-#~ msgstr "Ceci n'est pas une adresse IPv6 valide."
-
-#, python-format
-#~ msgctxt "String to return when truncating text"
-#~ msgid "%(truncated_text)s…"
-#~ msgstr "%(truncated_text)s.."
-
-#~ msgid "or"
-#~ msgstr "ou"
-
-#~ msgid ", "
-#~ msgstr ","
-
-#~ msgid "Forbidden"
-#~ msgstr "Forbidden"
-
-#~ msgid "CSRF verification failed. Request aborted."
-#~ msgstr "Échec de la vérification du CSRF. Request aborted."
-
-#~ msgid ""
-#~ "You are seeing this message because this HTTPS site requires a “Referer "
-#~ "header” to be sent by your web browser, but none was sent. This header is "
-#~ "required for security reasons, to ensure that your browser is not being "
-#~ "hijacked by third parties."
-#~ msgstr ""
-#~ "Vous voyez ce message parce que ce site HTTPS requiert un \"Referer header\""
-#~ " pour être envoyé par votre navigateur web, mais aucun n'a été envoyé. Cet "
-#~ "en-tête est nécessaire pour des raisons de sécurité, pour s'assurer que "
-#~ "votre navigateur n'est pas détourné par des tiers."
-
-#~ msgid ""
-#~ "If you have configured your browser to disable “Referer” headers, please re-"
-#~ "enable them, at least for this site, or for HTTPS connections, or for “same-"
-#~ "origin” requests."
-#~ msgstr ""
-#~ "Si vous avez configuré votre navigateur pour désactiver les en-têtes "
-#~ "\"Referer\", veuillez les réactiver, au moins pour ce site, ou pour les "
-#~ "connexions HTTPS, ou pour les requêtes \"same-origin\"."
-
-#~ msgid ""
-#~ "If you are using the <meta name=\"referrer\" content=\"no-referrer\"> tag or"
-#~ " including the “Referrer-Policy: no-referrer” header, please remove them. "
-#~ "The CSRF protection requires the “Referer” header to do strict referer "
-#~ "checking. If you’re concerned about privacy, use alternatives like <a "
-#~ "rel=\"noreferrer\" …> for links to third-party sites."
-#~ msgstr ""
-#~ "Si vous utilisez la balise <meta name=\"referrer\" content=\"no-referrer\"> "
-#~ "ou si vous incluez l'en-tête \"Referrer Policy : no-referrer\", veuillez les"
-#~ " supprimer. La protection CSRF exige que l'en-tête \"Referer\" fasse l'objet"
-#~ " d'une vérification stricte des référents. Si vous vous souciez de la "
-#~ "protection de la vie privée, utilisez des alternatives telles que <a "
-#~ "rel=\"noreferrer\" ...> pour les liens vers des sites tiers."
-
-#~ msgid ""
-#~ "You are seeing this message because this site requires a CSRF cookie when "
-#~ "submitting forms. This cookie is required for security reasons, to ensure "
-#~ "that your browser is not being hijacked by third parties."
-#~ msgstr ""
-#~ "Vous voyez ce message parce que ce site requiert un cookie CSRF lors de la "
-#~ "soumission de formulaires. Ce cookie est nécessaire pour des raisons de "
-#~ "sécurité, pour s'assurer que votre navigateur n'est pas détourné par des "
-#~ "tiers."
-
-#~ msgid ""
-#~ "If you have configured your browser to disable cookies, please re-enable "
-#~ "them, at least for this site, or for “same-origin” requests."
-#~ msgstr ""
-#~ "Si vous avez configuré votre navigateur pour désactiver les cookies, "
-#~ "veuillez les réactiver, au moins pour ce site, ou pour les demandes \"same-"
-#~ "origin\"."
-
-#~ msgid "More information is available with DEBUG=True."
-#~ msgstr "Plus d'informations sont disponibles avec DEBUG=True."
-
-#~ msgid "No year specified"
-#~ msgstr "Pas d'année spécifiée"
-
-#~ msgid "Date out of range"
-#~ msgstr "Date hors de portée"
-
-#~ msgid "No month specified"
-#~ msgstr "Pas de mois spécifié"
-
-#~ msgid "No day specified"
-#~ msgstr "Pas de jour spécifié"
-
-#~ msgid "No week specified"
-#~ msgstr "Pas de semaine spécifiée"
-
-#, python-format
-#~ msgid "No %(verbose_name_plural)s available"
-#~ msgstr "No %(verbose_name_plural)s disponible"
-
-#, python-format
-#~ msgid ""
-#~ "Future %(verbose_name_plural)s not available because "
-#~ "%(class_name)s.allow_future is False."
-#~ msgstr ""
-#~ "Future %(verbose_name_plural)s non disponible parce que "
-#~ "%(class_name)s.allow_future est False."
-
-#, python-format
-#~ msgid "Invalid date string “%(datestr)s” given format “%(format)s”"
-#~ msgstr "Invalid date string \"%(datestr)s\" given format \"%(format)s\""
-
-#, python-format
-#~ msgid "No %(verbose_name)s found matching the query"
-#~ msgstr "No %(verbose_name)s found matching the query"
-
-#~ msgid "Page is not “last”, nor can it be converted to an int."
-#~ msgstr "La page n'est pas \"dernière\", ni ne peut être convertie en un int."
-
-#, python-format
-#~ msgid "Invalid page (%(page_number)s): %(message)s"
-#~ msgstr "Page invalide (%(numéro_de_page)s) : %(message)s"
-
-#, python-format
-#~ msgid "Empty list and “%(class_name)s.allow_empty” is False."
-#~ msgstr "Empty list and \"%(class_name)s.allow_empty\" is False."
-
-#~ msgid "Directory indexes are not allowed here."
-#~ msgstr "Les index de répertoire ne sont pas autorisés ici."
-
-#, python-format
-#~ msgid "“%(path)s” does not exist"
-#~ msgstr "\"%(path)s\" n'existe pas"
-
-#, python-format
-#~ msgid "Index of %(directory)s"
-#~ msgstr "Index de %(répertoire)s"
-
-#~ msgid "The install worked successfully! Congratulations!"
-#~ msgstr "L'installation s'est déroulée avec succès ! Félicitations !"
-
-#, python-format
-#~ msgid ""
-#~ "View <a href=\"https://docs.djangoproject.com/en/%(version)s/releases/\" "
-#~ "target=\"_blank\" rel=\"noopener\">release notes</a> for Django %(version)s"
-#~ msgstr ""
-#~ "View <a href=\"https://docs.djangoproject.com/en/%(version)s/releases/\" "
-#~ "target=\"_blank\" rel=\"noopener\">notes de mise à jour</a> pour Django "
-#~ "%(version)s"
-
-#, python-format
-#~ msgid ""
-#~ "You are seeing this page because <a "
-#~ "href=\"https://docs.djangoproject.com/en/%(version)s/ref/settings/#debug\" "
-#~ "target=\"_blank\" rel=\"noopener\">DEBUG=True</a> is in your settings file "
-#~ "and you have not configured any URLs."
-#~ msgstr ""
-#~ "Vous voyez cette page parce que <a "
-#~ "href=\"https://docs.djangoproject.com/en/%(version)s/ref/settings/#debug\" "
-#~ "target=\"_blank\" rel=\"noopener\">DEBUG=True</a> est dans votre fichier de "
-#~ "paramètres et que vous n'avez pas configuré d'URL."
-
-#~ msgid "Django Documentation"
-#~ msgstr "Documentation Django"
-
-#~ msgid "Topics, references, &amp; how-to’s"
-#~ msgstr "Topics, références, &amp ; how-to's"
-
-#~ msgid "Tutorial: A Polling App"
-#~ msgstr "Tutoriel : Une application de sondage"
-
-#~ msgid "Get started with Django"
-#~ msgstr "Démarre avec Django"
-
-#~ msgid "Django Community"
-#~ msgstr "Communauté Django"
-
-#~ msgid "Connect, get help, or contribute"
-#~ msgstr "Se connecter, obtenir de l'aide, ou contribuer"
-
-#, fuzzy
-#~ msgid "{name} {filename!r} is a directory."
-#~ msgstr "{nom} '{filename}' est un répertoire."
