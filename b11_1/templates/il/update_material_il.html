@@ -75,22 +75,24 @@
                     <h5>{% trans "Existing Attachments" %}</h5>
                 </div>
                 <div class="card-body">
-                    {% for attachment in object.attachments.all %}
-                        <div class="existing-attachment-row mb-3">
-                            <div class="row">
-                                <div class="col-5">
-                                    <a href="{{ attachment.get_file_url }}" target="_blank">{{ attachment.file.name|basename }}</a>
-                                </div>
-                                <div class="col-6">
-                                    {{ attachment.comment }}
-                                </div>
-                                <div class="col-1">
-                                    <input type="checkbox" name="delete_attachments[]" value="{{ attachment.id }}">
-                                    <label>{% trans "Delete" %}</label>
+                    <div id="existing-attachments-container">
+                        {% for attachment in object.attachments.all %}
+                            <div class="attachment-row mb-3">
+                                <div class="row">
+                                    <div class="col-5">
+                                        <a href="{{ attachment.get_file_url }}" target="_blank" class="form-control">{{ attachment.file.name|basename }}</a>
+                                    </div>
+                                    <div class="col-5">
+                                        <input type="text" value="{{ attachment.comment }}" class="form-control" readonly>
+                                    </div>
+                                    <div class="col-2">
+                                            <input type="checkbox" name="delete_attachments[]" value="{{ attachment.id }}">
+                                            <label>{% trans "Delete" %}</label>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    {% endfor %}
+                        {% endfor %}
+                    </div>
                 </div>
             </div>
         {% endif %}
