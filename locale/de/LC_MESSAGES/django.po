@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-13 08:37+0200\n"
+"POT-Creation-Date: 2025-05-13 13:29+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,6 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
 #: LBA/settings.py:8
 msgid "German"
 msgstr "German"
@@ -579,7 +580,7 @@ msgstr "Delete"
 #: b11_1/templates/il/update_material_il.html:101
 #: b11_1/templates/smda/update_material_smda.html:178
 msgid "New Attachments"
-msgstr "New Attachments"
+msgstr "Neue Anlagen"
 
 #: b11_1/templates/gd/update_material_gd.html:188
 #: b11_1/templates/il/add_material_il.html:65
@@ -602,7 +603,7 @@ msgid "Änderungen speichern"
 msgstr "Änderungen speichern"
 
 #: b11_1/templates/gd/update_material_gd.html:204
-#: b11_1/templates/il/add_material_il.html:80
+#: b11_1/templates/il/add_material_il.html:102
 #: b11_1/templates/il/update_material_il.html:148
 #: b11_1/templates/smda/update_material_smda.html:204
 msgid "Zurück ohne Speichern"
@@ -616,7 +617,22 @@ msgstr "New Material"
 msgid "Attachments"
 msgstr "Attachments"
 
-#: b11_1/templates/il/add_material_il.html:79
+#: b11_1/templates/il/add_material_il.html:81
+#: b11_1/templates/il/update_material_il.html:127
+msgid "Material Status"
+msgstr "Material Status"
+
+#: b11_1/templates/il/add_material_il.html:87
+#: b11_1/templates/il/update_material_il.html:133
+msgid "Material ist fertig"
+msgstr "Material ist fertig"
+
+#: b11_1/templates/il/add_material_il.html:88
+#: b11_1/templates/il/update_material_il.html:134
+msgid "Markieren Sie dieses Kästchen, wenn das Material fertig ist und übermittelt werden kann."
+msgstr "Markieren Sie dieses Kästchen, wenn das Material fertig ist und übermittelt werden kann."
+
+#: b11_1/templates/il/add_material_il.html:101
 msgid "Save"
 msgstr "Save"
 
@@ -651,18 +667,6 @@ msgstr "Übermittelte/s Material/ien"
 #: b11_1/templates/il/update_material_il.html:54
 msgid "Berechnete Felder"
 msgstr "Berechnete Felder"
-
-#: b11_1/templates/il/update_material_il.html:127
-msgid "Material Status"
-msgstr "Material Status"
-
-#: b11_1/templates/il/update_material_il.html:133
-msgid "Material ist fertig"
-msgstr "Material ist fertig"
-
-#: b11_1/templates/il/update_material_il.html:134
-msgid "Markieren Sie dieses Kästchen, wenn das Material fertig ist und übermittelt werden kann."
-msgstr "Markieren Sie dieses Kästchen, wenn das Material fertig ist und übermittelt werden kann."
 
 #: b11_1/templates/navbar_generic.html:38
 msgid "Material_nav"

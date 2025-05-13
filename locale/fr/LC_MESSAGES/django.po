@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-13 08:37+0200\n"
+"POT-Creation-Date: 2025-05-13 13:29+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -607,7 +607,7 @@ msgid "Änderungen speichern"
 msgstr "Enregistrer les modifications"
 
 #: b11_1/templates/gd/update_material_gd.html:204
-#: b11_1/templates/il/add_material_il.html:80
+#: b11_1/templates/il/add_material_il.html:102
 #: b11_1/templates/il/update_material_il.html:148
 #: b11_1/templates/smda/update_material_smda.html:204
 msgid "Zurück ohne Speichern"
@@ -621,7 +621,24 @@ msgstr "Nouveau matériau"
 msgid "Attachments"
 msgstr "Pièces jointes"
 
-#: b11_1/templates/il/add_material_il.html:79
+#: b11_1/templates/il/add_material_il.html:81
+#: b11_1/templates/il/update_material_il.html:127
+msgid "Material Status"
+msgstr "Statut du matériau"
+
+#: b11_1/templates/il/add_material_il.html:87
+#: b11_1/templates/il/update_material_il.html:133
+msgid "Material ist fertig"
+msgstr "Le matériel est prêt"
+
+#: b11_1/templates/il/add_material_il.html:88
+#: b11_1/templates/il/update_material_il.html:134
+msgid ""
+"Markieren Sie dieses Kästchen, wenn das Material fertig ist und übermittelt "
+"werden kann."
+msgstr "Cochez cette case si le matériel est prêt et peut être transmis."
+
+#: b11_1/templates/il/add_material_il.html:101
 msgid "Save"
 msgstr "Save"
 
@@ -656,20 +673,6 @@ msgstr "Matériel(s) transmis"
 #: b11_1/templates/il/update_material_il.html:54
 msgid "Berechnete Felder"
 msgstr "Champs calculés"
-
-#: b11_1/templates/il/update_material_il.html:127
-msgid "Material Status"
-msgstr "Statut du matériau"
-
-#: b11_1/templates/il/update_material_il.html:133
-msgid "Material ist fertig"
-msgstr "Le matériel est prêt"
-
-#: b11_1/templates/il/update_material_il.html:134
-msgid ""
-"Markieren Sie dieses Kästchen, wenn das Material fertig ist und übermittelt "
-"werden kann."
-msgstr "Cochez cette case si le matériel est prêt et peut être transmis."
 
 #: b11_1/templates/navbar_generic.html:38
 msgid "Material_nav"
