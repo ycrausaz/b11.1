@@ -9,9 +9,6 @@ import boto3
 from botocore.client import Config
 from .storage import MaterialAttachmentStorage
 
-MAX_ATTACHMENTS_PER_MATERIAL = 5
-MAX_ATTACHMENT_SIZE = 2.5 * 1024 * 1024  # 2.5MB in bytes
-
 class LogEntry(models.Model):
     id = models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name=_('ID'))
     timestamp = models.DateTimeField(auto_now_add=True)

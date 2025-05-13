@@ -268,3 +268,7 @@ AUTHENTICATION_BACKENDS = [
     'b11_1.backends.EmailBackend',
     'b11_1.backends.UsernameBackend',
 ]
+
+# Attachment settings
+MAX_ATTACHMENTS_PER_MATERIAL = 5
+MAX_ATTACHMENT_SIZE = 2.5 * 1024 * 1024  # 2.5MB in bytes
