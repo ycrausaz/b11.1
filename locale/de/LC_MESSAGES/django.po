@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-13 13:29+0200\n"
+"POT-Creation-Date: 2025-05-13 16:21+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -86,411 +86,411 @@ msgstr "Start Date"
 msgid "End Date"
 msgstr "End Date"
 
-#: b11_1/models.py:16
+#: b11_1/models.py:13
 msgid "ID"
 msgstr "ID"
 
-#: b11_1/models.py:65
+#: b11_1/models.py:62
 msgid "Help content (German)"
 msgstr "Help content (German)"
 
-#: b11_1/models.py:66
+#: b11_1/models.py:63
 msgid "Help content (French)"
 msgstr "Help content (French)"
 
-#: b11_1/models.py:67
+#: b11_1/models.py:64
 msgid "Help content (English)"
 msgstr "Help content (English)"
 
-#: b11_1/models.py:68
+#: b11_1/models.py:65
 msgid "Inline help (German)"
 msgstr "Inline help (German)"
 
-#: b11_1/models.py:69
+#: b11_1/models.py:66
 msgid "Inline help (French)"
 msgstr "Inline help (French)"
 
-#: b11_1/models.py:70
+#: b11_1/models.py:67
 msgid "Inline help (English)"
 msgstr "Inline help (English)"
 
-#: b11_1/models.py:206
+#: b11_1/models.py:203
 msgid "Fertig"
 msgstr "Fertig"
 
-#: b11_1/models.py:207
+#: b11_1/models.py:204
 msgid "Transfer Comment"
 msgstr "Transfer Comment"
 
-#: b11_1/models.py:208
+#: b11_1/models.py:205
 msgid "Systemname"
 msgstr "Systemname"
 
-#: b11_1/models.py:209
+#: b11_1/models.py:206
 msgid "Positions-Nr."
 msgstr "Positions-Nr."
 
-#: b11_1/models.py:210
+#: b11_1/models.py:207
 msgid "Referenz-Nr. Lieferant"
 msgstr "Referenz-Nr. Lieferant"
 
-#: b11_1/models.py:211
+#: b11_1/models.py:208
 msgid "Kurztext DE"
 msgstr "Kurztext DE"
 
-#: b11_1/models.py:212
+#: b11_1/models.py:209
 msgid "Kurztext FR"
 msgstr "Kurztext FR"
 
-#: b11_1/models.py:213
+#: b11_1/models.py:210
 msgid "Kurztext EN"
 msgstr "Kurztext EN"
 
-#: b11_1/models.py:214
+#: b11_1/models.py:211
 msgid "Grunddatentext DE - 1. Zeile"
 msgstr "Grunddatentext DE - 1. Zeile"
 
-#: b11_1/models.py:215
+#: b11_1/models.py:212
 msgid "Grunddatentext DE - 2. Zeile"
 msgstr "Grunddatentext DE - 2. Zeile"
 
-#: b11_1/models.py:216
+#: b11_1/models.py:213
 msgid "Grunddatentext FR - 1. Zeile"
 msgstr "Grunddatentext FR - 1. Zeile"
 
-#: b11_1/models.py:217
+#: b11_1/models.py:214
 msgid "Grunddatentext FR - 2. Zeile"
 msgstr "Grunddatentext FR - 2. Zeile"
 
-#: b11_1/models.py:218
+#: b11_1/models.py:215
 msgid "Grunddatentext EN - 1. Zeile"
 msgstr "Grunddatentext EN - 1. Zeile"
 
-#: b11_1/models.py:219
+#: b11_1/models.py:216
 msgid "Grunddatentext EN - 2. Zeile"
 msgstr "Grunddatentext EN - 2. Zeile"
 
-#: b11_1/models.py:220
+#: b11_1/models.py:217
 msgid "Basismengeneinheit"
 msgstr "Basismengeneinheit"
 
-#: b11_1/models.py:221
+#: b11_1/models.py:218
 msgid "Bruttogewicht"
 msgstr "Bruttogewicht"
 
-#: b11_1/models.py:222
+#: b11_1/models.py:219
 msgid "Gewichtseinheit"
 msgstr "Gewichtseinheit"
 
-#: b11_1/models.py:223
+#: b11_1/models.py:220
 msgid "Nettogewicht"
 msgstr "Nettogewicht"
 
-#: b11_1/models.py:224
+#: b11_1/models.py:221
 msgid "Grösse / Abmessung"
 msgstr "Grösse / Abmessung"
 
-#: b11_1/models.py:225
+#: b11_1/models.py:222
 msgid "EAN / UPC Code"
 msgstr "EAN / UPC Code"
 
-#: b11_1/models.py:226
+#: b11_1/models.py:223
 msgid "Nato Stock Number"
 msgstr "Nato Stock Number"
 
-#: b11_1/models.py:227
+#: b11_1/models.py:224
 msgid "NSN Gruppe / Klasse"
 msgstr "NSN Gruppe / Klasse"
 
-#: b11_1/models.py:228
+#: b11_1/models.py:225
 msgid "Nato Versorgungs-Nr."
 msgstr "Nato Versorgungs-Nr."
 
-#: b11_1/models.py:229
+#: b11_1/models.py:226
 msgid "Herstellerteilenummer"
 msgstr "Herstellerteilenummer"
 
-#: b11_1/models.py:230
+#: b11_1/models.py:227
 msgid "Normbezeichnung"
 msgstr "Normbezeichnung"
 
-#: b11_1/models.py:231
+#: b11_1/models.py:228
 msgid "Gefahrgutkennzeichen"
 msgstr "Gefahrgutkennzeichen"
 
-#: b11_1/models.py:232
+#: b11_1/models.py:229
 msgid "Instandsetzbar"
 msgstr "Instandsetzbar"
 
-#: b11_1/models.py:233
+#: b11_1/models.py:230
 msgid "Chargenpflicht"
 msgstr "Chargenpflicht"
 
-#: b11_1/models.py:234
+#: b11_1/models.py:231
 msgid "Bestellmengeneinheit"
 msgstr "Bestellmengeneinheit"
 
-#: b11_1/models.py:235
+#: b11_1/models.py:232
 msgid "Mindestbestellmenge"
 msgstr "Mindestbestellmenge"
 
-#: b11_1/models.py:236
+#: b11_1/models.py:233
 msgid "Lieferzeit"
 msgstr "Lieferzeit"
 
-#: b11_1/models.py:237
+#: b11_1/models.py:234
 msgid "Einheit L / B / H"
 msgstr "Einheit L / B / H"
 
-#: b11_1/models.py:238
+#: b11_1/models.py:235
 msgid "Länge"
 msgstr "Länge"
 
-#: b11_1/models.py:239
+#: b11_1/models.py:236
 msgid "Breite"
 msgstr "Breite"
 
-#: b11_1/models.py:240
+#: b11_1/models.py:237
 msgid "Höhe"
 msgstr "Höhe"
 
-#: b11_1/models.py:241
+#: b11_1/models.py:238
 msgid "Preis"
 msgstr "Preis"
 
-#: b11_1/models.py:242
+#: b11_1/models.py:239
 msgid "Währung"
 msgstr "Währung"
 
-#: b11_1/models.py:243
+#: b11_1/models.py:240
 msgid "Preiseinheit"
 msgstr "Preiseinheit"
 
-#: b11_1/models.py:244
+#: b11_1/models.py:241
 msgid "Lagerfähigkeit"
 msgstr "Lagerfähigkeit"
 
-#: b11_1/models.py:245
+#: b11_1/models.py:242
 msgid "Exportkontrollauflage"
 msgstr "Exportkontrollauflage"
 
-#: b11_1/models.py:246
+#: b11_1/models.py:243
 msgid "CAGE Code"
 msgstr "CAGE Code"
 
-#: b11_1/models.py:247
+#: b11_1/models.py:244
 msgid "Hersteller Name"
 msgstr "Hersteller Name"
 
-#: b11_1/models.py:248
+#: b11_1/models.py:245
 msgid "Hersteller Adresse"
 msgstr "Hersteller Adresse"
 
-#: b11_1/models.py:249
+#: b11_1/models.py:246
 msgid "Hersteller PLZ "
 msgstr "Hersteller PLZ "
 
-#: b11_1/models.py:250
+#: b11_1/models.py:247
 msgid "Hersteller Ort"
 msgstr "Hersteller Ort"
 
-#: b11_1/models.py:251
+#: b11_1/models.py:248
 msgid "Revision"
 msgstr "Revision"
 
-#: b11_1/models.py:252
+#: b11_1/models.py:249
 msgid "Bemerkung"
 msgstr "Bemerkung"
 
-#: b11_1/models.py:253
+#: b11_1/models.py:250
 msgid "BEGRU"
 msgstr "BEGRU"
 
-#: b11_1/models.py:254
+#: b11_1/models.py:251
 msgid "Materialart"
 msgstr "Materialart"
 
-#: b11_1/models.py:255
+#: b11_1/models.py:252
 msgid "Sparte"
 msgstr "Sparte"
 
-#: b11_1/models.py:256
+#: b11_1/models.py:253
 msgid "Produkthierarchie"
 msgstr "Produkthierarchie"
 
-#: b11_1/models.py:257
+#: b11_1/models.py:254
 msgid "Materialzustandsverwaltung"
 msgstr "Materialzustandsverwaltung"
 
-#: b11_1/models.py:258
+#: b11_1/models.py:255
 msgid "Rückführungscode"
 msgstr "Rückführungscode"
 
-#: b11_1/models.py:259
+#: b11_1/models.py:256
 msgid "Serialnummerprofil"
 msgstr "Serialnummerprofil"
 
-#: b11_1/models.py:260
+#: b11_1/models.py:257
 msgid "Spare Part Class Code"
 msgstr "Spare Part Class Code"
 
-#: b11_1/models.py:261
+#: b11_1/models.py:258
 msgid "Geschäftspartner"
 msgstr "Geschäftspartner"
 
-#: b11_1/models.py:262
+#: b11_1/models.py:259
 msgid "Warengruppe"
 msgstr "Warengruppe"
 
-#: b11_1/models.py:263
+#: b11_1/models.py:260
 msgid "Externe Warengruppe"
 msgstr "Externe Warengruppe"
 
-#: b11_1/models.py:264
+#: b11_1/models.py:261
 msgid "Übersetzungsstatus"
 msgstr "Übersetzungsstatus"
 
-#: b11_1/models.py:265
+#: b11_1/models.py:262
 msgid "Endbevorratet"
 msgstr "Endbevorratet"
 
-#: b11_1/models.py:266
+#: b11_1/models.py:263
 msgid "Revision Fremd"
 msgstr "Revision Fremd"
 
-#: b11_1/models.py:267
+#: b11_1/models.py:264
 msgid "Revision Eigen"
 msgstr "Revision Eigen"
 
-#: b11_1/models.py:268
+#: b11_1/models.py:265
 msgid "Zertifiziert für Flug"
 msgstr "Zertifiziert für Flug"
 
-#: b11_1/models.py:269
+#: b11_1/models.py:266
 msgid "A-Nummer"
 msgstr "A-Nummer"
 
-#: b11_1/models.py:270
+#: b11_1/models.py:267
 msgid "Verteilung an PSD"
 msgstr "Verteilung an PSD"
 
-#: b11_1/models.py:271
+#: b11_1/models.py:268
 msgid "Verteilung an RUAG"
 msgstr "Verteilung an RUAG"
 
-#: b11_1/models.py:272
+#: b11_1/models.py:269
 msgid "Werkzuordnung"
 msgstr "Werkzuordnung"
 
-#: b11_1/models.py:273
+#: b11_1/models.py:270
 msgid "Werkzuordnung (2)"
 msgstr "Werkzuordnung (2)"
 
-#: b11_1/models.py:274
+#: b11_1/models.py:271
 msgid "Werkzuordnung (3)"
 msgstr "Werkzuordnung (3)"
 
-#: b11_1/models.py:275
+#: b11_1/models.py:272
 msgid "Werkzuordnung (4)"
 msgstr "Werkzuordnung (4)"
 
-#: b11_1/models.py:276
+#: b11_1/models.py:273
 msgid "Allgemeine Positionstypengruppe"
 msgstr "Allgemeine Positionstypengruppe"
 
-#: b11_1/models.py:277
+#: b11_1/models.py:274
 msgid "Verkaufsorg."
 msgstr "Verkaufsorg."
 
-#: b11_1/models.py:278
+#: b11_1/models.py:275
 msgid "Vertriebsweg"
 msgstr "Vertriebsweg"
 
-#: b11_1/models.py:279
+#: b11_1/models.py:276
 msgid "Führendes Material"
 msgstr "Führendes Material"
 
-#: b11_1/models.py:280
+#: b11_1/models.py:277
 msgid "Auszeichnungsfeld"
 msgstr "Auszeichnungsfeld"
 
-#: b11_1/models.py:281
+#: b11_1/models.py:278
 msgid "Fertigungssteuerer"
 msgstr "Fertigungssteuerer"
 
-#: b11_1/models.py:282
+#: b11_1/models.py:279
 msgid "Kennzeichen komplexes System"
 msgstr "Kennzeichen komplexes System"
 
-#: b11_1/models.py:283
+#: b11_1/models.py:280
 msgid "Sonderablauf"
 msgstr "Sonderablauf"
 
-#: b11_1/models.py:284
+#: b11_1/models.py:281
 msgid "Temperaturbedingung"
 msgstr "Temperaturbedingung"
 
-#: b11_1/models.py:285
+#: b11_1/models.py:282
 msgid "Bewertungsklasse"
 msgstr "Bewertungsklasse"
 
-#: b11_1/models.py:286
+#: b11_1/models.py:283
 msgid "Systemmanager"
 msgstr "Systemmanager"
 
-#: b11_1/models.py:287
+#: b11_1/models.py:284
 msgid "Kennziffer BAMF"
 msgstr "Kennziffer BAMF"
 
-#: b11_1/models.py:288
+#: b11_1/models.py:285
 msgid "Mietrelevanz"
 msgstr "Mietrelevanz"
 
-#: b11_1/models.py:289
+#: b11_1/models.py:286
 msgid "Next Higher Assembly"
 msgstr "Next Higher Assembly"
 
-#: b11_1/models.py:290
+#: b11_1/models.py:287
 msgid "Nachschubklasse"
 msgstr "Nachschubklasse"
 
-#: b11_1/models.py:291
+#: b11_1/models.py:288
 msgid "Materialeinstufung nach ZUVA"
 msgstr "Materialeinstufung nach ZUVA"
 
-#: b11_1/models.py:292
+#: b11_1/models.py:289
 msgid "Orderbuchpflicht"
 msgstr "Orderbuchpflicht"
 
-#: b11_1/models.py:293
+#: b11_1/models.py:290
 msgid "Verteilung APM Kerda"
 msgstr "Verteilung APM Kerda"
 
-#: b11_1/models.py:294
+#: b11_1/models.py:291
 msgid "Verteilung SVSAA"
 msgstr "Verteilung SVSAA"
 
-#: b11_1/models.py:295
+#: b11_1/models.py:292
 msgid "Verteilung CHEOPS"
 msgstr "Verteilung CHEOPS"
 
-#: b11_1/models.py:296
+#: b11_1/models.py:293
 msgid "Zuteilung"
 msgstr "Zuteilung"
 
-#: b11_1/models.py:297
+#: b11_1/models.py:294
 msgid "Ausprägung"
 msgstr "Ausprägung"
 
-#: b11_1/models.py:298
+#: b11_1/models.py:295
 msgid "Preissteuerung"
 msgstr "Preissteuerung"
 
-#: b11_1/models.py:299
+#: b11_1/models.py:296
 msgid "Preisermittlung"
 msgstr "Preisermittlung"
 
-#: b11_1/models.py:300
+#: b11_1/models.py:297
 msgid "Repararaturlokation"
 msgstr "Repararaturlokation"
 
@@ -568,7 +568,7 @@ msgstr "Material aktualisieren"
 #: b11_1/templates/il/update_material_il.html:75
 #: b11_1/templates/smda/update_material_smda.html:152
 msgid "Existing Attachments"
-msgstr "Existing Attachments"
+msgstr "Aktuelle Anlagen"
 
 #: b11_1/templates/gd/update_material_gd.html:166
 #: b11_1/templates/il/update_material_il.html:89
