@@ -673,19 +673,19 @@ msgstr "Check this box when the material is ready and can be transmitted."
 
 #: b11_1/templates/navbar_generic.html:38
 msgid "Material_nav"
-msgstr "Material_nav"
+msgstr "Material"
 
 #: b11_1/templates/navbar_generic.html:41
 msgid "Materialliste_nav"
-msgstr "Material list_nav"
+msgstr "Material list"
 
 #: b11_1/templates/navbar_generic.html:42
 msgid "Neues Material definieren_nav"
-msgstr "Define new material_nav"
+msgstr "Define new material"
 
 #: b11_1/templates/navbar_generic.html:47
 msgid "Account_nav"
-msgstr "Account_nav"
+msgstr "Account"
 
 #: b11_1/templates/registration/pre_register.html:13
 msgid "Registration - Email Verification"

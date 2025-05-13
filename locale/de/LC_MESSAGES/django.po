@@ -666,19 +666,19 @@ msgstr "Markieren Sie dieses Kästchen, wenn das Material fertig ist und übermi
 
 #: b11_1/templates/navbar_generic.html:38
 msgid "Material_nav"
-msgstr "Material_nav"
+msgstr "Material"
 
 #: b11_1/templates/navbar_generic.html:41
 msgid "Materialliste_nav"
-msgstr "Materialliste_nav"
+msgstr "Materialliste"
 
 #: b11_1/templates/navbar_generic.html:42
 msgid "Neues Material definieren_nav"
-msgstr "Neues Material definieren_nav"
+msgstr "Neues Material definieren"
 
 #: b11_1/templates/navbar_generic.html:47
 msgid "Account_nav"
-msgstr "Account_nav"
+msgstr "Account"
 
 #: b11_1/templates/registration/pre_register.html:13
 msgid "Registration - Email Verification"

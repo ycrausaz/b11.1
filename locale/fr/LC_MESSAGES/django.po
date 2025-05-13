@@ -673,19 +673,19 @@ msgstr "Cochez cette case si le matériel est prêt et peut être transmis."
 
 #: b11_1/templates/navbar_generic.html:38
 msgid "Material_nav"
-msgstr "Matériel_nav"
+msgstr "Matériel"
 
 #: b11_1/templates/navbar_generic.html:41
 msgid "Materialliste_nav"
-msgstr "Liste de matériel_nav"
+msgstr "Liste de matériel"
 
 #: b11_1/templates/navbar_generic.html:42
 msgid "Neues Material definieren_nav"
-msgstr "Définir un nouveau matériau_nav"
+msgstr "Définir un nouveau matériau"
 
 #: b11_1/templates/navbar_generic.html:47
 msgid "Account_nav"
-msgstr "Compte_nav"
+msgstr "Compte"
 
 #: b11_1/templates/registration/pre_register.html:13
 msgid "Registration - Email Verification"
