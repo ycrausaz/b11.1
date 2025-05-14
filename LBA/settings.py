@@ -268,3 +268,7 @@ AUTHENTICATION_BACKENDS = [
     'b11_1.backends.EmailBackend',
     'b11_1.backends.UsernameBackend',
 ]
+
+# Maximum size for file uploads (in bytes)
+DATA_UPLOAD_MAX_MEMORY_SIZE = 5242880  # 5MB
+FILE_UPLOAD_MAX_MEMORY_SIZE = 5242880  # 5MB
