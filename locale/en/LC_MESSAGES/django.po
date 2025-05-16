@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-13 16:21+0200\n"
+"POT-Creation-Date: 2025-05-16 18:10+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -516,11 +516,11 @@ msgstr "Export"
 
 #: b11_1/templates/admin/login_user.html:28
 msgid "login_email"
-msgstr "login_email"
+msgstr "E-mail      "
 
 #: b11_1/templates/admin/login_user.html:32
 msgid "login_password"
-msgstr "login_password"
+msgstr "Password"
 
 #: b11_1/templates/admin/login_user.html:37
 msgid "Zugriff beantragen"
@@ -574,42 +574,42 @@ msgstr "Update material"
 msgid "Existing Attachments"
 msgstr "Existing Attachments"
 
-#: b11_1/templates/gd/update_material_gd.html:166
-#: b11_1/templates/il/update_material_il.html:89
-#: b11_1/templates/smda/update_material_smda.html:166
+#: b11_1/templates/gd/update_material_gd.html:167
+#: b11_1/templates/il/update_material_il.html:90
+#: b11_1/templates/smda/update_material_smda.html:167
 msgid "Delete"
 msgstr "Delete"
 
-#: b11_1/templates/gd/update_material_gd.html:178
-#: b11_1/templates/il/update_material_il.html:101
-#: b11_1/templates/smda/update_material_smda.html:178
+#: b11_1/templates/gd/update_material_gd.html:180
+#: b11_1/templates/il/update_material_il.html:103
+#: b11_1/templates/smda/update_material_smda.html:180
 msgid "New Attachments"
 msgstr "New Attachments"
 
-#: b11_1/templates/gd/update_material_gd.html:188
+#: b11_1/templates/gd/update_material_gd.html:190
 #: b11_1/templates/il/add_material_il.html:65
-#: b11_1/templates/il/update_material_il.html:111
-#: b11_1/templates/smda/update_material_smda.html:188
+#: b11_1/templates/il/update_material_il.html:113
+#: b11_1/templates/smda/update_material_smda.html:190
 msgid "Comment"
 msgstr "Comment"
 
-#: b11_1/templates/gd/update_material_gd.html:197
+#: b11_1/templates/gd/update_material_gd.html:199
 #: b11_1/templates/il/add_material_il.html:74
-#: b11_1/templates/il/update_material_il.html:120
-#: b11_1/templates/smda/update_material_smda.html:197
+#: b11_1/templates/il/update_material_il.html:122
+#: b11_1/templates/smda/update_material_smda.html:199
 msgid "Add Another Attachment"
 msgstr "Add Another Attachment"
 
-#: b11_1/templates/gd/update_material_gd.html:203
-#: b11_1/templates/il/update_material_il.html:147
-#: b11_1/templates/smda/update_material_smda.html:203
+#: b11_1/templates/gd/update_material_gd.html:205
+#: b11_1/templates/il/update_material_il.html:149
+#: b11_1/templates/smda/update_material_smda.html:205
 msgid "Änderungen speichern"
 msgstr "Save changes"
 
-#: b11_1/templates/gd/update_material_gd.html:204
+#: b11_1/templates/gd/update_material_gd.html:206
 #: b11_1/templates/il/add_material_il.html:102
-#: b11_1/templates/il/update_material_il.html:148
-#: b11_1/templates/smda/update_material_smda.html:204
+#: b11_1/templates/il/update_material_il.html:150
+#: b11_1/templates/smda/update_material_smda.html:206
 msgid "Zurück ohne Speichern"
 msgstr "Back without saving"
 
@@ -622,17 +622,17 @@ msgid "Attachments"
 msgstr "Attachments"
 
 #: b11_1/templates/il/add_material_il.html:81
-#: b11_1/templates/il/update_material_il.html:127
+#: b11_1/templates/il/update_material_il.html:129
 msgid "Material Status"
 msgstr "Material status"
 
 #: b11_1/templates/il/add_material_il.html:87
-#: b11_1/templates/il/update_material_il.html:133
+#: b11_1/templates/il/update_material_il.html:135
 msgid "Material ist fertig"
 msgstr "Material is ready"
 
 #: b11_1/templates/il/add_material_il.html:88
-#: b11_1/templates/il/update_material_il.html:134
+#: b11_1/templates/il/update_material_il.html:136
 msgid ""
 "Markieren Sie dieses Kästchen, wenn das Material fertig ist und übermittelt "
 "werden kann."
