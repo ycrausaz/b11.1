@@ -28,7 +28,7 @@ from django.db.models import IntegerField
 from .export_utils import export_to_excel
 from django.contrib import messages
 import re
-from .mixins import FormValidMixin_IL, FormValidMixin_GD, FormValidMixin_SMDA
+from .mixins import FormValidMixin
 from django.template import RequestContext
 from .forms import CustomPasswordChangeForm
 from .forms import CustomPasswordResetForm
@@ -546,7 +546,7 @@ class ListMaterial_IL_View(GroupRequiredMixin, ListView):
 
         return redirect(reverse('list_material_il'))
 
-class AddMaterial_IL_View(FormValidMixin_IL, GroupRequiredMixin, SuccessMessageMixin, CreateView):
+class AddMaterial_IL_View(FormValidMixin, GroupRequiredMixin, SuccessMessageMixin, CreateView):
     model = Material
     template_name = 'il/add_material_il.html'
     form_class = MaterialForm_IL
@@ -634,7 +634,7 @@ class AddMaterial_IL_View(FormValidMixin_IL, GroupRequiredMixin, SuccessMessageM
             form.add_error(None, error_msg)
             return self.render_to_response(self.get_context_data(form=form))
 
-class UpdateMaterial_IL_View(FormValidMixin_IL, GroupRequiredMixin, SuccessMessageMixin, UpdateView):
+class UpdateMaterial_IL_View(FormValidMixin, GroupRequiredMixin, SuccessMessageMixin, UpdateView):
     model = Material
     template_name = 'il/update_material_il.html'
     form_class = MaterialForm_IL
@@ -833,7 +833,7 @@ class ListMaterialArchived_GD_View(GroupRequiredMixin, ListView):
         # Order by the cast integer field
         return qs.order_by('positions_nr_int')
 
-class UpdateMaterial_GD_View(ComputedContextMixin, FormValidMixin_GD, GroupRequiredMixin, SuccessMessageMixin, UpdateView):
+class UpdateMaterial_GD_View(ComputedContextMixin, FormValidMixin, GroupRequiredMixin, SuccessMessageMixin, UpdateView):
     model = Material
     template_name = 'gd/update_material_gd.html'
     form_class = MaterialForm_GD
@@ -1036,7 +1036,7 @@ class ListMaterialArchived_SMDA_View(GroupRequiredMixin, ListView):
         # Order by the cast integer field
         return qs.order_by('positions_nr_int')
 
-class UpdateMaterial_SMDA_View(ComputedContextMixin, FormValidMixin_SMDA, GroupRequiredMixin, SuccessMessageMixin, UpdateView):
+class UpdateMaterial_SMDA_View(ComputedContextMixin, FormValidMixin, GroupRequiredMixin, SuccessMessageMixin, UpdateView):
     model = Material
     template_name = 'smda/update_material_smda.html'
     form_class = MaterialForm_SMDA
