@@ -3,7 +3,7 @@
 {% load custom_filters %}
 {% load field_filters %}
 
-<!-- templates/update_material_smda.html -->
+<!-- templates/update_material_lba.html -->
 {% load help_tags %}
 {% block content %}
     <h1>{% trans "Material aktualisieren" %}: {{ object.systemname }}</h1>
@@ -79,41 +79,8 @@
                 <div class="mytitle">Stammdaten</div>
                 <div class="content">
                     <table>
-                        <tr class="section-header"><td colspan="2"><strong>Daten Lieferant</strong></td></tr>
                         {% for field in form.get_readonly_fields %}
                             {% if field.name|is_in_il_fields %}
-                                {% if not field.is_hidden %}
-                                    <tr>
-                                        <td>
-                                            <label for="{{ field.id_for_label }}">
-                                                {{ field.label }}
-                                                {% if field.field.required %}
-                                                    <span class="required">*</span>
-                                                {% endif %}
-                                            </label>
-                                        </td>
-                                        <td>
-                                            {{ field }}
-                                            {% if field.errors %}
-                                                <div class="error">
-                                                    {% for error in field.errors %}
-                                                        <p>{{ error }}</p>
-                                                    {% endfor %}
-                                                </div>
-                                            {% endif %}
-                                        </td>
-                                    </tr>
-                                {% else %}
-                                    {{ field }}
-                                {% endif %}
-                            {% endif %}
-                        {% endfor %}
-
-                        <tr><td colspan="2"><hr></td></tr>
-            
-                        <tr class="section-header"><td colspan="2"><strong>Daten SYMM</strong></td></tr>
-                        {% for field in form.get_readonly_fields %}
-                            {% if field.name|is_in_gd_fields %}
                                 {% if not field.is_hidden %}
                                     <tr>
                                         <td>
@@ -203,7 +170,7 @@
 
         <div class="same-width" style="margin-top: 20px;">
             <input type="submit" value="{% trans "Änderungen speichern" %}" class="btn btn-primary">
-            <button type="button" class="btn btn-secondary" onclick="window.location.href='{% url 'list_material_smda' %}'">{% trans "Zurück ohne Speichern" %}</button>
+            <button type="button" class="btn btn-secondary" onclick="window.location.href='{% url 'list_material_lba' %}'">{% trans "Zurück ohne Speichern" %}</button>
         </div>
     </form>
 

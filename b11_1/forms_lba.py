@@ -13,7 +13,7 @@ from .utils import readonly_field_style
 from .forms import CustomBooleanChoiceField, SplitterReadOnlyReadWriteFields, BaseTemplateForm
 from .editable_fields_config import *
 
-class MaterialForm_GD(BaseTemplateForm, SplitterReadOnlyReadWriteFields):
+class MaterialForm_LBA(BaseTemplateForm, SplitterReadOnlyReadWriteFields):
 
     revision_fremd = forms.CharField(
         label='Revision Fremd',
@@ -22,6 +22,31 @@ class MaterialForm_GD(BaseTemplateForm, SplitterReadOnlyReadWriteFields):
     )
     materialzustandsverwaltung = forms.CharField(
         label='Materialzustandsverwaltung',
+        required=False,
+        disabled=True
+    )
+    verkaufsorg = forms.CharField(
+        label='Verkaufsorg.',
+        required=False,
+        disabled=True  # This marks it as disabled for BaseTemplateForm
+    )
+    vertriebsweg = forms.CharField(
+        label='Vertriebsweg',
+        required=False,
+        disabled=True
+    )
+    auszeichnungsfeld = forms.CharField(
+        label='Auszeichnungsfeld',
+        required=False,
+        disabled=True
+    )
+    preissteuerung = forms.CharField(
+        label='Preissteuerung',
+        required=False,
+        disabled=True
+    )
+    preisermittlung = forms.CharField(
+        label='Preisermittlung',
         required=False,
         disabled=True
     )
@@ -37,14 +62,31 @@ class MaterialForm_GD(BaseTemplateForm, SplitterReadOnlyReadWriteFields):
             'uebersetzungsstatus',
             'materialart_grunddaten',
             'produkthierarchie',
+            'werkzuordnung_1',
+            'allgemeine_positionstypengruppe',
+            'spare_part_class_code',
+            'materialeinstufung_nach_zuva',
+            'bewertungsklasse',
         ]
         computed_fields = [
             'revision_fremd',
             'materialzustandsverwaltung',
+            'verkaufsorg',
+            'vertriebsweg',
+            'auszeichnungsfeld',
+            'preissteuerung',
+            'preisermittlung',
         ]
 
         # Set up foreign key fields with their querysets and required status
         foreign_key_fields = {
+            'werkzuordnung_1': {'model': Werkzuordnung_1, 'queryset': Werkzuordnung_1.objects.all()},
+            'allgemeine_positionstypengruppe': {'model': AllgemeinePositionstypengruppe, 'queryset': AllgemeinePositionstypengruppe.objects.all()},
+            'spare_part_class_code': {'model': SparePartClassCode, 'queryset': SparePartClassCode.objects.all()},
+            'materialeinstufung_nach_zuva': {'model': MaterialeinstufungNachZUVA, 'queryset': MaterialeinstufungNachZUVA.objects.all()},
+            'bewertungsklasse': {'model': Bewertungsklasse, 'queryset': Bewertungsklasse.objects.all()},
+            'zuteilung': {'model': Zuteilung, 'queryset': Zuteilung.objects.all()},
+            'auspraegung': {'model': Auspraegung, 'queryset': Auspraegung.objects.all()},
             'basismengeneinheit': {'model': Basismengeneinheit, 'queryset': Basismengeneinheit.objects.all()},
             'begru': {'model': BEGRU, 'queryset': BEGRU.objects.all()},
             'materialart_grunddaten': {'model': Materialart, 'queryset': Materialart.objects.all()},
@@ -69,7 +111,7 @@ class MaterialForm_GD(BaseTemplateForm, SplitterReadOnlyReadWriteFields):
         }
 
     def __init__(self, *args, **kwargs):
-        kwargs['editable_fields'] = EDITABLE_FIELDS_GD
+        kwargs['editable_fields'] = EDITABLE_FIELDS_LBA
         super().__init__(*args, **kwargs)
 
         # Set required fields based on Meta.required_fields
@@ -88,18 +130,23 @@ class MaterialForm_GD(BaseTemplateForm, SplitterReadOnlyReadWriteFields):
             # Set initial values for readonly fields
             self.fields['revision_fremd'].initial = instance.revision_fremd
             self.fields['materialzustandsverwaltung'].initial = instance.materialzustandsverwaltung
+            self.fields['verkaufsorg'].initial = instance.verkaufsorg
+            self.fields['vertriebsweg'].initial = instance.vertriebsweg
+            self.fields['auszeichnungsfeld'].initial = instance.auszeichnungsfeld
+            self.fields['preissteuerung'].initial = instance.preissteuerung
+            self.fields['preisermittlung'].initial = instance.preisermittlung
 
         for field_name, field_info in self.Meta.foreign_key_fields.items():
             if field_name in self.fields:
                 queryset = field_info['queryset']
 
-                if field_name in EDITABLE_FIELDS_GD:
+                if field_name in EDITABLE_FIELDS_LBA:
                     # For editable fields, use Select widget with both text and explanation
                     choices = [('', '---')]
                     for obj in queryset:
                         display_text = str(obj)  # This will use the updated __str__ method
                         choices.append((obj.idx, display_text))
-                    
+
                     self.fields[field_name].widget = forms.Select(choices=choices)
 
                     # Set initial value if instance exists
@@ -116,6 +163,19 @@ class MaterialForm_GD(BaseTemplateForm, SplitterReadOnlyReadWriteFields):
                         value = getattr(instance, field_name)
                         if value:
                             self.fields[field_name].initial = value.idx
+
+        # Set required fields based on Meta.required_fields
+        for field_name in self.Meta.required_fields:
+            if field_name in self.fields:
+                self.fields[field_name].required = True
+
+        # Mark computed fields
+        for field_name in self.Meta.computed_fields:
+            self.fields[field_name].is_computed = True
+
+        for field_name, field_info in self.Meta.foreign_key_fields.items():
+            if field_name in self.fields:
+                queryset = field_info['queryset']
 
         # Add tooltips
         from django.utils.translation import get_language

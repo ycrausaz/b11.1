@@ -1,6 +1,6 @@
 {% extends "base_generic.html" %}
 
-<!-- templates/list_material_smda.html -->
+<!-- templates/list_material_lba.html -->
 {% block content %}
 <h1>Materialliste</h1>
 <br/>
@@ -33,7 +33,7 @@
             {% for mat in list_material %}
                 <tr>
                     <td><input type="checkbox" name="selected_materials" value="{{ mat.id }}" class="material-checkbox" data-form-id="1"></td>
-                    <td>{{ mat.systemname }}: <a href="{% url 'update_material_smda' mat.id %}">{{ mat.get_localized_kurztext }}</a> ({{ mat.hersteller }})</td>
+                    <td>{{ mat.systemname }}: <a href="{% url 'update_material_lba' mat.id %}">{{ mat.get_localized_kurztext }}</a> ({{ mat.hersteller }})</td>
                 </tr>
             {% endfor %}
         </tbody>
@@ -106,7 +106,7 @@ document.addEventListener('DOMContentLoaded', function() {
             {% for mat in list_material_archived %}
                 <tr>
                     <td><input type="checkbox" name="selected_materials" value="{{ mat.id }}" class="material-checkbox" data-form-id="2"></td>
-                    <td><a href="{% url 'show_material_smda' mat.id %}">{{ mat.kurztext_de }}</a> ({{ mat.hersteller }})</td>
+                    <td><a href="{% url 'show_material_lba' mat.id %}">{{ mat.kurztext_de }}</a> ({{ mat.hersteller }})</td>
                 </tr>
             {% endfor %}
         </tbody>

@@ -9,8 +9,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from .models import Material, Zuteilung, Auspraegung, G_Partner, MaterialAttachment
 from .forms_il import MaterialForm_IL
-from .forms_gd import MaterialForm_GD
-from .forms_smda import MaterialForm_SMDA
+from .forms_lba import MaterialForm_LBA
 from django.contrib.messages.views import SuccessMessageMixin
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
 from django.urls import reverse_lazy
@@ -45,7 +44,7 @@ from django.utils.encoding import force_bytes
 from django.contrib.auth.tokens import default_token_generator
 from django.core.mail import send_mail
 from django.conf import settings
-from .editable_fields_config import EDITABLE_FIELDS_GD, EDITABLE_FIELDS_SMDA, EDITABLE_FIELDS_IL
+from .editable_fields_config import EDITABLE_FIELDS_IL, EDITABLE_FIELDS_LBA
 from django.views.generic.edit import FormView
 from django import forms
 from .import_utils import import_from_excel
@@ -94,7 +93,7 @@ class ExcelImportView(GroupRequiredMixin, FormView):
     """
     View for handling Excel file uploads and importing material data.
     """
-    allowed_groups = ['grLBA', 'grGD', 'grSMDA', 'grAdmin']
+    allowed_groups = ['grLBA', 'grAdmin']
     template_name = 'admin/excel_import.html'
     form_class = ExcelUploadForm
     success_url = reverse_lazy('import_excel')
@@ -288,12 +287,8 @@ class CustomLoginView(LoginView):
                 # Your existing redirection logic
                 if self.request.user.groups.filter(name='grIL').exists():
                     return redirect('list_material_il')
-                elif self.request.user.groups.filter(name='grGD').exists():
-                    return redirect('list_material_gd')
-                elif self.request.user.groups.filter(name='grSMDA').exists():
-                    return redirect('list_material_smda')
                 elif self.request.user.groups.filter(name='grLBA').exists():
-                    return redirect('list_material_gd')
+                    return redirect('list_material_lba')
                 elif self.request.user.groups.filter(name='grAdmin').exists():
                     return redirect('logging')
 
@@ -756,10 +751,10 @@ class ShowMaterial_IL_View(ComputedContextMixin, GroupRequiredMixin, SuccessMess
     def post(self, request, *args, **kwargs):
         return redirect('list_material_il')
 
-class ListMaterial_GD_View(ComputedContextMixin, GroupRequiredMixin, ListView):
+class ListMaterial_LBA_View(ComputedContextMixin, GroupRequiredMixin, ListView):
     model = Material
-    template_name = 'gd/list_material_gd.html'
-    allowed_groups = ['grLBA', 'grGD']
+    template_name = 'lba/list_material_lba.html'
+    allowed_groups = ['grLBA']
 
     def get_queryset(self, **kwargs):
         # Call the superclass method to get the base queryset
@@ -773,12 +768,12 @@ class ListMaterial_GD_View(ComputedContextMixin, GroupRequiredMixin, ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        list_material_gd_archived = Material.objects.filter(is_transferred=True, is_archived=True)
-        list_material_gd = Material.objects.filter(is_transferred=True, is_archived=False)
+        list_material_lba_archived = Material.objects.filter(is_transferred=True, is_archived=True)
+        list_material_lba = Material.objects.filter(is_transferred=True, is_archived=False)
 
         # Convert positions_nr to integers for sorting
-        context['list_material_archived'] = sorted(list_material_gd_archived, key=lambda x: (int(x.positions_nr) if x.positions_nr is not None else float('inf'), x.kurztext_de or ''))
-        context['list_material'] = sorted(list_material_gd, key=lambda x: (int(x.positions_nr) if x.positions_nr is not None else float('inf'), x.kurztext_de or ''))
+        context['list_material_archived'] = sorted(list_material_lba_archived, key=lambda x: (int(x.positions_nr) if x.positions_nr is not None else float('inf'), x.kurztext_de or ''))
+        context['list_material'] = sorted(list_material_lba, key=lambda x: (int(x.positions_nr) if x.positions_nr is not None else float('inf'), x.kurztext_de or ''))
         return context
 
     def post(self, request, *args, **kwargs):
@@ -815,13 +810,13 @@ class ListMaterial_GD_View(ComputedContextMixin, GroupRequiredMixin, ListView):
                     logger.info("Material '" + material.kurztext_de + "' durch '" + request.user.email + "' exportiert (RUAG).")
                 return export_to_excel(selected_materials, 'RUAG')
 
-        return redirect(reverse('list_material_gd'))
+        return redirect(reverse('list_material_lba'))
 
-class ListMaterialArchived_GD_View(GroupRequiredMixin, ListView):
+class ListMaterialArchived_LBA_View(GroupRequiredMixin, ListView):
     model = Material
-    template_name = 'gd/list_material_gd_archived.html'
-    context_object_name = 'list_material_gd_archived'
-    allowed_groups = ['grLBA', 'grGD']
+    template_name = 'lba/list_material_lba_archived.html'
+    context_object_name = 'list_material_lba_archived'
+    allowed_groups = ['grLBA']
 
     def get_queryset(self, **kwargs):
         # Call the superclass method to get the base queryset
@@ -833,17 +828,17 @@ class ListMaterialArchived_GD_View(GroupRequiredMixin, ListView):
         # Order by the cast integer field
         return qs.order_by('positions_nr_int')
 
-class UpdateMaterial_GD_View(ComputedContextMixin, FormValidMixin, GroupRequiredMixin, SuccessMessageMixin, UpdateView):
+class UpdateMaterial_LBA_View(ComputedContextMixin, FormValidMixin, GroupRequiredMixin, SuccessMessageMixin, UpdateView):
     model = Material
-    template_name = 'gd/update_material_gd.html'
-    form_class = MaterialForm_GD
-    success_url = reverse_lazy('list_material_gd')
+    template_name = 'lba/update_material_lba.html'
+    form_class = MaterialForm_LBA
+    success_url = reverse_lazy('list_material_lba')
     success_message = "Das Material wurde erfolgreich aktualisiert."
-    allowed_groups = ['grLBA', 'grGD']
+    allowed_groups = ['grLBA']
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
-        kwargs['editable_fields'] = EDITABLE_FIELDS_GD
+        kwargs['editable_fields'] = EDITABLE_FIELDS_LBA
         return kwargs
 
     def form_valid(self, form):
@@ -946,11 +941,11 @@ class UpdateMaterial_GD_View(ComputedContextMixin, FormValidMixin, GroupRequired
             form.add_error(None, error_msg)
             return self.render_to_response(self.get_context_data(form=form))
 
-class ShowMaterial_GD_View(ComputedContextMixin, GroupRequiredMixin, SuccessMessageMixin, DetailView):
+class ShowMaterial_LBA_View(ComputedContextMixin, GroupRequiredMixin, SuccessMessageMixin, DetailView):
     model = Material
-    template_name = 'gd/show_material_gd.html'
-    form_class = MaterialForm_GD
-    allowed_groups = ['grLBA', 'grGD']
+    template_name = 'lba/show_material_lba.html'
+    form_class = MaterialForm_LBA
+    allowed_groups = ['grLBA']
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -958,210 +953,7 @@ class ShowMaterial_GD_View(ComputedContextMixin, GroupRequiredMixin, SuccessMess
         return context    
 
     def post(self, request, *args, **kwargs):
-        return redirect('list_material_gd')
-
-class ListMaterial_SMDA_View(ComputedContextMixin, GroupRequiredMixin, ListView):
-    model = Material
-    template_name = 'smda/list_material_smda.html'
-    allowed_groups = ['grLBA', 'grSMDA']
-
-    def get_queryset(self, **kwargs):
-        # Call the superclass method to get the base queryset
-        qs = super().get_queryset(**kwargs)
-        # Filter the queryset to exclude transferred items
-        qs = qs.filter(is_transferred=True, is_archived=False)
-        # Cast 'positions_nr' to an IntegerField for proper numeric sorting
-        qs = qs.annotate(positions_nr_int=Cast('positions_nr', IntegerField()))
-        # Order by the cast integer field
-        return qs.order_by('positions_nr_int')
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        list_material_smda_archived = Material.objects.filter(is_transferred=True, is_archived=True)
-        list_material_smda = Material.objects.filter(is_transferred=True, is_archived=False)
-
-        # Convert positions_nr to integers for sorting
-        context['list_material_archived'] = sorted(list_material_smda_archived, key=lambda x: (int(x.positions_nr) if x.positions_nr is not None else float('inf'), x.kurztext_de or ''))
-        context['list_material'] = sorted(list_material_smda, key=lambda x: (int(x.positions_nr) if x.positions_nr is not None else float('inf'), x.kurztext_de or ''))
-        return context
-
-    def post(self, request, *args, **kwargs):
-        selected_material_ids = request.POST.getlist('selected_materials')
-        # To switch from LBA mode to RUAG mode
-        action = request.POST.get('action')
-
-        if selected_material_ids and action:
-            selected_materials = Material.objects.filter(id__in=selected_material_ids)
-            if action == 'transfer':
-                transfer_comment = request.POST.get('transfer_comment', '')
-                selected_materials.update(is_transferred=False, transfer_date=timezone.now(), transfer_comment=transfer_comment, is_finished=False)
-                for material in selected_materials:
-                    logger.info("Material '" + material.kurztext_de + "' (" + material.systemname + "') durch '" + request.user.email + "' dem Hersteller zur Nacharbeit übermittelt (Begründung: '" + transfer_comment + "')")
-            elif action == 'archive':
-                selected_materials.update(is_archived=True)
-                for material in selected_materials:
-                    logger.info("Material '" + material.kurztext_de + "' durch '" + request.user.email + "' archiviert.")
-            elif action == 'unarchive':
-                selected_materials.update(is_archived=False)
-                for material in selected_materials:
-                    logger.info("Material '" + material.kurztext_de + "' durch '" + request.user.email + "' unarchiviert.")
-            elif action == 'delete':
-                for material in selected_materials:
-                    logger.info("Material '" + material.kurztext_de + "' durch '" + request.user.email + "' gelöscht.")
-                selected_materials.delete()
-            elif action == 'export_lba':
-                for material in selected_materials:
-                    logger.info("Material '" + material.kurztext_de + "' durch '" + request.user.email + "' exportiert (LBA).")
-                return export_to_excel(selected_materials, 'LBA')
-            elif action == 'export_ruag':
-                for material in selected_materials:
-                    logger.info("Material '" + material.kurztext_de + "' durch '" + request.user.email + "' exportiert (RUAG).")
-                return export_to_excel(selected_materials, 'RUAG')
-
-        return redirect(reverse('list_material_smda'))
-
-class ListMaterialArchived_SMDA_View(GroupRequiredMixin, ListView):
-    model = Material
-    template_name = 'smda/list_material_smda_archived.html'
-    context_object_name = 'list_material_smda_archived'
-    allowed_groups = ['grLBA', 'grSMDA']
-
-    def get_queryset(self, **kwargs):
-        # Call the superclass method to get the base queryset
-        qs = super().get_queryset(**kwargs)
-        # Filter the queryset to exclude transferred items
-        qs = qs.filter(is_transferred=True, is_archived=True)
-        # Cast 'positions_nr' to an IntegerField for proper numeric sorting
-        qs = qs.annotate(positions_nr_int=Cast('positions_nr', IntegerField()))
-        # Order by the cast integer field
-        return qs.order_by('positions_nr_int')
-
-class UpdateMaterial_SMDA_View(ComputedContextMixin, FormValidMixin, GroupRequiredMixin, SuccessMessageMixin, UpdateView):
-    model = Material
-    template_name = 'smda/update_material_smda.html'
-    form_class = MaterialForm_SMDA
-    success_url = reverse_lazy('list_material_smda')
-    success_message = "Das Material wurde erfolgreich aktualisiert."
-    allowed_groups = ['grLBA', 'grSMDA']
-
-    def get_form_kwargs(self):
-        kwargs = super().get_form_kwargs()
-        kwargs['editable_fields'] = EDITABLE_FIELDS_SMDA
-        return kwargs
-
-    def form_valid(self, form):
-        try:
-            with transaction.atomic():
-                # Start by validating the form data
-                self.object = form.save(commit=False)
-
-                # Get new files and comments
-                files = self.request.FILES.getlist('attachment_files[]')
-                comments = self.request.POST.getlist('attachment_comments[]')
-                attachments_to_delete = self.request.POST.getlist('delete_attachments[]')
-
-                # Handle deletion of existing attachments first
-                if attachments_to_delete:
-                    attachments = MaterialAttachment.objects.filter(
-                        id__in=attachments_to_delete,
-                        material=self.object
-                    )
-                    for attachment in attachments:
-                        try:
-                            # Delete from S3 first
-                            attachment.file.delete(save=False)
-                        except (BotoCoreError, ClientError) as e:
-                            error_msg = f"Failed to delete file {attachment.file.name} from storage: {str(e)}"
-                            logger.error(error_msg)
-                            form.add_error(None, error_msg)
-                            return self.render_to_response(self.get_context_data(form=form))
-
-                        # If S3 deletion successful, delete from database
-                        attachment.delete()
-
-                # Create temporary list to track new attachments
-                new_attachments = []
-
-                # Process new file attachments
-                for file, comment in zip(files, comments):
-                    if file:
-                        try:
-                            attachment = MaterialAttachment(
-                                material=self.object,
-                                file=file,
-                                comment=comment,
-                                uploaded_by=self.request.user
-                            )
-                            # Validate the attachment
-                            attachment.full_clean()
-
-                            # Try to save file to S3 first
-                            try:
-                                # Note: Don't save to database yet
-                                attachment.file.save(file.name, file, save=False)
-                            except (BotoCoreError, ClientError) as e:
-                                error_msg = f"Failed to upload file '{file.name}' to storage."
-                                logger.error(error_msg)
-                                form.add_error(None, error_msg)
-                                return self.render_to_response(self.get_context_data(form=form))
-
-                            new_attachments.append(attachment)
-
-                        except ValidationError as e:
-                            error_msg = f"Validation error for file {file.name}: {str(e)}"
-                            logger.error(error_msg)
-                            form.add_error(None, error_msg)
-                            return self.render_to_response(self.get_context_data(form=form))
-
-                # If we got here, all S3 operations were successful
-                # Now save the material object
-                self.object.save()
-
-                # And save all new attachments to database
-                for attachment in new_attachments:
-                    attachment.save()
-
-                # Log the successful update
-                logger.info(f"Material '{self.object.kurztext_de}' wurde durch '{self.request.user.email}' aktualisiert.")
-
-                return super().form_valid(form)
-
-        except ValidationError as e:
-            # Clean up any files that might have been uploaded to S3 before the error
-            for attachment in new_attachments:
-                try:
-                    attachment.file.delete(save=False)
-                except (BotoCoreError, ClientError) as s3_error:
-                    logger.error(f"Failed to clean up file {attachment.file.name} after error: {str(s3_error)}")
-
-            form.add_error(None, str(e))
-            return self.render_to_response(self.get_context_data(form=form))
-
-        except (BotoCoreError, ClientError) as e:
-            error_msg = f"Failed to upload file to storage."
-            logger.error(error_msg)
-            form.add_error(None, error_msg)
-            return self.render_to_response(self.get_context_data(form=form))
-
-        except Exception as e:
-            error_msg = f"Unexpected error: {str(e)}"
-            logger.error(error_msg)
-            form.add_error(None, error_msg)
-            return self.render_to_response(self.get_context_data(form=form))
-
-class ShowMaterial_SMDA_View(ComputedContextMixin, GroupRequiredMixin, SuccessMessageMixin, DetailView):
-    model = Material
-    template_name = 'smda/show_material_smda.html'
-    form_class = MaterialForm_SMDA
-    allowed_groups = ['grLBA', 'grSMDA']
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['form'] = self.form_class(instance=self.object)
-        return context    
-
-    def post(self, request, *args, **kwargs):
-        return redirect('list_material_smda')
+        return redirect('list_material_lba')
 
 class Logging_View(GroupRequiredMixin, ListView):
     template_name = 'admin/logging.html'

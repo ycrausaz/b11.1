@@ -25,9 +25,6 @@ class grIL_GroupRequiredMixin(GroupRequiredMixin):
 class grGD_GroupRequiredMixin(GroupRequiredMixin):
     group_required = 'grGD'
 
-class grSMDA_GroupRequiredMixin(GroupRequiredMixin):
-    group_required = 'grSMDA'
-
 class grLBA_GroupRequiredMixin(GroupRequiredMixin):
     group_required = 'grLBA'
 

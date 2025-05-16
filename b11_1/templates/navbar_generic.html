@@ -10,14 +10,6 @@
     <div class="navbar-brand">LBA - Beilage 11.1 (Benutzer: {{ user.email }} / Firma: {{ user.profile.firm }})</div>
 {% endif %}
 
-{% if user|has_group:"grGD" %}
-    <div class="navbar-brand">LBA - Beilage 11.1 - Grunddaten Team (Benutzer: {{ user.email }})</div>
-{% endif %}
-
-{% if user|has_group:"grSMDA" %}
-    <div class="navbar-brand">LBA - Beilage 11.1 - Systemmanager / Datenassistent (Benutzer: {{ user.email }})</div>
-{% endif %}
-
 {% if user|has_group:"grLBA" %}
     <div class="navbar-brand">LBA - Beilage 11.1 (Benutzer: {{ user.email }})</div>
 {% endif %}
@@ -74,43 +66,11 @@
     </div>
 {% endif %}
 
-{% if user|has_group:"grGD" %}
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-        <li>
-            <a class="nav-link" href="{% url 'list_material_gd' %}">Materialliste</a>
-        </li>
-        <li>
-            <a class="nav-link" href="{% url 'import_excel' %}">Import Excel Data</a>
-        </li>
-        <li>
-            <a class="nav-link" href="{% url 'logout_user' %}">Logout</a>
-        </li>
-      </ul>
-    </div>
-{% endif %}
-
-{% if user|has_group:"grSMDA" %}
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-        <li>
-            <a class="nav-link" href="{% url 'list_material_smda' %}">Materialliste</a>
-        </li>
-        <li>
-            <a class="nav-link" href="{% url 'import_excel' %}">Import Excel Data</a>
-        </li>
-        <li>
-            <a class="nav-link" href="{% url 'logout_user' %}">Logout</a>
-        </li>
-      </ul>
-    </div>
-{% endif %}
-
 {% if user|has_group:"grLBA" %}
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         <li>
-            <a class="nav-link" href="{% url 'list_material_gd' %}">Materialliste</a>
+            <a class="nav-link" href="{% url 'list_material_lba' %}">Materialliste</a>
         </li>
         <li>
             <a class="nav-link" href="{% url 'import_excel' %}">Import Excel Data</a>
