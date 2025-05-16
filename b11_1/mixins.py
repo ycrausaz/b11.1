@@ -134,6 +134,10 @@ class FormValidMixin_IL:
             form.add_error(None, error_msg)
 #            print(f"Error: {error_msg}")
 
+        # Revision Fremd
+        item.revision_fremd = form.cleaned_data['revision']
+#        print("item.revision_fremd = " + str(item.revision_fremd))
+
         if form.errors:
             return self.form_invalid(form)
 
@@ -170,10 +174,6 @@ class FormValidMixin_GD:
         # Verteilung PSD
         item.verteilung_an_psd = True
 #        print("item.verteilung_an_psd = " + str(item.verteilung_an_psd))
-
-        # Revision Fremd
-        item.revision_fremd = form.cleaned_data['revision']
-#        print("item.revision_fremd = " + str(item.revision_fremd))
 
         # Produkthierarchie
         if item.produkthierarchie is not None and len(item.produkthierarchie) != 4:
