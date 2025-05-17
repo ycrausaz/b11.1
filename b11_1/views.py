@@ -255,7 +255,22 @@ class CustomLoginView(LoginView):
         # Get the authenticated user
         user = form.get_user()
 
-        # Check the user's profile status
+        # Check if user belongs to any of the authorized groups
+        authorized_groups = ['grIL', 'grLBA', 'grAdmin']
+        is_authorized = any(user.groups.filter(name=group).exists() for group in authorized_groups)
+
+        if not is_authorized:
+            # User is not in any authorized group (e.g., 'grGD')
+            messages.error(
+                self.request,
+                "You do not have permission to access this system. Please contact an administrator."
+            )
+            logger.warning(f"Unauthorized login attempt by user in unsupported group: {user.email}")
+            # Log the user out immediately
+            logout(self.request)
+            return self.render_to_response(self.get_context_data(form=form))
+
+        # Continue with existing profile status checks
         try:
             profile = user.profile
 
@@ -292,7 +307,8 @@ class CustomLoginView(LoginView):
                 elif self.request.user.groups.filter(name='grAdmin').exists():
                     return redirect('logging')
 
-                return response
+                # Fallback - should not reach here normally since we check authorization above
+                return redirect('login_user')
 
             # Handle unexpected status values
             else:
