@@ -22,9 +22,6 @@ class GroupRequiredMixin(LoginRequiredMixin):
 class grIL_GroupRequiredMixin(GroupRequiredMixin):
     group_required = 'grIL'
 
-class grGD_GroupRequiredMixin(GroupRequiredMixin):
-    group_required = 'grGD'
-
 class grLBA_GroupRequiredMixin(GroupRequiredMixin):
     group_required = 'grLBA'
 
