@@ -52,8 +52,9 @@
                             <div class="modal-body">
                                 <p>Are you sure you want to approve this registration?</p>
                                 <div class="form-group mb-3">
-                                    <label for="selected_group">Assign to Group:</label>
-                                    <select class="form-control select2" id="selected_group" name="selected_group" required>
+                                    <label for="selected_group_{{ profile.id }}">Assign to Group:</label>
+                                    <select class="form-select" id="selected_group_{{ profile.id }}" name="selected_group" required>
+                                        <option value="" disabled selected>-- Select a group --</option>
                                         {% for group in groups %}
                                             <option value="{{ group.id }}">{{ group.name }}</option>
                                         {% endfor %}
