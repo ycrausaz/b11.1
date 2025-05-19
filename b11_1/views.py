@@ -1361,26 +1361,35 @@ class PendingRegistrationsView(grAdmin_GroupRequiredMixin, ListView):
     def get_queryset(self):
         return Profile.objects.filter(status='pending').order_by('-registration_date')
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # Get all groups starting with 'gr'
+        context['groups'] = Group.objects.filter(name__startswith='gr').order_by('name')
+        return context
+
 class ApproveRegistrationView(grAdmin_GroupRequiredMixin, View):
     allowed_groups = ['grAdmin']
 
     def post(self, request, profile_id):
-#        print("post()")
         try:
             profile = Profile.objects.get(id=profile_id, status='pending')
-#            print("profile = ", str(profile))
             user = profile.user
 
             # Approve the user
             profile.status = 'approved'
             profile.save()
 
-            # Add user to grIL group
+            # Get the selected group ID from the form
+            selected_group_id = request.POST.get('selected_group')
+
+            # Add user to the selected group
             try:
-                il_group = Group.objects.get(name='grIL')
-                user.groups.add(il_group)
+                selected_group = Group.objects.get(id=selected_group_id)
+                user.groups.add(selected_group)
+                logger.info(f"User {profile.email} has been assigned to group '{selected_group.name}'")
             except Group.DoesNotExist:
-                logger.error(f"Group 'grIL' not found when approving user {profile.email}")
+                logger.error(f"Group with ID {selected_group_id} not found when approving user {profile.email}")
+                messages.warning(request, f"Could not assign group to {profile.email}. Please check group permissions manually.")
 
             # Send approval email
             registration_link = request.build_absolute_uri(
@@ -1391,6 +1400,7 @@ class ApproveRegistrationView(grAdmin_GroupRequiredMixin, View):
                 'email': profile.email,
                 'registration_link': registration_link,
                 'expiry_date': profile.token_expiry,
+                'group_name': selected_group.name if 'selected_group' in locals() else 'Unknown'
             }
 
             email_body = render_to_string('registration/email/registration_approved_email.html', email_context)
@@ -1403,9 +1413,11 @@ class ApproveRegistrationView(grAdmin_GroupRequiredMixin, View):
 #                [profile.email],
 #                fail_silently=False,
 #            )
+
+            # Debug logging for the email body
             logger.info(email_body)
-            messages.success(request, f'Registration for {profile.email} has been approved.')
-            logger.info(f"Registration approved for user: {profile.email}")
+            messages.success(request, f'Registration for {profile.email} has been approved and assigned to {selected_group.name}.')
+            logger.info(f"Registration approved for user: {profile.email} (Group: {selected_group.name})")
 
         except Profile.DoesNotExist:
             messages.error(request, 'Profile not found.')

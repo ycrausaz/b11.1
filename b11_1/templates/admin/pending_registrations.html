@@ -38,7 +38,7 @@
                     </button>
                 </td>
             </tr>
-            
+
             <!-- Approve Modal -->
             <div class="modal fade" id="approveModal{{ profile.id }}" tabindex="-1" aria-labelledby="approveModalLabel{{ profile.id }}" aria-hidden="true">
                 <div class="modal-dialog">
@@ -51,6 +51,14 @@
                             </div>
                             <div class="modal-body">
                                 <p>Are you sure you want to approve this registration?</p>
+                                <div class="form-group mb-3">
+                                    <label for="selected_group">Assign to Group:</label>
+                                    <select class="form-control select2" id="selected_group" name="selected_group" required>
+                                        {% for group in groups %}
+                                            <option value="{{ group.id }}">{{ group.name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
@@ -60,7 +68,7 @@
                     </div>
                 </div>
             </div>
-            
+
             <!-- Reject Modal -->
             <div class="modal fade" id="rejectModal{{ profile.id }}" tabindex="-1" aria-labelledby="rejectModalLabel{{ profile.id }}" aria-hidden="true">
                 <div class="modal-dialog">
