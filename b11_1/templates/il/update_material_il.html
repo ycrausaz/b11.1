@@ -68,7 +68,7 @@
             {% endfor %}
         </table>
 
-        <!-- Existing Attachments Section -->
+        <!-- Existing Attachments Section in update_material_il.html -->
         {% if object.attachments.all %}
             <div class="card mt-4 mb-4">
                 <div class="card-header">
@@ -77,17 +77,17 @@
                 <div class="card-body">
                     <div id="existing-attachments-container">
                         {% for attachment in object.attachments.all %}
-                            <div class="attachment-row mb-3">
+                            <div class="attachment-row mb-3 existing-attachment-row">
                                 <div class="row">
                                     <div class="col-5">
-                                        <a href="{{ attachment.get_file_url }}" target="_blank" class="form-control">{{ attachment.file.name|basename }}</a>
+                                        <a href="{{ attachment.get_file_url }}" target="_blank" class="form-control attachment-link">{{ attachment.file.name|basename }}</a>
                                     </div>
-                                    <div class="col-5">
+                                    <div class="col-6">
                                         <input type="text" value="{{ attachment.comment }}" class="form-control" readonly>
                                     </div>
-                                    <div class="col-2">
-                                            <input type="checkbox" name="delete_attachments[]" value="{{ attachment.id }}">
-                                            <label>{% trans "Delete" %}</label>
+                                    <div class="col-1">
+                                        <input type="checkbox" name="delete_attachments[]" value="{{ attachment.id }}" class="d-none attachment-delete-checkbox">
+                                        <button type="button" class="btn btn-danger toggle-delete-btn" data-attachment-id="{{ attachment.id }}">{% trans "Delete" %}</button>
                                     </div>
                                 </div>
                             </div>

@@ -251,3 +251,20 @@ label[data-bs-toggle="tooltip"] {
 .section-header td {
     text-align: left;
 }
+
+.attachment-link {
+    text-decoration: none;
+    transition: text-decoration 0.3s;
+}
+
+.attachment-row .btn-success {
+    transition: background-color 0.3s;
+}
+
+.attachment-row .btn-danger {
+    transition: background-color 0.3s;
+}
+
+.attachment-row input[type="text"] {
+    transition: text-decoration 0.3s;
+}
