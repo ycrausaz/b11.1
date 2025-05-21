@@ -63,7 +63,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'b11_1.middleware.LoginPathMiddleware',
+    'b11_1.utils.middleware.LoginPathMiddleware',
 ]
 
 ROOT_URLCONF = 'LBA.urls'
@@ -82,7 +82,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'django.template.context_processors.i18n',
-                'b11_1.context_processors.app_version',
+                'b11_1.utils.context_processors.app_version',
             ],
         },
     },
@@ -149,7 +149,7 @@ LOGGING = {
         },
         'db': {
             'level': 'DEBUG',
-            'class': 'b11_1.db_log_handler.DatabaseLogHandler',
+            'class': 'b11_1.utils.db_log_handler.DatabaseLogHandler',
 #            'formatter': 'verbose',
             'formatter': 'simple',
         },
@@ -265,8 +265,8 @@ EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', '')
 DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL', 'yann.crausaz@gmail.com')
 
 AUTHENTICATION_BACKENDS = [
-    'b11_1.backends.EmailBackend',
-    'b11_1.backends.UsernameBackend',
+    'b11_1.utils.backends.EmailBackend',
+    'b11_1.utils.backends.UsernameBackend',
 ]
 
 # Maximum size for file uploads (in bytes)

@@ -8,14 +8,14 @@ from django.views.generic.base import View
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from .models import Material, Zuteilung, Auspraegung, G_Partner, MaterialAttachment
-from .forms_il import MaterialForm_IL
-from .forms_gd import MaterialForm_GD
-from .forms_smda import MaterialForm_SMDA
-from .forms_lba import MaterialForm_LBA
+from .forms.forms_il import MaterialForm_IL
+from .forms.forms_gd import MaterialForm_GD
+from .forms.forms_smda import MaterialForm_SMDA
+from .forms.forms_lba import MaterialForm_LBA
 from django.contrib.messages.views import SuccessMessageMixin
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
 from django.urls import reverse_lazy
-from .mixins import grIL_GroupRequiredMixin, GroupRequiredMixin, grAdmin_GroupRequiredMixin, ComputedContextMixin
+from .utils.mixins import grIL_GroupRequiredMixin, GroupRequiredMixin, grAdmin_GroupRequiredMixin, ComputedContextMixin
 import pandas as pd
 from django.shortcuts import render
 from django.http import HttpResponse
@@ -26,15 +26,15 @@ from django.urls import reverse
 from django.utils import timezone
 from django.db.models.functions import Cast
 from django.db.models import IntegerField
-from .export_utils import export_to_excel
+from .utils.export_utils import export_to_excel
 from django.contrib import messages
 import re
-from .mixins import FormValidMixin
+from .utils.mixins import FormValidMixin
 from django.template import RequestContext
-from .forms import CustomPasswordChangeForm
-from .forms import CustomPasswordResetForm
-from .forms import EmailVerificationForm
-from .forms import RegistrationPasswordForm
+from .forms.forms import CustomPasswordChangeForm
+from .forms.forms import CustomPasswordResetForm
+from .forms.forms import EmailVerificationForm
+from .forms.forms import RegistrationPasswordForm
 from b11_1.models import Profile, Material
 from django.contrib.auth.models import User, Group
 from django.core.exceptions import ObjectDoesNotExist
@@ -46,20 +46,20 @@ from django.utils.encoding import force_bytes
 from django.contrib.auth.tokens import default_token_generator
 from django.core.mail import send_mail
 from django.conf import settings
-from .editable_fields_config import *
+from .utils.editable_fields_config import *
 from django.views.generic.edit import FormView
 from django import forms
-from .import_utils import import_from_excel
+from .utils.import_utils import import_from_excel
 from django.utils.crypto import get_random_string
 from django.utils import timezone
 from datetime import timedelta
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
-from .forms import UserRegistrationForm
+from .forms.forms import UserRegistrationForm
 from django.db import transaction
 from django.core.exceptions import ValidationError
 from botocore.exceptions import BotoCoreError, ClientError
-from .log_export_utils import export_logs_to_excel
+from .utils.log_export_utils import export_logs_to_excel
 import logging
 
 logger = logging.getLogger(__name__)

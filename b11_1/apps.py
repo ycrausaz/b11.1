@@ -6,4 +6,4 @@ class B111Config(AppConfig):
     name = 'b11_1'
 
     def ready(self):
-        import b11_1.signals  # Ensure signals are imported
+        import b11_1.utils.signals  # Ensure signals are imported

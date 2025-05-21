@@ -1,10 +1,10 @@
 from django import forms
-from .widgets import ReadOnlyForeignKeyWidget
-from .utils import readonly_field_style
+from ..utils.widgets import ReadOnlyForeignKeyWidget
+from ..utils.utils import readonly_field_style
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.password_validation import validate_password
 from django.contrib.auth.forms import SetPasswordForm
-from .models import *
+from ..models import *
 from bootstrap_datepicker_plus.widgets import DatePickerInput
 from django.utils.translation import gettext_lazy as _
 from django.core.exceptions import ValidationError

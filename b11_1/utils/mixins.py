@@ -2,7 +2,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.core.exceptions import PermissionDenied
 import re
 from django.http import HttpResponseRedirect
-from .models import *
+from ..models import *
 from pprint import pprint
 from django.views.generic import TemplateView
 from django.urls import resolve

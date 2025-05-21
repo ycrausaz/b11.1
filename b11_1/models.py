@@ -7,7 +7,7 @@ from django.utils.translation import gettext_lazy as _
 from django.conf import settings
 import boto3
 from botocore.client import Config
-from .storage import MaterialAttachmentStorage
+from .utils.storage import MaterialAttachmentStorage
 
 class LogEntry(models.Model):
     id = models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name=_('ID'))

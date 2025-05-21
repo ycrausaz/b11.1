@@ -4,8 +4,8 @@ import pandas as pd
 from django.contrib import messages
 import logging
 from openpyxl import load_workbook
-from .models import *
-from .field_mapping_config import FIELD_MAPPING
+from ..models import *
+from ..utils.field_mapping_config import FIELD_MAPPING
 
 logger = logging.getLogger(__name__)
 
