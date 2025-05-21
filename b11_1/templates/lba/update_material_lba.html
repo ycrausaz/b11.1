@@ -1,0 +1,179 @@
+{% extends "base_generic.html" %}
+{% load i18n %}
+{% load custom_filters %}
+{% load field_filters %}
+
+<!-- templates/update_material_lba.html -->
+{% load help_tags %}
+{% block content %}
+    <h1>{% trans "Material aktualisieren" %}: {{ object.systemname }}</h1>
+    <br/>
+
+    {% if form.non_field_errors %}
+        {% for nfe in form.non_field_errors %}
+            <div class="alert alert-error" role="alert">
+                {{ nfe }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <div class="table-container">
+            <div class="column">
+                <div class="mytitle">Daten zu pflegen</div>
+                <div class="content">
+                    <table>
+                        {% for field in form.get_normal_fields %}
+                            {% if not field.is_hidden %}
+                                <tr>
+                                    <td>
+                                        {% with label_with_tooltip=field|add_tooltip %}
+                                            {{ label_with_tooltip|safe }}
+                                            {% if field.field.required %}
+                                                <span class="required">*</span>
+                                            {% elif field|is_conditional_required %}
+                                                <span class="required conditional-required" id="{{ field.name }}_required">*</span>
+                                            {% endif %}
+                                            {{ field|get_inline_help }}
+                                        {% endwith %}
+                                    </td>
+                                    <td>
+                                        {{ field }}
+                                        {% if field.errors %}
+                                            <div class="error">
+                                                {% for error in field.errors %}
+                                                    <p>{{ error }}</p>
+                                                {% endfor %}
+                                            </div>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            {% else %}
+                                {{ field }}
+                            {% endif %}
+                        {% endfor %}
+
+                        <tr><td colspan="2"><hr></td></tr>
+
+                        <tr class="section-header"><td colspan="2"><strong>Berechnete Felder</strong></td></tr>
+                        {% for field in form.get_computed_fields %}
+                            {% if not field.is_hidden %}
+                                <tr>
+                                    <td>
+                                        <label for="{{ field.id_for_label }}">
+                                            {% trans field.label %}
+                                        </label>
+                                    </td>
+                                    <td>
+                                        {{ field }}
+                                    </td>
+                                </tr>
+                            {% endif %}
+                        {% endfor %}
+                    </table>
+                </div>
+            </div>
+            <div class="column">
+                <div class="mytitle">Stammdaten</div>
+                <div class="content">
+                    <table>
+                        <tr class="section-header"><td colspan="2"><strong>Daten Lieferant</strong></td></tr>
+                        {% for field in form.get_readonly_fields %}
+                            {% if field.name|is_in_il_fields %}
+                                {% if not field.is_hidden %}
+                                    <tr>
+                                        <td>
+                                            <label for="{{ field.id_for_label }}">
+                                                {{ field.label }}
+                                                {% if field.field.required %}
+                                                    <span class="required">*</span>
+                                                {% endif %}
+                                            </label>
+                                        </td>
+                                        <td>
+                                            {{ field }}
+                                            {% if field.errors %}
+                                                <div class="error">
+                                                    {% for error in field.errors %}
+                                                        <p>{{ error }}</p>
+                                                    {% endfor %}
+                                                </div>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                {% else %}
+                                    {{ field }}
+                                {% endif %}
+                            {% endif %}
+                        {% endfor %}
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Existing Attachments Section -->
+        {% if object.attachments.all %}
+            <div class="card mt-4 mb-4 same-width">
+                <div class="card-header">
+                    <h5>{% trans "Existing Attachments" %}</h5>
+                </div>
+                <div class="card-body">
+                    <div id="existing-attachments-container">
+                        {% for attachment in object.attachments.all %}
+                            <div class="attachment-row mb-3 existing-attachment-row">
+                                <div class="row">
+                                    <div class="col-5">
+                                        <a href="{{ attachment.get_file_url }}" target="_blank" class="form-control attachment-link">{{ attachment.file.name|basename }}</a>
+                                    </div>
+                                    <div class="col-6">
+                                        <input type="text" value="{{ attachment.comment }}" class="form-control" readonly>
+                                    </div>
+                                    <div class="col-1">
+                                        <input type="checkbox" name="delete_attachments[]" value="{{ attachment.id }}" class="d-none attachment-delete-checkbox">
+                                        <button type="button" class="btn btn-danger toggle-delete-btn" data-attachment-id="{{ attachment.id }}">{% trans "Delete" %}</button>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+
+        <!-- New Attachments Section -->
+        <div class="card mt-4 mb-4 same-width">
+            <div class="card-header">
+                <h5>{% trans "New Attachments" %}</h5>
+            </div>
+            <div class="card-body">
+                <div id="attachments-container">
+                    <div class="attachment-row mb-3">
+                        <div class="row">
+                            <div class="col-5">
+                                <input type="file" name="attachment_files[]" class="form-control">
+                            </div>
+                            <div class="col-6">
+                                <input type="text" name="attachment_comments[]" class="form-control" placeholder="{% trans 'Comment' %}">
+                            </div>
+                            <div class="col-1">
+                                <button type="button" class="btn btn-danger remove-attachment">×</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <button type="button" class="btn btn-secondary" id="add-attachment">
+                    {% trans "Add Another Attachment" %}
+                </button>
+            </div>
+        </div>
+
+        <div class="same-width" style="margin-top: 20px;">
+            <input type="submit" value="{% trans "Änderungen speichern" %}" class="btn btn-primary">
+            <button type="button" class="btn btn-secondary" onclick="window.location.href='{% url 'list_material_lba' %}'">{% trans "Zurück ohne Speichern" %}</button>
+        </div>
+    </form>
+
+    <br/>
+{% endblock %}
