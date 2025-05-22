@@ -1677,3 +1677,110 @@ class RejectRegistrationView(grAdmin_GroupRequiredMixin, View):
             messages.error(request, 'Profile not found.')
 
         return redirect('pending_registrations')
+
+# Add this to your views.py
+
+class CustomPasswordResetView(FormView):
+    """
+    Custom password reset view that prints email to console in development
+    """
+    template_name = 'admin/password_reset.html'
+    form_class = forms.Form  # We'll define this inline
+    success_url = reverse_lazy('password_reset_done')
+    
+    def get_form_class(self):
+        class PasswordResetForm(forms.Form):
+            email = forms.EmailField(
+                label='E-Mail-Adresse',
+                max_length=254,
+                widget=forms.EmailInput(attrs={
+                    'class': 'form-control',
+                    'style': 'width: 300px;',
+                    'autocomplete': 'email'
+                })
+            )
+            
+            def clean_email(self):
+                email = self.cleaned_data['email']
+                # Check if user exists with this email
+                if not User.objects.filter(email=email, is_active=True).exists():
+                    # Don't reveal whether the email exists or not for security
+                    # Just return the email - we'll handle the case in the view
+                    pass
+                return email
+                
+        return PasswordResetForm
+    
+    def form_valid(self, form):
+        email = form.cleaned_data['email']
+        
+        try:
+            user = User.objects.get(email=email, is_active=True)
+            
+            # Generate password reset token and uid
+            current_site = get_current_site(self.request)
+            uid = urlsafe_base64_encode(force_bytes(user.pk))
+            token = default_token_generator.make_token(user)
+            
+            # Create the password reset link
+            reset_link = reverse('password_reset_confirm', kwargs={'uidb64': uid, 'token': token})
+            reset_url = f'http://{current_site.domain}{reset_link}'
+            
+            # Prepare email context
+            email_context = {
+                'email': user.email,
+                'domain': current_site.domain,
+                'site_name': current_site.name,
+                'uid': uid,
+                'user': user,
+                'token': token,
+                'protocol': 'http',
+                'reset_url': reset_url,
+            }
+            
+            # Render email templates
+            subject = f'Password reset on {current_site.name}'
+            email_body = f"""Someone asked for password reset for email {user.email}.
+
+Follow the link below to reset your password:
+{reset_url}
+
+If you didn't request this password reset, please ignore this email.
+
+This link will expire in a few hours for security reasons.
+"""
+            
+            # In development environment - print details to console instead of sending email
+            print("\n" + "="*80)
+            print("DEVELOPMENT MODE: Password Reset Email")
+            print("="*80)
+            print(f"To: {user.email}")
+            print(f"Subject: {subject}")
+            print("-"*80)
+            print(email_body)
+            print("-"*80)
+            print(f"RESET LINK: {reset_url}")
+            print("="*80 + "\n")
+            
+            # Log the reset link for easy access
+            logger.info(f"Password reset link for {user.email}: {reset_url}")
+            
+        except User.DoesNotExist:
+            # User doesn't exist, but don't reveal this for security reasons
+            # Still show success message
+            print("\n" + "="*80)
+            print("DEVELOPMENT MODE: Password Reset Attempt")
+            print("="*80)
+            print(f"Password reset requested for: {email}")
+            print("No user found with this email address.")
+            print("="*80 + "\n")
+            
+            logger.info(f"Password reset attempted for non-existent email: {email}")
+        
+        # Always show success message (don't reveal if email exists or not)
+        messages.success(
+            self.request, 
+            "If an account with this email exists, we have sent you a password reset link."
+        )
+        
+        return super().form_valid(form)
