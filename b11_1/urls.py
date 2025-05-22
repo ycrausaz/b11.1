@@ -3,11 +3,11 @@
 from django.views.i18n import JavaScriptCatalog
 from django.urls import include, path
 from . import views
-from .views import (CustomLoginView, UserLogout, CustomPasswordChangeView, CustomPasswordResetConfirmView, ListMaterial_IL_View, ShowMaterial_IL_View, AddMaterial_IL_View, UpdateMaterial_IL_View, ListMaterial_GD_View, ListMaterialArchived_GD_View, UpdateMaterial_GD_View, ShowMaterial_GD_View, ListMaterial_SMDA_View, ListMaterialArchived_SMDA_View, UpdateMaterial_SMDA_View, ShowMaterial_SMDA_View, ListMaterial_LBA_View, ListMaterialArchived_LBA_View, UpdateMaterial_LBA_View, ShowMaterial_LBA_View, Logging_View, ExcelImportView, RegisterView, CompleteRegistrationView, PendingRegistrationsView, ApproveRegistrationView, RejectRegistrationView, ExportLogsView, PreRegisterView, VerifyEmailView)
+from .views import (CustomLoginView, UserLogout, CustomPasswordChangeView, CustomPasswordResetConfirmView, CustomPasswordResetView, ListMaterial_IL_View, ShowMaterial_IL_View, AddMaterial_IL_View, UpdateMaterial_IL_View, ListMaterial_GD_View, ListMaterialArchived_GD_View, UpdateMaterial_GD_View, ShowMaterial_GD_View, ListMaterial_SMDA_View, ListMaterialArchived_SMDA_View, UpdateMaterial_SMDA_View, ShowMaterial_SMDA_View, ListMaterial_LBA_View, ListMaterialArchived_LBA_View, UpdateMaterial_LBA_View, ShowMaterial_LBA_View, Logging_View, ExcelImportView, RegisterView, CompleteRegistrationView, PendingRegistrationsView, ApproveRegistrationView, RejectRegistrationView, ExportLogsView, PreRegisterView, VerifyEmailView)
 from django.contrib.auth.decorators import login_required
 from django.conf.urls import handler403
 from b11_1.views import custom_permission_denied_view
-from django.contrib.auth.views import PasswordResetView, PasswordResetConfirmView, PasswordResetCompleteView
+from django.contrib.auth.views import PasswordResetView, PasswordResetConfirmView, PasswordResetCompleteView, PasswordResetDoneView
 from django.views.generic import TemplateView
 from django.contrib.auth import views as auth_views
 
@@ -28,13 +28,18 @@ urlpatterns = [
     path('password_change_done', 
          TemplateView.as_view(template_name='admin/password_change_done.html'),
          name='password_change_done'),
-    path('password_reset',
-         PasswordResetView.as_view(template_name='admin/password_reset.html'),
+    
+    # Password reset URLs
+    path('password_reset/',
+         CustomPasswordResetView.as_view(),
          name='password_reset'),
-    path('reset/<uidb64>/<token>',
+    path('password_reset/done/',
+         PasswordResetDoneView.as_view(template_name='admin/password_reset_done.html'),
+         name='password_reset_done'),
+    path('reset/<uidb64>/<token>/',
          CustomPasswordResetConfirmView.as_view(),
          name='password_reset_confirm'),
-    path('reset/done',
+    path('reset/done/',
          PasswordResetCompleteView.as_view(template_name='admin/password_reset_complete.html'),
          name='password_reset_complete'),
 
