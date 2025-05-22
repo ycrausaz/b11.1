@@ -7,7 +7,7 @@ from django.conf import settings
 import deepl
 
 # Adjust the import path based on where you place the file in your project
-from b11_1.translation_memory_sqlite import SQLiteTranslationMemory
+from b11_1.utils.translation_memory_sqlite import SQLiteTranslationMemory
 
 class Command(BaseCommand):
     help = 'Automatically translate .po files using SQLite-based Translation Memory with DeepL'
