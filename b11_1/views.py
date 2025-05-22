@@ -1378,7 +1378,7 @@ class Logging_View(GroupRequiredMixin, ListView):
 
     def get(self, request, *args, **kwargs):
         # Create an instance of the date filter form
-        from .forms import LogDateFilterForm
+        from .forms.forms import LogDateFilterForm
         form = LogDateFilterForm(request.GET)
 
         # Default query with no date filters
