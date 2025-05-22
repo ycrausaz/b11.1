@@ -47,8 +47,8 @@
             {% trans "Account_nav" %}
           </a>
           <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                <li><a class="dropdown-item" href="{% url 'password_change' %}">Passwort ändern</a></li>
-                <li><a class="dropdown-item" href="{% url 'logout_user' %}">Logout</a></li>
+                <li><a class="dropdown-item" href="{% url 'password_change' %}">{% trans "Passwort ändern" %}</a></li>
+                <li><a class="dropdown-item" href="{% url 'logout_user' %}">{% trans "Logout" %}</a></li>
           </ul>
         </li>
       </ul>
@@ -62,13 +62,13 @@
             <a class="nav-link" href="{% url 'logging' %}">Logging</a>
         </li>
         <li>
-            <a class="nav-link" href="{% url 'import_excel' %}">Import Excel Data</a>
+            <a class="nav-link" href="{% url 'import_excel' %}">{% trans "Import Excel Data" %}</a>
         </li>
         <li>
             <a class="nav-link" href="{% url 'pending_registrations' %}">Registrations</a>
         </li>
         <li>
-            <a class="nav-link" href="{% url 'logout_user' %}">Logout</a>
+            <a class="nav-link" href="{% url 'logout_user' %}">{% trans "Logout" %}</a>
         </li>
       </ul>
     </div>
@@ -78,13 +78,13 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         <li>
-            <a class="nav-link" href="{% url 'list_material_gd' %}">Materialliste</a>
+            <a class="nav-link" href="{% url 'list_material_gd' %}">{% trans "Materialliste_nav" %}</a>
         </li>
         <li>
-            <a class="nav-link" href="{% url 'import_excel' %}">Import Excel Data</a>
+            <a class="nav-link" href="{% url 'import_excel' %}">{% trans "Import Excel Data" %}</a>
         </li>
         <li>
-            <a class="nav-link" href="{% url 'logout_user' %}">Logout</a>
+            <a class="nav-link" href="{% url 'logout_user' %}">{% trans "Logout" %}</a>
         </li>
       </ul>
     </div>
@@ -94,13 +94,13 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         <li>
-            <a class="nav-link" href="{% url 'list_material_smda' %}">Materialliste</a>
+            <a class="nav-link" href="{% url 'list_material_smda' %}">{% trans "Materialliste_nav" %}</a>
         </li>
         <li>
-            <a class="nav-link" href="{% url 'import_excel' %}">Import Excel Data</a>
+            <a class="nav-link" href="{% url 'import_excel' %}">{% trans "Import Excel Data" %}</a>
         </li>
         <li>
-            <a class="nav-link" href="{% url 'logout_user' %}">Logout</a>
+            <a class="nav-link" href="{% url 'logout_user' %}">{% trans "Logout" %}</a>
         </li>
       </ul>
     </div>
@@ -110,30 +110,15 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         <li>
-            <a class="nav-link" href="{% url 'list_material_gd' %}">Materialliste</a>
+            <a class="nav-link" href="{% url 'list_material_lba' %}">{% trans "Materialliste_nav" %}</a>
         </li>
         <li>
-            <a class="nav-link" href="{% url 'import_excel' %}">Import Excel Data</a>
+            <a class="nav-link" href="{% url 'import_excel' %}">{% trans "Import Excel Data" %}</a>
         </li>
         <li>
-            <a class="nav-link" href="{% url 'logout_user' %}">Logout</a>
+            <a class="nav-link" href="{% url 'logout_user' %}">{% trans "Logout" %}</a>
         </li>
       </ul>
-      <div class="navbar-nav ms-auto">
-        <span class="navbar-text me-2">Aktuelle Sicht:</span>
-        <div class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" id="navbarDarkDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            {{ current_view }}
-          </a>
-          <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end" style="min-width: 100%;" aria-labelledby="navbarDarkDropdownMenuLink">
-            <li>
-                <a class="dropdown-item" href="{{ other_url }}">{{ other_view }}</a>
-            </li>
-          </ul>
-        </div>
-      </div>
-
-
     </div>
 {% endif %}
 

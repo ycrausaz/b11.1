@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-16 18:10+0200\n"
+"POT-Creation-Date: 2025-05-22 20:13+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -30,59 +30,59 @@ msgstr "French"
 msgid "English"
 msgstr "English"
 
-#: b11_1/forms.py:20
+#: b11_1/forms/forms.py:20
 msgid "New password"
 msgstr "New password"
 
-#: b11_1/forms.py:25
+#: b11_1/forms/forms.py:25
 msgid "Confirm new password"
 msgstr "Confirm new password"
 
-#: b11_1/forms.py:53 b11_1/forms.py:85
+#: b11_1/forms/forms.py:53 b11_1/forms/forms.py:85
 msgid "Password must be at least 8 characters long."
 msgstr "Password must be at least 8 characters long."
 
-#: b11_1/forms.py:56 b11_1/forms.py:89
+#: b11_1/forms/forms.py:56 b11_1/forms/forms.py:89
 msgid "Password must contain at least one uppercase letter."
 msgstr "Password must contain at least one uppercase letter."
 
-#: b11_1/forms.py:59 b11_1/forms.py:93
+#: b11_1/forms/forms.py:59 b11_1/forms/forms.py:93
 msgid "Password must contain at least one lowercase letter."
 msgstr "Password must contain at least one lowercase letter."
 
-#: b11_1/forms.py:74
+#: b11_1/forms/forms.py:74
 msgid "The two password fields didn't match."
 msgstr "The two password fields didn't match."
 
-#: b11_1/forms.py:97
+#: b11_1/forms/forms.py:97
 msgid "Password must contain at least one digit."
 msgstr "Password must contain at least one digit."
 
-#: b11_1/forms.py:102
+#: b11_1/forms/forms.py:102
 msgid "Password must contain at least one special character (~!@#$%^&*()_+{}\":;'[])."
 msgstr ""
 
-#: b11_1/forms.py:127
+#: b11_1/forms/forms.py:127
 msgid "A user with this email already exists."
 msgstr "A user with this email already exists."
 
-#: b11_1/forms.py:157 b11_1/forms.py:309
+#: b11_1/forms/forms.py:157 b11_1/forms/forms.py:309
 msgid "reCAPTCHA verification failed. Please try again."
 msgstr "reCAPTCHA verification failed. Please try again."
 
-#: b11_1/forms.py:162 b11_1/forms.py:314
+#: b11_1/forms/forms.py:162 b11_1/forms/forms.py:314
 msgid "reCAPTCHA score too low. Please try again."
 msgstr "reCAPTCHA score too low. Please try again."
 
-#: b11_1/forms.py:280
+#: b11_1/forms/forms.py:280
 msgid "This username is already taken."
 msgstr "This username is already taken."
 
-#: b11_1/forms.py:318 b11_1/templates/admin/logging.html:15
+#: b11_1/forms/forms.py:318 b11_1/templates/admin/logging.html:15
 msgid "Start Date"
 msgstr "Start Date"
 
-#: b11_1/forms.py:330 b11_1/templates/admin/logging.html:19
+#: b11_1/forms/forms.py:330 b11_1/templates/admin/logging.html:19
 msgid "End Date"
 msgstr "End Date"
 
@@ -522,6 +522,12 @@ msgstr "Passwort"
 msgid "Zugriff beantragen"
 msgstr "Zugriff beantragen"
 
+#: b11_1/templates/admin/login_user.html:38
+#, fuzzy
+#| msgid "Password Requirements"
+msgid "Passwort vergessen?"
+msgstr "Password Requirements"
+
 #: b11_1/templates/admin/password_change.html:7
 msgid "Password Change"
 msgstr "Password Change"
@@ -558,26 +564,71 @@ msgstr " Passwords match"
 msgid "Change my password"
 msgstr "Change my password"
 
+#: b11_1/templates/admin/password_reset.html:13
+#, fuzzy
+#| msgid "Password Requirements"
+msgid "Passwort zurücksetzen"
+msgstr "Password Requirements"
+
+#: b11_1/templates/admin/password_reset.html:25
+msgid "Geben Sie Ihre E-Mail-Adresse ein und wir senden Ihnen einen Link zum Zurücksetzen Ihres Passworts."
+msgstr "Geben Sie Ihre E-Mail-Adresse ein und wir senden Ihnen einen Link zum Zurücksetzen Ihres Passworts."
+
+#: b11_1/templates/admin/password_reset.html:31
+#, fuzzy
+#| msgid "Email Address"
+msgid "E-Mail-Adresse"
+msgstr "Email Address"
+
+#: b11_1/templates/admin/password_reset.html:35
+msgid "Link senden"
+msgstr "Link senden"
+
+#: b11_1/templates/admin/password_reset.html:36
+#: b11_1/templates/admin/password_reset_done.html:21
+msgid "Zurück zum Login"
+msgstr "Zurück zum Login"
+
+#: b11_1/templates/admin/password_reset_done.html:13
+msgid "E-Mail gesendet"
+msgstr "E-Mail gesendet"
+
+#: b11_1/templates/admin/password_reset_done.html:16
+msgid "Falls ein Konto mit dieser E-Mail-Adresse existiert, haben wir Ihnen eine E-Mail mit Anweisungen zum Zurücksetzen Ihres Passworts gesendet. Bitte überprüfen Sie Ihr Postfach."
+msgstr "Falls ein Konto mit dieser E-Mail-Adresse existiert, haben wir Ihnen eine E-Mail mit Anweisungen zum Zurücksetzen Ihres Passworts gesendet. Bitte überprüfen Sie Ihr Postfach."
+
+#: b11_1/templates/admin/password_reset_done.html:17
+msgid "Falls Sie keine E-Mail erhalten haben, überprüfen Sie bitte Ihren Spam-Ordner oder versuchen Sie es erneut."
+msgstr "Falls Sie keine E-Mail erhalten haben, überprüfen Sie bitte Ihren Spam-Ordner oder versuchen Sie es erneut."
+
+#: b11_1/templates/admin/password_reset_done.html:18
+msgid "Entwicklungsmodus: Überprüfen Sie die Django-Konsole für den Reset-Link."
+msgstr "Entwicklungsmodus: Überprüfen Sie die Django-Konsole für den Reset-Link."
+
 #: b11_1/templates/gd/update_material_gd.html:9
 #: b11_1/templates/il/update_material_il.html:8
+#: b11_1/templates/lba/update_material_lba.html:9
 #: b11_1/templates/smda/update_material_smda.html:9
 msgid "Material aktualisieren"
 msgstr "Material aktualisieren"
 
 #: b11_1/templates/gd/update_material_gd.html:152
 #: b11_1/templates/il/update_material_il.html:75
+#: b11_1/templates/lba/update_material_lba.html:120
 #: b11_1/templates/smda/update_material_smda.html:152
 msgid "Existing Attachments"
 msgstr "Aktuelle Anlagen"
 
 #: b11_1/templates/gd/update_material_gd.html:167
 #: b11_1/templates/il/update_material_il.html:90
+#: b11_1/templates/lba/update_material_lba.html:135
 #: b11_1/templates/smda/update_material_smda.html:167
 msgid "Delete"
 msgstr "Delete"
 
 #: b11_1/templates/gd/update_material_gd.html:180
 #: b11_1/templates/il/update_material_il.html:103
+#: b11_1/templates/lba/update_material_lba.html:148
 #: b11_1/templates/smda/update_material_smda.html:180
 msgid "New Attachments"
 msgstr "Neue Anlagen"
@@ -585,6 +636,7 @@ msgstr "Neue Anlagen"
 #: b11_1/templates/gd/update_material_gd.html:190
 #: b11_1/templates/il/add_material_il.html:65
 #: b11_1/templates/il/update_material_il.html:113
+#: b11_1/templates/lba/update_material_lba.html:158
 #: b11_1/templates/smda/update_material_smda.html:190
 msgid "Comment"
 msgstr "Comment"
@@ -592,12 +644,14 @@ msgstr "Comment"
 #: b11_1/templates/gd/update_material_gd.html:199
 #: b11_1/templates/il/add_material_il.html:74
 #: b11_1/templates/il/update_material_il.html:122
+#: b11_1/templates/lba/update_material_lba.html:167
 #: b11_1/templates/smda/update_material_smda.html:199
 msgid "Add Another Attachment"
 msgstr "Add Another Attachment"
 
 #: b11_1/templates/gd/update_material_gd.html:205
 #: b11_1/templates/il/update_material_il.html:149
+#: b11_1/templates/lba/update_material_lba.html:173
 #: b11_1/templates/smda/update_material_smda.html:205
 msgid "Änderungen speichern"
 msgstr "Änderungen speichern"
@@ -605,6 +659,7 @@ msgstr "Änderungen speichern"
 #: b11_1/templates/gd/update_material_gd.html:206
 #: b11_1/templates/il/add_material_il.html:102
 #: b11_1/templates/il/update_material_il.html:150
+#: b11_1/templates/lba/update_material_lba.html:174
 #: b11_1/templates/smda/update_material_smda.html:206
 msgid "Zurück ohne Speichern"
 msgstr "Zurück ohne Speichern"
@@ -673,6 +728,9 @@ msgid "Material_nav"
 msgstr "Material"
 
 #: b11_1/templates/navbar_generic.html:41
+#: b11_1/templates/navbar_generic.html:81
+#: b11_1/templates/navbar_generic.html:97
+#: b11_1/templates/navbar_generic.html:113
 msgid "Materialliste_nav"
 msgstr "Materialliste"
 
@@ -683,6 +741,27 @@ msgstr "Neues Material definieren"
 #: b11_1/templates/navbar_generic.html:47
 msgid "Account_nav"
 msgstr "Account"
+
+#: b11_1/templates/navbar_generic.html:50
+#, fuzzy
+#| msgid "Password Requirements"
+msgid "Passwort ändern"
+msgstr "Password Requirements"
+
+#: b11_1/templates/navbar_generic.html:51
+#: b11_1/templates/navbar_generic.html:71
+#: b11_1/templates/navbar_generic.html:87
+#: b11_1/templates/navbar_generic.html:103
+#: b11_1/templates/navbar_generic.html:119
+msgid "Logout"
+msgstr "Logout"
+
+#: b11_1/templates/navbar_generic.html:65
+#: b11_1/templates/navbar_generic.html:84
+#: b11_1/templates/navbar_generic.html:100
+#: b11_1/templates/navbar_generic.html:116
+msgid "Import Excel Data"
+msgstr "Excel-Datei importieren"
 
 #: b11_1/templates/registration/pre_register.html:13
 msgid "Registration - Email Verification"
