@@ -3,6 +3,7 @@ from pathlib import Path
 import dj_database_url
 from django.utils.translation import gettext_lazy as _
 import socket
+import environ
 
 LANGUAGES = [
     ('de', _('German')),
@@ -10,8 +11,17 @@ LANGUAGES = [
     ('en', _('English')),
 ]
 
+# Initialize environment variables
+env = environ.Env(
+    # Set casting, default value
+    DEBUG=(bool, False)
+)
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+# Take environment variables from .env file
+environ.Env.read_env(BASE_DIR / '.env')
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-nuz3!gby)s_=^-%#(fqi+e4g7jbeltn2o=+bh0o0jm$e!d*m(8')
@@ -32,7 +42,7 @@ CSRF_TRUSTED_ORIGINS=["https://*.aldryn.io"]
 #RECAPTCHA_PRIVATE_KEY = 'your_secret_key'  # Replace with your secret key
 #RECAPTCHA_REQUIRED_SCORE = 0.5  # Threshold score (0.0 to 1.0)
 
-DEBUG = True
+DEBUG = env('DEBUG', default='True')
 # Development settings for reCAPTCHA (bypassed)
 RECAPTCHA_PUBLIC_KEY = 'dummy_public_key'
 RECAPTCHA_PRIVATE_KEY = 'dummy_private_key'
@@ -256,13 +266,13 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Email settings
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = os.environ.get('EMAIL_HOST', 'smtp.gmail.com')
-EMAIL_PORT = int(os.environ.get('EMAIL_PORT', 587))
-EMAIL_USE_TLS = os.environ.get('EMAIL_USE_TLS', 'True') == 'True'
-EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER', 'yann.crausaz@gmail.com')
-EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', '')
-DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL', 'yann.crausaz@gmail.com')
+#EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+#EMAIL_HOST = os.environ.get('EMAIL_HOST', 'smtp.gmail.com')
+#EMAIL_PORT = int(os.environ.get('EMAIL_PORT', 587))
+#EMAIL_USE_TLS = os.environ.get('EMAIL_USE_TLS', 'True') == 'True'
+#EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER', 'yann.crausaz@gmail.com')
+#EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', '')
+#DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL', 'yann.crausaz@gmail.com')
 
 AUTHENTICATION_BACKENDS = [
     'b11_1.utils.backends.EmailBackend',
