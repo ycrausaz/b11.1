@@ -178,6 +178,10 @@ class MaterialForm_LBA(BaseTemplateForm, SplitterReadOnlyReadWriteFields):
                 elif hasattr(tooltip, 'help_content_de') and tooltip.help_content_de:
                     field.help_text = tooltip.help_content_de
 
+    def get_required_field_names(self):
+        """Return a list of field names that are normally required for this form"""
+        return self.Meta.required_fields
+
     def clean(self):
         """Override clean method to handle mass edit validation"""
         cleaned_data = super().clean()

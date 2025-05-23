@@ -16,7 +16,7 @@ function updateAddAttachmentButton() {
     // Wait for DOM to be fully loaded
     setTimeout(() => {
         const existingCount = $('.existing-attachment-row').length;
-        const newCount = $('.attachment-row').length;
+        const newCount = $('.attachment-row').not('.existing-attachment-row').length;
         const deletedCount = $('input[name="delete_attachments[]"]:checked').length;
         const totalCount = existingCount + newCount - deletedCount;
 
@@ -33,145 +33,6 @@ function updateAddAttachmentButton() {
         console.log('Button state updated. Total attachments:', totalCount);
     }, 100);
 }
-
-// Initialize attachment handlers
-function initializeAttachmentHandlers() {
-    // Initialize button state on page load
-    updateAddAttachmentButton();
-
-    // Also initialize after a short delay to ensure all elements are loaded
-    setTimeout(updateAddAttachmentButton, 500);
-
-    // Add attachment button handler
-    $('#add-attachment').click(function() {
-        const existingCount = $('.existing-attachment-row').length;
-        const newCount = $('.attachment-row').length;
-        const deletedCount = $('input[name="delete_attachments[]"]:checked').length;
-        const totalCount = existingCount + newCount - deletedCount;
-
-        if (totalCount >= MAX_ATTACHMENTS) {
-            alert(`Cannot have more than ${MAX_ATTACHMENTS} attachments per material.`);
-            return;
-        }
-
-        const newRow = $('.attachment-row:first').clone();
-        newRow.find('input').val('');
-        $('#attachments-container').append(newRow);
-
-        updateAddAttachmentButton();
-    });
-
-    // Remove attachment handler
-    $(document).on('click', '.remove-attachment', function() {
-        if ($('.attachment-row').length > 1) {
-            $(this).closest('.attachment-row').remove();
-        } else {
-            $('.attachment-row:first').find('input').val('');
-        }
-        updateAddAttachmentButton();
-    });
-
-    // Handle deletion of existing attachments
-    $(document).on('change', 'input[name="delete_attachments[]"]', function() {
-        updateAddAttachmentButton();
-    });
-
-    // File input change handler
-    $(document).on('change', 'input[type="file"]', function() {
-        const file = this.files[0];
-        if (file && !validateFileSize(file)) {
-            $(this).val(''); // Clear the file input
-        }
-    });
-
-    // Form submit handler for attachments
-    $('form').submit(function(e) {
-        // Only apply this to forms with file inputs
-        if ($(this).find('input[type="file"]').length === 0) {
-            return true;
-        }
-        
-        const files = $('input[type="file"]').get().filter(input => input.files.length > 0);
-
-        // Validate all file sizes
-        for (let input of files) {
-            if (!validateFileSize(input.files[0])) {
-                e.preventDefault();
-                return false;
-            }
-        }
-
-        // Count total attachments (existing + new - deleted)
-        const existingCount = $('.existing-attachment-row').length;
-        const deletedCount = $('input[name="delete_attachments[]"]:checked').length;
-        const newCount = files.length;
-        const totalCount = existingCount - deletedCount + newCount;
-
-        if (totalCount > MAX_ATTACHMENTS) {
-            alert(`Cannot have more than ${MAX_ATTACHMENTS} attachments per material.`);
-            e.preventDefault();
-            return false;
-        }
-    });
-}
-
-// Conditional requirement handling for manufacturer fields
-function updateRequiredStatus() {
-    var cageCode = $('#id_cage_code').val();
-    var herstellerName = $('#id_hersteller_name').val();
-    var herstellerAdresse = $('#id_hersteller_adresse').val();
-    var herstellerPlz = $('#id_hersteller_plz').val();
-    var herstellerOrt = $('#id_hersteller_ort').val();
-    
-    // If cage_code is empty, hersteller fields are required
-    if (!cageCode) {
-        $('#hersteller_name_required, #hersteller_adresse_required, #hersteller_plz_required, #hersteller_ort_required').show();
-    } else {
-        $('#hersteller_name_required, #hersteller_adresse_required, #hersteller_plz_required, #hersteller_ort_required').hide();
-    }
-    
-    // If any hersteller field is empty, cage_code is required
-    if (!herstellerName || !herstellerAdresse || !herstellerPlz || !herstellerOrt) {
-        $('#cage_code_required').show();
-    } else {
-        $('#cage_code_required').hide();
-    }
-}
-
-// Initialize conditional requirement handling
-function initializeConditionalRequirements() {
-    if ($('#id_cage_code').length > 0) {
-        // Initial state
-        updateRequiredStatus();
-        
-        // Bind to input events
-        $('#id_cage_code, #id_hersteller_name, #id_hersteller_adresse, #id_hersteller_plz, #id_hersteller_ort').on('input change', function() {
-            updateRequiredStatus();
-        });
-    }
-}
-
-// Main initialization function
-function initializeValidations() {
-    if ($('#add-attachment').length > 0) {
-        initializeAttachmentHandlers();
-    }
-    
-    initializeConditionalRequirements();
-}
-
-// Make functions available globally
-window.ValidationUtils = {
-    validateFileSize,
-    updateAddAttachmentButton,
-    updateRequiredStatus,
-    initializeValidations
-};
-
-// Initialize when DOM is ready
-$(document).ready(function() {
-    initializeValidations();
-});
 
 // Handle toggling of attachment deletion
 function initializeAttachmentDeleteToggle() {
@@ -203,7 +64,7 @@ function initializeAttachmentDeleteToggle() {
     });
 }
 
-// Extend the initializeAttachmentHandlers function to include the new toggle functionality
+// Initialize attachment handlers
 function initializeAttachmentHandlers() {
     // Initialize button state on page load
     updateAddAttachmentButton();
@@ -287,24 +148,130 @@ function initializeAttachmentHandlers() {
     });
 }
 
-function updateAddAttachmentButton() {
-    // Wait for DOM to be fully loaded
-    setTimeout(() => {
-        const existingCount = $('.existing-attachment-row').length;
-        const newCount = $('.attachment-row').not('.existing-attachment-row').length;
-        const deletedCount = $('input[name="delete_attachments[]"]:checked').length;
-        const totalCount = existingCount + newCount - deletedCount;
+// Mass Edit functionality
+function initializeMassEditHandlers() {
+    const selectAllBtn = document.getElementById('select-all-fields');
+    const deselectAllBtn = document.getElementById('deselect-all-fields');
+    const updateCheckboxes = document.querySelectorAll('.update-checkbox:not([disabled])');
 
-        const addButton = $('#add-attachment');
-        if (totalCount >= MAX_ATTACHMENTS) {
-            addButton.prop('disabled', true);
-            addButton.addClass('btn-secondary-disabled');
-            addButton.attr('title', `Maximum of ${MAX_ATTACHMENTS} attachments reached`);
-        } else {
-            addButton.prop('disabled', false);
-            addButton.removeClass('btn-secondary-disabled');
-            addButton.attr('title', '');
-        }
-        console.log('Button state updated. Total attachments:', totalCount);
-    }, 100);
+    // Select all fields button
+    if (selectAllBtn) {
+        selectAllBtn.addEventListener('click', function() {
+            updateCheckboxes.forEach(function(checkbox) {
+                checkbox.checked = true;
+            });
+        });
+    }
+
+    // Deselect all fields button
+    if (deselectAllBtn) {
+        deselectAllBtn.addEventListener('click', function() {
+            updateCheckboxes.forEach(function(checkbox) {
+                checkbox.checked = false;
+            });
+        });
+    }
+
+    // Form submission confirmation for mass edit
+    const massEditForm = document.querySelector('form[action*="mass-update"]') || 
+                        (document.querySelector('.mass-edit-table') ? document.querySelector('form') : null);
+    
+    if (massEditForm) {
+        massEditForm.addEventListener('submit', function(e) {
+            const checkedBoxes = document.querySelectorAll('.update-checkbox:checked:not([disabled])');
+            
+            if (checkedBoxes.length === 0) {
+                e.preventDefault();
+                alert('Bitte wählen Sie mindestens ein Feld zum Aktualisieren aus.');
+                return false;
+            }
+            
+            // Get material count from hidden inputs
+            const materialCount = document.querySelectorAll('input[name="material_ids"]').length;
+            const fieldCount = checkedBoxes.length;
+            
+            const materialText = materialCount > 1 ? 'ien' : '';
+            const fieldText = fieldCount > 1 ? 'er' : '';
+            
+            if (!confirm(`Sie werden ${fieldCount} Feld${fieldText} in ${materialCount} Material${materialText} aktualisieren. Sind Sie sicher?`)) {
+                e.preventDefault();
+                return false;
+            }
+        });
+    }
 }
+
+// Conditional requirement handling for manufacturer fields
+function updateRequiredStatus() {
+    var cageCode = $('#id_cage_code').val();
+    var herstellerName = $('#id_hersteller_name').val();
+    var herstellerAdresse = $('#id_hersteller_adresse').val();
+    var herstellerPlz = $('#id_hersteller_plz').val();
+    var herstellerOrt = $('#id_hersteller_ort').val();
+    
+    // If cage_code is empty, hersteller fields are required
+    if (!cageCode) {
+        $('#hersteller_name_required, #hersteller_adresse_required, #hersteller_plz_required, #hersteller_ort_required').show();
+    } else {
+        $('#hersteller_name_required, #hersteller_adresse_required, #hersteller_plz_required, #hersteller_ort_required').hide();
+    }
+    
+    // If any hersteller field is empty, cage_code is required
+    if (!herstellerName || !herstellerAdresse || !herstellerPlz || !herstellerOrt) {
+        $('#cage_code_required').show();
+    } else {
+        $('#cage_code_required').hide();
+    }
+}
+
+// Initialize conditional requirement handling
+function initializeConditionalRequirements() {
+    if ($('#id_cage_code').length > 0) {
+        // Initial state
+        updateRequiredStatus();
+        
+        // Bind to input events
+        $('#id_cage_code, #id_hersteller_name, #id_hersteller_adresse, #id_hersteller_plz, #id_hersteller_ort').on('input change', function() {
+            updateRequiredStatus();
+        });
+    }
+}
+
+// Main initialization function
+function initializeValidations() {
+    // Initialize attachment handlers if attachment elements exist
+    if ($('#add-attachment').length > 0) {
+        initializeAttachmentHandlers();
+    }
+    
+    // Initialize conditional requirements
+    initializeConditionalRequirements();
+    
+    // Initialize mass edit handlers if mass edit elements exist
+    if (document.querySelector('.mass-edit-table') || document.getElementById('select-all-fields')) {
+        initializeMassEditHandlers();
+    }
+}
+
+// Make functions available globally
+window.ValidationUtils = {
+    validateFileSize,
+    updateAddAttachmentButton,
+    updateRequiredStatus,
+    initializeValidations,
+    initializeMassEditHandlers
+};
+
+// Initialize when DOM is ready
+$(document).ready(function() {
+    initializeValidations();
+});
+
+// Also initialize when content is loaded (for compatibility)
+document.addEventListener('DOMContentLoaded', function() {
+    // Only run if jQuery is not available or hasn't run yet
+    if (typeof $ === 'undefined' || !window.ValidationUtils.initialized) {
+        initializeValidations();
+        window.ValidationUtils.initialized = true;
+    }
+});
