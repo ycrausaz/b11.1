@@ -1,0 +1,261 @@
+ python manage.py test_email --recipient=yann@mydomain.com
+Sending test email...
+DEBUG - EMAIL_HOST: smtp.mailgun.org
+DEBUG - EMAIL_PORT: 587
+DEBUG - EMAIL_HOST_USER: brad@sandbox55233cc73cfc46cfb6cf94605a6e5c36.mailgun.org
+DEBUG - EMAIL_HOST_PASSWORD: **************************************************
+DEBUG - DEFAULT_FROM_EMAIL: Brad <brad@sandbox55233cc73cfc46cfb6cf94605a6e5c36.mailgun.org>
+Failed to send email: Connection unexpectedly closed
+--- Logging error ---
+Traceback (most recent call last):
+  File "/Users/yann/Prog/Python/LBA-b11-1/b11_1/utils/email_utils.py", line 34, in send_simple_email
+    sent = send_mail(
+           ^^^^^^^^^^
+  File "/Users/yann/Prog/Python/LBA-b11-1/venv/lib/python3.12/site-packages/django/core/mail/__init__.py", line 88, in send_mail
+    return mail.send()
+           ^^^^^^^^^^^
+  File "/Users/yann/Prog/Python/LBA-b11-1/venv/lib/python3.12/site-packages/django/core/mail/message.py", line 301, in send
+    return self.get_connection(fail_silently).send_messages([self])
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/yann/Prog/Python/LBA-b11-1/venv/lib/python3.12/site-packages/django/core/mail/backends/smtp.py", line 128, in send_messages
+    new_conn_created = self.open()
+                       ^^^^^^^^^^^
+  File "/Users/yann/Prog/Python/LBA-b11-1/venv/lib/python3.12/site-packages/django/core/mail/backends/smtp.py", line 95, in open
+    self.connection.login(self.username, self.password)
+  File "/opt/local/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/smtplib.py", line 739, in login
+    (code, resp) = self.auth(
+                   ^^^^^^^^^^
+  File "/opt/local/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/smtplib.py", line 642, in auth
+    (code, resp) = self.docmd("AUTH", mechanism + " " + response)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/local/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/smtplib.py", line 432, in docmd
+    return self.getreply()
+           ^^^^^^^^^^^^^^^
+  File "/opt/local/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/smtplib.py", line 405, in getreply
+    raise SMTPServerDisconnected("Connection unexpectedly closed")
+smtplib.SMTPServerDisconnected: Connection unexpectedly closed
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/yann/Prog/Python/LBA-b11-1/venv/lib/python3.12/site-packages/django/db/backends/base/base.py", line 279, in ensure_connection
+    self.connect()
+  File "/Users/yann/Prog/Python/LBA-b11-1/venv/lib/python3.12/site-packages/django/utils/asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/yann/Prog/Python/LBA-b11-1/venv/lib/python3.12/site-packages/django/db/backends/base/base.py", line 256, in connect
+    self.connection = self.get_new_connection(conn_params)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/yann/Prog/Python/LBA-b11-1/venv/lib/python3.12/site-packages/django/utils/asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/yann/Prog/Python/LBA-b11-1/venv/lib/python3.12/site-packages/django/db/backends/postgresql/base.py", line 332, in get_new_connection
+    connection = self.Database.connect(**conn_params)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/yann/Prog/Python/LBA-b11-1/venv/lib/python3.12/site-packages/psycopg/connection.py", line 734, in connect
+    attempts = conninfo_attempts(params)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/yann/Prog/Python/LBA-b11-1/venv/lib/python3.12/site-packages/psycopg/_conninfo_attempts.py", line 45, in conninfo_attempts
+    raise e.OperationalError(str(last_exc))
+psycopg.OperationalError: [Errno 8] nodename nor servname provided, or not known
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/yann/Prog/Python/LBA-b11-1/b11_1/utils/db_log_handler.py", line 12, in emit
+    with connections['default'].cursor() as cursor:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/yann/Prog/Python/LBA-b11-1/venv/lib/python3.12/site-packages/django/utils/asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/yann/Prog/Python/LBA-b11-1/venv/lib/python3.12/site-packages/django/db/backends/base/base.py", line 320, in cursor
+    return self._cursor()
+           ^^^^^^^^^^^^^^
+  File "/Users/yann/Prog/Python/LBA-b11-1/venv/lib/python3.12/site-packages/django/db/backends/base/base.py", line 296, in _cursor
+    self.ensure_connection()
+  File "/Users/yann/Prog/Python/LBA-b11-1/venv/lib/python3.12/site-packages/django/utils/asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/yann/Prog/Python/LBA-b11-1/venv/lib/python3.12/site-packages/django/db/backends/base/base.py", line 278, in ensure_connection
+    with self.wrap_database_errors:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/yann/Prog/Python/LBA-b11-1/venv/lib/python3.12/site-packages/django/db/utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "/Users/yann/Prog/Python/LBA-b11-1/venv/lib/python3.12/site-packages/django/db/backends/base/base.py", line 279, in ensure_connection
+    self.connect()
+  File "/Users/yann/Prog/Python/LBA-b11-1/venv/lib/python3.12/site-packages/django/utils/asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/yann/Prog/Python/LBA-b11-1/venv/lib/python3.12/site-packages/django/db/backends/base/base.py", line 256, in connect
+    self.connection = self.get_new_connection(conn_params)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/yann/Prog/Python/LBA-b11-1/venv/lib/python3.12/site-packages/django/utils/asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/yann/Prog/Python/LBA-b11-1/venv/lib/python3.12/site-packages/django/db/backends/postgresql/base.py", line 332, in get_new_connection
+    connection = self.Database.connect(**conn_params)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/yann/Prog/Python/LBA-b11-1/venv/lib/python3.12/site-packages/psycopg/connection.py", line 734, in connect
+    attempts = conninfo_attempts(params)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/yann/Prog/Python/LBA-b11-1/venv/lib/python3.12/site-packages/psycopg/_conninfo_attempts.py", line 45, in conninfo_attempts
+    raise e.OperationalError(str(last_exc))
+django.db.utils.OperationalError: [Errno 8] nodename nor servname provided, or not known
+Call stack:
+  File "/Users/yann/Prog/Python/LBA-b11-1/manage.py", line 22, in <module>
+    main()
+  File "/Users/yann/Prog/Python/LBA-b11-1/manage.py", line 18, in main
+    execute_from_command_line(sys.argv)
+  File "/Users/yann/Prog/Python/LBA-b11-1/venv/lib/python3.12/site-packages/django/core/management/__init__.py", line 442, in execute_from_command_line
+    utility.execute()
+  File "/Users/yann/Prog/Python/LBA-b11-1/venv/lib/python3.12/site-packages/django/core/management/__init__.py", line 436, in execute
+    self.fetch_command(subcommand).run_from_argv(self.argv)
+  File "/Users/yann/Prog/Python/LBA-b11-1/venv/lib/python3.12/site-packages/django/core/management/base.py", line 413, in run_from_argv
+    self.execute(*args, **cmd_options)
+  File "/Users/yann/Prog/Python/LBA-b11-1/venv/lib/python3.12/site-packages/django/core/management/base.py", line 459, in execute
+    output = self.handle(*args, **options)
+  File "/Users/yann/Prog/Python/LBA-b11-1/b11_1/management/commands/test_email.py", line 16, in handle
+    result = send_simple_email(
+  File "/Users/yann/Prog/Python/LBA-b11-1/b11_1/utils/email_utils.py", line 45, in send_simple_email
+    logger.error(f"Failed to send email: {e}")
+  File "/opt/local/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/logging/__init__.py", line 1568, in error
+    self._log(ERROR, msg, args, **kwargs)
+  File "/opt/local/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/logging/__init__.py", line 1684, in _log
+    self.handle(record)
+  File "/opt/local/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/logging/__init__.py", line 1700, in handle
+    self.callHandlers(record)
+  File "/opt/local/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/logging/__init__.py", line 1762, in callHandlers
+    hdlr.handle(record)
+  File "/opt/local/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/logging/__init__.py", line 1028, in handle
+    self.emit(record)
+  File "/Users/yann/Prog/Python/LBA-b11-1/b11_1/utils/db_log_handler.py", line 20, in emit
+    self.handleError(record)
+Message: 'Failed to send email: Connection unexpectedly closed'
+Arguments: ()
+Full error details: Connection unexpectedly closed
+Failed to send simple test email
+Failed to send template email: Connection unexpectedly closed
+--- Logging error ---
+Traceback (most recent call last):
+  File "/Users/yann/Prog/Python/LBA-b11-1/b11_1/utils/email_utils.py", line 79, in send_template_email
+    sent = msg.send()
+           ^^^^^^^^^^
+  File "/Users/yann/Prog/Python/LBA-b11-1/venv/lib/python3.12/site-packages/django/core/mail/message.py", line 301, in send
+    return self.get_connection(fail_silently).send_messages([self])
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/yann/Prog/Python/LBA-b11-1/venv/lib/python3.12/site-packages/django/core/mail/backends/smtp.py", line 128, in send_messages
+    new_conn_created = self.open()
+                       ^^^^^^^^^^^
+  File "/Users/yann/Prog/Python/LBA-b11-1/venv/lib/python3.12/site-packages/django/core/mail/backends/smtp.py", line 95, in open
+    self.connection.login(self.username, self.password)
+  File "/opt/local/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/smtplib.py", line 739, in login
+    (code, resp) = self.auth(
+                   ^^^^^^^^^^
+  File "/opt/local/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/smtplib.py", line 642, in auth
+    (code, resp) = self.docmd("AUTH", mechanism + " " + response)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/local/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/smtplib.py", line 432, in docmd
+    return self.getreply()
+           ^^^^^^^^^^^^^^^
+  File "/opt/local/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/smtplib.py", line 405, in getreply
+    raise SMTPServerDisconnected("Connection unexpectedly closed")
+smtplib.SMTPServerDisconnected: Connection unexpectedly closed
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/yann/Prog/Python/LBA-b11-1/venv/lib/python3.12/site-packages/django/db/backends/base/base.py", line 279, in ensure_connection
+    self.connect()
+  File "/Users/yann/Prog/Python/LBA-b11-1/venv/lib/python3.12/site-packages/django/utils/asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/yann/Prog/Python/LBA-b11-1/venv/lib/python3.12/site-packages/django/db/backends/base/base.py", line 256, in connect
+    self.connection = self.get_new_connection(conn_params)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/yann/Prog/Python/LBA-b11-1/venv/lib/python3.12/site-packages/django/utils/asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/yann/Prog/Python/LBA-b11-1/venv/lib/python3.12/site-packages/django/db/backends/postgresql/base.py", line 332, in get_new_connection
+    connection = self.Database.connect(**conn_params)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/yann/Prog/Python/LBA-b11-1/venv/lib/python3.12/site-packages/psycopg/connection.py", line 734, in connect
+    attempts = conninfo_attempts(params)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/yann/Prog/Python/LBA-b11-1/venv/lib/python3.12/site-packages/psycopg/_conninfo_attempts.py", line 45, in conninfo_attempts
+    raise e.OperationalError(str(last_exc))
+psycopg.OperationalError: [Errno 8] nodename nor servname provided, or not known
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/yann/Prog/Python/LBA-b11-1/b11_1/utils/db_log_handler.py", line 12, in emit
+    with connections['default'].cursor() as cursor:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/yann/Prog/Python/LBA-b11-1/venv/lib/python3.12/site-packages/django/utils/asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/yann/Prog/Python/LBA-b11-1/venv/lib/python3.12/site-packages/django/db/backends/base/base.py", line 320, in cursor
+    return self._cursor()
+           ^^^^^^^^^^^^^^
+  File "/Users/yann/Prog/Python/LBA-b11-1/venv/lib/python3.12/site-packages/django/db/backends/base/base.py", line 296, in _cursor
+    self.ensure_connection()
+  File "/Users/yann/Prog/Python/LBA-b11-1/venv/lib/python3.12/site-packages/django/utils/asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/yann/Prog/Python/LBA-b11-1/venv/lib/python3.12/site-packages/django/db/backends/base/base.py", line 278, in ensure_connection
+    with self.wrap_database_errors:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/yann/Prog/Python/LBA-b11-1/venv/lib/python3.12/site-packages/django/db/utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "/Users/yann/Prog/Python/LBA-b11-1/venv/lib/python3.12/site-packages/django/db/backends/base/base.py", line 279, in ensure_connection
+    self.connect()
+  File "/Users/yann/Prog/Python/LBA-b11-1/venv/lib/python3.12/site-packages/django/utils/asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/yann/Prog/Python/LBA-b11-1/venv/lib/python3.12/site-packages/django/db/backends/base/base.py", line 256, in connect
+    self.connection = self.get_new_connection(conn_params)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/yann/Prog/Python/LBA-b11-1/venv/lib/python3.12/site-packages/django/utils/asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/yann/Prog/Python/LBA-b11-1/venv/lib/python3.12/site-packages/django/db/backends/postgresql/base.py", line 332, in get_new_connection
+    connection = self.Database.connect(**conn_params)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/yann/Prog/Python/LBA-b11-1/venv/lib/python3.12/site-packages/psycopg/connection.py", line 734, in connect
+    attempts = conninfo_attempts(params)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/yann/Prog/Python/LBA-b11-1/venv/lib/python3.12/site-packages/psycopg/_conninfo_attempts.py", line 45, in conninfo_attempts
+    raise e.OperationalError(str(last_exc))
+django.db.utils.OperationalError: [Errno 8] nodename nor servname provided, or not known
+Call stack:
+  File "/Users/yann/Prog/Python/LBA-b11-1/manage.py", line 22, in <module>
+    main()
+  File "/Users/yann/Prog/Python/LBA-b11-1/manage.py", line 18, in main
+    execute_from_command_line(sys.argv)
+  File "/Users/yann/Prog/Python/LBA-b11-1/venv/lib/python3.12/site-packages/django/core/management/__init__.py", line 442, in execute_from_command_line
+    utility.execute()
+  File "/Users/yann/Prog/Python/LBA-b11-1/venv/lib/python3.12/site-packages/django/core/management/__init__.py", line 436, in execute
+    self.fetch_command(subcommand).run_from_argv(self.argv)
+  File "/Users/yann/Prog/Python/LBA-b11-1/venv/lib/python3.12/site-packages/django/core/management/base.py", line 413, in run_from_argv
+    self.execute(*args, **cmd_options)
+  File "/Users/yann/Prog/Python/LBA-b11-1/venv/lib/python3.12/site-packages/django/core/management/base.py", line 459, in execute
+    output = self.handle(*args, **options)
+  File "/Users/yann/Prog/Python/LBA-b11-1/b11_1/management/commands/test_email.py", line 28, in handle
+    result = send_template_email(
+  File "/Users/yann/Prog/Python/LBA-b11-1/b11_1/utils/email_utils.py", line 83, in send_template_email
+    logger.error(f"Failed to send template email: {e}")
+  File "/opt/local/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/logging/__init__.py", line 1568, in error
+    self._log(ERROR, msg, args, **kwargs)
+  File "/opt/local/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/logging/__init__.py", line 1684, in _log
+    self.handle(record)
+  File "/opt/local/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/logging/__init__.py", line 1700, in handle
+    self.callHandlers(record)
+  File "/opt/local/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/logging/__init__.py", line 1762, in callHandlers
+    hdlr.handle(record)
+  File "/opt/local/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/logging/__init__.py", line 1028, in handle
+    self.emit(record)
+  File "/Users/yann/Prog/Python/LBA-b11-1/b11_1/utils/db_log_handler.py", line 20, in emit
+    self.handleError(record)
+Message: 'Failed to send template email: Connection unexpectedly closed'
+Arguments: ()
+Failed to send template test email

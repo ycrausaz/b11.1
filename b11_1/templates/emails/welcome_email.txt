@@ -1,0 +1,8 @@
+Hello {{ name }},
+
+Welcome to {{ app_name }}!
+
+Thank you for joining us.
+
+Best regards,
+The {{ app_name }} Team
