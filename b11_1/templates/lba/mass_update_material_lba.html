@@ -1,0 +1,269 @@
+{% extends "base_generic.html" %}
+{% load i18n %}
+{% load custom_filters %}
+{% load field_filters %}
+
+<!-- templates/lba/mass_update_material_lba.html -->
+{% load help_tags %}
+{% block content %}
+    <h1>{% trans "Massenbearbeitung von Materialien" %} ({{ material_count }} Material{% if material_count > 1 %}ien{% endif %})</h1>
+    <br/>
+
+    <!-- Display selected materials -->
+    <div class="alert alert-info">
+        <strong>Ausgewählte Materialien:</strong>
+        <ul class="mb-0">
+            {% for material in materials %}
+                <li>{{ material.systemname }}: {{ material.get_localized_kurztext }} ({{ material.hersteller }})</li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    {% if form.non_field_errors %}
+        {% for nfe in form.non_field_errors %}
+            <div class="alert alert-danger" role="alert">
+                {{ nfe }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <div class="alert alert-warning">
+        <strong>Hinweis:</strong> Nur Felder mit aktivierter Checkbox werden in den ausgewählten Materialien aktualisiert.
+    </div>
+
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        
+        <!-- Hidden field to pass material IDs -->
+        {% for material in materials %}
+            <input type="hidden" name="material_ids" value="{{ material.id }}">
+        {% endfor %}
+
+        <div class="table-container">
+            <div class="column">
+                <div class="mytitle">Daten zu pflegen</div>
+                <div class="content">
+                    <table class="mass-edit-table">
+                        <thead>
+                            <tr>
+                                <th width="40px">Update</th>
+                                <th width="200px">Feld</th>
+                                <th>Neuer Wert</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for field in form.get_normal_fields %}
+                                {% if not field.is_hidden %}
+                                    <tr>
+                                        <td>
+                                            <input type="checkbox" name="update_{{ field.name }}" id="update_{{ field.name }}" class="update-checkbox">
+                                        </td>
+                                        <td>
+                                            <label for="{{ field.id_for_label }}" class="field-label">
+                                                {% with label_with_tooltip=field|add_tooltip %}
+                                                    {{ label_with_tooltip|safe }}
+                                                    {% if field.field.required %}
+                                                        <span class="required">*</span>
+                                                    {% elif field|is_conditional_required %}
+                                                        <span class="required conditional-required" id="{{ field.name }}_required">*</span>
+                                                    {% endif %}
+                                                    {{ field|get_inline_help }}
+                                                {% endwith %}
+                                            </label>
+                                        </td>
+                                        <td>
+                                            {{ field }}
+                                            {% if field.errors %}
+                                                <div class="error">
+                                                    {% for error in field.errors %}
+                                                        <p>{{ error }}</p>
+                                                    {% endfor %}
+                                                </div>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                {% else %}
+                                    {{ field }}
+                                {% endif %}
+                            {% endfor %}
+
+                            <tr><td colspan="3"><hr></td></tr>
+                            <tr class="section-header"><td colspan="3"><strong>Berechnete Felder</strong></td></tr>
+                            
+                            {% for field in form.get_computed_fields %}
+                                {% if not field.is_hidden %}
+                                    <tr>
+                                        <td>
+                                            <input type="checkbox" name="update_{{ field.name }}" id="update_{{ field.name }}" class="update-checkbox" disabled>
+                                        </td>
+                                        <td>
+                                            <label for="{{ field.id_for_label }}" class="field-label">
+                                                {% trans field.label %}
+                                            </label>
+                                        </td>
+                                        <td>
+                                            {{ field }}
+                                            <small class="text-muted">(Berechnetes Feld - kann nicht geändert werden)</small>
+                                        </td>
+                                    </tr>
+                                {% endif %}
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="column">
+                <div class="mytitle">Stammdaten (Nur-Lesen)</div>
+                <div class="content">
+                    <table class="mass-edit-table">
+                        <thead>
+                            <tr>
+                                <th width="40px"></th>
+                                <th width="200px">Feld</th>
+                                <th>Wert</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="section-header"><td colspan="3"><strong>Daten Lieferant</strong></td></tr>
+                            {% for field in form.get_readonly_fields %}
+                                {% if field.name|is_in_il_fields %}
+                                    {% if not field.is_hidden %}
+                                        <tr>
+                                            <td>
+                                                <span class="text-muted">—</span>
+                                            </td>
+                                            <td>
+                                                <label for="{{ field.id_for_label }}" class="field-label">
+                                                    {{ field.label }}
+                                                    {% if field.field.required %}
+                                                        <span class="required">*</span>
+                                                    {% endif %}
+                                                </label>
+                                            </td>
+                                            <td>
+                                                {{ field }}
+                                                <small class="text-muted">(Nur-Lesen)</small>
+                                                {% if field.errors %}
+                                                    <div class="error">
+                                                        {% for error in field.errors %}
+                                                            <p>{{ error }}</p>
+                                                        {% endfor %}
+                                                    </div>
+                                                {% endif %}
+                                            </td>
+                                        </tr>
+                                    {% else %}
+                                        {{ field }}
+                                    {% endif %}
+                                {% endif %}
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="same-width" style="margin-top: 20px;">
+            <div class="mb-3">
+                <button type="button" class="btn btn-outline-secondary" id="select-all-fields">Alle Felder auswählen</button>
+                <button type="button" class="btn btn-outline-secondary" id="deselect-all-fields">Alle Felder abwählen</button>
+            </div>
+            
+            <input type="submit" value="{% trans "Ausgewählte Felder in allen Materialien aktualisieren" %}" class="btn btn-primary btn-lg">
+            <button type="button" class="btn btn-secondary" onclick="window.location.href='{% url 'list_material_lba' %}'">{% trans "Zurück ohne Speichern" %}</button>
+        </div>
+    </form>
+
+    <style>
+        .mass-edit-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .mass-edit-table th,
+        .mass-edit-table td {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            vertical-align: top;
+        }
+        
+        .mass-edit-table th {
+            background-color: #f8f9fa;
+            font-weight: bold;
+        }
+        
+        .update-checkbox {
+            transform: scale(1.2);
+        }
+        
+        .field-label {
+            font-weight: 500;
+            margin-bottom: 0;
+        }
+        
+        .section-header td {
+            background-color: #e9ecef;
+            font-weight: bold;
+        }
+        
+        .table-container {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .column {
+            flex: 1;
+        }
+        
+        .same-width {
+            width: 100%;
+        }
+        
+        .alert ul {
+            max-height: 200px;
+            overflow-y: auto;
+        }
+    </style>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const selectAllBtn = document.getElementById('select-all-fields');
+            const deselectAllBtn = document.getElementById('deselect-all-fields');
+            const updateCheckboxes = document.querySelectorAll('.update-checkbox:not([disabled])');
+
+            selectAllBtn.addEventListener('click', function() {
+                updateCheckboxes.forEach(function(checkbox) {
+                    checkbox.checked = true;
+                });
+            });
+
+            deselectAllBtn.addEventListener('click', function() {
+                updateCheckboxes.forEach(function(checkbox) {
+                    checkbox.checked = false;
+                });
+            });
+
+            // Add confirmation before submitting
+            const form = document.querySelector('form');
+            form.addEventListener('submit', function(e) {
+                const checkedBoxes = document.querySelectorAll('.update-checkbox:checked:not([disabled])');
+                
+                if (checkedBoxes.length === 0) {
+                    e.preventDefault();
+                    alert('Bitte wählen Sie mindestens ein Feld zum Aktualisieren aus.');
+                    return false;
+                }
+                
+                const materialCount = {{ material_count }};
+                const fieldCount = checkedBoxes.length;
+                
+                if (!confirm(`Sie werden ${fieldCount} Feld${fieldCount > 1 ? 'er' : ''} in ${materialCount} Material${materialCount > 1 ? 'ien' : ''} aktualisieren. Sind Sie sicher?`)) {
+                    e.preventDefault();
+                    return false;
+                }
+            });
+        });
+    </script>
+
+    <br/>
+{% endblock %}

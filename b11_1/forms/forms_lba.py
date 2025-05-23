@@ -93,35 +93,34 @@ class MaterialForm_LBA(BaseTemplateForm, SplitterReadOnlyReadWriteFields):
             'sparte': {'model': Sparte, 'queryset': Sparte.objects.all()},
             'rueckfuehrungscode': {'model': Rueckfuehrungscode, 'queryset': Rueckfuehrungscode.objects.all()},
             'serialnummerprofil': {'model': Serialnummerprofil, 'queryset': Serialnummerprofil.objects.all()},
-            'spare_part_class_code': {'model': SparePartClassCode, 'queryset': SparePartClassCode.objects.all()},
             'uebersetzungsstatus': {'model': Uebersetzungsstatus, 'queryset': Uebersetzungsstatus.objects.all()},
             'gefahrgutkennzeichen': {'model': Gefahrgutkennzeichen, 'queryset': Gefahrgutkennzeichen.objects.all()},
-            'werkzuordnung_1': {'model': Werkzuordnung_1, 'queryset': Werkzuordnung_1.objects.all()},
             'werkzuordnung_2': {'model': Werkzuordnung_2, 'queryset': Werkzuordnung_2.objects.all()},
             'werkzuordnung_3': {'model': Werkzuordnung_3, 'queryset': Werkzuordnung_3.objects.all()},
             'werkzuordnung_4': {'model': Werkzuordnung_4, 'queryset': Werkzuordnung_4.objects.all()},
-            'allgemeine_positionstypengruppe': {'model': AllgemeinePositionstypengruppe, 'queryset': AllgemeinePositionstypengruppe.objects.all()},
             'fertigungssteuerer': {'model': Fertigungssteuerer, 'queryset': Fertigungssteuerer.objects.all()},
             'sonderablauf': {'model': Sonderablauf, 'queryset': Sonderablauf.objects.all()},
             'temperaturbedingung': {'model': Temperaturbedingung, 'queryset': Temperaturbedingung.objects.all()},
-            'bewertungsklasse': {'model': Bewertungsklasse, 'queryset': Bewertungsklasse.objects.all()},
-            'materialeinstufung_nach_zuva': {'model': MaterialeinstufungNachZUVA, 'queryset': MaterialeinstufungNachZUVA.objects.all()},
-            'zuteilung': {'model': Zuteilung, 'queryset': Zuteilung.objects.all()},
-            'auspraegung': {'model': Auspraegung, 'queryset': Auspraegung.objects.all()},
         }
 
     def __init__(self, *args, **kwargs):
         kwargs['editable_fields'] = EDITABLE_FIELDS_LBA
         super().__init__(*args, **kwargs)
 
-        # Set required fields based on Meta.required_fields
-        for field_name in self.Meta.required_fields:
-            if field_name in self.fields:
-                self.fields[field_name].required = True
+        # For mass edit forms, we don't want to require fields by default
+        # since the user might not want to update all required fields
+        is_mass_edit = kwargs.get('instance') is None and not kwargs.get('data')
+        
+        # Set required fields based on Meta.required_fields (only for single edit)
+        if not is_mass_edit:
+            for field_name in self.Meta.required_fields:
+                if field_name in self.fields:
+                    self.fields[field_name].required = True
 
         # Mark computed fields
         for field_name in self.Meta.computed_fields:
-            self.fields[field_name].is_computed = True
+            if field_name in self.fields:
+                self.fields[field_name].is_computed = True
 
         # Initialize foreign key widgets and set required fields
         instance = kwargs.get('instance')
@@ -164,19 +163,6 @@ class MaterialForm_LBA(BaseTemplateForm, SplitterReadOnlyReadWriteFields):
                         if value:
                             self.fields[field_name].initial = value.idx
 
-        # Set required fields based on Meta.required_fields
-        for field_name in self.Meta.required_fields:
-            if field_name in self.fields:
-                self.fields[field_name].required = True
-
-        # Mark computed fields
-        for field_name in self.Meta.computed_fields:
-            self.fields[field_name].is_computed = True
-
-        for field_name, field_info in self.Meta.foreign_key_fields.items():
-            if field_name in self.fields:
-                queryset = field_info['queryset']
-
         # Add tooltips
         from django.utils.translation import get_language
         tooltips = HelpTooltip.objects.all()
@@ -192,3 +178,35 @@ class MaterialForm_LBA(BaseTemplateForm, SplitterReadOnlyReadWriteFields):
                 elif hasattr(tooltip, 'help_content_de') and tooltip.help_content_de:
                     field.help_text = tooltip.help_content_de
 
+    def clean(self):
+        """Override clean method to handle mass edit validation"""
+        cleaned_data = super().clean()
+        
+        # For mass edit, we need to convert idx values back to model instances
+        # This ensures Django's ModelForm can properly handle the foreign key fields
+        for field_name, field_info in self.Meta.foreign_key_fields.items():
+            if field_name in cleaned_data and cleaned_data[field_name]:
+                value = cleaned_data[field_name]
+                
+                # If value is a string representation of an idx, convert it to the model instance
+                if isinstance(value, str) and value.isdigit():
+                    try:
+                        related_model = field_info['model']
+                        related_obj = related_model.objects.get(idx=int(value))
+                        cleaned_data[field_name] = related_obj
+                    except related_model.DoesNotExist:
+                        # If the related object doesn't exist, set to None
+                        cleaned_data[field_name] = None
+                # If value is an integer idx, convert it to the model instance
+                elif isinstance(value, int):
+                    try:
+                        related_model = field_info['model']
+                        related_obj = related_model.objects.get(idx=value)
+                        cleaned_data[field_name] = related_obj
+                    except related_model.DoesNotExist:
+                        # If the related object doesn't exist, set to None
+                        cleaned_data[field_name] = None
+                # If it's already a model instance, keep it as is
+                # (this handles the normal case)
+        
+        return cleaned_data

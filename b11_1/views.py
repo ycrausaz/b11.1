@@ -1355,6 +1355,114 @@ class UpdateMaterial_LBA_View(ComputedContextMixin, FormValidMixin, GroupRequire
             form.add_error(None, error_msg)
             return self.render_to_response(self.get_context_data(form=form))
 
+# Replace your existing MassUpdateMaterial_LBA_View with this simplified version
+
+class MassUpdateMaterial_LBA_View(ComputedContextMixin, FormValidMixin, GroupRequiredMixin, SuccessMessageMixin, View):
+    template_name = 'lba/mass_update_material_lba.html'
+    success_url = reverse_lazy('list_material_lba')
+    success_message = "Die Materialien wurden erfolgreich aktualisiert."
+    allowed_groups = ['grLBA']
+
+    def get(self, request, *args, **kwargs):
+        material_ids = request.GET.getlist('materials')
+        if not material_ids:
+            messages.error(request, "Keine Materialien für die Massenbearbeitung ausgewählt.")
+            return redirect('list_material_lba')
+        
+        materials = Material.objects.filter(id__in=material_ids)
+        if not materials.exists():
+            messages.error(request, "Keine gültigen Materialien gefunden.")
+            return redirect('list_material_lba')
+        
+        # Create form with editable fields configuration
+        form = MaterialForm_LBA(editable_fields=EDITABLE_FIELDS_LBA)
+        
+        context = {
+            'form': form,
+            'materials': materials,
+            'material_count': materials.count(),
+        }
+        return render(request, self.template_name, context)
+
+    def post(self, request, *args, **kwargs):
+        material_ids = request.POST.getlist('material_ids')
+        if not material_ids:
+            messages.error(request, "Keine Materialien für die Massenbearbeitung ausgewählt.")
+            return redirect('list_material_lba')
+        
+        materials = Material.objects.filter(id__in=material_ids)
+        if not materials.exists():
+            messages.error(request, "Keine gültigen Materialien gefunden.")
+            return redirect('list_material_lba')
+        
+        form = MaterialForm_LBA(request.POST, editable_fields=EDITABLE_FIELDS_LBA)
+        
+        if form.is_valid():
+            try:
+                with transaction.atomic():
+                    updated_count = 0
+                    updated_fields = []
+                    
+                    # Get which fields should be updated (those with checked checkboxes)
+                    fields_to_update = []
+                    for field_name in form.fields:
+                        checkbox_name = f"update_{field_name}"
+                        if request.POST.get(checkbox_name):
+                            fields_to_update.append(field_name)
+                            if field_name not in updated_fields:
+                                updated_fields.append(field_name)
+                    
+                    if not fields_to_update:
+                        messages.warning(request, "Keine Felder zum Aktualisieren ausgewählt.")
+                        return redirect('list_material_lba')
+                    
+                    # Update each material with the selected fields
+                    for material in materials:
+                        material_updated = False
+                        for field_name in fields_to_update:
+                            if field_name in form.cleaned_data:
+                                new_value = form.cleaned_data[field_name]
+                                
+                                # Set the field value directly
+                                # The form's clean() method has already converted values to proper types
+                                setattr(material, field_name, new_value)
+                                material_updated = True
+                        
+                        if material_updated:
+                            material.save(update_fields=fields_to_update)
+                            updated_count += 1
+                            logger.info(f"Material '{material.kurztext_de}' wurde durch Massenbearbeitung von '{request.user.email}' aktualisiert. Felder: {', '.join(updated_fields)}")
+                    
+                    if updated_count > 0:
+                        messages.success(
+                            request, 
+                            f"{updated_count} Material(ien) wurden erfolgreich aktualisiert. "
+                            f"Geänderte Felder: {', '.join(updated_fields)}"
+                        )
+                    else:
+                        messages.warning(request, "Keine Materialien wurden aktualisiert.")
+                    
+                    return redirect('list_material_lba')
+                    
+            except Exception as e:
+                error_msg = f"Fehler bei der Massenbearbeitung: {str(e)}"
+                logger.error(error_msg)
+                messages.error(request, error_msg)
+                
+        else:
+            # Form has errors
+            for field, errors in form.errors.items():
+                for error in errors:
+                    messages.error(request, f"{field}: {error}")
+        
+        # If we get here, there were errors - redisplay the form
+        context = {
+            'form': form,
+            'materials': materials,
+            'material_count': materials.count(),
+        }
+        return render(request, self.template_name, context)
+
 class ShowMaterial_LBA_View(ComputedContextMixin, GroupRequiredMixin, SuccessMessageMixin, DetailView):
     model = Material
     template_name = 'lba/show_material_lba.html'
