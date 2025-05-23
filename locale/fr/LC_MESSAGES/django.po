@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-22 20:13+0200\n"
+"POT-Creation-Date: 2025-05-23 12:11+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,15 +18,15 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: LBA/settings.py:8
+#: LBA/settings.py:9
 msgid "German"
 msgstr "French"
 
-#: LBA/settings.py:9
+#: LBA/settings.py:10
 msgid "French"
 msgstr "French"
 
-#: LBA/settings.py:10
+#: LBA/settings.py:11
 msgid "English"
 msgstr "Anglais"
 
