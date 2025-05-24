@@ -1,0 +1,124 @@
+{% extends 'base_generic.html' %}
+{% load i18n %}
+
+{% block title %}Material Assignment Detail{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <h2>{% trans "Manage Assignments for" %}: {{ object.kurztext_de }}</h2>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h4>{% trans "Material Information" %}</h4>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p><strong>{% trans "Position Nr." %}:</strong> {{ object.positions_nr|default:"-" }}</p>
+                            <p><strong>{% trans "Short Text (DE)" %}:</strong> {{ object.kurztext_de }}</p>
+                            <p><strong>{% trans "Short Text (FR)" %}:</strong> {{ object.kurztext_fr|default:"-" }}</p>
+                            <p><strong>{% trans "Short Text (EN)" %}:</strong> {{ object.kurztext_en|default:"-" }}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <p><strong>{% trans "System Name" %}:</strong> {{ object.systemname|default:"-" }}</p>
+                            <p><strong>{% trans "Manufacturer" %}:</strong> {{ object.hersteller|default:"-" }}</p>
+                            <p><strong>{% trans "Status" %}:</strong> 
+                                {% if object.is_transferred %}
+                                    <span class="badge badge-success">{% trans "Transferred" %}</span>
+                                {% else %}
+                                    <span class="badge badge-warning">{% trans "In Progress" %}</span>
+                                {% endif %}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card mt-4">
+                <div class="card-header">
+                    <h4>{% trans "User Assignments" %}</h4>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        
+                        <div class="row">
+                            <div class="col-md-8">
+                                <h5>{% trans "Assigned Users" %}</h5>
+                                <p class="text-muted">{% trans "Select all users who should have access to this material" %}</p>
+                                <div style="max-height: 300px; overflow-y: auto; border: 1px solid #ddd; padding: 15px;">
+                                    {{ form.assigned_users }}
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-4">
+                                <h5>{% trans "Primary User" %}</h5>
+                                <p class="text-muted">{% trans "Select the main responsible user (optional)" %}</p>
+                                {{ form.primary_user }}
+                            </div>
+                        </div>
+                        
+                        <div class="row mt-4">
+                            <div class="col-12">
+                                <button type="submit" class="btn btn-primary">
+                                    {% trans "Save Assignments" %}
+                                </button>
+                                <a href="{% url 'material_user_management' %}" class="btn btn-secondary">
+                                    {% trans "Back to Management" %}
+                                </a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Update primary user dropdown based on selected users
+document.addEventListener('DOMContentLoaded', function() {
+    const assignedUsersCheckboxes = document.querySelectorAll('input[name="assigned_users"]');
+    const primaryUserSelect = document.querySelector('select[name="primary_user"]');
+    
+    function updatePrimaryUserOptions() {
+        const selectedUserIds = Array.from(assignedUsersCheckboxes)
+            .filter(cb => cb.checked)
+            .map(cb => cb.value);
+        
+        // Store current selection
+        const currentSelection = primaryUserSelect.value;
+        
+        // Clear all options except the first one (empty option)
+        while (primaryUserSelect.children.length > 1) {
+            primaryUserSelect.removeChild(primaryUserSelect.lastChild);
+        }
+        
+        // Add options for selected users
+        assignedUsersCheckboxes.forEach(checkbox => {
+            if (checkbox.checked) {
+                const option = document.createElement('option');
+                option.value = checkbox.value;
+                option.textContent = checkbox.nextElementSibling.textContent.trim();
+                primaryUserSelect.appendChild(option);
+            }
+        });
+        
+        // Restore selection if still valid
+        if (selectedUserIds.includes(currentSelection)) {
+            primaryUserSelect.value = currentSelection;
+        }
+    }
+    
+    // Update on checkbox change
+    assignedUsersCheckboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', updatePrimaryUserOptions);
+    });
+    
+    // Initial update
+    updatePrimaryUserOptions();
+});
+</script>
+{% endblock %}
