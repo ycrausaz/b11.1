@@ -9,6 +9,40 @@ import boto3
 from botocore.client import Config
 from .utils.storage import MaterialAttachmentStorage
 
+class MaterialUserAssociation(models.Model):
+    """
+    Many-to-many relationship between Materials and IL Users
+    """
+    material = models.ForeignKey('Material', on_delete=models.CASCADE, related_name='user_associations')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='material_associations')
+    assigned_date = models.DateTimeField(auto_now_add=True)
+    assigned_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='assignments_made')
+    is_primary = models.BooleanField(default=False, help_text="Primary responsible user")
+    
+    class Meta:
+        app_label = 'b11_1'
+        unique_together = ['material', 'user']
+        
+    def __str__(self):
+        primary = " (Primary)" if self.is_primary else ""
+        return f"{self.material.kurztext_de} -> {self.user.email}{primary}"
+
+def assign_user(self, user, assigned_by, is_primary=False):
+    """Assign a user to this material"""
+    association, created = MaterialUserAssociation.objects.get_or_create(
+        material=self,
+        user=user,
+        defaults={'assigned_by': assigned_by, 'is_primary': is_primary}
+    )
+    if not created and is_primary:
+        association.is_primary = True
+        association.save()
+    return association
+
+def remove_user(self, user):
+    """Remove a user from this material"""
+    MaterialUserAssociation.objects.filter(material=self, user=user).delete()
+
 class LogEntry(models.Model):
     id = models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name=_('ID'))
     timestamp = models.DateTimeField(auto_now_add=True)
@@ -322,6 +356,18 @@ class Material(models.Model):
             return str(self.positions_nr) + " - " + self.kurztext_de + " (" + self.hersteller + ")"
         else:
             return "<None> - " + self.kurztext_de + " (" + self.hersteller + ")"
+
+    def get_assigned_users(self):
+        """Get all users assigned to this material"""
+        return User.objects.filter(material_associations__material=self)
+    
+    def get_primary_user(self):
+        """Get the primary user assigned to this material"""
+        try:
+            association = self.user_associations.get(is_primary=True)
+            return association.user
+        except MaterialUserAssociation.DoesNotExist:
+            return None
 
     class Meta:
         ordering = ["positions_nr"]
