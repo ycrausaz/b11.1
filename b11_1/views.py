@@ -584,6 +584,8 @@ class ListMaterial_IL_View(GroupRequiredMixin, ListView):
                     return User.objects.filter(pk=hersteller_user.pk)
                 return User.objects.none()
 
+# Replace the AddMaterial_IL_View in views.py
+
 class AddMaterial_IL_View(FormValidMixin, GroupRequiredMixin, SuccessMessageMixin, CreateView):
     model = Material
     template_name = 'il/add_material_il.html'
@@ -595,10 +597,10 @@ class AddMaterial_IL_View(FormValidMixin, GroupRequiredMixin, SuccessMessageMixi
     def form_valid(self, form):
         try:
             with transaction.atomic():
-                # Start by validating the form data
+                # Save the material first
                 self.object = form.save(commit=False)
 
-                # Get new files and comments
+                # Get new files and comments for attachments
                 files = self.request.FILES.getlist('attachment_files[]')
                 comments = self.request.POST.getlist('attachment_comments[]')
 
@@ -620,7 +622,6 @@ class AddMaterial_IL_View(FormValidMixin, GroupRequiredMixin, SuccessMessageMixi
 
                             # Try to save file to S3 first
                             try:
-                                # Note: Don't save to database yet
                                 attachment.file.save(file.name, file, save=False)
                             except (BotoCoreError, ClientError) as e:
                                 error_msg = f"Failed to upload file '{file.name}' to storage."
@@ -636,16 +637,18 @@ class AddMaterial_IL_View(FormValidMixin, GroupRequiredMixin, SuccessMessageMixi
                             form.add_error(None, error_msg)
                             return self.render_to_response(self.get_context_data(form=form))
 
-                # If we got here, all S3 operations were successful
-                # Now save the material object
+                # Save the material object to get the ID
                 self.object.save()
 
-                # And save all new attachments to database
+                # Automatically set the creator as the primary responsible user
+                self.object.set_primary_user(self.request.user, assigned_by=self.request.user)
+
+                # Save all new attachments to database
                 for attachment in new_attachments:
                     attachment.save()
 
-                # Log the successful creation
-                logger.info(f"Material '{self.object.kurztext_de}' wurde durch '{self.request.user.email}' erstellt.")
+                # Log the successful creation with primary user assignment
+                logger.info(f"Material '{self.object.kurztext_de}' created by '{self.request.user.email}' and set as primary responsible user.")
 
                 return super().form_valid(form)
 
@@ -658,12 +661,6 @@ class AddMaterial_IL_View(FormValidMixin, GroupRequiredMixin, SuccessMessageMixi
                     logger.error(f"Failed to clean up file {attachment.file.name} after error: {str(s3_error)}")
 
             form.add_error(None, str(e))
-            return self.render_to_response(self.get_context_data(form=form))
-
-        except (BotoCoreError, ClientError) as e:
-            error_msg = f"Failed to upload file to storage."
-            logger.error(error_msg)
-            form.add_error(None, error_msg)
             return self.render_to_response(self.get_context_data(form=form))
 
         except Exception as e:
