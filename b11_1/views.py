@@ -814,8 +814,7 @@ class MassUpdateMaterial_IL_View(ComputedContextMixin, FormValidMixin, GroupRequ
             }
             return render(request, self.template_name, context)
 
-        # Create a custom validation approach for mass updates
-        # Only validate fields that are actually being updated
+        # Custom validation for mass updates - only validate selected fields
         validation_errors = {}
 
         # Check each field that's being updated
@@ -1523,8 +1522,6 @@ class UpdateMaterial_LBA_View(ComputedContextMixin, FormValidMixin, GroupRequire
             form.add_error(None, error_msg)
             return self.render_to_response(self.get_context_data(form=form))
 
-# Replace your existing MassUpdateMaterial_LBA_View with this simplified version
-
 class MassUpdateMaterial_LBA_View(ComputedContextMixin, FormValidMixin, GroupRequiredMixin, SuccessMessageMixin, View):
     template_name = 'lba/mass_update_material_lba.html'
     success_url = reverse_lazy('list_material_lba')
@@ -1542,8 +1539,11 @@ class MassUpdateMaterial_LBA_View(ComputedContextMixin, FormValidMixin, GroupReq
             messages.error(request, "Keine gültigen Materialien gefunden.")
             return redirect('list_material_lba')
         
-        # Create form with editable fields configuration
-        form = MaterialForm_LBA(editable_fields=EDITABLE_FIELDS_LBA)
+        # Create form with editable fields configuration and mass update flag
+        form = MaterialForm_LBA(
+            editable_fields=EDITABLE_FIELDS_LBA,
+            is_mass_update=True
+        )
         
         context = {
             'form': form,
@@ -1563,7 +1563,64 @@ class MassUpdateMaterial_LBA_View(ComputedContextMixin, FormValidMixin, GroupReq
             messages.error(request, "Keine gültigen Materialien gefunden.")
             return redirect('list_material_lba')
         
-        form = MaterialForm_LBA(request.POST, editable_fields=EDITABLE_FIELDS_LBA)
+        # Create form with mass update configuration
+        form = MaterialForm_LBA(
+            request.POST, 
+            editable_fields=EDITABLE_FIELDS_LBA,
+            is_mass_update=True
+        )
+        
+        # Get which fields should be updated (those with checked checkboxes)
+        fields_to_update = []
+        for field_name in form.fields:
+            checkbox_name = f"update_{field_name}"
+            if request.POST.get(checkbox_name):
+                fields_to_update.append(field_name)
+        
+        if not fields_to_update:
+            messages.warning(request, "Keine Felder zum Aktualisieren ausgewählt.")
+            context = {
+                'form': form,
+                'materials': materials,
+                'material_count': materials.count(),
+            }
+            return render(request, self.template_name, context)
+
+        # Custom validation for mass updates - only validate selected fields
+        validation_errors = {}
+
+        # Check each field that's being updated
+        for field_name in fields_to_update:
+            if field_name in form.fields:
+                field = form.fields[field_name]
+                raw_value = request.POST.get(field_name)
+
+                # For required fields in the original Meta.required_fields, validate them
+                if field_name in form.Meta.required_fields:
+                    if not raw_value or (isinstance(raw_value, str) and raw_value.strip() == ''):
+                        validation_errors[field_name] = ["Dieses Feld ist erforderlich."]
+
+                # For foreign key fields, validate that the value exists
+                if field_name in form.Meta.foreign_key_fields and raw_value:
+                    try:
+                        # Convert to int and check if it exists
+                        if raw_value != '':
+                            int(raw_value)
+                    except (ValueError, TypeError):
+                        validation_errors[field_name] = ["Ungültiger Wert ausgewählt."]
+
+        # If there are validation errors, show them
+        if validation_errors:
+            for field_name, errors in validation_errors.items():
+                for error in errors:
+                    messages.error(request, f"{form.fields[field_name].label}: {error}")
+
+            context = {
+                'form': form,
+                'materials': materials,
+                'material_count': materials.count(),
+            }
+            return render(request, self.template_name, context)
         
         if form.is_valid():
             try:
@@ -1571,18 +1628,10 @@ class MassUpdateMaterial_LBA_View(ComputedContextMixin, FormValidMixin, GroupReq
                     updated_count = 0
                     updated_fields = []
                     
-                    # Get which fields should be updated (those with checked checkboxes)
-                    fields_to_update = []
-                    for field_name in form.fields:
-                        checkbox_name = f"update_{field_name}"
-                        if request.POST.get(checkbox_name):
-                            fields_to_update.append(field_name)
-                            if field_name not in updated_fields:
-                                updated_fields.append(field_name)
-                    
-                    if not fields_to_update:
-                        messages.warning(request, "Keine Felder zum Aktualisieren ausgewählt.")
-                        return redirect('list_material_lba')
+                    # Build the list of field names for logging
+                    for field_name in fields_to_update:
+                        if field_name not in updated_fields:
+                            updated_fields.append(field_name)
                     
                     # Update each material with the selected fields
                     for material in materials:
@@ -1618,10 +1667,11 @@ class MassUpdateMaterial_LBA_View(ComputedContextMixin, FormValidMixin, GroupReq
                 messages.error(request, error_msg)
                 
         else:
-            # Form has errors
-            for field, errors in form.errors.items():
-                for error in errors:
-                    messages.error(request, f"{field}: {error}")
+            # Form has errors - but only show errors for fields that were actually being updated
+            for field_name, errors in form.errors.items():
+                if field_name in fields_to_update:
+                    for error in errors:
+                        messages.error(request, f"{form.fields.get(field_name, {}).get('label', field_name)}: {error}")
         
         # If we get here, there were errors - redisplay the form
         context = {
