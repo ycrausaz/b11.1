@@ -13,6 +13,21 @@ from ..utils.utils import readonly_field_style
 from .forms import CustomBooleanChoiceField, SplitterReadOnlyReadWriteFields, BaseTemplateForm
 from ..utils.editable_fields_config import *
 
+from django import forms
+from django.forms import ModelForm
+from ..models import Material
+from django.contrib.admin import widgets
+from bootstrap_datepicker_plus.widgets import DatePickerInput
+from django.db import connection
+from django.urls import reverse_lazy
+from django.forms import DateField
+from django.conf import settings
+from ..models import *
+from ..utils.widgets import ReadOnlyForeignKeyWidget
+from ..utils.utils import readonly_field_style
+from .forms import CustomBooleanChoiceField, SplitterReadOnlyReadWriteFields, BaseTemplateForm
+from ..utils.editable_fields_config import *
+
 class MaterialForm_IL(BaseTemplateForm, SplitterReadOnlyReadWriteFields):
 
     gewichtseinheit = forms.CharField(
@@ -76,6 +91,10 @@ class MaterialForm_IL(BaseTemplateForm, SplitterReadOnlyReadWriteFields):
             'basismengeneinheit': {'model': Basismengeneinheit, 'queryset': Basismengeneinheit.objects.all()},
             'gefahrgutkennzeichen': {'model': Gefahrgutkennzeichen, 'queryset': Gefahrgutkennzeichen.objects.all()},
         }
+
+    def get_required_field_names(self):
+        """Return a list of field names that are normally required for this form"""
+        return self.Meta.required_fields
 
     def clean(self):
         cleaned_data = super().clean()
@@ -146,16 +165,16 @@ class MaterialForm_IL(BaseTemplateForm, SplitterReadOnlyReadWriteFields):
         print(f"DEBUG: Final form fields: {list(self.fields.keys())}")
 
         # Set required fields based on Meta.required_fields (only for fields that exist)
-        # BUT NOT for mass update forms - they should handle requirements differently
-        if not is_mass_update:
-            for field_name in self.Meta.required_fields:
-                if field_name in self.fields:
-                    self.fields[field_name].required = True
-        else:
-            # For mass update forms, make all fields optional initially
-            # They will be validated only if their update checkbox is checked
-            for field_name in self.fields:
+        # For mass update forms, make all fields optional initially
+        # They will be validated only if their update checkbox is checked
+        for field_name in self.fields:
+            if is_mass_update:
+                # For mass update forms, make all fields optional
                 self.fields[field_name].required = False
+            else:
+                # For regular forms, set required based on Meta.required_fields
+                if field_name in self.Meta.required_fields:
+                    self.fields[field_name].required = True
 
         # Initialize the conditional fields as not required (only if they exist)
         # since we'll handle validation in clean() method

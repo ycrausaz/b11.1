@@ -11,6 +11,9 @@
 
     <!-- Display selected materials -->
     <div class="alert alert-info">
+        <strong>{% trans "Hinweis:" %}</strong> 
+        {% trans "Wählen Sie die Felder aus, die Sie für alle ausgewählten Materialien aktualisieren möchten. Nur angehakte Felder werden geändert." %}
+        <br/><br/>
         <strong>Ausgewählte Materialien:</strong>
         <ul class="mb-0">
             {% for material in materials %}
@@ -40,91 +43,143 @@
             <input type="hidden" name="material_ids" value="{{ material.id }}">
         {% endfor %}
 
-        <div class="table-container">
-            <div class="column">
-                <div class="mytitle">Daten zu pflegen</div>
-                <div class="content">
-                    <table class="mass-edit-table">
-                        <thead>
-                            <tr>
-                                <th width="10%">Update</th>
-                                <th>Feld</th>
-                                <th>Neuer Wert</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for field in form.get_normal_fields %}
-                                {% if not field.is_hidden %}
-                                    <tr>
-                                        <td>
-                                            <input type="checkbox" name="update_{{ field.name }}" id="update_{{ field.name }}" class="update-checkbox">
-                                        </td>
-                                        <td>
-                                            <label for="{{ field.id_for_label }}" class="field-label">
-                                                {% with label_with_tooltip=field|add_tooltip %}
-                                                    {{ label_with_tooltip|safe }}
-                                                    {% if field.name in form.get_required_field_names %}
-                                                        <span class="required">*</span>
-                                                    {% elif field|is_conditional_required %}
-                                                        <span class="required conditional-required" id="{{ field.name }}_required">*</span>
-                                                    {% endif %}
-                                                    {{ field|get_inline_help }}
-                                                {% endwith %}
-                                            </label>
-                                        </td>
-                                        <td>
-                                            {{ field }}
-                                            {% if field.errors %}
-                                                <div class="error">
-                                                    {% for error in field.errors %}
-                                                        <p>{{ error }}</p>
-                                                    {% endfor %}
-                                                </div>
-                                            {% endif %}
-                                        </td>
-                                    </tr>
-                                {% else %}
-                                    {{ field }}
-                                {% endif %}
-                            {% endfor %}
+        <div class="card">
+            <div class="card-header">
+                <h5>{% trans "Felder für Massenbearbeitung" %}</h5>
+            </div>
+            <div class="card-body">
+                <!-- Select all / deselect all buttons -->
+                <button type="button" class="btn btn-sm btn-outline-primary me-2 mb-3" id="select-all-btn">Alle auswählen</button>
+                <button type="button" class="btn btn-sm btn-outline-secondary mb-3" id="deselect-all-btn">Alle abwählen</button>
+                
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th width="5%">{% trans "Aktualisieren" %}</th>
+                            <th width="30%">{% trans "Feld" %}</th>
+                            <th width="65%">{% trans "Neuer Wert" %}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for field in form.get_normal_fields %}
+                            {% if not field.is_hidden %}
+                                <tr>
+                                    <td>
+                                        <input type="checkbox" id="update_{{ field.name }}" name="update_{{ field.name }}" class="form-check-input update-checkbox">
+                                    </td>
+                                    <td>
+                                        <label for="{{ field.id_for_label }}" class="form-label">
+                                            {% with label_with_tooltip=field|add_tooltip %}
+                                                {{ label_with_tooltip|safe }}
+                                                {% if field.name in form.get_required_field_names %}
+                                                    <span class="required">*</span>
+                                                {% elif field|is_conditional_required %}
+                                                    <span class="required conditional-required" id="{{ field.name }}_required">*</span>
+                                                {% endif %}
+                                                {{ field|get_inline_help }}
+                                            {% endwith %}
+                                        </label>
+                                    </td>
+                                    <td>
+                                        {{ field }}
+                                        {% if field.errors %}
+                                            <div class="text-danger small">
+                                                {% for error in field.errors %}
+                                                    {{ error }}
+                                                {% endfor %}
+                                            </div>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            {% elif field.is_hidden %}
+                                {{ field }}
+                            {% endif %}
+                        {% endfor %}
 
-                            <tr><td colspan="3"><hr></td></tr>
-                            <tr class="section-header"><td colspan="3"><strong>Berechnete Felder</strong></td></tr>
-                            
-                            {% for field in form.get_computed_fields %}
-                                {% if not field.is_hidden %}
-                                    <tr>
-                                        <td>
-                                            <input type="checkbox" name="update_{{ field.name }}" id="update_{{ field.name }}" class="update-checkbox" disabled>
-                                        </td>
-                                        <td>
-                                            <label for="{{ field.id_for_label }}" class="field-label">
-                                                {% trans field.label %}
-                                            </label>
-                                        </td>
-                                        <td>
-                                            {{ field }}
-                                            <small class="text-muted">(Berechnetes Feld - kann nicht geändert werden)</small>
-                                        </td>
-                                    </tr>
-                                {% endif %}
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
+                        <tr><td colspan="3"><hr></td></tr>
+                        <tr class="section-header"><td colspan="3"><strong>{% trans "Berechnete Felder" %}</strong></td></tr>
+                        
+                        {% for field in form.get_computed_fields %}
+                            {% if not field.is_hidden %}
+                                <tr>
+                                    <td>
+                                        <input type="checkbox" name="update_{{ field.name }}" id="update_{{ field.name }}" class="form-check-input update-checkbox" disabled>
+                                    </td>
+                                    <td>
+                                        <label for="{{ field.id_for_label }}" class="form-label">
+                                            {% trans field.label %}
+                                        </label>
+                                    </td>
+                                    <td>
+                                        {{ field }}
+                                        <small class="text-muted">({% trans "Berechnetes Feld - kann nicht geändert werden" %})</small>
+                                    </td>
+                                </tr>
+                            {% endif %}
+                        {% endfor %}
+                    </tbody>
+                </table>
             </div>
         </div>
 
-        <div class="same-width" style="margin-top: 20px;">
-            <div class="mb-3">
-                <button type="button" class="btn btn-outline-secondary" id="select-all-fields">Alle Felder auswählen</button>
-                <button type="button" class="btn btn-outline-secondary" id="deselect-all-fields">Alle Felder abwählen</button>
-            </div>
-            
-            <input type="submit" value="{% trans "Ausgewählte Felder in allen Materialien aktualisieren" %}" class="btn btn-primary btn-lg">
-            <button type="button" class="btn btn-secondary" onclick="window.location.href='{% url 'list_material_lba' %}'">{% trans "Zurück ohne Speichern" %}</button>
+        <div class="mt-4">
+            <button type="submit" class="btn btn-primary">{% trans "Massenbearbeitung durchführen" %}</button>
+            <button type="button" class="btn btn-secondary" onclick="window.location.href='{% url 'list_material_lba' %}'">{% trans "Abbrechen" %}</button>
         </div>
     </form>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Initialize all fields as disabled by default
+        document.querySelectorAll('.update-checkbox').forEach(function(checkbox) {
+            const fieldName = checkbox.name.replace('update_', '');
+            const field = document.getElementById('id_' + fieldName);
+            
+            if (field && !checkbox.disabled) {
+                // Initially disable all fields and style them as readonly
+                field.disabled = true;
+                field.style.backgroundColor = '#f8f9fa';
+                
+                // Handle checkbox change events
+                checkbox.addEventListener('change', function() {
+                    if (this.checked) {
+                        // Enable the field when checkbox is checked
+                        field.disabled = false;
+                        field.style.backgroundColor = '';
+                    } else {
+                        // Disable and clear the field when checkbox is unchecked
+                        field.disabled = true;
+                        field.style.backgroundColor = '#f8f9fa';
+                        
+                        // Clear the field value
+                        if (field.type === 'checkbox') {
+                            field.checked = false;
+                        } else if (field.tagName === 'SELECT') {
+                            field.selectedIndex = 0; // Reset to first option (usually empty)
+                        } else {
+                            field.value = '';
+                        }
+                    }
+                });
+            }
+        });
+        
+        // Select all / deselect all functionality
+        document.getElementById('select-all-btn').addEventListener('click', function() {
+            document.querySelectorAll('.update-checkbox:not([disabled])').forEach(function(cb) {
+                cb.checked = true;
+                cb.dispatchEvent(new Event('change'));
+            });
+        });
+        
+        document.getElementById('deselect-all-btn').addEventListener('click', function() {
+            document.querySelectorAll('.update-checkbox:not([disabled])').forEach(function(cb) {
+                cb.checked = false;
+                cb.dispatchEvent(new Event('change'));
+            });
+        });
+    });
+    </script>
 
     <br/>
 {% endblock %}

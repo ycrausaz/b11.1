@@ -13,6 +13,21 @@ from ..utils.utils import readonly_field_style
 from .forms import CustomBooleanChoiceField, SplitterReadOnlyReadWriteFields, BaseTemplateForm
 from ..utils.editable_fields_config import *
 
+from django import forms
+from django.forms import ModelForm
+from ..models import Material
+from django.contrib.admin import widgets
+from bootstrap_datepicker_plus.widgets import DatePickerInput
+from django.db import connection
+from django.urls import reverse_lazy
+from django.forms import DateField
+from django.conf import settings
+from ..models import *
+from ..utils.widgets import ReadOnlyForeignKeyWidget
+from ..utils.utils import readonly_field_style
+from .forms import CustomBooleanChoiceField, SplitterReadOnlyReadWriteFields, BaseTemplateForm
+from ..utils.editable_fields_config import *
+
 class MaterialForm_LBA(BaseTemplateForm, SplitterReadOnlyReadWriteFields):
 
     revision_fremd = forms.CharField(
@@ -103,18 +118,32 @@ class MaterialForm_LBA(BaseTemplateForm, SplitterReadOnlyReadWriteFields):
             'temperaturbedingung': {'model': Temperaturbedingung, 'queryset': Temperaturbedingung.objects.all()},
         }
 
+    def get_required_field_names(self):
+        """Return a list of field names that are normally required for this form"""
+        return self.Meta.required_fields
+
     def __init__(self, *args, **kwargs):
-        kwargs['editable_fields'] = EDITABLE_FIELDS_LBA
+        # Extract editable_fields and is_mass_update before calling super().__init__
+        editable_fields = kwargs.pop('editable_fields', EDITABLE_FIELDS_LBA)
+        is_mass_update = kwargs.pop('is_mass_update', False)
+        
+        # Store the mass update flag
+        self.is_mass_update = is_mass_update
+        
+        # Pass editable_fields to the parent constructor
+        kwargs['editable_fields'] = editable_fields
         super().__init__(*args, **kwargs)
 
-        # For mass edit forms, we don't want to require fields by default
-        # since the user might not want to update all required fields
-        is_mass_edit = kwargs.get('instance') is None and not kwargs.get('data')
-        
-        # Set required fields based on Meta.required_fields (only for single edit)
-        if not is_mass_edit:
-            for field_name in self.Meta.required_fields:
-                if field_name in self.fields:
+        # Set required fields based on Meta.required_fields (only for fields that exist)
+        # For mass update forms, make all fields optional initially
+        # They will be validated only if their update checkbox is checked
+        for field_name in self.fields:
+            if is_mass_update:
+                # For mass update forms, make all fields optional
+                self.fields[field_name].required = False
+            else:
+                # For regular forms, set required based on Meta.required_fields
+                if field_name in self.Meta.required_fields:
                     self.fields[field_name].required = True
 
         # Mark computed fields
@@ -127,19 +156,26 @@ class MaterialForm_LBA(BaseTemplateForm, SplitterReadOnlyReadWriteFields):
 
         if instance:
             # Set initial values for readonly fields
-            self.fields['revision_fremd'].initial = instance.revision_fremd
-            self.fields['materialzustandsverwaltung'].initial = instance.materialzustandsverwaltung
-            self.fields['verkaufsorg'].initial = instance.verkaufsorg
-            self.fields['vertriebsweg'].initial = instance.vertriebsweg
-            self.fields['auszeichnungsfeld'].initial = instance.auszeichnungsfeld
-            self.fields['preissteuerung'].initial = instance.preissteuerung
-            self.fields['preisermittlung'].initial = instance.preisermittlung
+            if 'revision_fremd' in self.fields:
+                self.fields['revision_fremd'].initial = instance.revision_fremd
+            if 'materialzustandsverwaltung' in self.fields:
+                self.fields['materialzustandsverwaltung'].initial = instance.materialzustandsverwaltung
+            if 'verkaufsorg' in self.fields:
+                self.fields['verkaufsorg'].initial = instance.verkaufsorg
+            if 'vertriebsweg' in self.fields:
+                self.fields['vertriebsweg'].initial = instance.vertriebsweg
+            if 'auszeichnungsfeld' in self.fields:
+                self.fields['auszeichnungsfeld'].initial = instance.auszeichnungsfeld
+            if 'preissteuerung' in self.fields:
+                self.fields['preissteuerung'].initial = instance.preissteuerung
+            if 'preisermittlung' in self.fields:
+                self.fields['preisermittlung'].initial = instance.preisermittlung
 
         for field_name, field_info in self.Meta.foreign_key_fields.items():
             if field_name in self.fields:
                 queryset = field_info['queryset']
 
-                if field_name in EDITABLE_FIELDS_LBA:
+                if field_name in editable_fields:
                     # For editable fields, use Select widget with both text and explanation
                     choices = [('', '---')]
                     for obj in queryset:
@@ -177,10 +213,6 @@ class MaterialForm_LBA(BaseTemplateForm, SplitterReadOnlyReadWriteFields):
                 # Fallback to German
                 elif hasattr(tooltip, 'help_content_de') and tooltip.help_content_de:
                     field.help_text = tooltip.help_content_de
-
-    def get_required_field_names(self):
-        """Return a list of field names that are normally required for this form"""
-        return self.Meta.required_fields
 
     def clean(self):
         """Override clean method to handle mass edit validation"""
