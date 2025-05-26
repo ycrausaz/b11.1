@@ -369,6 +369,92 @@ class Material(models.Model):
         except MaterialUserAssociation.DoesNotExist:
             return None
 
+    @property
+    def primary_user_email(self):
+        """Get the email of the primary responsible user"""
+        primary_user = self.get_primary_user()
+        return primary_user.email if primary_user else None
+    
+    @property
+    def primary_user_name(self):
+        """Get the full name of the primary responsible user"""
+        primary_user = self.get_primary_user()
+        if primary_user:
+            return f"{primary_user.first_name} {primary_user.last_name}".strip() or primary_user.email
+        return None
+    
+    def set_primary_user(self, user, assigned_by=None):
+        """
+        Set the primary user for this material.
+        Automatically assigns the user if they're not already assigned.
+        """
+        # Remove primary status from all current associations
+        MaterialUserAssociation.objects.filter(
+            material=self, is_primary=True
+        ).update(is_primary=False)
+        
+        # Create or update the association for the new primary user
+        association, created = MaterialUserAssociation.objects.get_or_create(
+            material=self,
+            user=user,
+            defaults={'assigned_by': assigned_by, 'is_primary': True}
+        )
+        
+        if not created:
+            association.is_primary = True
+            association.save()
+        
+        return association
+    
+    def assign_user(self, user, assigned_by, is_primary=False):
+        """Assign a user to this material"""
+        association, created = MaterialUserAssociation.objects.get_or_create(
+            material=self,
+            user=user,
+            defaults={'assigned_by': assigned_by, 'is_primary': is_primary}
+        )
+        if not created and is_primary:
+            # Remove primary from others and set this one as primary
+            MaterialUserAssociation.objects.filter(
+                material=self, is_primary=True
+            ).update(is_primary=False)
+            association.is_primary = True
+            association.save()
+        return association
+
+    def remove_user(self, user):
+        """Remove a user from this material"""
+        MaterialUserAssociation.objects.filter(material=self, user=user).delete()
+
+    def get_localized_kurztext(self):
+        """Returns the kurztext in the current language, falling back to German if not available"""
+        from django.utils.translation import get_language
+        
+        current_language = get_language()
+        if current_language == 'fr' and self.kurztext_fr:
+            return self.kurztext_fr
+        elif current_language == 'en' and self.kurztext_en:
+            return self.kurztext_en
+        
+        # Default to German
+        return self.kurztext_de
+
+    def delete(self, *args, **kwargs):
+        # First, delete all attachment files from storage
+        for attachment in self.attachments.all():
+            attachment.delete()  # This will call MaterialAttachment's delete() method
+
+        # Then delete the Material record (which will cascade delete attachments)
+        super().delete(*args, **kwargs)
+
+    def __str__(self):
+        # Display primary responsible user instead of manufacturer name
+        responsible_user = self.primary_user_email or "No responsible user"
+        if self.positions_nr is not None:
+            return f"{self.positions_nr} - {self.kurztext_de} (Responsible: {responsible_user})"
+        else:
+            return f"<None> - {self.kurztext_de} (Responsible: {responsible_user})"
+
     class Meta:
         ordering = ["positions_nr"]
         app_label = 'b11_1'
