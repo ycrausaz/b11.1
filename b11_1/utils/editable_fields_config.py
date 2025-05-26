@@ -49,6 +49,54 @@ EDITABLE_FIELDS_IL = [
 'bemerkung', #AS
 ]
 
+EDITABLE_FIELDS_IL_MASS_UPDATE = [
+#'positions_nr', #B
+'systemname',
+#'is_finished',
+'referenznummer_leiferant', #C
+#'kurztext_de', #D
+#'kurztext_fr', #E
+#'kurztext_en', #F
+#'grunddatentext_de_1_zeile', #G
+#'grunddatentext_de_2_zeile', #H
+#'grunddatentext_fr_1_zeile', #I
+#'grunddatentext_fr_2_zeile', #J
+#'grunddatentext_en_1_zeile', #K
+#'grunddatentext_en_2_zeile', #L
+'basismengeneinheit', #M
+'bruttogewicht', #N
+#'gewichtseinheit', #O
+'nettogewicht', #P
+'groesse_abmessung', #Q
+'ean_upc_code', #R
+'nato_stock_number', #S
+'nsn_gruppe_klasse', #T
+'nato_versorgungs_nr', #U
+'herstellerteilenummer', #V
+'normbezeichnung', #W
+'gefahrgutkennzeichen', #X
+'instandsetzbar', #Y
+'chargenpflicht', #Z
+'bestellmengeneinheit', #AA
+'mindestbestellmenge', #AB
+'lieferzeit', #AC
+'einheit_l_b_h', #AD
+'laenge', #AE
+'breite', #AF
+'hoehe', #AG
+'preis', #AH
+#'waehrung', #AI
+'preiseinheit', #AJ
+'lagerfaehigkeit', #AK
+#'exportkontrollauflage', #AL
+'cage_code', #AM
+'hersteller_name', #AN
+'hersteller_adresse', #AO
+'hersteller_plz', #AP
+'hersteller_ort', #AQ
+'revision', #AR
+'bemerkung', #AS
+]
 
 EDITABLE_FIELDS_GD = [
 'begru', #C
@@ -70,7 +118,6 @@ EDITABLE_FIELDS_GD = [
 #'materialzustandsverwaltung', #S
 #'transfer_comment',
 ]
-
 
 EDITABLE_FIELDS_SMDA = [
 'werkzuordnung_1', #C

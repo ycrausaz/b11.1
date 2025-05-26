@@ -7,18 +7,18 @@ document.addEventListener('DOMContentLoaded', function() {
     function updateButtonStates(formId) {
         const form = document.getElementById('material-form-' + formId);
         if (!form) return;
-        
+
         const checkboxes = form.querySelectorAll('.material-checkbox[data-form-id="' + formId + '"]:checked');
         const buttons = form.querySelectorAll('.action-button[data-form-id="' + formId + '"]');
         const selectAllCheckbox = form.querySelector('.select-all[data-form-id="' + formId + '"]');
-        
+
         const hasSelection = checkboxes.length > 0;
-        
+
         // Enable/disable buttons based on selection
         buttons.forEach(function(button) {
             button.disabled = !hasSelection;
         });
-        
+
         // Update select-all checkbox state
         if (selectAllCheckbox) {
             const allCheckboxes = form.querySelectorAll('.material-checkbox[data-form-id="' + formId + '"]');
@@ -34,25 +34,25 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
     }
-    
+
     // Handle select-all checkboxes
     document.querySelectorAll('.select-all').forEach(function(selectAllCheckbox) {
         selectAllCheckbox.addEventListener('change', function() {
             const formId = this.getAttribute('data-form-id');
             const form = document.getElementById('material-form-' + formId);
             if (!form) return;
-            
+
             const checkboxes = form.querySelectorAll('.material-checkbox[data-form-id="' + formId + '"]');
             const isChecked = this.checked;
-            
+
             checkboxes.forEach(function(checkbox) {
                 checkbox.checked = isChecked;
             });
-            
+
             updateButtonStates(formId);
         });
     });
-    
+
     // Handle individual checkboxes
     document.querySelectorAll('.material-checkbox').forEach(function(checkbox) {
         checkbox.addEventListener('change', function() {
@@ -60,25 +60,25 @@ document.addEventListener('DOMContentLoaded', function() {
             updateButtonStates(formId);
         });
     });
-    
+
     // Initialize button states on page load
-    const formIds = ['1', '2']; // Add more form IDs if you have more forms
+    const formIds = ['1', '2', '3']; // Updated to include form 3
     formIds.forEach(function(formId) {
         updateButtonStates(formId);
     });
-    
+
     // Handle form submissions with confirmations
     document.querySelectorAll('form[id^="material-form-"]').forEach(function(form) {
         form.addEventListener('submit', function(e) {
             const action = e.submitter ? e.submitter.value : '';
             const selectedCount = form.querySelectorAll('.material-checkbox:checked').length;
-            
+
             if (selectedCount === 0) {
                 e.preventDefault();
                 alert('Bitte wählen Sie mindestens ein Material aus.');
                 return;
             }
-            
+
             // Add confirmation for destructive actions
             if (action === 'delete') {
                 if (!confirm(`Sind Sie sicher, dass Sie ${selectedCount} Material${selectedCount > 1 ? 'ien' : ''} löschen möchten? Diese Aktion kann nicht rückgängig gemacht werden.`)) {
@@ -91,6 +91,37 @@ document.addEventListener('DOMContentLoaded', function() {
                     return;
                 }
             }
+        });
+    });
+
+    // Handle mass edit buttons (if they exist)
+    document.querySelectorAll('.mass-edit-btn').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            const formId = this.getAttribute('data-form-id');
+            const form = document.getElementById('material-form-' + formId);
+            const checkedBoxes = form.querySelectorAll('.material-checkbox:checked');
+
+            if (checkedBoxes.length === 0) {
+                alert('Bitte wählen Sie mindestens ein Material für die Massenbearbeitung aus.');
+                return;
+            }
+
+            // Create URL with selected material IDs
+            const materialIds = Array.from(checkedBoxes).map(cb => cb.value);
+
+            // Determine the correct URL based on the current page
+            let massUpdateUrl;
+            if (window.location.pathname.includes('lba')) {
+                massUpdateUrl = '{% url "mass_update_material_lba" %}';
+            } else if (window.location.pathname.includes('il')) {
+                massUpdateUrl = '{% url "mass_update_material_il" %}';
+            } else {
+                // Default to IL if we can't determine
+                massUpdateUrl = '{% url "mass_update_material_il" %}';
+            }
+
+            const url = massUpdateUrl + '?' + materialIds.map(id => 'materials=' + id).join('&');
+            window.location.href = url;
         });
     });
 });
