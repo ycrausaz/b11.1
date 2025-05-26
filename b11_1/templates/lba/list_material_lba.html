@@ -1,4 +1,5 @@
 {% extends "base_generic.html" %}
+{% load i18n %}
 
 <!-- templates/list_material_lba.html -->
 {% block content %}
@@ -33,7 +34,11 @@
             {% for mat in list_material %}
                 <tr>
                     <td><input type="checkbox" name="selected_materials" value="{{ mat.id }}" class="material-checkbox" data-form-id="1"></td>
-                    <td>{{ mat.systemname }}: <a href="{% url 'update_material_lba' mat.id %}">{{ mat.get_localized_kurztext }}</a> ({{ mat.hersteller }})</td>
+                    <td>
+                        {{ mat.systemname }}: 
+                        <a href="{% url 'update_material_lba' mat.id %}">{{ mat.get_localized_kurztext }}</a>
+                        <span class="text-muted">({% trans "Verantwortung:" %} {{ mat.responsible_user_display }})</span>
+                    </td>
                 </tr>
             {% endfor %}
         </tbody>
@@ -93,7 +98,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 {% if list_material_archived|length > 0 %}
 <hr>
-<form method="post" id="material-form-1">
+<form method="post" id="material-form-2">
     {% csrf_token %}
     <table class="table table-striped table-hover">
         <thead>
@@ -106,7 +111,10 @@ document.addEventListener('DOMContentLoaded', function() {
             {% for mat in list_material_archived %}
                 <tr>
                     <td><input type="checkbox" name="selected_materials" value="{{ mat.id }}" class="material-checkbox" data-form-id="2"></td>
-                    <td><a href="{% url 'show_material_lba' mat.id %}">{{ mat.kurztext_de }}</a> ({{ mat.hersteller }})</td>
+                    <td>
+                        <a href="{% url 'show_material_lba' mat.id %}">{{ mat.kurztext_de }}</a>
+                        <span class="text-muted">(Responsible: {{ mat.responsible_user_display }})</span>
+                    </td>
                 </tr>
             {% endfor %}
         </tbody>

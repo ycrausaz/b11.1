@@ -230,7 +230,6 @@ class MaterialeinstufungNachZUVA(BaseIdxModel):
         app_label = 'b11_1'
 
 class Material(models.Model):
-    hersteller = models.CharField(null=True, blank=True, max_length=40)
     is_transferred = models.BooleanField(null=True, blank=False, default=False)
     is_archived = models.BooleanField(null=True, blank=False, default=False)
     transfer_date = models.DateTimeField(null=True, blank=True)
@@ -330,33 +329,6 @@ class Material(models.Model):
     preisermittlung = models.IntegerField(null=True, blank=True, verbose_name=_("Preisermittlung"))
     repararaturlokation = models.CharField(null=True, blank=True, max_length=40, verbose_name=_("Repararaturlokation"))
 
-    def get_localized_kurztext(self):
-        """Returns the kurztext in the current language, falling back to German if not available"""
-        from django.utils.translation import get_language
-        
-        current_language = get_language()
-        if current_language == 'fr' and self.kurztext_fr:
-            return self.kurztext_fr
-        elif current_language == 'en' and self.kurztext_en:
-            return self.kurztext_en
-        
-        # Default to German
-        return self.kurztext_de
-
-    def delete(self, *args, **kwargs):
-        # First, delete all attachment files from storage
-        for attachment in self.attachments.all():
-            attachment.delete()  # This will call MaterialAttachment's delete() method
-
-        # Then delete the Material record (which will cascade delete attachments)
-        super().delete(*args, **kwargs)
-
-    def __str__(self):
-        if self.positions_nr is not None:
-            return str(self.positions_nr) + " - " + self.kurztext_de + " (" + self.hersteller + ")"
-        else:
-            return "<None> - " + self.kurztext_de + " (" + self.hersteller + ")"
-
     def get_assigned_users(self):
         """Get all users assigned to this material"""
         return User.objects.filter(material_associations__material=self)
@@ -382,6 +354,11 @@ class Material(models.Model):
         if primary_user:
             return f"{primary_user.first_name} {primary_user.last_name}".strip() or primary_user.email
         return None
+    
+    @property
+    def responsible_user_display(self):
+        """Get a display-friendly name for the responsible user"""
+        return self.primary_user_name or self.primary_user_email or "No responsible user"
     
     def set_primary_user(self, user, assigned_by=None):
         """
@@ -426,6 +403,10 @@ class Material(models.Model):
         """Remove a user from this material"""
         MaterialUserAssociation.objects.filter(material=self, user=user).delete()
 
+    def has_responsible_user(self):
+        """Check if material has a responsible user assigned"""
+        return self.get_primary_user() is not None
+
     def get_localized_kurztext(self):
         """Returns the kurztext in the current language, falling back to German if not available"""
         from django.utils.translation import get_language
@@ -442,18 +423,18 @@ class Material(models.Model):
     def delete(self, *args, **kwargs):
         # First, delete all attachment files from storage
         for attachment in self.attachments.all():
-            attachment.delete()  # This will call MaterialAttachment's delete() method
+            attachment.delete()
 
         # Then delete the Material record (which will cascade delete attachments)
         super().delete(*args, **kwargs)
 
     def __str__(self):
-        # Display primary responsible user instead of manufacturer name
-        responsible_user = self.primary_user_email or "No responsible user"
+        # Display responsible user instead of hersteller
+        responsible = self.responsible_user_display
         if self.positions_nr is not None:
-            return f"{self.positions_nr} - {self.kurztext_de} (Responsible: {responsible_user})"
+            return f"{self.positions_nr} - {self.kurztext_de} (Responsible: {responsible})"
         else:
-            return f"<None> - {self.kurztext_de} (Responsible: {responsible_user})"
+            return f"<None> - {self.kurztext_de} (Responsible: {responsible})"
 
     class Meta:
         ordering = ["positions_nr"]

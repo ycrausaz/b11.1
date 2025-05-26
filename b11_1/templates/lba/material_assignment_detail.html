@@ -23,14 +23,14 @@
                         </div>
                         <div class="col-md-6">
                             <p><strong>{% trans "System Name" %}:</strong> {{ object.systemname|default:"-" }}</p>
-                            <p><strong>{% trans "Manufacturer" %}:</strong> {{ object.hersteller|default:"Not specified" }}</p>
                             <p><strong>{% trans "Primary Responsible User" %}:</strong> 
                                 {% if object.primary_user_email %}
-                                    <span class="user-assignment-badge primary">{{ object.primary_user_email }}</span>
+                                    <span class="user-assignment-badge primary">{{ object.responsible_user_display }}</span>
                                 {% else %}
                                     <span class="text-muted">No responsible user assigned</span>
                                 {% endif %}
                             </p>
+                            <p><strong>{% trans "Assigned Users Count" %}:</strong> {{ object.get_assigned_users.count }}</p>
                             <p><strong>{% trans "Status" %}:</strong> 
                                 {% if object.is_transferred %}
                                     <span class="user-assignment-badge assigned">{% trans "Transferred" %}</span>

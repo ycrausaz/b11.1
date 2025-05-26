@@ -85,8 +85,7 @@
                                     <td>{{ item.material.positions_nr|default:"-" }}</td>
                                     <td>
                                         <strong>{{ item.material.kurztext_de }}</strong><br>
-                                        <small class="text-muted">Manufacturer: {{ item.material.hersteller|default:"Not specified" }}</small><br>
-                                        <small class="text-primary">Responsible: {{ item.material.primary_user_email|default:"No responsible user" }}</small>
+                                        <small class="text-primary">Responsible: {{ item.material.responsible_user_display }}</small>
                                     </td>
                                     <td>
                                         {% if item.assigned_users %}
