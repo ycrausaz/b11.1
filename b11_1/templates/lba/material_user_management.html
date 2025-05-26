@@ -29,7 +29,7 @@
                             <div class="col-md-6">
                                 <h5>{% trans "Select Materials" %}</h5>
                                 <div class="mb-2">
-                                    <button type="button" class="btn btn-sm btn-secondary" onclick="toggleAllMaterials()">
+                                    <button type="button" class="btn btn-sm btn-secondary" id="toggle-all-materials">
                                         {% trans "Toggle All" %}
                                     </button>
                                 </div>
@@ -41,7 +41,7 @@
                             <div class="col-md-6">
                                 <h5>{% trans "Select IL Users" %}</h5>
                                 <div class="mb-2">
-                                    <button type="button" class="btn btn-sm btn-secondary" onclick="toggleAllUsers()">
+                                    <button type="button" class="btn btn-sm btn-secondary" id="toggle-all-users">
                                         {% trans "Toggle All" %}
                                     </button>
                                 </div>
@@ -90,7 +90,7 @@
                                     <td>
                                         {% if item.assigned_users %}
                                             {% for user in item.assigned_users %}
-                                                <span class="badge badge-info">{{ user.email }}</span>
+                                                <span class="user-assignment-badge assigned">{{ user.email }}</span>
                                             {% endfor %}
                                             <br><small class="text-muted">({{ item.user_count }} users)</small>
                                         {% else %}
@@ -99,7 +99,7 @@
                                     </td>
                                     <td>
                                         {% if item.primary_user %}
-                                            <span class="badge badge-primary">{{ item.primary_user.email }}</span>
+                                            <span class="user-assignment-badge primary">{{ item.primary_user.email }}</span>
                                         {% else %}
                                             <span class="text-muted">{% trans "No primary user" %}</span>
                                         {% endif %}
@@ -124,41 +124,4 @@
         </div>
     </div>
 </div>
-
-<script>
-function toggleAllMaterials() {
-    const checkboxes = document.querySelectorAll('.material-checkbox input[type="checkbox"]');
-    const allChecked = Array.from(checkboxes).every(cb => cb.checked);
-    checkboxes.forEach(cb => cb.checked = !allChecked);
-}
-
-function toggleAllUsers() {
-    const checkboxes = document.querySelectorAll('.user-checkbox input[type="checkbox"]');
-    const allChecked = Array.from(checkboxes).every(cb => cb.checked);
-    checkboxes.forEach(cb => cb.checked = !allChecked);
-}
-
-// Add confirmation for bulk operations
-document.getElementById('bulk-assignment-form').addEventListener('submit', function(e) {
-    const selectedMaterials = document.querySelectorAll('.material-checkbox input:checked').length;
-    const selectedUsers = document.querySelectorAll('.user-checkbox input:checked').length;
-    const action = document.querySelector('input[name="action"]:checked').value;
-    
-    if (selectedMaterials === 0 || selectedUsers === 0) {
-        e.preventDefault();
-        alert('Please select at least one material and one user.');
-        return;
-    }
-    
-    const actionText = {
-        'assign': 'assign',
-        'remove': 'remove',
-        'replace': 'replace all assignments for'
-    };
-    
-    if (!confirm(`Are you sure you want to ${actionText[action]} ${selectedUsers} user(s) to/from ${selectedMaterials} material(s)?`)) {
-        e.preventDefault();
-    }
-});
-</script>
 {% endblock %}
