@@ -241,13 +241,11 @@ def process_additional_fields(material, row_data):
         logger.error(f"Error processing additional fields for material {material.positions_nr}: {str(e)}")
         raise
 
-# Replace the import_from_excel function in import_utils.py
-
 def import_from_excel(excel_file, request, il_user):
     """
     Process the uploaded Excel file and create new Material objects.
     Sets il_user as the primary responsible user for all imported materials.
-    Returns a tuple of (success_status, message, created_count, updated_count)
+    NO hersteller field assignment - only user associations.
     """
     try:
         tab_data = get_tab_data(excel_file)
@@ -268,11 +266,15 @@ def import_from_excel(excel_file, request, il_user):
             material_data = {}
             row_has_error = False
 
-            # Calculate actual Excel row number (add 9 because we started at row 9)
+            # Calculate actual Excel row number
             excel_row = row_idx + 9
 
             # Process each field according to its mapping
             for field_name, field_config in field_mapping.items():
+                # Skip hersteller field completely if it exists in mapping
+                if field_name == 'hersteller':
+                    continue
+                    
                 tab = field_config['tab']
                 column = field_config['column']
 
@@ -344,7 +346,7 @@ def import_from_excel(excel_file, request, il_user):
                         # Save the material first to get an ID
                         material.save()
                         
-                        # Set the IL user as the primary responsible user
+                        # Set the IL user as the primary responsible user (ONLY way to track responsibility)
                         material.set_primary_user(il_user, assigned_by=None)
                         
                         materials_created += 1
