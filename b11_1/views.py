@@ -46,7 +46,13 @@ from django.utils.encoding import force_bytes
 from django.contrib.auth.tokens import default_token_generator
 from django.core.mail import send_mail
 from django.conf import settings
-from .utils.editable_fields_config import *
+from .utils.editable_fields_config import (
+    EDITABLE_FIELDS_IL, 
+    EDITABLE_FIELDS_IL_MASS_UPDATE,
+    EDITABLE_FIELDS_LBA,
+    EDITABLE_FIELDS_GD,
+    EDITABLE_FIELDS_SMDA
+)
 from django.views.generic.edit import FormView
 from django import forms
 from .utils.import_utils import import_from_excel
@@ -742,6 +748,168 @@ class UpdateMaterial_IL_View(FormValidMixin, GroupRequiredMixin, SuccessMessageM
             logger.error(error_msg)
             form.add_error(None, error_msg)
             return self.render_to_response(self.get_context_data(form=form))
+
+class MassUpdateMaterial_IL_View(ComputedContextMixin, FormValidMixin, GroupRequiredMixin, SuccessMessageMixin, View):
+    template_name = 'il/mass_update_material_il.html'
+    success_url = reverse_lazy('list_material_il')
+    success_message = "Die Materialien wurden erfolgreich aktualisiert."
+    allowed_groups = ['grIL']
+
+    def get(self, request, *args, **kwargs):
+        material_ids = request.GET.getlist('materials')
+        if not material_ids:
+            messages.error(request, "Keine Materialien für die Massenbearbeitung ausgewählt.")
+            return redirect('list_material_il')
+
+        materials = Material.objects.filter(id__in=material_ids)
+        if not materials.exists():
+            messages.error(request, "Keine gültigen Materialien gefunden.")
+            return redirect('list_material_il')
+
+        # Create form with editable fields configuration for IL mass update
+        # IMPORTANT: Pass is_mass_update=True to disable default required field validation
+        form = MaterialForm_IL(
+            editable_fields=EDITABLE_FIELDS_IL_MASS_UPDATE,
+            is_mass_update=True
+        )
+
+        context = {
+            'form': form,
+            'materials': materials,
+            'material_count': materials.count(),
+        }
+        return render(request, self.template_name, context)
+
+    def post(self, request, *args, **kwargs):
+        material_ids = request.POST.getlist('material_ids')
+        if not material_ids:
+            messages.error(request, "Keine Materialien für die Massenbearbeitung ausgewählt.")
+            return redirect('list_material_il')
+
+        materials = Material.objects.filter(id__in=material_ids)
+        if not materials.exists():
+            messages.error(request, "Keine gültigen Materialien gefunden.")
+            return redirect('list_material_il')
+
+        # Create form with mass update configuration
+        form = MaterialForm_IL(
+            request.POST, 
+            editable_fields=EDITABLE_FIELDS_IL_MASS_UPDATE,
+            is_mass_update=True
+        )
+
+        # Get which fields should be updated (those with checked checkboxes)
+        fields_to_update = []
+        for field_name in form.fields:
+            checkbox_name = f"update_{field_name}"
+            if request.POST.get(checkbox_name):
+                fields_to_update.append(field_name)
+
+        if not fields_to_update:
+            messages.warning(request, "Keine Felder zum Aktualisieren ausgewählt.")
+            context = {
+                'form': form,
+                'materials': materials,
+                'material_count': materials.count(),
+            }
+            return render(request, self.template_name, context)
+
+        # Create a custom validation approach for mass updates
+        # Only validate fields that are actually being updated
+        validation_errors = {}
+
+        # Check each field that's being updated
+        for field_name in fields_to_update:
+            if field_name in form.fields:
+                field = form.fields[field_name]
+                raw_value = request.POST.get(field_name)
+
+                # For required fields in the original Meta.required_fields, validate them
+                if field_name in form.Meta.required_fields:
+                    if not raw_value or (isinstance(raw_value, str) and raw_value.strip() == ''):
+                        validation_errors[field_name] = ["Dieses Feld ist erforderlich."]
+
+                # For foreign key fields, validate that the value exists
+                if field_name in form.Meta.foreign_key_fields and raw_value:
+                    try:
+                        # Convert to int and check if it exists
+                        if raw_value != '':
+                            int(raw_value)
+                    except (ValueError, TypeError):
+                        validation_errors[field_name] = ["Ungültiger Wert ausgewählt."]
+
+        # If there are validation errors, show them
+        if validation_errors:
+            for field_name, errors in validation_errors.items():
+                for error in errors:
+                    messages.error(request, f"{form.fields[field_name].label}: {error}")
+
+            context = {
+                'form': form,
+                'materials': materials,
+                'material_count': materials.count(),
+            }
+            return render(request, self.template_name, context)
+
+        # If validation passes, proceed with the update
+        if form.is_valid():
+            try:
+                with transaction.atomic():
+                    updated_count = 0
+                    updated_fields = []
+
+                    # Build the list of field names for logging
+                    for field_name in fields_to_update:
+                        if field_name not in updated_fields:
+                            updated_fields.append(field_name)
+
+                    # Update each material with the selected fields
+                    for material in materials:
+                        material_updated = False
+                        for field_name in fields_to_update:
+                            if field_name in form.cleaned_data:
+                                new_value = form.cleaned_data[field_name]
+
+                                # Set the field value directly
+                                # The form's clean() method has already converted values to proper types
+                                setattr(material, field_name, new_value)
+                                material_updated = True
+
+                        if material_updated:
+                            material.save(update_fields=fields_to_update)
+                            updated_count += 1
+                            logger.info(f"Material '{material.kurztext_de}' wurde durch Massenbearbeitung von '{request.user.email}' aktualisiert. Felder: {', '.join(updated_fields)}")
+
+                    if updated_count > 0:
+                        messages.success(
+                            request, 
+                            f"{updated_count} Material(ien) wurden erfolgreich aktualisiert. "
+                            f"Geänderte Felder: {', '.join(updated_fields)}"
+                        )
+                    else:
+                        messages.warning(request, "Keine Materialien wurden aktualisiert.")
+
+                    return redirect('list_material_il')
+
+            except Exception as e:
+                error_msg = f"Fehler bei der Massenbearbeitung: {str(e)}"
+                logger.error(error_msg)
+                messages.error(request, error_msg)
+
+        else:
+            # Form has errors - but only show errors for fields that were actually being updated
+            for field_name, errors in form.errors.items():
+                if field_name in fields_to_update:
+                    for error in errors:
+                        messages.error(request, f"{form.fields.get(field_name, {}).get('label', field_name)}: {error}")
+
+        # If we get here, there were errors - redisplay the form
+        context = {
+            'form': form,
+            'materials': materials,
+            'material_count': materials.count(),
+        }
+        return render(request, self.template_name, context)
 
 class ShowMaterial_IL_View(ComputedContextMixin, GroupRequiredMixin, SuccessMessageMixin, DetailView):
     model = Material

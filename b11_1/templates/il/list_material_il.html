@@ -42,6 +42,7 @@
     <br/>
     <button type="submit" name="action" value="transfer" class="btn btn-primary action-button" data-form-id="1" disabled>Übermitteln an die LBA</button>
     <button type="submit" name="action" value="delete" class="btn btn-danger action-button" data-form-id="1" disabled>Löschen</button>
+    <button type="button" class="btn btn-info action-button mass-edit-btn" data-form-id="1" disabled>Massenbearbeitung</button>
 </form>
 
 <br/>
@@ -71,6 +72,7 @@
     <br/>
     <button type="submit" name="action" value="transfer" class="btn btn-primary action-button" data-form-id="2" disabled>{% trans "Übermitteln an die LBA" %}</button>
     <button type="submit" name="action" value="delete" class="btn btn-danger action-button" data-form-id="2" disabled>{% trans "Löschen" %}</button>
+    <button type="button" class="btn btn-info action-button mass-edit-btn" data-form-id="2" disabled>{% trans "Massenbearbeitung" %}</button>
 </form>
 
 <br/>
@@ -100,6 +102,31 @@
     <button type="submit" name="action" value="archive" class="btn btn-danger action-button" data-form-id="3" disabled>Archivieren</button>
 </form>
 {% endif %}
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Handle mass edit buttons
+    document.querySelectorAll('.mass-edit-btn').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            const formId = this.getAttribute('data-form-id');
+            const form = document.getElementById('material-form-' + formId);
+            const checkedBoxes = form.querySelectorAll('.material-checkbox:checked');
+
+            if (checkedBoxes.length === 0) {
+                alert('Bitte wählen Sie mindestens ein Material für die Massenbearbeitung aus.');
+                return;
+            }
+
+            // Create URL with selected material IDs
+            const materialIds = Array.from(checkedBoxes).map(cb => cb.value);
+            const url = '{% url "mass_update_material_il" %}?' + materialIds.map(id => 'materials=' + id).join('&');
+
+            window.location.href = url;
+        });
+    });
+});
+</script>
+
 {% include 'checkbox.html' %}
 {% endif%}
 {% endblock %}
