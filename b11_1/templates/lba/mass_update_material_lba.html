@@ -95,28 +95,6 @@
                                 {{ field }}
                             {% endif %}
                         {% endfor %}
-
-                        <tr><td colspan="3"><hr></td></tr>
-                        <tr class="section-header"><td colspan="3"><strong>{% trans "Berechnete Felder" %}</strong></td></tr>
-                        
-                        {% for field in form.get_computed_fields %}
-                            {% if not field.is_hidden %}
-                                <tr>
-                                    <td>
-                                        <input type="checkbox" name="update_{{ field.name }}" id="update_{{ field.name }}" class="form-check-input update-checkbox" disabled>
-                                    </td>
-                                    <td>
-                                        <label for="{{ field.id_for_label }}" class="form-label">
-                                            {% trans field.label %}
-                                        </label>
-                                    </td>
-                                    <td>
-                                        {{ field }}
-                                        <small class="text-muted">({% trans "Berechnetes Feld - kann nicht geändert werden" %})</small>
-                                    </td>
-                                </tr>
-                            {% endif %}
-                        {% endfor %}
                     </tbody>
                 </table>
             </div>

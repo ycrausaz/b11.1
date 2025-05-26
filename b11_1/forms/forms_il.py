@@ -13,21 +13,6 @@ from ..utils.utils import readonly_field_style
 from .forms import CustomBooleanChoiceField, SplitterReadOnlyReadWriteFields, BaseTemplateForm
 from ..utils.editable_fields_config import *
 
-from django import forms
-from django.forms import ModelForm
-from ..models import Material
-from django.contrib.admin import widgets
-from bootstrap_datepicker_plus.widgets import DatePickerInput
-from django.db import connection
-from django.urls import reverse_lazy
-from django.forms import DateField
-from django.conf import settings
-from ..models import *
-from ..utils.widgets import ReadOnlyForeignKeyWidget
-from ..utils.utils import readonly_field_style
-from .forms import CustomBooleanChoiceField, SplitterReadOnlyReadWriteFields, BaseTemplateForm
-from ..utils.editable_fields_config import *
-
 class MaterialForm_IL(BaseTemplateForm, SplitterReadOnlyReadWriteFields):
 
     gewichtseinheit = forms.CharField(
@@ -184,9 +169,13 @@ class MaterialForm_IL(BaseTemplateForm, SplitterReadOnlyReadWriteFields):
                 self.fields[field_name].required = False
 
         # Mark computed fields (only for fields that exist)
+        # This needs to be done AFTER BaseTemplateForm.__init__ has run
         for field_name in self.Meta.computed_fields:
             if field_name in self.fields:
                 self.fields[field_name].is_computed = True
+                # Also ensure computed fields are disabled and readonly
+                self.fields[field_name].disabled = True
+                self.fields[field_name].widget.attrs['readonly'] = True
 
         # Initialize foreign key widgets and set required fields
         instance = kwargs.get('instance')
