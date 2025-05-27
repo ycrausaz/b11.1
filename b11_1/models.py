@@ -333,11 +333,40 @@ def material_attachment_path(instance, filename):
     """
     return f'{instance.material.id}/{filename}'
 
+def validate_file_extension(value):
+    """
+    Validate file extension and size
+    """
+    import os
+    from django.core.exceptions import ValidationError
+    from django.conf import settings
+    
+    # Define allowed extensions
+    allowed_extensions = ['.pdf', '.doc', '.docx', '.txt', '.jpg', '.jpeg', '.png', '.gif']
+    
+    # Get file extension
+    ext = os.path.splitext(value.name)[1].lower()
+    
+    # Check file extension
+    if ext not in allowed_extensions:
+        raise ValidationError(
+            f'Unsupported file extension "{ext}". Allowed extensions are: {", ".join(allowed_extensions)}'
+        )
+    
+    # Check file size (5MB limit)
+    max_size = getattr(settings, 'DATA_UPLOAD_MAX_MEMORY_SIZE', 5242880)  # 5MB default
+    if value.size > max_size:
+        max_size_mb = max_size / (1024 * 1024)
+        raise ValidationError(
+            f'File size ({value.size / (1024 * 1024):.1f}MB) exceeds the maximum allowed size of {max_size_mb:.1f}MB'
+        )
+
 class MaterialAttachment(models.Model):
     material = models.ForeignKey('Material', on_delete=models.CASCADE, related_name='attachments')
     file = models.FileField(
         upload_to=material_attachment_path,
-        storage=MaterialAttachmentStorage()
+        storage=MaterialAttachmentStorage(),
+        validators=[validate_file_extension]
     )
     comment = models.TextField(blank=True)
     uploaded_at = models.DateTimeField(auto_now_add=True)

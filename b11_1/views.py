@@ -60,6 +60,10 @@ from django.db import transaction
 from django.core.exceptions import ValidationError
 from botocore.exceptions import BotoCoreError, ClientError
 from .utils.log_export_utils import export_logs_to_excel
+import time
+import random
+from django_ratelimit.decorators import ratelimit
+from django.utils.decorators import method_decorator
 import logging
 
 logger = logging.getLogger(__name__)
@@ -76,7 +80,7 @@ class ExcelUploadForm(forms.Form):
             'accept': '.xlsx'
         })
     )
-    
+
     il_user = forms.ModelChoiceField(
         queryset=User.objects.filter(groups__name='grIL'),
         label='Zuweisung',
@@ -85,7 +89,7 @@ class ExcelUploadForm(forms.Form):
         required=True,
         error_messages={'obligatorisch': 'Bitte wählen Sie einen IL-Benutzer, um fortzufahren.'}
     )
-    
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         # Set up the queryset to show email as display value
@@ -103,7 +107,7 @@ class ExcelImportView(GroupRequiredMixin, FormView):
     def form_valid(self, form):
         excel_file = form.cleaned_data['excel_file']
         il_user = form.cleaned_data['il_user']  # Get the selected user
-        
+
         success, message, created, updated = import_from_excel(excel_file, self.request, il_user)
 
         if success:
@@ -130,40 +134,40 @@ class PreRegisterView(FormView):
     """
     template_name = 'registration/pre_register.html'
     form_class = EmailVerificationForm
-    
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['email'] = self.request.session.get('verified_email')
         context['recaptcha_site_key'] = getattr(settings, 'RECAPTCHA_PUBLIC_KEY', 'dummy_key')
         context['settings'] = settings  # Pass settings to template
         return context
-    
+
     def form_valid(self, form):
         email = form.cleaned_data['email']
-        
+
         # Generate verification token
         verification_token = get_random_string(64)
-        
+
         # Store token in session for validation later
         self.request.session['email_verification'] = {
             'email': email,
             'token': verification_token,
             'expires': (timezone.now() + timedelta(hours=24)).isoformat()
         }
-        
+
         # Generate verification link
         current_site = get_current_site(self.request)
         verification_link = f"http://{current_site.domain}{reverse('verify_email')}?email={email}&token={verification_token}"
-        
+
         # Prepare email context
         email_context = {
             'verification_link': verification_link,
             'expiry_date': (timezone.now() + timedelta(hours=24)).strftime('%Y-%m-%d %H:%M:%S'),
         }
-        
+
         # Render email template
         email_body = render_to_string('registration/email/verification_email.html', email_context)
-        
+
         # In development environment - print details to console instead of sending email
         print("\n" + "="*80)
         print("DEVELOPMENT MODE: Email Verification")
@@ -175,13 +179,13 @@ class PreRegisterView(FormView):
         print("-"*80)
         print(f"VERIFICATION LINK: {verification_link}")
         print("="*80 + "\n")
-        
+
         # Log the verification link for easy access
         logger.info(f"Verification link for {email}: {verification_link}")
-        
+
         # Add success message
         messages.success(self.request, "Verification email sent! Please check your inbox to continue registration.")
-        
+
         return redirect('login_user')
 
 class VerifyEmailView(View):
@@ -191,10 +195,10 @@ class VerifyEmailView(View):
     def get(self, request):
         email = request.GET.get('email')
         token = request.GET.get('token')
-        
+
         # Get verification data from session
         verification_data = request.session.get('email_verification', {})
-        
+
         # Debug info
         print("\n" + "="*80)
         print("DEBUG: Email Verification Attempt")
@@ -202,21 +206,21 @@ class VerifyEmailView(View):
         print(f"Token in URL: {token}")
         print(f"Session verification data: {verification_data}")
         print("="*80 + "\n")
-        
+
         if not verification_data:
             messages.error(request, "Verification link is invalid or has expired. (Session data not found)")
             return redirect('pre_register')
-        
+
         # Verify token and email
         stored_email = verification_data.get('email')
         stored_token = verification_data.get('token')
         expires = verification_data.get('expires')
-        
+
         print("\n" + "="*80)
         print("DEBUG: Verification Comparison")
         print(f"Stored email: {stored_email} | Matches: {stored_email == email}")
         print(f"Stored token: {stored_token} | Matches: {stored_token == token}")
-        
+
         if expires:
             expiry_time = timezone.datetime.fromisoformat(expires)
             is_expired = timezone.now() > expiry_time
@@ -224,17 +228,17 @@ class VerifyEmailView(View):
         else:
             print("No expiry time found")
         print("="*80 + "\n")
-        
+
         if (stored_email != email or 
             stored_token != token or
             (expires and timezone.now() > timezone.datetime.fromisoformat(expires))):
-            
+
             messages.error(request, "Verification link is invalid or has expired. (Data mismatch)")
             return redirect('pre_register')
-        
+
         # Log successful verification
         logger.info(f"Email verification successful for: {email}")
-        
+
         # Store verified email in the session (mark it as verified)
         self.request.session['verified_email'] = email
         self.request.session.modified = True
@@ -246,10 +250,11 @@ class VerifyEmailView(View):
         print(f"Full session data: {dict(self.request.session)}")
         print(f"Session key: {self.request.session.session_key}")
         print("="*80 + "\n")
-        
+
         # Redirect to registration form without email parameter
         return redirect('register')
 
+@method_decorator(ratelimit(key='ip', rate='5/m', method='POST'), name='dispatch')
 class CustomLoginView(LoginView):
     template_name = 'admin/login_user.html'
 
@@ -370,6 +375,7 @@ class CustomLoginView(LoginView):
                 pass
 
         # For all other cases, show the standard error message
+        time.sleep(random.uniform(0.5, 1.5))
         messages.error(self.request, "Email und/oder Passwort ungültig.")
         return self.render_to_response(self.get_context_data(form=form))
 
@@ -384,15 +390,15 @@ class ExportLogsView(GroupRequiredMixin, View):
 
     def get(self, request, *args, **kwargs):
         from datetime import datetime
-        
+
         # Get date filter parameters
         raw_start_date = request.GET.get('start_date')
         raw_end_date = request.GET.get('end_date')
-        
+
         # Initialize date variables
         start_date = None
         end_date = None
-        
+
         # Parse start date if provided
         if raw_start_date:
             try:
@@ -405,7 +411,7 @@ class ExportLogsView(GroupRequiredMixin, View):
                         continue
             except Exception as e:
                 logger.error(f"Error parsing start_date '{raw_start_date}': {e}")
-        
+
         # Parse end date if provided
         if raw_end_date:
             try:
@@ -418,13 +424,13 @@ class ExportLogsView(GroupRequiredMixin, View):
                         continue
             except Exception as e:
                 logger.error(f"Error parsing end_date '{raw_end_date}': {e}")
-        
+
         # Generate Excel file and return as response
         response = export_logs_to_excel(start_date, end_date)
-        
+
         # Log the export action
         logger.info(f"Log entries exported to Excel by {request.user.email} (date range: {start_date} to {end_date})")
-        
+
         return response
 
 class CustomPasswordChangeView(PasswordChangeView):
@@ -508,17 +514,17 @@ class ListMaterial_IL_View(GroupRequiredMixin, ListView):
                     id__in=selected_material_ids,
                     is_finished=True
                 )
-                
+
                 # Count how many materials were selected vs. how many are finished
                 total_selected = len(selected_material_ids)
                 total_finished = finished_materials.count()
-                
+
                 # Update only the finished materials
                 if total_finished > 0:
                     finished_materials.update(is_transferred=True, transfer_date=timezone.now())
                     for material in finished_materials:
                         logger.info("Material '" + material.kurztext_de + "' durch '" + request.user.email + "' übermittelt.")
-                    
+
                     # Add a message to inform the user
                     if total_finished < total_selected:
                         messages.warning(
@@ -569,7 +575,7 @@ class AddMaterial_IL_View(FormValidMixin, GroupRequiredMixin, SuccessMessageMixi
                 new_attachments = []
 
                 # Process new file attachments
-                for file, comment in zip(files, comments):
+                for i, (file, comment) in enumerate(zip(files, comments)):
                     if file:
                         try:
                             attachment = MaterialAttachment(
@@ -578,7 +584,8 @@ class AddMaterial_IL_View(FormValidMixin, GroupRequiredMixin, SuccessMessageMixi
                                 comment=comment,
                                 uploaded_by=self.request.user
                             )
-                            # Validate the attachment
+
+                            # Validate the attachment (this will call validate_file_extension)
                             attachment.full_clean()
 
                             # Try to save file to S3 first
@@ -586,7 +593,7 @@ class AddMaterial_IL_View(FormValidMixin, GroupRequiredMixin, SuccessMessageMixi
                                 # Note: Don't save to database yet
                                 attachment.file.save(file.name, file, save=False)
                             except (BotoCoreError, ClientError) as e:
-                                error_msg = f"Failed to upload file '{file.name}' to storage."
+                                error_msg = f"Failed to upload file '{file.name}' to storage: {str(e)}"
                                 logger.error(error_msg)
                                 form.add_error(None, error_msg)
                                 return self.render_to_response(self.get_context_data(form=form))
@@ -594,12 +601,30 @@ class AddMaterial_IL_View(FormValidMixin, GroupRequiredMixin, SuccessMessageMixi
                             new_attachments.append(attachment)
 
                         except ValidationError as e:
-                            error_msg = f"Validation error for file {file.name}: {str(e)}"
-                            logger.error(error_msg)
-                            form.add_error(None, error_msg)
+                            # Handle validation errors (including file extension/size errors)
+                            if hasattr(e, 'message_dict') and 'file' in e.message_dict:
+                                # Field-specific validation error
+                                file_errors = e.message_dict['file']
+                                for error in file_errors:
+                                    error_msg = f"Error with file '{file.name}': {error}"
+                                    logger.error(error_msg)
+                                    form.add_error(None, error_msg)
+                            else:
+                                # General validation error
+                                error_msg = f"Validation error for file '{file.name}': {str(e)}"
+                                logger.error(error_msg)
+                                form.add_error(None, error_msg)
+
+                            # Clean up any successfully uploaded files before returning
+                            for uploaded_attachment in new_attachments:
+                                try:
+                                    uploaded_attachment.file.delete(save=False)
+                                except (BotoCoreError, ClientError) as cleanup_error:
+                                    logger.error(f"Failed to clean up file {uploaded_attachment.file.name}: {str(cleanup_error)}")
+
                             return self.render_to_response(self.get_context_data(form=form))
 
-                # If we got here, all S3 operations were successful
+                # If we got here, all validations and S3 operations were successful
                 # Now save the material object
                 self.object.save()
 
@@ -613,6 +638,11 @@ class AddMaterial_IL_View(FormValidMixin, GroupRequiredMixin, SuccessMessageMixi
                 return super().form_valid(form)
 
         except ValidationError as e:
+            # Handle any other validation errors
+            error_msg = f"Validation error: {str(e)}"
+            logger.error(error_msg)
+            form.add_error(None, error_msg)
+
             # Clean up any files that might have been uploaded to S3 before the error
             for attachment in new_attachments:
                 try:
@@ -620,11 +650,10 @@ class AddMaterial_IL_View(FormValidMixin, GroupRequiredMixin, SuccessMessageMixi
                 except (BotoCoreError, ClientError) as s3_error:
                     logger.error(f"Failed to clean up file {attachment.file.name} after error: {str(s3_error)}")
 
-            form.add_error(None, str(e))
             return self.render_to_response(self.get_context_data(form=form))
 
         except (BotoCoreError, ClientError) as e:
-            error_msg = f"Failed to upload file to storage."
+            error_msg = f"Failed to upload file to storage: {str(e)}"
             logger.error(error_msg)
             form.add_error(None, error_msg)
             return self.render_to_response(self.get_context_data(form=form))
@@ -677,7 +706,7 @@ class UpdateMaterial_IL_View(FormValidMixin, GroupRequiredMixin, SuccessMessageM
                 new_attachments = []
 
                 # Process new file attachments
-                for file, comment in zip(files, comments):
+                for i, (file, comment) in enumerate(zip(files, comments)):
                     if file:
                         try:
                             attachment = MaterialAttachment(
@@ -686,7 +715,8 @@ class UpdateMaterial_IL_View(FormValidMixin, GroupRequiredMixin, SuccessMessageM
                                 comment=comment,
                                 uploaded_by=self.request.user
                             )
-                            # Validate the attachment
+
+                            # Validate the attachment (this will call validate_file_extension)
                             attachment.full_clean()
 
                             # Try to save file to S3 first
@@ -694,7 +724,7 @@ class UpdateMaterial_IL_View(FormValidMixin, GroupRequiredMixin, SuccessMessageM
                                 # Note: Don't save to database yet
                                 attachment.file.save(file.name, file, save=False)
                             except (BotoCoreError, ClientError) as e:
-                                error_msg = f"Failed to upload file '{file.name}' to storage."
+                                error_msg = f"Failed to upload file '{file.name}' to storage: {str(e)}"
                                 logger.error(error_msg)
                                 form.add_error(None, error_msg)
                                 return self.render_to_response(self.get_context_data(form=form))
@@ -702,12 +732,30 @@ class UpdateMaterial_IL_View(FormValidMixin, GroupRequiredMixin, SuccessMessageM
                             new_attachments.append(attachment)
 
                         except ValidationError as e:
-                            error_msg = f"Validation error for file {file.name}: {str(e)}"
-                            logger.error(error_msg)
-                            form.add_error(None, error_msg)
+                            # Handle validation errors (including file extension/size errors)
+                            if hasattr(e, 'message_dict') and 'file' in e.message_dict:
+                                # Field-specific validation error
+                                file_errors = e.message_dict['file']
+                                for error in file_errors:
+                                    error_msg = f"Error with file '{file.name}': {error}"
+                                    logger.error(error_msg)
+                                    form.add_error(None, error_msg)
+                            else:
+                                # General validation error
+                                error_msg = f"Validation error for file '{file.name}': {str(e)}"
+                                logger.error(error_msg)
+                                form.add_error(None, error_msg)
+
+                            # Clean up any successfully uploaded files before returning
+                            for uploaded_attachment in new_attachments:
+                                try:
+                                    uploaded_attachment.file.delete(save=False)
+                                except (BotoCoreError, ClientError) as cleanup_error:
+                                    logger.error(f"Failed to clean up file {uploaded_attachment.file.name}: {str(cleanup_error)}")
+
                             return self.render_to_response(self.get_context_data(form=form))
 
-                # If we got here, all S3 operations were successful
+                # If we got here, all validations and S3 operations were successful
                 # Now save the material object
                 self.object.save()
 
@@ -721,6 +769,11 @@ class UpdateMaterial_IL_View(FormValidMixin, GroupRequiredMixin, SuccessMessageM
                 return super().form_valid(form)
 
         except ValidationError as e:
+            # Handle any other validation errors
+            error_msg = f"Validation error: {str(e)}"
+            logger.error(error_msg)
+            form.add_error(None, error_msg)
+
             # Clean up any files that might have been uploaded to S3 before the error
             for attachment in new_attachments:
                 try:
@@ -728,11 +781,10 @@ class UpdateMaterial_IL_View(FormValidMixin, GroupRequiredMixin, SuccessMessageM
                 except (BotoCoreError, ClientError) as s3_error:
                     logger.error(f"Failed to clean up file {attachment.file.name} after error: {str(s3_error)}")
 
-            form.add_error(None, str(e))
             return self.render_to_response(self.get_context_data(form=form))
 
         except (BotoCoreError, ClientError) as e:
-            error_msg = f"Failed to upload file to storage."
+            error_msg = f"Failed to upload file to storage: {str(e)}"
             logger.error(error_msg)
             form.add_error(None, error_msg)
             return self.render_to_response(self.get_context_data(form=form))
@@ -1289,7 +1341,7 @@ class UpdateMaterial_LBA_View(ComputedContextMixin, FormValidMixin, GroupRequire
                 new_attachments = []
 
                 # Process new file attachments
-                for file, comment in zip(files, comments):
+                for i, (file, comment) in enumerate(zip(files, comments)):
                     if file:
                         try:
                             attachment = MaterialAttachment(
@@ -1298,7 +1350,8 @@ class UpdateMaterial_LBA_View(ComputedContextMixin, FormValidMixin, GroupRequire
                                 comment=comment,
                                 uploaded_by=self.request.user
                             )
-                            # Validate the attachment
+
+                            # Validate the attachment (this will call validate_file_extension)
                             attachment.full_clean()
 
                             # Try to save file to S3 first
@@ -1306,7 +1359,7 @@ class UpdateMaterial_LBA_View(ComputedContextMixin, FormValidMixin, GroupRequire
                                 # Note: Don't save to database yet
                                 attachment.file.save(file.name, file, save=False)
                             except (BotoCoreError, ClientError) as e:
-                                error_msg = f"Failed to upload file '{file.name}' to storage."
+                                error_msg = f"Failed to upload file '{file.name}' to storage: {str(e)}"
                                 logger.error(error_msg)
                                 form.add_error(None, error_msg)
                                 return self.render_to_response(self.get_context_data(form=form))
@@ -1314,12 +1367,30 @@ class UpdateMaterial_LBA_View(ComputedContextMixin, FormValidMixin, GroupRequire
                             new_attachments.append(attachment)
 
                         except ValidationError as e:
-                            error_msg = f"Validation error for file {file.name}: {str(e)}"
-                            logger.error(error_msg)
-                            form.add_error(None, error_msg)
+                            # Handle validation errors (including file extension/size errors)
+                            if hasattr(e, 'message_dict') and 'file' in e.message_dict:
+                                # Field-specific validation error
+                                file_errors = e.message_dict['file']
+                                for error in file_errors:
+                                    error_msg = f"Error with file '{file.name}': {error}"
+                                    logger.error(error_msg)
+                                    form.add_error(None, error_msg)
+                            else:
+                                # General validation error
+                                error_msg = f"Validation error for file '{file.name}': {str(e)}"
+                                logger.error(error_msg)
+                                form.add_error(None, error_msg)
+
+                            # Clean up any successfully uploaded files before returning
+                            for uploaded_attachment in new_attachments:
+                                try:
+                                    uploaded_attachment.file.delete(save=False)
+                                except (BotoCoreError, ClientError) as cleanup_error:
+                                    logger.error(f"Failed to clean up file {uploaded_attachment.file.name}: {str(cleanup_error)}")
+
                             return self.render_to_response(self.get_context_data(form=form))
 
-                # If we got here, all S3 operations were successful
+                # If we got here, all validations and S3 operations were successful
                 # Now save the material object
                 self.object.save()
 
@@ -1333,6 +1404,11 @@ class UpdateMaterial_LBA_View(ComputedContextMixin, FormValidMixin, GroupRequire
                 return super().form_valid(form)
 
         except ValidationError as e:
+            # Handle any other validation errors
+            error_msg = f"Validation error: {str(e)}"
+            logger.error(error_msg)
+            form.add_error(None, error_msg)
+
             # Clean up any files that might have been uploaded to S3 before the error
             for attachment in new_attachments:
                 try:
@@ -1340,11 +1416,10 @@ class UpdateMaterial_LBA_View(ComputedContextMixin, FormValidMixin, GroupRequire
                 except (BotoCoreError, ClientError) as s3_error:
                     logger.error(f"Failed to clean up file {attachment.file.name} after error: {str(s3_error)}")
 
-            form.add_error(None, str(e))
             return self.render_to_response(self.get_context_data(form=form))
 
         except (BotoCoreError, ClientError) as e:
-            error_msg = f"Failed to upload file to storage."
+            error_msg = f"Failed to upload file to storage: {str(e)}"
             logger.error(error_msg)
             form.add_error(None, error_msg)
             return self.render_to_response(self.get_context_data(form=form))
@@ -1440,25 +1515,25 @@ class RegisterView(FormView):
         print(f"verified_email in session: {request.session.get('verified_email')}")
         print(f"Full session data: {dict(request.session)}")
         print("="*80 + "\n")
-        
+
         # Check if email is in session
         if not request.session.get('verified_email'):
             messages.error(request, "Please verify your email address first.")
             return redirect('pre_register')
         return super().dispatch(request, *args, **kwargs)
-    
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        
+
         # Make sure we're explicitly getting the email from the session
         email = self.request.session.get('verified_email', '')
-        
+
         print("\n" + "="*80)
         print("DEBUG: RegisterView.get_context_data method called")
         print(f"Email retrieved from session: '{email}'")
         print(f"Full context keys: {context.keys()}")
         print("="*80 + "\n")
-        
+
         # Explicitly add it to the context
         context['email'] = email
         context['recaptcha_site_key'] = getattr(settings, 'RECAPTCHA_PUBLIC_KEY', 'dummy_key')
@@ -1471,7 +1546,7 @@ class RegisterView(FormView):
         print("DEBUG: RegisterView.get method called")
         print(f"verified_email in session: {request.session.get('verified_email')}")
         print("="*80 + "\n")
-        
+
         # Call the standard get method
         return super().get(request, *args, **kwargs)
 
@@ -1479,10 +1554,10 @@ class RegisterView(FormView):
         form = UserRegistrationForm(request.POST)
         if form.is_valid():
             submitted_email = form.cleaned_data['email']
-            
+
             # Get email from session instead of form
             email = request.session.get('verified_email')
-            
+
             user = User.objects.create(
                 username=email,  # Set username to email
                 email=submitted_email,
@@ -1490,7 +1565,7 @@ class RegisterView(FormView):
                 last_name=form.cleaned_data['last_name'],
                 is_active=False
             )
-    
+
             profile = form.save(commit=False)
             profile.user = user
             profile.email = submitted_email
@@ -1499,18 +1574,18 @@ class RegisterView(FormView):
             profile.token_expiry = timezone.now() + timedelta(days=2)
             profile.status = 'pending'  # Set initial status
             profile.save()
-            
+
             # Clear verification data from session
             if 'email_verification' in request.session:
                 del request.session['email_verification']
             if 'verified_email' in request.session:
                 del request.session['verified_email']
             request.session.modified = True
-    
+
             messages.success(request, 'Registration submitted successfully! Please wait for administrator approval.')
             logger.info(f"New user registration pending approval: {submitted_email}")
             return redirect('login_user')
-    
+
         return render(request, self.template_name, {'form': form, 'email': request.session.get('verified_email')})
 
 class CompleteRegistrationView(FormView):
@@ -1687,7 +1762,7 @@ class CustomPasswordResetView(FormView):
     template_name = 'admin/password_reset.html'
     form_class = forms.Form  # We'll define this inline
     success_url = reverse_lazy('password_reset_done')
-    
+
     def get_form_class(self):
         class PasswordResetForm(forms.Form):
             email = forms.EmailField(
@@ -1699,7 +1774,7 @@ class CustomPasswordResetView(FormView):
                     'autocomplete': 'email'
                 })
             )
-            
+
             def clean_email(self):
                 email = self.cleaned_data['email']
                 # Check if user exists with this email
@@ -1708,24 +1783,24 @@ class CustomPasswordResetView(FormView):
                     # Just return the email - we'll handle the case in the view
                     pass
                 return email
-                
+
         return PasswordResetForm
-    
+
     def form_valid(self, form):
         email = form.cleaned_data['email']
-        
+
         try:
             user = User.objects.get(email=email, is_active=True)
-            
+
             # Generate password reset token and uid
             current_site = get_current_site(self.request)
             uid = urlsafe_base64_encode(force_bytes(user.pk))
             token = default_token_generator.make_token(user)
-            
+
             # Create the password reset link
             reset_link = reverse('password_reset_confirm', kwargs={'uidb64': uid, 'token': token})
             reset_url = f'http://{current_site.domain}{reset_link}'
-            
+
             # Prepare email context
             email_context = {
                 'email': user.email,
@@ -1737,7 +1812,7 @@ class CustomPasswordResetView(FormView):
                 'protocol': 'http',
                 'reset_url': reset_url,
             }
-            
+
             # Render email templates
             subject = f'Password reset on {current_site.name}'
             email_body = f"""Someone asked for password reset for email {user.email}.
@@ -1749,7 +1824,7 @@ If you didn't request this password reset, please ignore this email.
 
 This link will expire in a few hours for security reasons.
 """
-            
+
             # In development environment - print details to console instead of sending email
             print("\n" + "="*80)
             print("DEVELOPMENT MODE: Password Reset Email")
@@ -1761,10 +1836,10 @@ This link will expire in a few hours for security reasons.
             print("-"*80)
             print(f"RESET LINK: {reset_url}")
             print("="*80 + "\n")
-            
+
             # Log the reset link for easy access
             logger.info(f"Password reset link for {user.email}: {reset_url}")
-            
+
         except User.DoesNotExist:
             # User doesn't exist, but don't reveal this for security reasons
             # Still show success message
@@ -1774,13 +1849,13 @@ This link will expire in a few hours for security reasons.
             print(f"Password reset requested for: {email}")
             print("No user found with this email address.")
             print("="*80 + "\n")
-            
+
             logger.info(f"Password reset attempted for non-existent email: {email}")
-        
+
         # Always show success message (don't reveal if email exists or not)
         messages.success(
             self.request, 
             "If an account with this email exists, we have sent you a password reset link."
         )
-        
+
         return super().form_valid(form)
