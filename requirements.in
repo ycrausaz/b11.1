@@ -16,3 +16,4 @@ deepl
 polib
 requests
 django-environ
+django-ratelimit
