@@ -67,10 +67,12 @@ INSTALLED_APPS = [
     'storages',
 #    'captcha',
     'bootstrap_datepicker_plus',
+    'csp',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'csp.middleware.CSPMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.locale.LocaleMiddleware',  # This must be after session and before common
@@ -304,3 +306,44 @@ X_FRAME_OPTIONS = 'DENY'
 SECURE_HSTS_SECONDS = 31536000 if not DEBUG else 0
 SECURE_HSTS_INCLUDE_SUBDOMAINS = True
 SECURE_HSTS_PRELOAD = True
+
+CONTENT_SECURITY_POLICY = {
+    'DIRECTIVES': {
+        'default-src': ("'self'",),
+        'script-src': (
+            "'self'",
+            "'unsafe-inline'",  # Required for inline scripts (minimize usage)
+            "https://cdn.jsdelivr.net",  # Bootstrap, Select2
+            "https://code.jquery.com",   # jQuery
+        ),
+        'style-src': (
+            "'self'",
+            "'unsafe-inline'",  # Required for inline styles
+            "https://cdn.jsdelivr.net",  # Bootstrap, Select2
+            "https://code.jquery.com",   # jQuery UI
+        ),
+        'img-src': (
+            "'self'",
+            "data:",  # For data URLs
+            "https:",  # Allow HTTPS images
+        ),
+        'font-src': (
+            "'self'",
+            "https://cdn.jsdelivr.net",
+        ),
+        'connect-src': (
+            "'self'",
+            # Add your S3/MinIO domains here
+            "https://s3-eu-central-1.amazonaws.com",
+            "http://192.168.1.2:9000",  # Your MinIO server
+        ),
+        'frame-ancestors': ("'none'",),  # Prevent clickjacking
+        'object-src': ("'none'",),       # Block plugins
+        'base-uri': ("'self'",),
+        'form-action': ("'self'",),      # Only allow form submissions to same origin
+    },
+    'REPORT_URI': '/csp-report/',  # Optional: for violation reporting
+}
+
+# Optional: Start with report-only mode for testing
+# CONTENT_SECURITY_POLICY_REPORT_ONLY = True
