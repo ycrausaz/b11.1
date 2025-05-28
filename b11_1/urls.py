@@ -55,6 +55,7 @@ urlpatterns = [
          name='update_material_il'),
     path('show_material_il/<int:pk>', login_required(ShowMaterial_IL_View.as_view()), name='show_material_il'),
     path('il/materials/mass-update/', login_required(views.MassUpdateMaterial_IL_View.as_view()), name='mass_update_material_il'),
+    path('il/materials/tabular-mass-update/', login_required(views.TabularMassUpdateMaterial_IL_View.as_view()), name='tabular_mass_update_material_il'),
 
     # Material GD paths
     path('list_material_gd',
@@ -92,6 +93,7 @@ urlpatterns = [
          name='update_material_lba'),
     path('show_material_lba/<int:pk>', login_required(ShowMaterial_LBA_View.as_view()), name='show_material_lba'),
     path('lba/materials/mass-update/', login_required(views.MassUpdateMaterial_LBA_View.as_view()), name='mass_update_material_lba'),
+    path('lba/materials/tabular-mass-update/', login_required(views.TabularMassUpdateMaterial_LBA_View.as_view()), name='tabular_mass_update_material_lba'),
 
     # Registration paths
     path('registration/register/', RegisterView.as_view(), name='register'),

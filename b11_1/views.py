@@ -47,7 +47,8 @@ from django.contrib.auth.tokens import default_token_generator
 from django.core.mail import send_mail
 from django.conf import settings
 from .utils.editable_fields_config import (
-    EDITABLE_FIELDS_IL, 
+    EDITABLE_FIELDS_IL,
+    EDITABLE_FIELDS_IL_TABULAR_MASS_UPDATE,
     EDITABLE_FIELDS_IL_MASS_UPDATE,
     EDITABLE_FIELDS_LBA,
     EDITABLE_FIELDS_GD,
@@ -907,6 +908,181 @@ class MassUpdateMaterial_IL_View(ComputedContextMixin, FormValidMixin, GroupRequ
             'form': form,
             'materials': materials,
             'material_count': materials.count(),
+        }
+        return render(request, self.template_name, context)
+
+class TabularMassUpdateMaterial_LBA_View(ComputedContextMixin, FormValidMixin, GroupRequiredMixin, SuccessMessageMixin, View):
+    template_name = 'lba/tabular_mass_update_material_lba.html'
+    success_url = reverse_lazy('list_material_lba')
+    success_message = "Die Materialien wurden erfolgreich aktualisiert."
+    allowed_groups = ['grLBA']
+
+class TabularMassUpdateMaterial_IL_View(ComputedContextMixin, FormValidMixin, GroupRequiredMixin, SuccessMessageMixin, View):
+    template_name = 'il/tabular_mass_update_material_il.html'
+    success_url = reverse_lazy('list_material_il')
+    success_message = "Die Materialien wurden erfolgreich aktualisiert."
+    allowed_groups = ['grIL']
+
+    def get(self, request, *args, **kwargs):
+        material_ids = request.GET.getlist('materials')
+        if not material_ids:
+            messages.error(request, "Keine Materialien für die Tabellen-Massenbearbeitung ausgewählt.")
+            return redirect('list_material_il')
+
+        materials = Material.objects.filter(id__in=material_ids).order_by('positions_nr')
+        if not materials.exists():
+            messages.error(request, "Keine gültigen Materialien gefunden.")
+            return redirect('list_material_il')
+
+        # Create a modified field list excluding 'systemname'
+        tabular_editable_fields = [field for field in EDITABLE_FIELDS_IL_TABULAR_MASS_UPDATE if field != 'systemname']
+
+        # Create a form for each material
+        material_forms = []
+        for material in materials:
+            form = MaterialForm_IL(
+                instance=material,
+                editable_fields=tabular_editable_fields,  # Use the modified list
+                is_mass_update=True,
+                prefix=f'material_{material.id}'
+            )
+            material_forms.append({
+                'material': material,
+                'form': form
+            })
+
+        # Get field information for the table headers using the modified list
+        sample_form = MaterialForm_IL(
+            editable_fields=tabular_editable_fields,  # Use the modified list
+            is_mass_update=True
+        )
+        
+        # Get only the normal (editable) fields
+        editable_fields = []
+        for field in sample_form.get_normal_fields():
+            if not field.is_hidden:
+                editable_fields.append({
+                    'name': field.name,
+                    'label': field.label,
+                    'required': field.name in sample_form.get_required_field_names(),
+                    'help_text': field.help_text
+                })
+
+        context = {
+            'material_forms': material_forms,
+            'materials': materials,
+            'material_count': materials.count(),
+            'editable_fields': editable_fields,
+        }
+        return render(request, self.template_name, context)
+
+    # Also update the post method to use the same filtered fields
+    def post(self, request, *args, **kwargs):
+        material_ids = request.POST.getlist('material_ids')
+        if not material_ids:
+            messages.error(request, "Keine Materialien für die Tabellen-Massenbearbeitung ausgewählt.")
+            return redirect('list_material_il')
+
+        materials = Material.objects.filter(id__in=material_ids).order_by('positions_nr')
+        if not materials.exists():
+            messages.error(request, "Keine gültigen Materialien gefunden.")
+            return redirect('list_material_il')
+
+        # Use the same filtered field list
+        tabular_editable_fields = [field for field in EDITABLE_FIELDS_IL_TABULAR_MASS_UPDATE if field != 'systemname']
+
+        # Create forms for each material with POST data
+        material_forms = []
+        all_forms_valid = True
+        
+        for material in materials:
+            form = MaterialForm_IL(
+                request.POST,
+                instance=material,
+                editable_fields=tabular_editable_fields,  # Use the modified list
+                is_mass_update=True,
+                prefix=f'material_{material.id}'
+            )
+            material_forms.append({
+                'material': material,
+                'form': form
+            })
+            
+            if not form.is_valid():
+                all_forms_valid = False
+
+        # Rest of the post method remains the same...
+        if all_forms_valid:
+            try:
+                with transaction.atomic():
+                    updated_count = 0
+                    
+                    for material_form_data in material_forms:
+                        form = material_form_data['form']
+                        material = material_form_data['material']
+                        
+                        # Check if any field has actually changed
+                        form_changed = False
+                        for field_name in form.changed_data:
+                            if field_name in tabular_editable_fields:  # Use the modified list
+                                form_changed = True
+                                break
+                        
+                        if form_changed:
+                            form.save()
+                            updated_count += 1
+                            logger.info(f"Material '{material.kurztext_de}' wurde durch Tabellen-Massenbearbeitung von '{request.user.email}' aktualisiert.")
+                    
+                    if updated_count > 0:
+                        messages.success(
+                            request, 
+                            f"{updated_count} Material(ien) wurden erfolgreich aktualisiert."
+                        )
+                    else:
+                        messages.info(request, "Keine Änderungen wurden vorgenommen.")
+                    
+                    return redirect('list_material_il')
+                    
+            except Exception as e:
+                error_msg = f"Fehler bei der Tabellen-Massenbearbeitung: {str(e)}"
+                logger.error(error_msg)
+                messages.error(request, error_msg)
+        else:
+            # Handle form errors...
+            error_count = 0
+            for material_form_data in material_forms:
+                form = material_form_data['form']
+                material = material_form_data['material']
+                
+                for field_name, errors in form.errors.items():
+                    for error in errors:
+                        messages.error(request, f"Material {material.systemname} - {field_name}: {error}")
+                        error_count += 1
+            
+            if error_count > 0:
+                messages.error(request, f"Es wurden {error_count} Validierungsfehler gefunden. Bitte korrigieren Sie diese.")
+
+        # Re-render with errors
+        sample_form = MaterialForm_IL(
+            editable_fields=tabular_editable_fields,  # Use the modified list
+            is_mass_update=True
+        )
+        
+        editable_fields = []
+        for field in sample_form.get_normal_fields():
+            if not field.is_hidden:
+                editable_fields.append({
+                    'name': field.name,
+                    'label': field.label,
+                    'required': field.name in sample_form.get_required_field_names(),
+                    'help_text': field.help_text
+                })
+
+        context = {
+            'material_forms': material_forms,
+            'materials': materials,
+            'material_count': materials.count(),
+            'editable_fields': editable_fields,
         }
         return render(request, self.template_name, context)
 
