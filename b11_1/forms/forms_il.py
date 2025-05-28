@@ -198,8 +198,14 @@ class MaterialForm_IL(BaseTemplateForm, SplitterReadOnlyReadWriteFields):
                         display_text = str(obj)  # This will use the updated __str__ method
                         choices.append((obj.idx, display_text))
 
+                    # For tabular editing, use more compact styling
+                    widget_attrs = {'class': 'form-select'}
+                    if is_mass_update:
+                        widget_attrs['class'] += ' form-select-sm'
+
                     self.fields[field_name].widget = forms.Select(
                         choices=choices,
+                        attrs=widget_attrs
                     )
 
                     # Set initial value if instance exists
@@ -216,6 +222,16 @@ class MaterialForm_IL(BaseTemplateForm, SplitterReadOnlyReadWriteFields):
                         value = getattr(instance, field_name)
                         if value:
                             self.fields[field_name].initial = value.idx
+
+        # Style form controls for tabular editing
+        if is_mass_update:
+            for field_name, field in self.fields.items():
+                if isinstance(field.widget, forms.TextInput):
+                    field.widget.attrs.update({'class': 'form-control form-control-sm'})
+                elif isinstance(field.widget, forms.NumberInput):
+                    field.widget.attrs.update({'class': 'form-control form-control-sm'})
+                elif isinstance(field.widget, forms.CheckboxInput):
+                    field.widget.attrs.update({'class': 'form-check-input'})
 
         # Add tooltips (only for fields that exist)
         from django.utils.translation import get_language
