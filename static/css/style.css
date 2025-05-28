@@ -355,3 +355,95 @@ label[data-bs-toggle="tooltip"] {
         width: 150px;
     }
 }
+
+/* ===== TABULAR MASS EDIT STYLES ===== */
+
+/* Sticky column for material information */
+.sticky-column {
+    position: sticky;
+    left: 0;
+    z-index: 10;
+    background-color: #f8f9fa !important;
+}
+
+/* Table responsive container styling */
+.tabular-edit .table-responsive {
+    border: 1px solid #dee2e6;
+}
+
+/* Sticky header with higher z-index */
+.tabular-edit .sticky-top {
+    z-index: 20;
+}
+
+/* Compact view styles for smaller screens */
+.compact-view .table td,
+.compact-view .table th {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.85em;
+}
+
+.compact-view .form-control,
+.compact-view .form-select {
+    font-size: 0.85em;
+    padding: 0.25rem 0.5rem;
+}
+
+/* Highlight changed cells in tabular edit */
+.changed-cell {
+    background-color: #fff3cd !important;
+    border-color: #ffc107 !important;
+}
+
+/* Form controls styling within tabular edit table */
+.tabular-edit .table td .form-control,
+.tabular-edit .table td .form-select {
+    border: 1px solid #ced4da;
+    border-radius: 0.25rem;
+    font-size: 0.9em;
+}
+
+.tabular-edit .table td .form-control:focus,
+.tabular-edit .table td .form-select:focus {
+    border-color: #86b7fe;
+    box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+}
+
+/* Materials table specific styling */
+#materials-table {
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+#materials-table th,
+#materials-table td {
+    border: 1px solid #dee2e6;
+}
+
+/* Tabular edit specific responsive design */
+@media (max-width: 992px) {
+    .tabular-edit .table-responsive {
+        font-size: 0.875rem;
+    }
+    
+    .tabular-edit .table th,
+    .tabular-edit .table td {
+        padding: 0.5rem 0.25rem;
+    }
+    
+    .sticky-column {
+        min-width: 120px !important;
+    }
+}
+
+@media (max-width: 768px) {
+    .tabular-edit .table-responsive {
+        font-size: 0.8rem;
+    }
+    
+    .tabular-edit .form-control,
+    .tabular-edit .form-select {
+        font-size: 0.8rem;
+        padding: 0.25rem 0.5rem;
+    }
+}
