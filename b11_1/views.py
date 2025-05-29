@@ -911,14 +911,14 @@ class MassUpdateMaterial_IL_View(ComputedContextMixin, FormValidMixin, GroupRequ
         }
         return render(request, self.template_name, context)
 
-class TabularMassUpdateMaterial_LBA_View(ComputedContextMixin, FormValidMixin, GroupRequiredMixin, SuccessMessageMixin, View):
-    template_name = 'lba/tabular_mass_update_material_lba.html'
+class TabularMaterialsMassUpdateMaterial_LBA_View(ComputedContextMixin, FormValidMixin, GroupRequiredMixin, SuccessMessageMixin, View):
+    template_name = 'lba/tabular_materials_mass_update_material_lba.html'
     success_url = reverse_lazy('list_material_lba')
     success_message = "Die Materialien wurden erfolgreich aktualisiert."
     allowed_groups = ['grLBA']
 
-class TabularMassUpdateMaterial_IL_View(ComputedContextMixin, FormValidMixin, GroupRequiredMixin, SuccessMessageMixin, View):
-    template_name = 'il/tabular_mass_update_material_il.html'
+class TabularMaterialsMassUpdateMaterial_IL_View(ComputedContextMixin, FormValidMixin, GroupRequiredMixin, SuccessMessageMixin, View):
+    template_name = 'il/tabular_materials_mass_update_material_il.html'
     success_url = reverse_lazy('list_material_il')
     success_message = "Die Materialien wurden erfolgreich aktualisiert."
     allowed_groups = ['grIL']
@@ -1085,6 +1085,190 @@ class TabularMassUpdateMaterial_IL_View(ComputedContextMixin, FormValidMixin, Gr
             'editable_fields': editable_fields,
         }
         return render(request, self.template_name, context)
+
+class TabularFieldsMassUpdateMaterial_LBA_View(ComputedContextMixin, FormValidMixin, GroupRequiredMixin, SuccessMessageMixin, View):
+    template_name = 'lba/tabular_fields_update_material_lba.html'
+    success_url = reverse_lazy('list_material_lba')
+    success_message = "Die Materialien wurden erfolgreich aktualisiert."
+    allowed_groups = ['grLBA']
+
+
+class TabularFieldsMassUpdateMaterial_IL_View(ComputedContextMixin, FormValidMixin, GroupRequiredMixin, SuccessMessageMixin, View):
+    template_name = 'il/tabular_fields_mass_update_material_il.html'
+    success_url = reverse_lazy('list_material_il')
+    success_message = "Die Materialien wurden erfolgreich aktualisiert."
+    allowed_groups = ['grIL']
+
+    def get(self, request, *args, **kwargs):
+        material_ids = request.GET.getlist('materials')
+        if not material_ids:
+            messages.error(request, "Keine Materialien für die Felder-Tabellen-Massenbearbeitung ausgewählt.")
+            return redirect('list_material_il')
+
+        materials = Material.objects.filter(id__in=material_ids).order_by('positions_nr')
+        if not materials.exists():
+            messages.error(request, "Keine gültigen Materialien gefunden.")
+            return redirect('list_material_il')
+
+        # Create a modified field list
+        tabular_editable_fields = [field for field in EDITABLE_FIELDS_IL_TABULAR_MASS_UPDATE if field != 'systemname']
+
+        # Create a form for each material to get field information
+        sample_form = MaterialForm_IL(
+            editable_fields=tabular_editable_fields,
+            is_mass_update=True
+        )
+        
+        # Get field information for the table rows
+        editable_fields = []
+        for field in sample_form.get_normal_fields():
+            if not field.is_hidden:
+                editable_fields.append({
+                    'name': field.name,
+                    'label': field.label,
+                    'required': field.name in sample_form.get_required_field_names(),
+                    'help_text': field.help_text,
+                    'field_type': field.field.__class__.__name__,
+                    'widget_type': field.field.widget.__class__.__name__
+                })
+
+        # Get current values for each material and field
+        material_field_data = []
+        for material in materials:
+            material_data = {
+                'material': material,
+                'field_values': {}
+            }
+            
+            for field_info in editable_fields:
+                field_name = field_info['name']
+                value = getattr(material, field_name, None)
+                
+                # Handle foreign key fields
+                if hasattr(sample_form.fields.get(field_name, None), 'queryset'):
+                    if value:
+                        material_data['field_values'][field_name] = value.idx if hasattr(value, 'idx') else value
+                    else:
+                        material_data['field_values'][field_name] = ''
+                else:
+                    material_data['field_values'][field_name] = value if value is not None else ''
+            
+            material_field_data.append(material_data)
+
+        context = {
+            'materials': materials,
+            'material_count': materials.count(),
+            'editable_fields': editable_fields,
+            'material_field_data': material_field_data,
+            'sample_form': sample_form,
+        }
+        return render(request, self.template_name, context)
+
+    def post(self, request, *args, **kwargs):
+        material_ids = request.POST.getlist('material_ids')
+        if not material_ids:
+            messages.error(request, "Keine Materialien für die Felder-Tabellen-Massenbearbeitung ausgewählt.")
+            return redirect('list_material_il')
+
+        materials = Material.objects.filter(id__in=material_ids).order_by('positions_nr')
+        if not materials.exists():
+            messages.error(request, "Keine gültigen Materialien gefunden.")
+            return redirect('list_material_il')
+
+        # Use the same filtered field list
+        tabular_editable_fields = [field for field in EDITABLE_FIELDS_IL_TABULAR_MASS_UPDATE if field != 'systemname']
+
+        try:
+            with transaction.atomic():
+                updated_count = 0
+                
+                for material in materials:
+                    material_updated = False
+                    
+                    for field_name in tabular_editable_fields:
+                        # Get the field value from POST data
+                        field_key = f"{field_name}_{material.id}"
+                        new_value = request.POST.get(field_key)
+                        
+                        if new_value is not None:
+                            # Get current value
+                            current_value = getattr(material, field_name, None)
+                            
+                            # Handle different field types
+                            if field_name in ['instandsetzbar', 'chargenpflicht', 'is_finished']:
+                                # Boolean fields
+                                new_value = new_value == 'on'
+                                if current_value != new_value:
+                                    setattr(material, field_name, new_value)
+                                    material_updated = True
+                            elif field_name in ['basismengeneinheit', 'gefahrgutkennzeichen']:
+                                # Foreign key fields
+                                if new_value == '':
+                                    new_value = None
+                                else:
+                                    try:
+                                        new_value = int(new_value)
+                                    except (ValueError, TypeError):
+                                        new_value = None
+                                
+                                # Compare with current foreign key value
+                                current_fk_value = current_value.idx if current_value else None
+                                if current_fk_value != new_value:
+                                    if new_value:
+                                        # Get the foreign key object
+                                        if field_name == 'basismengeneinheit':
+                                            fk_obj = Basismengeneinheit.objects.filter(idx=new_value).first()
+                                        elif field_name == 'gefahrgutkennzeichen':
+                                            fk_obj = Gefahrgutkennzeichen.objects.filter(idx=new_value).first()
+                                        setattr(material, field_name, fk_obj)
+                                    else:
+                                        setattr(material, field_name, None)
+                                    material_updated = True
+                            elif field_name in ['bruttogewicht', 'nettogewicht', 'preis']:
+                                # Float fields
+                                try:
+                                    new_value = float(new_value) if new_value else None
+                                except (ValueError, TypeError):
+                                    new_value = None
+                                if current_value != new_value:
+                                    setattr(material, field_name, new_value)
+                                    material_updated = True
+                            elif field_name in ['positions_nr', 'mindestbestellmenge', 'lieferzeit', 'laenge', 'breite', 'hoehe', 'preiseinheit', 'lagerfaehigkeit', 'hersteller_plz']:
+                                # Integer fields
+                                try:
+                                    new_value = int(new_value) if new_value else None
+                                except (ValueError, TypeError):
+                                    new_value = None
+                                if current_value != new_value:
+                                    setattr(material, field_name, new_value)
+                                    material_updated = True
+                            else:
+                                # String fields
+                                new_value = new_value if new_value else None
+                                if current_value != new_value:
+                                    setattr(material, field_name, new_value)
+                                    material_updated = True
+                    
+                    if material_updated:
+                        material.save()
+                        updated_count += 1
+                        logger.info(f"Material '{material.kurztext_de}' wurde durch Felder-Tabellen-Massenbearbeitung von '{request.user.email}' aktualisiert.")
+                
+                if updated_count > 0:
+                    messages.success(
+                        request, 
+                        f"{updated_count} Material(ien) wurden erfolgreich aktualisiert."
+                    )
+                else:
+                    messages.info(request, "Keine Änderungen wurden vorgenommen.")
+                
+                return redirect('list_material_il')
+                
+        except Exception as e:
+            error_msg = f"Fehler bei der Felder-Tabellen-Massenbearbeitung: {str(e)}"
+            logger.error(error_msg)
+            messages.error(request, error_msg)
+            return redirect('list_material_il')
 
 class ShowMaterial_IL_View(ComputedContextMixin, GroupRequiredMixin, SuccessMessageMixin, DetailView):
     model = Material

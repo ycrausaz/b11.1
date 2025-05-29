@@ -682,3 +682,49 @@ label[data-bs-toggle="tooltip"] {
         max-width: none;
     }
 }
+
+/* ===== FIELDS TABULAR EDIT STYLES ===== */
+
+/* Fields-specific sticky column styling */
+.tabular-fields-edit .fields-sticky-column {
+    position: sticky;
+    left: 0;
+    z-index: 10;
+    background-color: #f8f9fa !important;
+    min-width: 200px !important;
+}
+
+/* Fields table specific styling */
+#fields-table {
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+/* Fields editable cell styling */
+.fields-editable-cell {
+    cursor: pointer;
+    position: relative;
+    transition: background-color 0.2s ease;
+}
+
+/* Fields selected cell highlighting - use different colors to distinguish from material view */
+.fields-editable-cell.selected {
+    background-color: #fff3e0 !important;
+    box-shadow: inset 0 0 0 2px #ff9800;
+}
+
+.fields-editable-cell.multi-selected {
+    background-color: #f3e5f5 !important;
+    box-shadow: inset 0 0 0 2px #9c27b0;
+}
+
+/* Fields same row highlighting */
+.fields-editable-cell.same-row-highlight {
+    background-color: #e8f5e8 !important;
+    transition: background-color 0.2s ease;
+}
+
+.fields-editable-cell.multi-row-highlight {
+    background-color: #e3f2fd !important;
+    transition: background-color 0.2s ease;
+}
