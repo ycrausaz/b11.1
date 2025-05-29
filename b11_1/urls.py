@@ -3,7 +3,8 @@
 from django.views.i18n import JavaScriptCatalog
 from django.urls import include, path
 from . import views
-from .views import (CustomLoginView, UserLogout, CustomPasswordChangeView, CustomPasswordResetConfirmView, CustomPasswordResetView, ListMaterial_IL_View, ShowMaterial_IL_View, AddMaterial_IL_View, UpdateMaterial_IL_View, ListMaterial_GD_View, ListMaterialArchived_GD_View, UpdateMaterial_GD_View, ShowMaterial_GD_View, ListMaterial_SMDA_View, ListMaterialArchived_SMDA_View, UpdateMaterial_SMDA_View, ShowMaterial_SMDA_View, ListMaterial_LBA_View, ListMaterialArchived_LBA_View, UpdateMaterial_LBA_View, ShowMaterial_LBA_View, MassUpdateMaterial_LBA_View, MassUpdateMaterial_IL_View, Logging_View, ExcelImportView, RegisterView, CompleteRegistrationView, PendingRegistrationsView, ApproveRegistrationView, RejectRegistrationView, ExportLogsView, PreRegisterView, VerifyEmailView)
+#from .views import (CustomLoginView, UserLogout, CustomPasswordChangeView, CustomPasswordResetConfirmView, CustomPasswordResetView, ListMaterial_IL_View, ShowMaterial_IL_View, AddMaterial_IL_View, UpdateMaterial_IL_View, ListMaterial_GD_View, ListMaterialArchived_GD_View, UpdateMaterial_GD_View, ShowMaterial_GD_View, ListMaterial_SMDA_View, ListMaterialArchived_SMDA_View, UpdateMaterial_SMDA_View, ShowMaterial_SMDA_View, ListMaterial_LBA_View, ListMaterialArchived_LBA_View, UpdateMaterial_LBA_View, ShowMaterial_LBA_View, MassUpdateMaterial_LBA_View, MassUpdateMaterial_IL_View, Logging_View, ExcelImportView, RegisterView, CompleteRegistrationView, PendingRegistrationsView, ApproveRegistrationView, RejectRegistrationView, ExportLogsView, PreRegisterView, VerifyEmailView)
+from .views import *
 from django.contrib.auth.decorators import login_required
 from django.conf.urls import handler403
 from b11_1.views import custom_permission_denied_view
@@ -55,7 +56,8 @@ urlpatterns = [
          name='update_material_il'),
     path('show_material_il/<int:pk>', login_required(ShowMaterial_IL_View.as_view()), name='show_material_il'),
     path('il/materials/mass-update/', login_required(views.MassUpdateMaterial_IL_View.as_view()), name='mass_update_material_il'),
-    path('il/materials/tabular-mass-update/', login_required(views.TabularMassUpdateMaterial_IL_View.as_view()), name='tabular_mass_update_material_il'),
+    path('il/materials/tabular-materials-mass-update/', login_required(views.TabularMaterialsMassUpdateMaterial_IL_View.as_view()), name='tabular_materials_mass_update_material_il'),
+    path('il/materials/tabular-fields-mass-update/', login_required(views.TabularFieldsMassUpdateMaterial_IL_View.as_view()), name='tabular_fields_mass_update_material_il'),
 
     # Material GD paths
     path('list_material_gd',
@@ -93,7 +95,8 @@ urlpatterns = [
          name='update_material_lba'),
     path('show_material_lba/<int:pk>', login_required(ShowMaterial_LBA_View.as_view()), name='show_material_lba'),
     path('lba/materials/mass-update/', login_required(views.MassUpdateMaterial_LBA_View.as_view()), name='mass_update_material_lba'),
-    path('lba/materials/tabular-mass-update/', login_required(views.TabularMassUpdateMaterial_LBA_View.as_view()), name='tabular_mass_update_material_lba'),
+    path('lba/materials/tabular-materials-mass-update/', login_required(views.TabularMaterialsMassUpdateMaterial_LBA_View.as_view()), name='tabular_materials_mass_update_material_lba'),
+    path('lba/materials/tabular-fields-mass-update/', login_required(views.TabularFieldsMassUpdateMaterial_LBA_View.as_view()), name='tabular_fields_mass_update_material_lba'),
 
     # Registration paths
     path('registration/register/', RegisterView.as_view(), name='register'),

@@ -151,6 +151,102 @@ function initializeAttachmentHandlers() {
     });
 }
 
+// ===== MATERIAL LIST BUTTON HANDLERS =====
+
+// Initialize material list button handlers
+function initializeMaterialListHandlers() {
+    console.log('Initializing material list button handlers...');
+    
+    // Handle mass edit buttons
+    document.querySelectorAll('.mass-edit-btn').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            const formId = this.getAttribute('data-form-id');
+            const form = document.getElementById('material-form-' + formId);
+            const checkedBoxes = form.querySelectorAll('.material-checkbox:checked');
+
+            if (checkedBoxes.length === 0) {
+                alert('Bitte wählen Sie mindestens ein Material für die Massenbearbeitung aus.');
+                return;
+            }
+
+            const materialIds = Array.from(checkedBoxes).map(cb => cb.value);
+            
+            // Determine the correct URL based on the current page
+            let massUpdateUrl;
+            if (window.location.pathname.includes('lba')) {
+                massUpdateUrl = '/lba/materials/mass-update/';
+            } else if (window.location.pathname.includes('il')) {
+                massUpdateUrl = '/il/materials/mass-update/';
+            } else {
+                massUpdateUrl = '/il/materials/mass-update/';
+            }
+            
+            const url = massUpdateUrl + '?' + materialIds.map(id => 'materials=' + id).join('&');
+            window.location.href = url;
+        });
+    });
+
+    // Handle tabular material edit buttons
+    document.querySelectorAll('.tabular-material-edit-btn').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            const formId = this.getAttribute('data-form-id');
+            const form = document.getElementById('material-form-' + formId);
+            const checkedBoxes = form.querySelectorAll('.material-checkbox:checked');
+
+            if (checkedBoxes.length === 0) {
+                alert('Bitte wählen Sie mindestens ein Material für die Material-Tabellen-Bearbeitung aus.');
+                return;
+            }
+
+            const materialIds = Array.from(checkedBoxes).map(cb => cb.value);
+            
+            // Determine the correct URL based on the current page
+            let tabularUpdateUrl;
+            if (window.location.pathname.includes('lba')) {
+                tabularUpdateUrl = '/lba/materials/tabular-materials-mass-update/';
+            } else if (window.location.pathname.includes('il')) {
+                tabularUpdateUrl = '/il/materials/tabular-materials-mass-update/';
+            } else {
+                tabularUpdateUrl = '/il/materials/tabular-materials-mass-update/';
+            }
+            
+            const url = tabularUpdateUrl + '?' + materialIds.map(id => 'materials=' + id).join('&');
+            window.location.href = url;
+        });
+    });
+
+    // Handle tabular fields edit buttons
+    document.querySelectorAll('.tabular-fields-edit-btn').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            const formId = this.getAttribute('data-form-id');
+            const form = document.getElementById('material-form-' + formId);
+            const checkedBoxes = form.querySelectorAll('.material-checkbox:checked');
+
+            if (checkedBoxes.length === 0) {
+                alert('Bitte wählen Sie mindestens ein Material für die Felder-Tabellen-Bearbeitung aus.');
+                return;
+            }
+
+            const materialIds = Array.from(checkedBoxes).map(cb => cb.value);
+            
+            // Determine the correct URL based on the current page
+            let fieldsTabularUpdateUrl;
+            if (window.location.pathname.includes('lba')) {
+                fieldsTabularUpdateUrl = '/lba/materials/tabular-fields-mass-update/';
+            } else if (window.location.pathname.includes('il')) {
+                fieldsTabularUpdateUrl = '/il/materials/tabular-fields-mass-update/';
+            } else {
+                fieldsTabularUpdateUrl = '/il/materials/tabular-fields-mass-update/';
+            }
+            
+            const url = fieldsTabularUpdateUrl + '?' + materialIds.map(id => 'materials=' + id).join('&');
+            window.location.href = url;
+        });
+    });
+    
+    console.log('Material list button handlers initialized.');
+}
+
 // Mass Edit functionality
 function initializeMassEditHandlers() {
     const selectAllBtn = document.getElementById('select-all-fields');
@@ -246,20 +342,25 @@ function initializeConditionalRequirements() {
 function initializeTabularChangeTracking() {
     const originalValues = new Map();
     
-    // Store original values
-    document.querySelectorAll('#tabular-form input, #tabular-form select, #tabular-form textarea').forEach(function(field) {
-        originalValues.set(field.name, field.value);
-        
-        // Add change listener
-        field.addEventListener('change', function() {
-            const cell = this.closest('td');
-            if (cell) {
-                if (this.value !== originalValues.get(this.name)) {
-                    cell.classList.add('changed-cell');
-                } else {
-                    cell.classList.remove('changed-cell');
+    // Store original values for both material and fields forms
+    const selectors = ['#tabular-form input, #tabular-form select, #tabular-form textarea',
+                      '#tabular-fields-form input, #tabular-fields-form select, #tabular-fields-form textarea'];
+    
+    selectors.forEach(selector => {
+        document.querySelectorAll(selector).forEach(function(field) {
+            originalValues.set(field.name, field.value);
+            
+            // Add change listener
+            field.addEventListener('change', function() {
+                const cell = this.closest('td');
+                if (cell) {
+                    if (this.value !== originalValues.get(this.name)) {
+                        cell.classList.add('changed-cell');
+                    } else {
+                        cell.classList.remove('changed-cell');
+                    }
                 }
-            }
+            });
         });
     });
     
@@ -269,7 +370,7 @@ function initializeTabularChangeTracking() {
 // ===== ENHANCED MULTI-CELL SELECTION FUNCTIONALITY =====
 
 // Global variables for cell selection
-let selectedCells = new Map(); // Map of column -> {cell, value, input}
+let selectedCells = new Map(); // Map of column/field -> {cell, value, input}
 let selectionMode = 'single'; // 'single' or 'multiple'
 
 // Initialize cell selection functionality
@@ -294,7 +395,7 @@ function initializeCellSelection() {
         console.log('Mode toggle button not found');
     }
     
-    // Handle cell selection
+    // Handle cell selection for material-based tabular editing
     document.querySelectorAll('.editable-cell').forEach(function(cell) {
         cell.addEventListener('click', function(e) {
             // Don't interfere with form controls
@@ -335,6 +436,7 @@ function initializeCellSelection() {
     // Clear selection when clicking outside table
     document.addEventListener('click', function(e) {
         if (!e.target.closest('#materials-table') && 
+            !e.target.closest('#fields-table') &&
             !e.target.closest('#copy-value-btn') && 
             !e.target.closest('#clear-selection-btn') &&
             !e.target.closest('#mode-toggle-btn')) {
@@ -557,9 +659,14 @@ function performCopyOperation() {
 
 // Clear all selections
 function clearAllSelections() {
-    // Remove all visual highlights
-    document.querySelectorAll('.selected, .multi-selected, .same-column-highlight, .multi-column-highlight').forEach(function(cell) {
-        cell.classList.remove('selected', 'multi-selected', 'same-column-highlight', 'multi-column-highlight');
+    // Remove all visual highlights for both material and fields views
+    const selectors = [
+        '.selected', '.multi-selected', '.same-column-highlight', '.multi-column-highlight',
+        '.same-row-highlight', '.multi-row-highlight'
+    ];
+    
+    document.querySelectorAll(selectors.join(', ')).forEach(function(cell) {
+        cell.classList.remove(...selectors.map(s => s.replace('.', '')));
         cell.removeAttribute('data-selection-number');
     });
     
@@ -568,6 +675,7 @@ function clearAllSelections() {
     
     // Update UI
     updateSelectionUI();
+    updateFieldsSelectionUI();
 }
 
 // Show success message for multi-copy operations
@@ -602,6 +710,164 @@ function showMultiCopySuccessMessage(results, totalCopied) {
         }
     }, 7000);
 }
+
+// ===== FIELDS TABULAR EDIT FUNCTIONALITY =====
+
+// Fields tabular edit cell selection (adapted from material version)
+function initializeFieldsCellSelection() {
+    // Only initialize if we're on a fields tabular edit page
+    if (!document.getElementById('tabular-fields-form')) return;
+    
+    console.log('Initializing fields cell selection...');
+    
+    // Reuse the existing cell selection logic but with fields-specific selectors
+    const copyBtn = document.getElementById('copy-value-btn');
+    const selectedInfo = document.getElementById('selected-cell-info');
+    const clearSelectionBtn = document.getElementById('clear-selection-btn');
+    const modeToggleBtn = document.getElementById('mode-toggle-btn');
+    
+    if (!copyBtn || !selectedInfo) return;
+    
+    // Initialize mode toggle if not already done
+    if (modeToggleBtn && !modeToggleBtn._fieldsInitialized) {
+        modeToggleBtn.addEventListener('click', toggleSelectionMode);
+        modeToggleBtn._fieldsInitialized = true;
+    }
+    
+    // Use the same selection logic but for rows instead of columns
+    document.querySelectorAll('.fields-editable-cell').forEach(function(cell) {
+        cell.addEventListener('click', function(e) {
+            if (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT' || e.target.tagName === 'TEXTAREA') {
+                return;
+            }
+            
+            const fieldName = this.getAttribute('data-field');
+            const materialId = this.getAttribute('data-material');
+            
+            if (selectionMode === 'single') {
+                handleSingleFieldCellSelection(this, fieldName, materialId);
+            } else {
+                handleMultiFieldCellSelection(this, fieldName, materialId);
+            }
+            
+            updateFieldsSelectionUI();
+        });
+    });
+    
+    // Initialize button handlers if not already done
+    if (!copyBtn._fieldsHandlerAdded) {
+        copyBtn.addEventListener('click', performFieldsCopyOperation);
+        copyBtn._fieldsHandlerAdded = true;
+    }
+    
+    if (clearSelectionBtn && !clearSelectionBtn._fieldsHandlerAdded) {
+        clearSelectionBtn.addEventListener('click', clearAllSelections);
+        clearSelectionBtn._fieldsHandlerAdded = true;
+    }
+}
+
+// Helper functions for fields selection
+function handleSingleFieldCellSelection(cell, fieldName, materialId) {
+    clearAllSelections();
+    const input = cell.querySelector('input, select, textarea');
+    if (!input) return;
+    
+    selectedCells.set(fieldName, {
+        cell: cell,
+        value: input.type === 'checkbox' ? input.checked : input.value,
+        input: input,
+        materialId: materialId
+    });
+    
+    cell.classList.add('selected');
+    document.querySelectorAll(`[data-field="${fieldName}"]`).forEach(function(sameRowCell) {
+        if (sameRowCell !== cell) {
+            sameRowCell.classList.add('same-row-highlight');
+        }
+    });
+}
+
+function handleMultiFieldCellSelection(cell, fieldName, materialId) {
+    const input = cell.querySelector('input, select, textarea');
+    if (!input) return;
+    
+    if (selectedCells.has(fieldName)) {
+        const existingSelection = selectedCells.get(fieldName);
+        existingSelection.cell.classList.remove('multi-selected');
+        selectedCells.delete(fieldName);
+        document.querySelectorAll(`[data-field="${fieldName}"]`).forEach(function(rowCell) {
+            rowCell.classList.remove('multi-row-highlight');
+        });
+    } else {
+        selectedCells.set(fieldName, {
+            cell: cell,
+            value: input.type === 'checkbox' ? input.checked : input.value,
+            input: input,
+            materialId: materialId
+        });
+        
+        cell.classList.add('multi-selected');
+        document.querySelectorAll(`[data-field="${fieldName}"]`).forEach(function(sameRowCell) {
+            if (sameRowCell !== cell) {
+                sameRowCell.classList.add('multi-row-highlight');
+            }
+        });
+    }
+}
+
+function updateFieldsSelectionUI() {
+    const copyBtn = document.getElementById('copy-value-btn');
+    const selectedInfo = document.getElementById('selected-cell-info');
+    
+    if (!copyBtn || !selectedInfo) return;
+    
+    if (selectedCells.size === 0) {
+        copyBtn.disabled = true;
+        selectedInfo.style.display = 'none';
+    } else if (selectedCells.size === 1) {
+        copyBtn.disabled = false;
+        selectedInfo.style.display = 'inline';
+        const [fieldName] = selectedCells.keys();
+        selectedInfo.textContent = `${fieldName} (Zeile)`;
+    } else {
+        copyBtn.disabled = false;
+        selectedInfo.style.display = 'inline';
+        selectedInfo.textContent = `${selectedCells.size} Felder ausgewählt`;
+    }
+}
+
+function performFieldsCopyOperation() {
+    if (selectedCells.size === 0) return;
+    
+    const operations = Array.from(selectedCells.entries()).map(([fieldName, selection]) => ({
+        fieldName: fieldName,
+        value: selection.value,
+        sourceCell: selection.cell
+    }));
+    
+    if (!confirm(`Möchten Sie die Werte in alle entsprechenden Zeilen kopieren?`)) {
+        return;
+    }
+    
+    operations.forEach(operation => {
+        const targetCells = document.querySelectorAll(`[data-field="${operation.fieldName}"]`);
+        targetCells.forEach(function(cell) {
+            const targetInput = cell.querySelector('input, select, textarea');
+            if (targetInput && cell !== operation.sourceCell) {
+                if (targetInput.type === 'checkbox') {
+                    targetInput.checked = operation.value;
+                } else {
+                    targetInput.value = operation.value;
+                }
+                targetInput.dispatchEvent(new Event('change', { bubbles: true }));
+            }
+        });
+    });
+    
+    alert('Werte wurden erfolgreich kopiert!');
+}
+
+// ===== LEGACY AND UTILITY FUNCTIONS =====
 
 // Legacy functions for backward compatibility
 function clearSelection() {
@@ -688,19 +954,23 @@ function initializeTabularFormReset(originalValues) {
     // Define the click handler
     resetFormBtn._clickHandler = function() {
         if (confirm('Sind Sie sicher, dass Sie alle Änderungen zurücksetzen möchten?')) {
-            document.querySelectorAll('#tabular-form input, #tabular-form select, #tabular-form textarea').forEach(function(field) {
-                const originalValue = originalValues.get(field.name);
-                if (field.type === 'checkbox') {
-                    field.checked = originalValue === 'on' || originalValue === true;
-                } else {
-                    field.value = originalValue || '';
-                }
-                
-                // Remove change highlighting
-                const cell = field.closest('td');
-                if (cell) {
-                    cell.classList.remove('changed-cell');
-                }
+            const formSelectors = ['#tabular-form', '#tabular-fields-form'];
+            
+            formSelectors.forEach(formSelector => {
+                document.querySelectorAll(`${formSelector} input, ${formSelector} select, ${formSelector} textarea`).forEach(function(field) {
+                    const originalValue = originalValues.get(field.name);
+                    if (field.type === 'checkbox') {
+                        field.checked = originalValue === 'on' || originalValue === true;
+                    } else {
+                        field.value = originalValue || '';
+                    }
+                    
+                    // Remove change highlighting
+                    const cell = field.closest('td');
+                    if (cell) {
+                        cell.classList.remove('changed-cell');
+                    }
+                });
             });
             
             // Clear cell selection
@@ -722,7 +992,7 @@ function initializeTabularKeyboardNavigation() {
     // Define the keydown handler
     document._tabularKeydownHandler = function(e) {
         // Only apply to tabular form fields
-        if (!document.getElementById('tabular-form')) return;
+        if (!document.getElementById('tabular-form') && !document.getElementById('tabular-fields-form')) return;
         
         if (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT' || e.target.tagName === 'TEXTAREA') {
             let nextField = null;
@@ -766,8 +1036,8 @@ function getNextField(currentField, direction) {
             break;
         case 'left':
             targetCell = currentCell.previousElementSibling;
-            if (targetCell && targetCell.classList.contains('sticky-column')) {
-                targetCell = null; // Skip the material name column
+            if (targetCell && (targetCell.classList.contains('sticky-column') || targetCell.classList.contains('fields-sticky-column'))) {
+                targetCell = null; // Skip the sticky columns
             }
             break;
         case 'down':
@@ -799,37 +1069,45 @@ function getNextField(currentField, direction) {
 // Auto-save functionality (optional)
 function initializeTabularAutoSave() {
     let autoSaveTimeout;
-    document.querySelectorAll('#tabular-form input, #tabular-form select, #tabular-form textarea').forEach(function(field) {
-        field.addEventListener('input', function() {
-            clearTimeout(autoSaveTimeout);
-            autoSaveTimeout = setTimeout(function() {
-                // You could implement auto-save here if needed
-                console.log('Auto-save triggered');
-            }, 2000);
+    const formSelectors = ['#tabular-form', '#tabular-fields-form'];
+    
+    formSelectors.forEach(formSelector => {
+        document.querySelectorAll(`${formSelector} input, ${formSelector} select, ${formSelector} textarea`).forEach(function(field) {
+            field.addEventListener('input', function() {
+                clearTimeout(autoSaveTimeout);
+                autoSaveTimeout = setTimeout(function() {
+                    // You could implement auto-save here if needed
+                    console.log('Auto-save triggered');
+                }, 2000);
+            });
         });
     });
 }
 
 // Initialize tabular mass edit functionality
 function initializeTabularMassEdit() {
-    // Only initialize if we're on a tabular mass edit page
-    if (!document.getElementById('tabular-form')) return;
+    // Initialize material-based tabular edit
+    if (document.getElementById('tabular-form')) {
+        console.log('Initializing material-based tabular mass edit functionality...');
+        const originalValues = initializeTabularChangeTracking();
+        initializeCellSelection();
+        initializeColumnCopyFunctionality();
+        initializeTabularFormReset(originalValues);
+        initializeTabularKeyboardNavigation();
+        initializeTabularAutoSave();
+        console.log('Material-based tabular mass edit functionality initialized.');
+    }
     
-    console.log('Initializing tabular mass edit functionality...');
-    
-    // Initialize change tracking and get original values
-    const originalValues = initializeTabularChangeTracking();
-    
-    // Initialize cell selection functionality
-    initializeCellSelection();
-    
-    // Initialize other tabular functionalities
-    initializeColumnCopyFunctionality();
-    initializeTabularFormReset(originalValues);
-    initializeTabularKeyboardNavigation();
-    initializeTabularAutoSave();
-    
-    console.log('Tabular mass edit functionality initialized.');
+    // Initialize fields-based tabular edit
+    if (document.getElementById('tabular-fields-form')) {
+        console.log('Initializing fields-based tabular mass edit functionality...');
+        const originalValues = initializeTabularChangeTracking();
+        initializeFieldsCellSelection();
+        initializeTabularFormReset(originalValues);
+        initializeTabularKeyboardNavigation();
+        initializeTabularAutoSave();
+        console.log('Fields-based tabular mass edit functionality initialized.');
+    }
 }
 
 // Main initialization function
@@ -849,6 +1127,11 @@ function initializeValidations() {
     
     // Initialize conditional requirements
     initializeConditionalRequirements();
+    
+    // Initialize material list handlers (for list pages)
+    if (document.querySelector('[id^="material-form-"]')) {
+        initializeMaterialListHandlers();
+    }
     
     // Initialize mass edit handlers if mass edit elements exist
     if (document.querySelector('.mass-edit-table') || document.getElementById('select-all-fields')) {
@@ -875,6 +1158,8 @@ window.ValidationUtils = {
     initializeColumnCopyFunctionality,
     initializeTabularKeyboardNavigation,
     initializeCellSelection,
+    initializeFieldsCellSelection,
+    initializeMaterialListHandlers,
     clearSelection,
     showCopySuccessMessage,
     initialized: false

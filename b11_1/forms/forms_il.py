@@ -120,12 +120,12 @@ class MaterialForm_IL(BaseTemplateForm, SplitterReadOnlyReadWriteFields):
         is_mass_update = kwargs.pop('is_mass_update', False)
 
         # Debug: Print which fields are being used
-        print(f"DEBUG: MaterialForm_IL.__init__ called with editable_fields: {editable_fields}")
-        print(f"DEBUG: is_mass_update: {is_mass_update}")
+#        print(f"DEBUG: MaterialForm_IL.__init__ called with editable_fields: {editable_fields}")
+ #       print(f"DEBUG: is_mass_update: {is_mass_update}")
 
         # **KEY FIX**: Override the Meta.fields for mass updates
         if editable_fields != EDITABLE_FIELDS_IL:
-            print(f"DEBUG: Overriding Meta.fields from {self.Meta.fields} to {editable_fields}")
+#            print(f"DEBUG: Overriding Meta.fields from {self.Meta.fields} to {editable_fields}")
             self.Meta.fields = editable_fields
 
         # Store the mass update flag
@@ -136,18 +136,18 @@ class MaterialForm_IL(BaseTemplateForm, SplitterReadOnlyReadWriteFields):
         super().__init__(*args, **kwargs)
 
         # Debug: Print which fields are in the form after super().__init__
-        print(f"DEBUG: Form fields after super().__init__: {list(self.fields.keys())}")
+#        print(f"DEBUG: Form fields after super().__init__: {list(self.fields.keys())}")
 
         # Remove excluded fields completely from the form (additional safety)
         if editable_fields != EDITABLE_FIELDS_IL:
             excluded_fields = set(EDITABLE_FIELDS_IL) - set(editable_fields)
-            print(f"DEBUG: Removing excluded fields: {excluded_fields}")
+#            print(f"DEBUG: Removing excluded fields: {excluded_fields}")
             for field_name in excluded_fields:
                 if field_name in self.fields:
                     del self.fields[field_name]
-                    print(f"DEBUG: Removed field: {field_name}")
+#                    print(f"DEBUG: Removed field: {field_name}")
 
-        print(f"DEBUG: Final form fields: {list(self.fields.keys())}")
+#        print(f"DEBUG: Final form fields: {list(self.fields.keys())}")
 
         # Set required fields based on Meta.required_fields (only for fields that exist)
         # For mass update forms, make all fields optional initially

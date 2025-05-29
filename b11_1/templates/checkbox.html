@@ -94,7 +94,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Handle mass edit buttons (if they exist)
+    // Update the mass edit buttons section to handle both types
     document.querySelectorAll('.mass-edit-btn').forEach(function(btn) {
         btn.addEventListener('click', function() {
             const formId = this.getAttribute('data-form-id');
@@ -106,17 +106,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 return;
             }
 
-            // Create URL with selected material IDs
             const materialIds = Array.from(checkedBoxes).map(cb => cb.value);
-
-            // Determine the correct URL based on the current page
             let massUpdateUrl;
             if (window.location.pathname.includes('lba')) {
                 massUpdateUrl = '{% url "mass_update_material_lba" %}';
             } else if (window.location.pathname.includes('il')) {
                 massUpdateUrl = '{% url "mass_update_material_il" %}';
             } else {
-                // Default to IL if we can't determine
                 massUpdateUrl = '{% url "mass_update_material_il" %}';
             }
 
@@ -125,35 +121,60 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Handle tabular edit buttons (if they exist)
-    document.querySelectorAll('.tabular-edit-btn').forEach(function(btn) {
+    // Handle material-based tabular edit buttons
+    document.querySelectorAll('.tabular-material-edit-btn').forEach(function(btn) {
         btn.addEventListener('click', function() {
             const formId = this.getAttribute('data-form-id');
             const form = document.getElementById('material-form-' + formId);
             const checkedBoxes = form.querySelectorAll('.material-checkbox:checked');
 
             if (checkedBoxes.length === 0) {
-                alert('Bitte wählen Sie mindestens ein Material für die Tabellen-Bearbeitung aus.');
+                alert('Bitte wählen Sie mindestens ein Material für die Material-Tabellen-Bearbeitung aus.');
                 return;
             }
 
-            // Create URL with selected material IDs
             const materialIds = Array.from(checkedBoxes).map(cb => cb.value);
-
-            // Determine the correct URL based on the current page
             let tabularUpdateUrl;
             if (window.location.pathname.includes('lba')) {
-                tabularUpdateUrl = '{% url "tabular_mass_update_material_lba" %}'; // You'll need to create this URL
+                tabularUpdateUrl = '{% url "tabular_materials_mass_update_material_lba" %}';
             } else if (window.location.pathname.includes('il')) {
-                tabularUpdateUrl = '{% url "tabular_mass_update_material_il" %}';
+                tabularUpdateUrl = '{% url "tabular_materials_mass_update_material_il" %}';
             } else {
-                // Default to IL if we can't determine
-                tabularUpdateUrl = '{% url "tabular_mass_update_material_il" %}';
+                tabularUpdateUrl = '{% url "tabular_materials_mass_update_material_il" %}';
             }
 
             const url = tabularUpdateUrl + '?' + materialIds.map(id => 'materials=' + id).join('&');
             window.location.href = url;
         });
     });
+
+    // Handle fields-based tabular edit buttons
+    document.querySelectorAll('.tabular-fields-edit-btn').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            const formId = this.getAttribute('data-form-id');
+            const form = document.getElementById('material-form-' + formId);
+            const checkedBoxes = form.querySelectorAll('.material-checkbox:checked');
+
+            if (checkedBoxes.length === 0) {
+                alert('Bitte wählen Sie mindestens ein Material für die Felder-Tabellen-Bearbeitung aus.');
+                return;
+            }
+
+            const materialIds = Array.from(checkedBoxes).map(cb => cb.value);
+            let fieldsTabularUpdateUrl;
+            if (window.location.pathname.includes('lba')) {
+                // Add LBA version when implemented
+                fieldsTabularUpdateUrl = '{% url "tabular_fields_mass_update_material_lba" %}';
+            } else if (window.location.pathname.includes('il')) {
+                fieldsTabularUpdateUrl = '{% url "tabular_fields_mass_update_material_il" %}';
+            } else {
+                fieldsTabularUpdateUrl = '{% url "tabular_fields_mass_update_material_il" %}';
+            }
+
+            const url = fieldsTabularUpdateUrl + '?' + materialIds.map(id => 'materials=' + id).join('&');
+            window.location.href = url;
+        });
+    });
+
 });
 </script>
