@@ -13,8 +13,11 @@
             <strong>{% trans "Hinweis:" %}</strong> 
             {% trans "Bearbeiten Sie die Materialien direkt in der Tabelle. Jede Zeile repräsentiert ein Material." %}
             <br/>
-            <strong>{% trans "Tipp:" %}</strong> 
-            {% trans "Verwenden Sie die Pfeiltasten oder Tab-Taste zur Navigation zwischen den Feldern." %}
+            <strong>{% trans "Einzelauswahl:" %}</strong> 
+            {% trans "Klicken Sie auf eine Zelle und verwenden Sie 'Wert kopieren' um den Wert in die gesamte Spalte zu kopieren." %}
+            <br/>
+            <strong>{% trans "Mehrfachauswahl:" %}</strong> 
+            {% trans "Schalten Sie in den Mehrfachauswahl-Modus um, wählen Sie Zellen aus verschiedenen Spalten aus und kopieren Sie alle Werte gleichzeitig. Verwenden Sie Strg+M zum Umschalten der Modi." %}
         </div>
 
         {% if messages %}
@@ -36,6 +39,18 @@
             <div class="card">
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <h5 class="mb-0">{% trans "Materialien bearbeiten" %}</h5>
+                    <div>
+                        <button type="button" class="btn btn-outline-secondary btn-sm me-2" id="mode-toggle-btn" title="Umschalten zwischen Einzel- und Mehrfachauswahl (Strg+M)">
+                            <i class="fas fa-mouse-pointer"></i> {% trans "Einzelauswahl" %}
+                        </button>
+                        <button type="button" class="btn btn-outline-info btn-sm me-2" id="copy-value-btn" disabled>
+                            <i class="fas fa-copy"></i> {% trans "Wert kopieren" %}
+                        </button>
+                        <button type="button" class="btn btn-outline-secondary btn-sm" id="clear-selection-btn">
+                            <i class="fas fa-times"></i> {% trans "Auswahl aufheben" %}
+                        </button>
+                        <span class="badge bg-secondary ms-2" id="selected-cell-info" style="display: none;"></span>
+                    </div>
                 </div>
                 <div class="card-body p-0">
                     <div class="table-responsive" style="max-height: 80vh; overflow-y: auto;">
@@ -46,7 +61,7 @@
                                         {% trans "Material" %}
                                     </th>
                                     {% for field_info in editable_fields %}
-                                        <th style="min-width: 120px; white-space: nowrap;">
+                                        <th style="min-width: 120px; white-space: nowrap;" data-column="{{ field_info.name }}">
                                             {{ field_info.label }}
                                             {% if field_info.required %}
                                                 <span class="text-danger">*</span>
@@ -75,7 +90,7 @@
                                             </td>
                                             
                                             {% for field_info in editable_fields %}
-                                                <td class="p-1">
+                                                <td class="p-1 editable-cell" data-column="{{ field_info.name }}" data-row="{{ forloop.parentloop.counter0 }}">
                                                     {% for field in form.get_normal_fields %}
                                                         {% if field.name == field_info.name and not field.is_hidden %}
                                                             {% if field.errors %}
@@ -107,48 +122,18 @@
 
             <div class="mt-4 d-flex justify-content-between">
                 <div>
-                    <button type="submit" class="btn btn-primary btn-lg">
+                    <button type="submit" class="btn btn-primary me-2">
                         <i class="fas fa-save"></i> {% trans "Alle Änderungen speichern" %}
                     </button>
+                    <button type="button" class="btn btn-outline-warning me-2" id="reset-form-btn">
+                        <i class="fas fa-undo"></i> {% trans "Formular zurücksetzen" %}
+                    </button>
                     <button type="button" class="btn btn-secondary" onclick="window.location.href='{% url 'list_material_il' %}'">
-                        {% trans "Abbrechen" %}
-                    </button>
-                </div>
-                <div>
-                    <button type="button" class="btn btn-outline-info" id="copy-column-btn">
-                        {% trans "Spalte kopieren" %}
-                    </button>
-                    <button type="button" class="btn btn-outline-warning" id="reset-form-btn">
-                        {% trans "Formular zurücksetzen" %}
+                        <i class="fas fa-times"></i> {% trans "Abbrechen" %}
                     </button>
                 </div>
             </div>
         </form>
-
-        <!-- Copy Column Modal -->
-        <div class="modal fade" id="copyColumnModal" tabindex="-1">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">{% trans "Spalte kopieren" %}</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                    </div>
-                    <div class="modal-body">
-                        <p>{% trans "Wählen Sie eine Spalte aus, um den Wert der ersten Zeile in alle anderen Zeilen zu kopieren:" %}</p>
-                        <select class="form-select" id="column-select">
-                            <option value="">{% trans "Spalte auswählen..." %}</option>
-                            {% for field_info in editable_fields %}
-                                <option value="{{ field_info.name }}">{{ field_info.label }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{% trans "Abbrechen" %}</button>
-                        <button type="button" class="btn btn-primary" id="confirm-copy-btn">{% trans "Kopieren" %}</button>
-                    </div>
-                </div>
-            </div>
-        </div>
     </div>
 
     <br/>
