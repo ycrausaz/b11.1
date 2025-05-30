@@ -527,7 +527,7 @@ function handleMultiCellSelection(cell, column, rowIndex) {
         // Remove selection from this column
         const existingSelection = selectedCells.get(column);
         existingSelection.cell.classList.remove('multi-selected');
-        existingSelection.cell.removeAttribute('data-selection-number');
+        // REMOVED: existingSelection.cell.removeAttribute('data-selection-number');
         selectedCells.delete(column);
         
         // Clear column highlighting for this column
@@ -545,7 +545,7 @@ function handleMultiCellSelection(cell, column, rowIndex) {
         
         // Apply visual highlighting
         cell.classList.add('multi-selected');
-        cell.setAttribute('data-selection-number', selectedCells.size);
+        // REMOVED: cell.setAttribute('data-selection-number', selectedCells.size);
         
         // Highlight same column cells
         document.querySelectorAll(`[data-column="${column}"]`).forEach(function(sameColumnCell) {
@@ -667,7 +667,7 @@ function clearAllSelections() {
     
     document.querySelectorAll(selectors.join(', ')).forEach(function(cell) {
         cell.classList.remove(...selectors.map(s => s.replace('.', '')));
-        cell.removeAttribute('data-selection-number');
+        // REMOVED: cell.removeAttribute('data-selection-number');
     });
     
     // Clear selection data
