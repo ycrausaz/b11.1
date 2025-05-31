@@ -9,6 +9,40 @@ import boto3
 from botocore.client import Config
 from .utils.storage import MaterialAttachmentStorage
 
+class MaterialUserAssociation(models.Model):
+    """
+    Many-to-many relationship between Materials and IL Users
+    """
+    material = models.ForeignKey('Material', on_delete=models.CASCADE, related_name='user_associations')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='material_associations')
+    assigned_date = models.DateTimeField(auto_now_add=True)
+    assigned_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='assignments_made')
+    is_primary = models.BooleanField(default=False, help_text="Primary responsible user")
+    
+    class Meta:
+        app_label = 'b11_1'
+        unique_together = ['material', 'user']
+        
+    def __str__(self):
+        primary = " (Primary)" if self.is_primary else ""
+        return f"{self.material.kurztext_de} -> {self.user.email}{primary}"
+
+def assign_user(self, user, assigned_by, is_primary=False):
+    """Assign a user to this material"""
+    association, created = MaterialUserAssociation.objects.get_or_create(
+        material=self,
+        user=user,
+        defaults={'assigned_by': assigned_by, 'is_primary': is_primary}
+    )
+    if not created and is_primary:
+        association.is_primary = True
+        association.save()
+    return association
+
+def remove_user(self, user):
+    """Remove a user from this material"""
+    MaterialUserAssociation.objects.filter(material=self, user=user).delete()
+
 class LogEntry(models.Model):
     id = models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name=_('ID'))
     timestamp = models.DateTimeField(auto_now_add=True)
@@ -196,7 +230,6 @@ class MaterialeinstufungNachZUVA(BaseIdxModel):
         app_label = 'b11_1'
 
 class Material(models.Model):
-    hersteller = models.CharField(null=True, blank=True, max_length=40)
     is_transferred = models.BooleanField(null=True, blank=False, default=False)
     is_archived = models.BooleanField(null=True, blank=False, default=False)
     transfer_date = models.DateTimeField(null=True, blank=True)
@@ -296,6 +329,84 @@ class Material(models.Model):
     preisermittlung = models.IntegerField(null=True, blank=True, verbose_name=_("Preisermittlung"))
     repararaturlokation = models.CharField(null=True, blank=True, max_length=40, verbose_name=_("Repararaturlokation"))
 
+    def get_assigned_users(self):
+        """Get all users assigned to this material"""
+        return User.objects.filter(material_associations__material=self)
+    
+    def get_primary_user(self):
+        """Get the primary user assigned to this material"""
+        try:
+            association = self.user_associations.get(is_primary=True)
+            return association.user
+        except MaterialUserAssociation.DoesNotExist:
+            return None
+
+    @property
+    def primary_user_email(self):
+        """Get the email of the primary responsible user"""
+        primary_user = self.get_primary_user()
+        return primary_user.email if primary_user else None
+    
+    @property
+    def primary_user_name(self):
+        """Get the full name of the primary responsible user"""
+        primary_user = self.get_primary_user()
+        if primary_user:
+            return f"{primary_user.first_name} {primary_user.last_name}".strip() or primary_user.email
+        return None
+    
+    @property
+    def responsible_user_display(self):
+        """Get a display-friendly name for the responsible user"""
+        return self.primary_user_name or self.primary_user_email or "No responsible user"
+    
+    def set_primary_user(self, user, assigned_by=None):
+        """
+        Set the primary user for this material.
+        Automatically assigns the user if they're not already assigned.
+        """
+        # Remove primary status from all current associations
+        MaterialUserAssociation.objects.filter(
+            material=self, is_primary=True
+        ).update(is_primary=False)
+        
+        # Create or update the association for the new primary user
+        association, created = MaterialUserAssociation.objects.get_or_create(
+            material=self,
+            user=user,
+            defaults={'assigned_by': assigned_by, 'is_primary': True}
+        )
+        
+        if not created:
+            association.is_primary = True
+            association.save()
+        
+        return association
+    
+    def assign_user(self, user, assigned_by, is_primary=False):
+        """Assign a user to this material"""
+        association, created = MaterialUserAssociation.objects.get_or_create(
+            material=self,
+            user=user,
+            defaults={'assigned_by': assigned_by, 'is_primary': is_primary}
+        )
+        if not created and is_primary:
+            # Remove primary from others and set this one as primary
+            MaterialUserAssociation.objects.filter(
+                material=self, is_primary=True
+            ).update(is_primary=False)
+            association.is_primary = True
+            association.save()
+        return association
+
+    def remove_user(self, user):
+        """Remove a user from this material"""
+        MaterialUserAssociation.objects.filter(material=self, user=user).delete()
+
+    def has_responsible_user(self):
+        """Check if material has a responsible user assigned"""
+        return self.get_primary_user() is not None
+
     def get_localized_kurztext(self):
         """Returns the kurztext in the current language, falling back to German if not available"""
         from django.utils.translation import get_language
@@ -312,16 +423,18 @@ class Material(models.Model):
     def delete(self, *args, **kwargs):
         # First, delete all attachment files from storage
         for attachment in self.attachments.all():
-            attachment.delete()  # This will call MaterialAttachment's delete() method
+            attachment.delete()
 
         # Then delete the Material record (which will cascade delete attachments)
         super().delete(*args, **kwargs)
 
     def __str__(self):
+        # Display responsible user instead of hersteller
+        responsible = self.responsible_user_display
         if self.positions_nr is not None:
-            return str(self.positions_nr) + " - " + self.kurztext_de + " (" + self.hersteller + ")"
+            return f"{self.positions_nr} - {self.kurztext_de} (Responsible: {responsible})"
         else:
-            return "<None> - " + self.kurztext_de + " (" + self.hersteller + ")"
+            return f"<None> - {self.kurztext_de} (Responsible: {responsible})"
 
     class Meta:
         ordering = ["positions_nr"]
