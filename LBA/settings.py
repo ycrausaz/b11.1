@@ -265,7 +265,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# Email settings
+## Email settings
 #EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 #EMAIL_HOST = os.environ.get('EMAIL_HOST', 'smtp.gmail.com')
 #EMAIL_PORT = int(os.environ.get('EMAIL_PORT', 587))
@@ -273,6 +273,14 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 #EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER', 'yann.crausaz@gmail.com')
 #EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', '')
 #DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL', 'yann.crausaz@gmail.com')
+
+# Email settings with Mailgun
+EMAIL_HOST = 'smtp.mailgun.org'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = env('MAILGUN_SMTP_LOGIN', default='')
+EMAIL_HOST_PASSWORD = env('MAILGUN_SMTP_PASSWORD', default='')
+DEFAULT_FROM_EMAIL = env('DEFAULT_FROM_EMAIL', default='Your App <no-reply@yourdomain.com>')
 
 AUTHENTICATION_BACKENDS = [
     'b11_1.utils.backends.EmailBackend',
