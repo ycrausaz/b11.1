@@ -14,11 +14,13 @@ from .forms import CustomBooleanChoiceField, SplitterReadOnlyReadWriteFields, Ba
 from ..utils.editable_fields_config import *
 
 class MaterialForm_IL(BaseTemplateForm, SplitterReadOnlyReadWriteFields):
-
+    
+    # REMOVED: hersteller field completely - it's no longer needed
+    
     gewichtseinheit = forms.CharField(
         label='Gewichtseinheit',
         required=False,
-        disabled=True  # This marks it as disabled for BaseTemplateForm
+        disabled=True
     )
     waehrung = forms.CharField(
         label='Währung',
@@ -71,7 +73,6 @@ class MaterialForm_IL(BaseTemplateForm, SplitterReadOnlyReadWriteFields):
             'nato_versorgungs_nr',
         ]
 
-        # Set up foreign key fields with their querysets and required status
         foreign_key_fields = {
             'basismengeneinheit': {'model': Basismengeneinheit, 'queryset': Basismengeneinheit.objects.all()},
             'gefahrgutkennzeichen': {'model': Gefahrgutkennzeichen, 'queryset': Gefahrgutkennzeichen.objects.all()},
@@ -83,7 +84,6 @@ class MaterialForm_IL(BaseTemplateForm, SplitterReadOnlyReadWriteFields):
 
     def clean(self):
         cleaned_data = super().clean()
-
         # Only perform conditional validation if this is NOT a mass update form
         # Mass update forms should not enforce these conditional requirements
         if not getattr(self, 'is_mass_update', False):

@@ -244,8 +244,8 @@ def process_additional_fields(material, row_data):
 def import_from_excel(excel_file, request, il_user):
     """
     Process the uploaded Excel file and create new Material objects.
-    Requires il_user parameter to set as hersteller.
-    Returns a tuple of (success_status, message, created_count, updated_count)
+    Sets il_user as the primary responsible user for all imported materials.
+    NO hersteller field assignment - only user associations.
     """
     try:
         tab_data = get_tab_data(excel_file)
@@ -266,11 +266,15 @@ def import_from_excel(excel_file, request, il_user):
             material_data = {}
             row_has_error = False
 
-            # Calculate actual Excel row number (add 9 because we started at row 9)
+            # Calculate actual Excel row number
             excel_row = row_idx + 9
 
             # Process each field according to its mapping
             for field_name, field_config in field_mapping.items():
+                # Skip hersteller field completely if it exists in mapping
+                if field_name == 'hersteller':
+                    continue
+                    
                 tab = field_config['tab']
                 column = field_config['column']
 
@@ -301,27 +305,52 @@ def import_from_excel(excel_file, request, il_user):
                 try:
                     # Check if material with this positions_nr already exists
                     positions_nr = material_data.get('positions_nr')
-                    material = None
+                    existing_material = None
                     
                     if positions_nr:
-                        material = Material.objects.filter(positions_nr=positions_nr).first()
+                        existing_material = Material.objects.filter(positions_nr=positions_nr).first()
                     
-                    material = Material(**material_data)
-                    materials_created += 1
-                    logger.info(f"Created new material from row {excel_row}")
-                    
-                    # Set hersteller to the IL user's email
-                    material.hersteller = il_user.email
-                    
-                    # Set the Systemname from cell B1
-                    if systemname:
-                        material.systemname = systemname
-                    
-                    # Set additional fields
-                    material.is_transferred = True
-                    
-                    # Save the material
-                    material.save()
+                    if existing_material:
+                        # Update existing material
+                        for field, value in material_data.items():
+                            setattr(existing_material, field, value)
+                        
+                        # Set the Systemname from cell B1
+                        if systemname:
+                            existing_material.systemname = systemname
+                        
+                        # Set as transferred (imported materials are considered transferred)
+                        existing_material.is_transferred = True
+                        
+                        # Save the material
+                        existing_material.save()
+                        
+                        # Set the IL user as primary if not already set
+                        if not existing_material.get_primary_user():
+                            existing_material.set_primary_user(il_user, assigned_by=None)
+                        
+                        materials_updated += 1
+                        logger.info(f"Updated existing material from row {excel_row}")
+                        
+                    else:
+                        # Create new material
+                        material = Material(**material_data)
+                        
+                        # Set the Systemname from cell B1
+                        if systemname:
+                            material.systemname = systemname
+                        
+                        # Set as transferred (imported materials are considered transferred)
+                        material.is_transferred = True
+                        
+                        # Save the material first to get an ID
+                        material.save()
+                        
+                        # Set the IL user as the primary responsible user (ONLY way to track responsibility)
+                        material.set_primary_user(il_user, assigned_by=None)
+                        
+                        materials_created += 1
+                        logger.info(f"Created new material from row {excel_row} with primary responsible user {il_user.email}")
 
                 except Exception as e:
                     error_msg = f"Error saving material at row {excel_row}: {str(e)}"
@@ -335,8 +364,8 @@ def import_from_excel(excel_file, request, il_user):
             logger.error(f"Excel import completed with {len(errors)} errors")
             return False, error_message, materials_created, materials_updated
         else:
-            success_message = f'Successfully processed Excel file. Created: {materials_created}, Updated: {materials_updated} materials.'
-            logger.info(f'Excel import completed. Created: {materials_created}, Updated: {materials_updated} materials.')
+            success_message = f'Successfully processed Excel file. Created: {materials_created}, Updated: {materials_updated} materials. Primary responsible user set to: {il_user.email}'
+            logger.info(f'Excel import completed. Created: {materials_created}, Updated: {materials_updated} materials. Primary responsible user: {il_user.email}')
             return True, success_message, materials_created, materials_updated
 
     except Exception as e:

@@ -12,6 +12,7 @@ from .forms.forms_il import MaterialForm_IL
 from .forms.forms_gd import MaterialForm_GD
 from .forms.forms_smda import MaterialForm_SMDA
 from .forms.forms_lba import MaterialForm_LBA
+from .forms.forms_material_management import *
 from django.contrib.messages.views import SuccessMessageMixin
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
 from django.urls import reverse_lazy
@@ -488,18 +489,29 @@ class ListMaterial_IL_View(GroupRequiredMixin, ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        list_material_il = Material.objects.filter(is_transferred=False, hersteller=self.request.user.email, transfer_date__isnull=True)
-        list_material_il_transferred = Material.objects.filter(is_transferred=True, hersteller=self.request.user.email, transfer_date__isnull=False)
-        list_material_il_returned = Material.objects.filter(is_transferred=False, hersteller=self.request.user.email, transfer_date__isnull=False)
-
-#        print("len(list_material_il_transferred) = ", len(list_material_il_transferred))
-#        print("len(list_material_il_returned) = ", len(list_material_il_returned))
-#        print("len(list_material_il) = ", len(list_material_il))
+        
+        # Filter materials by user associations
+        user_materials = Material.objects.filter(
+            user_associations__user=self.request.user
+        ).distinct()
+        
+        list_material_il = user_materials.filter(
+            is_transferred=False, 
+            transfer_date__isnull=True
+        )
+        list_material_il_transferred = user_materials.filter(
+            is_transferred=True, 
+            transfer_date__isnull=False
+        )
+        list_material_il_returned = user_materials.filter(
+            is_transferred=False, 
+            transfer_date__isnull=False
+        )
 
         # Define sort key function that handles None values
         def sort_key(x):
             if x.positions_nr is None:
-                return float('inf')  # Put None values at the end
+                return float('inf')
             return int(x.positions_nr)
 
         # Sort lists using the new sort key
@@ -560,6 +572,33 @@ class ListMaterial_IL_View(GroupRequiredMixin, ListView):
 
         return redirect(reverse('list_material_il'))
 
+        def get_hersteller_user(self):
+            """
+            Backwards compatibility: Get the user from hersteller email
+            """
+            if self.hersteller:
+                try:
+                    return User.objects.get(email=self.hersteller)
+                except User.DoesNotExist:
+                    return None
+            return None
+        
+        def get_effective_users(self):
+            """
+            Get users either from new association system or fallback to hersteller
+            """
+            assigned_users = self.get_assigned_users()
+            if assigned_users.exists():
+                return assigned_users
+            else:
+                # Fallback to hersteller field
+                hersteller_user = self.get_hersteller_user()
+                if hersteller_user:
+                    return User.objects.filter(pk=hersteller_user.pk)
+                return User.objects.none()
+
+# Replace the AddMaterial_IL_View in views.py
+
 class AddMaterial_IL_View(FormValidMixin, GroupRequiredMixin, SuccessMessageMixin, CreateView):
     model = Material
     template_name = 'il/add_material_il.html'
@@ -571,10 +610,10 @@ class AddMaterial_IL_View(FormValidMixin, GroupRequiredMixin, SuccessMessageMixi
     def form_valid(self, form):
         try:
             with transaction.atomic():
-                # Start by validating the form data
+                # Save the material first
                 self.object = form.save(commit=False)
 
-                # Get new files and comments
+                # Get new files and comments for attachments
                 files = self.request.FILES.getlist('attachment_files[]')
                 comments = self.request.POST.getlist('attachment_comments[]')
 
@@ -597,7 +636,6 @@ class AddMaterial_IL_View(FormValidMixin, GroupRequiredMixin, SuccessMessageMixi
 
                             # Try to save file to S3 first
                             try:
-                                # Note: Don't save to database yet
                                 attachment.file.save(file.name, file, save=False)
                             except (BotoCoreError, ClientError) as e:
                                 error_msg = f"Failed to upload file '{file.name}' to storage: {str(e)}"
@@ -635,12 +673,15 @@ class AddMaterial_IL_View(FormValidMixin, GroupRequiredMixin, SuccessMessageMixi
                 # Now save the material object
                 self.object.save()
 
-                # And save all new attachments to database
+                # Automatically set the creator as the primary responsible user
+                self.object.set_primary_user(self.request.user, assigned_by=self.request.user)
+
+                # Save all new attachments to database
                 for attachment in new_attachments:
                     attachment.save()
 
-                # Log the successful creation
-                logger.info(f"Material '{self.object.kurztext_de}' wurde durch '{self.request.user.email}' erstellt.")
+                # Log the successful creation with primary user assignment
+                logger.info(f"Material '{self.object.kurztext_de}' created by '{self.request.user.email}' and set as primary responsible user.")
 
                 return super().form_valid(form)
 
@@ -2544,4 +2585,131 @@ This link will expire in a few hours for security reasons.
             "If an account with this email exists, we have sent you a password reset link."
         )
 
+        return super().form_valid(form)
+
+class MaterialUserManagementView(GroupRequiredMixin, FormView):
+    """
+    Main view for managing material-user associations
+    """
+    template_name = 'lba/material_user_management.html'
+    form_class = MaterialUserAssignmentForm
+    allowed_groups = ['grLBA']
+    success_url = reverse_lazy('material_user_management')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        
+        # Get all materials with their current assignments
+        materials_with_users = []
+        for material in Material.objects.filter(is_archived=False).order_by('positions_nr'):
+            assigned_users = material.get_assigned_users()
+            primary_user = material.get_primary_user()
+            materials_with_users.append({
+                'material': material,
+                'assigned_users': assigned_users,
+                'primary_user': primary_user,
+                'user_count': assigned_users.count()
+            })
+        
+        context['materials_with_users'] = materials_with_users
+        context['il_users'] = User.objects.filter(groups__name='grIL').order_by('email')
+        
+        return context
+
+    def form_valid(self, form):
+        materials = form.cleaned_data['materials']
+        users = form.cleaned_data['users']
+        action = form.cleaned_data['action']
+        
+        success_count = 0
+        
+        try:
+            with transaction.atomic():
+                for material in materials:
+                    if action == 'assign':
+                        for user in users:
+                            association, created = MaterialUserAssociation.objects.get_or_create(
+                                material=material,
+                                user=user,
+                                defaults={'assigned_by': self.request.user}
+                            )
+                            if created:
+                                success_count += 1
+                                logger.info(f"User {user.email} assigned to material {material.kurztext_de} by {self.request.user.email}")
+                    
+                    elif action == 'remove':
+                        for user in users:
+                            deleted_count = MaterialUserAssociation.objects.filter(
+                                material=material,
+                                user=user
+                            ).delete()[0]
+                            if deleted_count > 0:
+                                success_count += 1
+                                logger.info(f"User {user.email} removed from material {material.kurztext_de} by {self.request.user.email}")
+                    
+                    elif action == 'replace':
+                        # Remove all existing assignments
+                        MaterialUserAssociation.objects.filter(material=material).delete()
+                        # Add new assignments
+                        for user in users:
+                            MaterialUserAssociation.objects.create(
+                                material=material,
+                                user=user,
+                                assigned_by=self.request.user
+                            )
+                            success_count += 1
+                        logger.info(f"All assignments replaced for material {material.kurztext_de} by {self.request.user.email}")
+                
+                messages.success(
+                    self.request,
+                    f"Successfully processed {success_count} assignments."
+                )
+                
+        except Exception as e:
+            messages.error(self.request, f"Error processing assignments: {str(e)}")
+            logger.error(f"Error in material-user assignment: {str(e)}")
+        
+        return super().form_valid(form)
+
+class MaterialDetailAssignmentView(GroupRequiredMixin, UpdateView):
+    """
+    View for managing assignments for a single material
+    """
+    model = Material
+    template_name = 'lba/material_assignment_detail.html'
+    form_class = MaterialAssignmentInlineForm
+    allowed_groups = ['grLBA']
+    success_url = reverse_lazy('material_user_management')
+
+    def form_valid(self, form):
+        try:
+            with transaction.atomic():
+                material = self.object
+                assigned_users = form.cleaned_data['assigned_users']
+                primary_user = form.cleaned_data['primary_user']
+                
+                # Remove all existing assignments
+                MaterialUserAssociation.objects.filter(material=material).delete()
+                
+                # Create new assignments
+                for user in assigned_users:
+                    is_primary = (user == primary_user)
+                    MaterialUserAssociation.objects.create(
+                        material=material,
+                        user=user,
+                        assigned_by=self.request.user,
+                        is_primary=is_primary
+                    )
+                
+                messages.success(
+                    self.request,
+                    f"Successfully updated assignments for {material.kurztext_de}"
+                )
+                
+                logger.info(f"Material {material.kurztext_de} assignments updated by {self.request.user.email}")
+                
+        except Exception as e:
+            messages.error(self.request, f"Error updating assignments: {str(e)}")
+            logger.error(f"Error updating material assignments: {str(e)}")
+        
         return super().form_valid(form)

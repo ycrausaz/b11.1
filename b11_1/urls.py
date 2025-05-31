@@ -108,4 +108,13 @@ urlpatterns = [
     path('admin/pending-registrations/', PendingRegistrationsView.as_view(), name='pending_registrations'),
     path('admin/approve-registration/<int:profile_id>/', ApproveRegistrationView.as_view(), name='approve_registration'),
     path('admin/reject-registration/<int:profile_id>/', RejectRegistrationView.as_view(), name='reject_registration'),
+
+    # Material-User Management URLs
+    path('material-user-management/', 
+         views.MaterialUserManagementView.as_view(), 
+         name='material_user_management'),
+    
+    path('material-assignment/<int:pk>/', 
+         views.MaterialDetailAssignmentView.as_view(), 
+         name='material_assignment_detail'),
 ]
