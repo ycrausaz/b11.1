@@ -1,7 +1,7 @@
 {% extends "base_generic.html" %}
 {% load i18n %}
 
-<!-- templates/list_material_il.html -->
+<!-- Updated templates/list_material_il.html -->
 {% block content %}
 <h1>{% trans "Materialliste" %}</h1>
 <br/>
@@ -42,6 +42,9 @@
     <br/>
     <button type="submit" name="action" value="transfer" class="btn btn-primary action-button" data-form-id="1" disabled>Übermitteln an die LBA</button>
     <button type="submit" name="action" value="delete" class="btn btn-danger action-button" data-form-id="1" disabled>Löschen</button>
+    <button type="button" class="btn btn-info action-button mass-edit-btn" data-form-id="1" disabled>Massenbearbeitung</button>
+    <button type="button" class="btn btn-success action-button tabular-material-edit-btn" data-form-id="1" disabled>Tabellen-Bearbeitung (Material)</button>
+    <button type="button" class="btn btn-warning action-button tabular-fields-edit-btn" data-form-id="1" disabled>Tabellen-Bearbeitung (Felder)</button>
 </form>
 
 <br/>
@@ -71,6 +74,9 @@
     <br/>
     <button type="submit" name="action" value="transfer" class="btn btn-primary action-button" data-form-id="2" disabled>{% trans "Übermitteln an die LBA" %}</button>
     <button type="submit" name="action" value="delete" class="btn btn-danger action-button" data-form-id="2" disabled>{% trans "Löschen" %}</button>
+    <button type="button" class="btn btn-info action-button mass-edit-btn" data-form-id="2" disabled>{% trans "Massenbearbeitung" %}</button>
+    <button type="button" class="btn btn-success action-button tabular-material-edit-btn" data-form-id="2" disabled>{% trans "Tabellen-Bearbeitung (Material)" %}</button>
+    <button type="button" class="btn btn-warning action-button tabular-fields-edit-btn" data-form-id="2" disabled>{% trans "Tabellen-Bearbeitung (Felder)" %}</button>
 </form>
 
 <br/>
@@ -100,6 +106,7 @@
     <button type="submit" name="action" value="archive" class="btn btn-danger action-button" data-form-id="3" disabled>Archivieren</button>
 </form>
 {% endif %}
+
 {% include 'checkbox.html' %}
 {% endif%}
 {% endblock %}

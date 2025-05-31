@@ -1,68 +1,180 @@
+<!-- templates/checkbox.html -->
+<!-- This file should be included at the bottom of your list templates -->
+
 <script>
-    // Function to toggle button state for a given form
-    function toggleButtons(formId) {
-        var checkboxes = document.querySelectorAll(`.material-checkbox[data-form-id="${formId}"]`);
-        var anyChecked = Array.from(checkboxes).some(checkbox => checkbox.checked);
-        var buttons = document.querySelectorAll(`.action-button[data-form-id="${formId}"]`);
-        for (var button of buttons) {
-            button.disabled = !anyChecked;
-        }
-    }
+document.addEventListener('DOMContentLoaded', function() {
+    // Function to update button states based on checkbox selections
+    function updateButtonStates(formId) {
+        const form = document.getElementById('material-form-' + formId);
+        if (!form) return;
 
-    // Toggle all checkboxes for a given form when "select-all" checkbox is clicked
-    function selectAllToggle(event) {
-        var formId = event.target.getAttribute('data-form-id');
-        var checkboxes = document.querySelectorAll(`.material-checkbox[data-form-id="${formId}"]`);
-        var isChecked = event.target.checked;
-        for (var checkbox of checkboxes) {
-            checkbox.checked = isChecked;
-        }
-        toggleButtons(formId);
-    }
+        const checkboxes = form.querySelectorAll('.material-checkbox[data-form-id="' + formId + '"]:checked');
+        const buttons = form.querySelectorAll('.action-button[data-form-id="' + formId + '"]');
+        const selectAllCheckbox = form.querySelector('.select-all[data-form-id="' + formId + '"]');
 
-    // Clear selections and disable buttons after form submission
-    function clearSelections(formId) {
-        var checkboxes = document.querySelectorAll(`.material-checkbox[data-form-id="${formId}"]`);
-        var selectAllCheckbox = document.querySelector(`.select-all[data-form-id="${formId}"]`);
-        var buttons = document.querySelectorAll(`.action-button[data-form-id="${formId}"]`);
+        const hasSelection = checkboxes.length > 0;
 
-        // Uncheck all checkboxes
-        for (var checkbox of checkboxes) {
-            checkbox.checked = false;
-        }
+        // Enable/disable buttons based on selection
+        buttons.forEach(function(button) {
+            button.disabled = !hasSelection;
+        });
 
-        // Uncheck the select-all checkbox
+        // Update select-all checkbox state
         if (selectAllCheckbox) {
-            selectAllCheckbox.checked = false;
-        }
-
-        // Disable all action buttons
-        for (var button of buttons) {
-            button.disabled = true;
+            const allCheckboxes = form.querySelectorAll('.material-checkbox[data-form-id="' + formId + '"]');
+            if (checkboxes.length === 0) {
+                selectAllCheckbox.indeterminate = false;
+                selectAllCheckbox.checked = false;
+            } else if (checkboxes.length === allCheckboxes.length) {
+                selectAllCheckbox.indeterminate = false;
+                selectAllCheckbox.checked = true;
+            } else {
+                selectAllCheckbox.indeterminate = true;
+                selectAllCheckbox.checked = false;
+            }
         }
     }
 
-    // Add event listeners to "select-all" checkboxes
+    // Handle select-all checkboxes
     document.querySelectorAll('.select-all').forEach(function(selectAllCheckbox) {
-        selectAllCheckbox.addEventListener('click', selectAllToggle);
+        selectAllCheckbox.addEventListener('change', function() {
+            const formId = this.getAttribute('data-form-id');
+            const form = document.getElementById('material-form-' + formId);
+            if (!form) return;
+
+            const checkboxes = form.querySelectorAll('.material-checkbox[data-form-id="' + formId + '"]');
+            const isChecked = this.checked;
+
+            checkboxes.forEach(function(checkbox) {
+                checkbox.checked = isChecked;
+            });
+
+            updateButtonStates(formId);
+        });
     });
 
-    // Add onclick event to all material checkboxes to toggle buttons independently
+    // Handle individual checkboxes
     document.querySelectorAll('.material-checkbox').forEach(function(checkbox) {
-        checkbox.addEventListener('click', function(event) {
-            var formId = event.target.getAttribute('data-form-id');
-            toggleButtons(formId);
+        checkbox.addEventListener('change', function() {
+            const formId = this.getAttribute('data-form-id');
+            updateButtonStates(formId);
         });
     });
 
-    // Add submit event listener to clear selections after form submission
-    document.querySelectorAll('form').forEach(function(form) {
-        form.addEventListener('submit', function(event) {
-            var formId = event.target.getAttribute('data-form-id');
-            clearSelections(formId);
-            // Allow the form to submit after clearing selections
-            form.submit();
+    // Initialize button states on page load
+    const formIds = ['1', '2', '3']; // Updated to include form 3
+    formIds.forEach(function(formId) {
+        updateButtonStates(formId);
+    });
+
+    // Handle form submissions with confirmations
+    document.querySelectorAll('form[id^="material-form-"]').forEach(function(form) {
+        form.addEventListener('submit', function(e) {
+            const action = e.submitter ? e.submitter.value : '';
+            const selectedCount = form.querySelectorAll('.material-checkbox:checked').length;
+
+            if (selectedCount === 0) {
+                e.preventDefault();
+                alert('Bitte wählen Sie mindestens ein Material aus.');
+                return;
+            }
+
+            // Add confirmation for destructive actions
+            if (action === 'delete') {
+                if (!confirm(`Sind Sie sicher, dass Sie ${selectedCount} Material${selectedCount > 1 ? 'ien' : ''} löschen möchten? Diese Aktion kann nicht rückgängig gemacht werden.`)) {
+                    e.preventDefault();
+                    return;
+                }
+            } else if (action === 'archive') {
+                if (!confirm(`Sind Sie sicher, dass Sie ${selectedCount} Material${selectedCount > 1 ? 'ien' : ''} archivieren möchten?`)) {
+                    e.preventDefault();
+                    return;
+                }
+            }
         });
     });
 
+    // Update the mass edit buttons section to handle both types
+    document.querySelectorAll('.mass-edit-btn').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            const formId = this.getAttribute('data-form-id');
+            const form = document.getElementById('material-form-' + formId);
+            const checkedBoxes = form.querySelectorAll('.material-checkbox:checked');
+
+            if (checkedBoxes.length === 0) {
+                alert('Bitte wählen Sie mindestens ein Material für die Massenbearbeitung aus.');
+                return;
+            }
+
+            const materialIds = Array.from(checkedBoxes).map(cb => cb.value);
+            let massUpdateUrl;
+            if (window.location.pathname.includes('lba')) {
+                massUpdateUrl = '{% url "mass_update_material_lba" %}';
+            } else if (window.location.pathname.includes('il')) {
+                massUpdateUrl = '{% url "mass_update_material_il" %}';
+            } else {
+                massUpdateUrl = '{% url "mass_update_material_il" %}';
+            }
+
+            const url = massUpdateUrl + '?' + materialIds.map(id => 'materials=' + id).join('&');
+            window.location.href = url;
+        });
+    });
+
+    // Handle material-based tabular edit buttons
+    document.querySelectorAll('.tabular-material-edit-btn').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            const formId = this.getAttribute('data-form-id');
+            const form = document.getElementById('material-form-' + formId);
+            const checkedBoxes = form.querySelectorAll('.material-checkbox:checked');
+
+            if (checkedBoxes.length === 0) {
+                alert('Bitte wählen Sie mindestens ein Material für die Material-Tabellen-Bearbeitung aus.');
+                return;
+            }
+
+            const materialIds = Array.from(checkedBoxes).map(cb => cb.value);
+            let tabularUpdateUrl;
+            if (window.location.pathname.includes('lba')) {
+                tabularUpdateUrl = '{% url "tabular_materials_mass_update_material_lba" %}';
+            } else if (window.location.pathname.includes('il')) {
+                tabularUpdateUrl = '{% url "tabular_materials_mass_update_material_il" %}';
+            } else {
+                tabularUpdateUrl = '{% url "tabular_materials_mass_update_material_il" %}';
+            }
+
+            const url = tabularUpdateUrl + '?' + materialIds.map(id => 'materials=' + id).join('&');
+            window.location.href = url;
+        });
+    });
+
+    // Handle fields-based tabular edit buttons
+    document.querySelectorAll('.tabular-fields-edit-btn').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            const formId = this.getAttribute('data-form-id');
+            const form = document.getElementById('material-form-' + formId);
+            const checkedBoxes = form.querySelectorAll('.material-checkbox:checked');
+
+            if (checkedBoxes.length === 0) {
+                alert('Bitte wählen Sie mindestens ein Material für die Felder-Tabellen-Bearbeitung aus.');
+                return;
+            }
+
+            const materialIds = Array.from(checkedBoxes).map(cb => cb.value);
+            let fieldsTabularUpdateUrl;
+            if (window.location.pathname.includes('lba')) {
+                // Add LBA version when implemented
+                fieldsTabularUpdateUrl = '{% url "tabular_fields_mass_update_material_lba" %}';
+            } else if (window.location.pathname.includes('il')) {
+                fieldsTabularUpdateUrl = '{% url "tabular_fields_mass_update_material_il" %}';
+            } else {
+                fieldsTabularUpdateUrl = '{% url "tabular_fields_mass_update_material_il" %}';
+            }
+
+            const url = fieldsTabularUpdateUrl + '?' + materialIds.map(id => 'materials=' + id).join('&');
+            window.location.href = url;
+        });
+    });
+
+});
 </script>

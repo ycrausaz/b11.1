@@ -41,6 +41,10 @@
     <br/>
     <input type="hidden" name="action" id="action-input">
     <input type="hidden" name="transfer_comment" id="transfer-comment-input">
+    
+    <!-- Add Mass Edit Button -->
+    <button type="button" id="mass-edit-btn" class="btn btn-info action-button" data-form-id="1" disabled>Massenbearbeitung</button>
+    
     <button type="button" id="transfer-btn" class="btn btn-primary action-button" data-form-id="1" disabled>Material zurück zum Hersteller senden</button>
     <button type="submit" name="action" value="export_lba" class="btn btn-primary action-button" data-form-id="1" disabled>"SAP input" generieren (LBA)</button>
     <button type="submit" name="action" value="export_ruag" class="btn btn-primary action-button" data-form-id="1" disabled>"SAP input" generieren (RUAG)</button>
@@ -71,12 +75,14 @@
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     const transferBtn = document.getElementById('transfer-btn');
+    const massEditBtn = document.getElementById('mass-edit-btn');
     const form = document.getElementById('material-form-1');
     const modal = new bootstrap.Modal(document.getElementById('transferModal'));
     const confirmBtn = document.getElementById('confirm-transfer');
     const commentInput = document.getElementById('transfer-comment-input');
     const actionInput = document.getElementById('action-input');
 
+    // Transfer button functionality
     transferBtn.addEventListener('click', function() {
         modal.show();
     });
@@ -87,13 +93,36 @@ document.addEventListener('DOMContentLoaded', function() {
         actionInput.value = 'transfer';  // Set the action value
         form.submit();
     });
+
+    // Mass Edit button functionality
+    massEditBtn.addEventListener('click', function() {
+        const selectedMaterials = [];
+        const checkboxes = document.querySelectorAll('input[name="selected_materials"]:checked');
+        
+        checkboxes.forEach(function(checkbox) {
+            selectedMaterials.push(checkbox.value);
+        });
+        
+        if (selectedMaterials.length > 0) {
+            // Create URL with selected material IDs as query parameters
+            const params = new URLSearchParams();
+            selectedMaterials.forEach(function(id) {
+                params.append('materials', id);
+            });
+            
+            // Navigate to mass edit page
+            window.location.href = '{% url "mass_update_material_lba" %}?' + params.toString();
+        } else {
+            alert('Bitte wählen Sie mindestens ein Material für die Massenbearbeitung aus.');
+        }
+    });
 });
 </script>
 {% endif %}
 
 {% if list_material_archived|length > 0 %}
 <hr>
-<form method="post" id="material-form-1">
+<form method="post" id="material-form-2">
     {% csrf_token %}
     <table class="table table-striped table-hover">
         <thead>

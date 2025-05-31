@@ -208,13 +208,35 @@ class BaseTemplateForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
 
         if editable_fields:
+            # Get computed fields from the specific form's Meta class before removing fields
+            computed_fields = getattr(self.Meta, 'computed_fields', [])
+            
+            # Get all model fields
+            all_fields = [field.name for field in self._meta.model._meta.fields]
+
+            # Remove fields that are not in editable_fields AND not computed fields
+            fields_to_remove = []
+            for field_name in self.fields:
+                if field_name not in editable_fields and field_name not in computed_fields:
+                    fields_to_remove.append(field_name)
+
+            # Actually remove the fields
+            for field_name in fields_to_remove:
+                del self.fields[field_name]
+
+            # For remaining fields, set readonly/disabled status
             for field_name in self.fields:
                 field = self.fields[field_name]
-                if field_name not in editable_fields:
-                    # If it's not in editable_fields, mark it as disabled
+                if field_name not in editable_fields and field_name not in computed_fields:
+                    # If it's not in editable_fields and not computed, mark it as disabled
                     field.disabled = True
                     # Also ensure the widget has readonly attribute
                     field.widget.attrs['readonly'] = True
+                elif field_name in computed_fields:
+                    # Mark computed fields as disabled and computed
+                    field.disabled = True
+                    field.widget.attrs['readonly'] = True
+                    field.is_computed = True
 
     def get_normal_fields(self):
         """Return only editable fields."""
@@ -231,7 +253,12 @@ class BaseTemplateForm(forms.ModelForm):
     def save(self, commit=True):
         instance = super().save(commit=False)
         if commit:
-            instance.save(update_fields=[field.name for field in self.get_normal_fields()])
+            # Only update fields that exist in the form
+            update_fields = [field.name for field in self.get_normal_fields() if field.name in self.fields]
+            if update_fields:
+                instance.save(update_fields=update_fields)
+            else:
+                instance.save()
         return instance
 
 class UserRegistrationForm(forms.ModelForm):
