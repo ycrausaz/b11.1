@@ -1,0 +1,172 @@
+{% extends "base_generic.html" %}
+{% load i18n %}
+{% load custom_filters %}
+
+<!-- templates/il/tabular_fields_mass_update_material_il.html -->
+{% load help_tags %}
+{% block content %}
+    <div class="tabular-edit tabular-fields-edit">
+        <h1>{% trans "Felder-Tabellen-Massenbearbeitung von Materialien" %} ({{ material_count }} {% trans "Materialien" %})</h1>
+        <br/>
+
+        <div class="alert alert-info">
+            <strong>{% trans "Hinweis:" %}</strong> 
+            {% trans "Bearbeiten Sie die Felder direkt in der Tabelle. Jede Zeile repräsentiert ein Datenbankfeld, jede Spalte ein Material." %}
+            <br/>
+            <strong>{% trans "Einzelauswahl:" %}</strong> 
+            {% trans "Klicken Sie auf eine Zelle und verwenden Sie 'Wert kopieren' um den Wert in die gesamte Zeile zu kopieren." %}
+            <br/>
+            <strong>{% trans "Mehrfachauswahl:" %}</strong> 
+            {% trans "Schalten Sie in den Mehrfachauswahl-Modus um, wählen Sie Zellen aus verschiedenen Zeilen aus und kopieren Sie alle Werte gleichzeitig. Verwenden Sie Strg+M zum Umschalten der Modi." %}
+        </div>
+
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}" role="alert">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        <form method="post" enctype="multipart/form-data" id="tabular-fields-form">
+            {% csrf_token %}
+            
+            <!-- Hidden field to pass material IDs -->
+            {% for material_data in material_field_data %}
+                <input type="hidden" name="material_ids" value="{{ material_data.material.id }}">
+            {% endfor %}
+
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">{% trans "Felder bearbeiten" %}</h5>
+                    <div>
+                        <button type="button" class="btn btn-outline-secondary btn-sm me-2" id="mode-toggle-btn" title="Umschalten zwischen Einzel- und Mehrfachauswahl (Strg+M)">
+                            <i class="fas fa-mouse-pointer"></i> {% trans "Einzelauswahl" %}
+                        </button>
+                        <button type="button" class="btn btn-outline-info btn-sm me-2" id="copy-value-btn" disabled>
+                            <i class="fas fa-copy"></i> {% trans "Wert kopieren" %}
+                        </button>
+                        <button type="button" class="btn btn-outline-secondary btn-sm" id="clear-selection-btn">
+                            <i class="fas fa-times"></i> {% trans "Auswahl aufheben" %}
+                        </button>
+                        <span class="badge bg-secondary ms-2" id="selected-cell-info" style="display: none;"></span>
+                    </div>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive" style="max-height: 80vh; overflow-y: auto;">
+                        <table class="table table-bordered table-hover mb-0" id="fields-table">
+                            <thead class="table-light sticky-top">
+                                <tr>
+                                    <th class="sticky-column fields-sticky-column" style="min-width: 200px;">
+                                        {% trans "Feld" %}
+                                    </th>
+                                    {% for material_data in material_field_data %}
+                                        <th style="min-width: 150px; white-space: nowrap;" data-material="{{ material_data.material.id }}">
+                                            <div class="d-flex flex-column">
+                                                <strong>{{ material_data.material.systemname }}</strong>
+                                                <small class="text-muted">{{ material_data.material.get_localized_kurztext|truncatechars:20 }}</small>
+                                                {% if material_data.material.positions_nr %}
+                                                    <small class="text-muted">Pos: {{ material_data.material.positions_nr }}</small>
+                                                {% endif %}
+                                            </div>
+                                        </th>
+                                    {% endfor %}
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for field_info in editable_fields %}
+                                    <tr data-field-name="{{ field_info.name }}">
+                                        <td class="sticky-column fields-sticky-column bg-light">
+                                            <div class="d-flex flex-column">
+                                                <strong>{{ field_info.label }}</strong>
+                                                {% if field_info.required %}
+                                                    <span class="text-danger small">*{% trans "Erforderlich" %}</span>
+                                                {% endif %}
+                                                {% if field_info.help_text %}
+                                                    <small class="text-muted">{{ field_info.help_text|striptags|truncatechars:50 }}</small>
+                                                {% endif %}
+                                            </div>
+                                        </td>
+                                        
+                                        {% for material_data in material_field_data %}
+                                            <td class="p-1 editable-cell fields-editable-cell" 
+                                                data-field="{{ field_info.name }}" 
+                                                data-material="{{ material_data.material.id }}"
+                                                data-row="{{ forloop.parentloop.counter0 }}"
+                                                data-col="{{ forloop.counter0 }}">
+                                                
+                                                {% if field_info.field_type == 'BooleanField' %}
+                                                    <input type="checkbox" 
+                                                           name="{{ field_info.name }}_{{ material_data.material.id }}" 
+                                                           class="form-check-input"
+                                                           {% if material_data.field_values|get_item:field_info.name %}checked{% endif %}>
+                                                
+                                                {% elif field_info.name == 'basismengeneinheit' %}
+                                                    <select name="{{ field_info.name }}_{{ material_data.material.id }}" class="form-select form-select-sm">
+                                                        <option value="">---</option>
+                                                        {% for obj in sample_form.Meta.foreign_key_fields.basismengeneinheit.queryset %}
+                                                            <option value="{{ obj.idx }}" 
+                                                                    {% if material_data.field_values|get_item:field_info.name == obj.idx %}selected{% endif %}>
+                                                                {{ obj }}
+                                                            </option>
+                                                        {% endfor %}
+                                                    </select>
+                                                
+                                                {% elif field_info.name == 'gefahrgutkennzeichen' %}
+                                                    <select name="{{ field_info.name }}_{{ material_data.material.id }}" class="form-select form-select-sm">
+                                                        <option value="">---</option>
+                                                        {% for obj in sample_form.Meta.foreign_key_fields.gefahrgutkennzeichen.queryset %}
+                                                            <option value="{{ obj.idx }}" 
+                                                                    {% if material_data.field_values|get_item:field_info.name == obj.idx %}selected{% endif %}>
+                                                                {{ obj }}
+                                                            </option>
+                                                        {% endfor %}
+                                                    </select>
+                                                
+                                                {% elif field_info.field_type == 'FloatField' %}
+                                                    <input type="number" 
+                                                           name="{{ field_info.name }}_{{ material_data.material.id }}" 
+                                                           class="form-control form-control-sm"
+                                                           step="0.01"
+                                                           value="{{ material_data.field_values|get_item:field_info.name|default:'' }}">
+                                                
+                                                {% elif field_info.field_type == 'IntegerField' %}
+                                                    <input type="number" 
+                                                           name="{{ field_info.name }}_{{ material_data.material.id }}" 
+                                                           class="form-control form-control-sm"
+                                                           value="{{ material_data.field_values|get_item:field_info.name|default:'' }}">
+                                                
+                                                {% else %}
+                                                    <input type="text" 
+                                                           name="{{ field_info.name }}_{{ material_data.material.id }}" 
+                                                           class="form-control form-control-sm"
+                                                           value="{{ material_data.field_values|get_item:field_info.name|default:'' }}">
+                                                {% endif %}
+                                            </td>
+                                        {% endfor %}
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-4 d-flex justify-content-between">
+                <div>
+                    <button type="submit" class="btn btn-primary me-2">
+                        <i class="fas fa-save"></i> {% trans "Alle Änderungen speichern" %}
+                    </button>
+                    <button type="button" class="btn btn-outline-warning me-2" id="reset-form-btn">
+                        <i class="fas fa-undo"></i> {% trans "Formular zurücksetzen" %}
+                    </button>
+                    <button type="button" class="btn btn-secondary" onclick="window.location.href='{% url 'list_material_il' %}'">
+                        <i class="fas fa-times"></i> {% trans "Abbrechen" %}
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <br/>
+{% endblock %}

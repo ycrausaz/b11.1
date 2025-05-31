@@ -9,6 +9,13 @@ def basename(value):
     return os.path.basename(value)
 
 @register.filter
+def get_item(dictionary, key):
+    """Get an item from a dictionary using a key."""
+    if isinstance(dictionary, dict):
+        return dictionary.get(key)
+    return None
+
+@register.filter
 def get_display_value(material, field_name):
     """
     Get the appropriate display value for a field, 

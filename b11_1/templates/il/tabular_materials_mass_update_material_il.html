@@ -1,0 +1,140 @@
+{% extends "base_generic.html" %}
+{% load i18n %}
+{% load custom_filters %}
+
+<!-- templates/il/tabular_mass_update_material_il.html -->
+{% load help_tags %}
+{% block content %}
+    <div class="tabular-edit">
+        <h1>{% trans "Tabellen-Massenbearbeitung von Materialien" %} ({{ material_count }} {% trans "Materialien" %})</h1>
+        <br/>
+
+        <div class="alert alert-info">
+            <strong>{% trans "Hinweis:" %}</strong> 
+            {% trans "Bearbeiten Sie die Materialien direkt in der Tabelle. Jede Zeile repräsentiert ein Material." %}
+            <br/>
+            <strong>{% trans "Einzelauswahl:" %}</strong> 
+            {% trans "Klicken Sie auf eine Zelle und verwenden Sie 'Wert kopieren' um den Wert in die gesamte Spalte zu kopieren." %}
+            <br/>
+            <strong>{% trans "Mehrfachauswahl:" %}</strong> 
+            {% trans "Schalten Sie in den Mehrfachauswahl-Modus um, wählen Sie Zellen aus verschiedenen Spalten aus und kopieren Sie alle Werte gleichzeitig. Verwenden Sie Strg+M zum Umschalten der Modi." %}
+        </div>
+
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}" role="alert">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        <form method="post" enctype="multipart/form-data" id="tabular-form">
+            {% csrf_token %}
+            
+            <!-- Hidden field to pass material IDs -->
+            {% for material_form_data in material_forms %}
+                <input type="hidden" name="material_ids" value="{{ material_form_data.material.id }}">
+            {% endfor %}
+
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">{% trans "Materialien bearbeiten" %}</h5>
+                    <div>
+                        <button type="button" class="btn btn-outline-secondary btn-sm me-2" id="mode-toggle-btn" title="Umschalten zwischen Einzel- und Mehrfachauswahl (Strg+M)">
+                            <i class="fas fa-mouse-pointer"></i> {% trans "Einzelauswahl" %}
+                        </button>
+                        <button type="button" class="btn btn-outline-info btn-sm me-2" id="copy-value-btn" disabled>
+                            <i class="fas fa-copy"></i> {% trans "Wert kopieren" %}
+                        </button>
+                        <button type="button" class="btn btn-outline-secondary btn-sm" id="clear-selection-btn">
+                            <i class="fas fa-times"></i> {% trans "Auswahl aufheben" %}
+                        </button>
+                        <span class="badge bg-secondary ms-2" id="selected-cell-info" style="display: none;"></span>
+                    </div>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive" style="max-height: 80vh; overflow-y: auto;">
+                        <table class="table table-bordered table-hover mb-0" id="materials-table">
+                            <thead class="table-light sticky-top">
+                                <tr>
+                                    <th class="sticky-column" style="min-width: 150px;">
+                                        {% trans "Material" %}
+                                    </th>
+                                    {% for field_info in editable_fields %}
+                                        <th style="min-width: 120px; white-space: nowrap;" data-column="{{ field_info.name }}">
+                                            {{ field_info.label }}
+                                            {% if field_info.required %}
+                                                <span class="text-danger">*</span>
+                                            {% endif %}
+                                            {% if field_info.help_text %}
+                                                <i class="fas fa-question-circle text-info ms-1" 
+                                                   data-bs-toggle="tooltip" 
+                                                   title="{{ field_info.help_text|striptags }}"></i>
+                                            {% endif %}
+                                        </th>
+                                    {% endfor %}
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for material_form_data in material_forms %}
+                                    {% with material=material_form_data.material form=material_form_data.form %}
+                                        <tr data-material-id="{{ material.id }}">
+                                            <td class="sticky-column bg-light">
+                                                <div class="d-flex flex-column">
+                                                    <strong>{{ material.systemname }}</strong>
+                                                    <small class="text-muted">{{ material.get_localized_kurztext|truncatechars:30 }}</small>
+                                                    {% if material.positions_nr %}
+                                                        <small class="text-muted">Pos: {{ material.positions_nr }}</small>
+                                                    {% endif %}
+                                                </div>
+                                            </td>
+                                            
+                                            {% for field_info in editable_fields %}
+                                                <td class="p-1 editable-cell" data-column="{{ field_info.name }}" data-row="{{ forloop.parentloop.counter0 }}">
+                                                    {% for field in form.get_normal_fields %}
+                                                        {% if field.name == field_info.name and not field.is_hidden %}
+                                                            {% if field.errors %}
+                                                                <div class="border border-danger rounded">
+                                                            {% endif %}
+                                                            
+                                                            {{ field }}
+                                                            
+                                                            {% if field.errors %}
+                                                                </div>
+                                                                <div class="text-danger small mt-1">
+                                                                    {% for error in field.errors %}
+                                                                        <div>{{ error }}</div>
+                                                                    {% endfor %}
+                                                                </div>
+                                                            {% endif %}
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                </td>
+                                            {% endfor %}
+                                        </tr>
+                                    {% endwith %}
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-4 d-flex justify-content-between">
+                <div>
+                    <button type="submit" class="btn btn-primary me-2">
+                        <i class="fas fa-save"></i> {% trans "Alle Änderungen speichern" %}
+                    </button>
+                    <button type="button" class="btn btn-outline-warning me-2" id="reset-form-btn">
+                        <i class="fas fa-undo"></i> {% trans "Formular zurücksetzen" %}
+                    </button>
+                    <button type="button" class="btn btn-secondary" onclick="window.location.href='{% url 'list_material_il' %}'">
+                        <i class="fas fa-times"></i> {% trans "Abbrechen" %}
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <br/>
+{% endblock %}

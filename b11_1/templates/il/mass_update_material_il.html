@@ -1,0 +1,161 @@
+{% extends "base_generic.html" %}
+{% load i18n %}
+{% load custom_filters %}
+
+<!-- templates/il/mass_update_material_il.html -->
+{% load help_tags %}
+{% block content %}
+    <h1>{% trans "Massenbearbeitung von Materialien" %} ({{ material_count }} {% trans "Materialien" %})</h1>
+    <br/>
+
+    <div class="alert alert-info">
+        <strong>{% trans "Hinweis:" %}</strong> 
+        {% trans "Wählen Sie die Felder aus, die Sie für alle ausgewählten Materialien aktualisieren möchten. Nur angehakte Felder werden geändert." %}
+        <br/><br/>
+        <strong>{% trans "Ausgewählte Materialien:" %}</strong>
+        <ul>
+            {% for material in materials %}
+                <li>{{ material.systemname }}: {{ material.get_localized_kurztext }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    {% if form.non_field_errors %}
+        {% for nfe in form.non_field_errors %}
+            <div class="alert alert-danger" role="alert">
+                {{ nfe }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <div class="alert alert-warning">
+        <strong>Hinweis:</strong> Nur Felder mit aktivierter Checkbox werden in den ausgewählten Materialien aktualisiert. 
+        Felder mit <span class="required">*</span> sind normalerweise Pflichtfelder.
+    </div>
+
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        
+        <!-- Hidden field to pass material IDs -->
+        {% for material in materials %}
+            <input type="hidden" name="material_ids" value="{{ material.id }}">
+        {% endfor %}
+
+        <div class="card">
+            <div class="card-header">
+                <h5>{% trans "Felder für Massenbearbeitung" %}</h5>
+            </div>
+            <div class="card-body">
+                <!-- Select all / deselect all buttons -->
+                <button type="button" class="btn btn-sm btn-outline-primary me-2 mb-3" id="select-all-btn">Alle auswählen</button>
+                <button type="button" class="btn btn-sm btn-outline-secondary mb-3" id="deselect-all-btn">Alle abwählen</button>
+                
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th width="5%">{% trans "Aktualisieren" %}</th>
+                            <th width="30%">{% trans "Feld" %}</th>
+                            <th width="65%">{% trans "Neuer Wert" %}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for field in form.get_normal_fields %}
+                            {% if not field.is_hidden %}
+                                <tr>
+                                    <td>
+                                        <input type="checkbox" id="update_{{ field.name }}" name="update_{{ field.name }}" class="form-check-input update-checkbox">
+                                    </td>
+                                    <td>
+                                        <label for="{{ field.id_for_label }}" class="form-label">
+                                            {% with label_with_tooltip=field|add_tooltip %}
+                                                {{ label_with_tooltip|safe }}
+                                                {% if field.name in form.get_required_field_names %}
+                                                    <span class="required">*</span>
+                                                {% elif field.name == 'cage_code' or field.name == 'hersteller_name' or field.name == 'hersteller_adresse' or field.name == 'hersteller_plz' or field.name == 'hersteller_ort' %}
+                                                    <span class="required conditional-required" id="{{ field.name }}_required">*</span>
+                                                {% endif %}
+                                                {{ field|get_inline_help }}
+                                            {% endwith %}
+                                        </label>
+                                    </td>
+                                    <td>
+                                        {{ field }}
+                                        {% if field.errors %}
+                                            <div class="text-danger small">
+                                                {% for error in field.errors %}
+                                                    {{ error }}
+                                                {% endfor %}
+                                            </div>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            {% elif field.is_hidden %}
+                                {{ field }}
+                            {% endif %}
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="mt-4">
+            <button type="submit" class="btn btn-primary">{% trans "Massenbearbeitung durchführen" %}</button>
+            <button type="button" class="btn btn-secondary" onclick="window.location.href='{% url 'list_material_il' %}'">{% trans "Abbrechen" %}</button>
+        </div>
+    </form>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Initialize all fields as disabled by default
+        document.querySelectorAll('.update-checkbox').forEach(function(checkbox) {
+            const fieldName = checkbox.name.replace('update_', '');
+            const field = document.getElementById('id_' + fieldName);
+            
+            if (field && !checkbox.disabled) {
+                // Initially disable all fields and style them as readonly
+                field.disabled = true;
+                field.style.backgroundColor = '#f8f9fa';
+                
+                // Handle checkbox change events
+                checkbox.addEventListener('change', function() {
+                    if (this.checked) {
+                        // Enable the field when checkbox is checked
+                        field.disabled = false;
+                        field.style.backgroundColor = '';
+                    } else {
+                        // Disable and clear the field when checkbox is unchecked
+                        field.disabled = true;
+                        field.style.backgroundColor = '#f8f9fa';
+                        
+                        // Clear the field value
+                        if (field.type === 'checkbox') {
+                            field.checked = false;
+                        } else if (field.tagName === 'SELECT') {
+                            field.selectedIndex = 0; // Reset to first option (usually empty)
+                        } else {
+                            field.value = '';
+                        }
+                    }
+                });
+            }
+        });
+        
+        // Select all / deselect all functionality
+        document.getElementById('select-all-btn').addEventListener('click', function() {
+            document.querySelectorAll('.update-checkbox:not([disabled])').forEach(function(cb) {
+                cb.checked = true;
+                cb.dispatchEvent(new Event('change'));
+            });
+        });
+        
+        document.getElementById('deselect-all-btn').addEventListener('click', function() {
+            document.querySelectorAll('.update-checkbox:not([disabled])').forEach(function(cb) {
+                cb.checked = false;
+                cb.dispatchEvent(new Event('change'));
+            });
+        });
+    });
+    </script>
+
+    <br/>
+{% endblock %}
