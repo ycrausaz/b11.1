@@ -27,7 +27,13 @@ environ.Env.read_env(BASE_DIR / '.env')
 SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-nuz3!gby)s_=^-%#(fqi+e4g7jbeltn2o=+bh0o0jm$e!d*m(8')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get('DEBUG', 'True') == 'True'
+DEBUG = False  # Hardcode for production
+# Or use environment with safe default
+DEBUG = os.environ.get('DEBUG', 'False').lower() == 'true'
+
+print("*"*40)
+print("DEBUG = ", DEBUG)
+print("*"*40)
 
 #ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '').split(',')
 #if len(ALLOWED_HOSTS) == 1 and len(ALLOWED_HOSTS[0]) == 0:
@@ -61,10 +67,12 @@ INSTALLED_APPS = [
     'storages',
 #    'captcha',
     'bootstrap_datepicker_plus',
+    'csp',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'csp.middleware.CSPMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.locale.LocaleMiddleware',  # This must be after session and before common
@@ -290,3 +298,60 @@ AUTHENTICATION_BACKENDS = [
 # Maximum size for file uploads (in bytes)
 DATA_UPLOAD_MAX_MEMORY_SIZE = 5242880  # 5MB
 FILE_UPLOAD_MAX_MEMORY_SIZE = 5242880  # 5MB
+
+# Session security
+SESSION_COOKIE_SECURE = not DEBUG  # HTTPS only in production
+SESSION_COOKIE_HTTPONLY = True
+SESSION_COOKIE_SAMESITE = 'Lax'
+CSRF_COOKIE_SECURE = not DEBUG
+CSRF_COOKIE_HTTPONLY = True
+CSRF_COOKIE_SAMESITE = 'Lax'
+
+# Security headers
+SECURE_BROWSER_XSS_FILTER = True
+SECURE_CONTENT_TYPE_NOSNIFF = True
+X_FRAME_OPTIONS = 'DENY'
+SECURE_HSTS_SECONDS = 31536000 if not DEBUG else 0
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+SECURE_HSTS_PRELOAD = True
+
+CONTENT_SECURITY_POLICY = {
+    'DIRECTIVES': {
+        'default-src': ("'self'",),
+        'script-src': (
+            "'self'",
+            "'unsafe-inline'",  # Required for inline scripts (minimize usage)
+            "https://cdn.jsdelivr.net",  # Bootstrap, Select2
+            "https://code.jquery.com",   # jQuery
+        ),
+        'style-src': (
+            "'self'",
+            "'unsafe-inline'",  # Required for inline styles
+            "https://cdn.jsdelivr.net",  # Bootstrap, Select2
+            "https://code.jquery.com",   # jQuery UI
+        ),
+        'img-src': (
+            "'self'",
+            "data:",  # For data URLs
+            "https:",  # Allow HTTPS images
+        ),
+        'font-src': (
+            "'self'",
+            "https://cdn.jsdelivr.net",
+        ),
+        'connect-src': (
+            "'self'",
+            # Add your S3/MinIO domains here
+            "https://s3-eu-central-1.amazonaws.com",
+            "http://192.168.1.2:9000",  # Your MinIO server
+        ),
+        'frame-ancestors': ("'none'",),  # Prevent clickjacking
+        'object-src': ("'none'",),       # Block plugins
+        'base-uri': ("'self'",),
+        'form-action': ("'self'",),      # Only allow form submissions to same origin
+    },
+    'REPORT_URI': '/csp-report/',  # Optional: for violation reporting
+}
+
+# Optional: Start with report-only mode for testing
+# CONTENT_SECURITY_POLICY_REPORT_ONLY = True

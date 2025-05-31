@@ -53,11 +53,16 @@ django==5.1.2
     #   -r requirements.in
     #   dj-database-url
     #   django-bootstrap-datepicker-plus
+    #   django-csp
     #   django-recaptcha
     #   django-storages
 django-bootstrap-datepicker-plus==5.0.5
     # via -r requirements.in
+django-csp==4.0
+    # via -r requirements.in
 django-environ==0.12.0
+    # via -r requirements.in
+django-ratelimit==4.1.0
     # via -r requirements.in
 django-recaptcha==4.1.0
     # via -r requirements.in
@@ -90,6 +95,7 @@ openpyxl==3.1.5
 packaging==23.2
     # via
     #   divio-cli
+    #   django-csp
     #   gunicorn
 pandas==2.2.1
     # via -r requirements.in
