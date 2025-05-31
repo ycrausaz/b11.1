@@ -7,6 +7,7 @@ let validationInitialized = false;
 
 // Validate file size
 function validateFileSize(file) {
+    console.log('validateFileSize');
     if (file.size > MAX_FILE_SIZE) {
         alert(`File ${file.name} is too large. Maximum size is 2.5MB.`);
         return false;
@@ -151,6 +152,155 @@ function initializeAttachmentHandlers() {
     });
 }
 
+// ===== MATERIAL LIST BUTTON HANDLERS =====
+
+// Initialize material list button handlers
+function initializeMaterialListHandlers() {
+    console.log('Initializing material list button handlers...');
+    
+    // Handle mass edit buttons
+    document.querySelectorAll('.mass-edit-btn').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            const formId = this.getAttribute('data-form-id');
+            const form = document.getElementById('material-form-' + formId);
+            const checkedBoxes = form.querySelectorAll('.material-checkbox:checked');
+
+            if (checkedBoxes.length === 0) {
+                alert('Bitte wählen Sie mindestens ein Material für die Massenbearbeitung aus.');
+                return;
+            }
+
+            const materialIds = Array.from(checkedBoxes).map(cb => cb.value);
+            
+            // Determine the correct URL based on the current page
+            let massUpdateUrl;
+            if (window.location.pathname.includes('lba')) {
+                massUpdateUrl = '/lba/materials/mass-update/';
+            } else if (window.location.pathname.includes('il')) {
+                massUpdateUrl = '/il/materials/mass-update/';
+            } else {
+                massUpdateUrl = '/il/materials/mass-update/';
+            }
+            
+            const url = massUpdateUrl + '?' + materialIds.map(id => 'materials=' + id).join('&');
+            window.location.href = url;
+        });
+    });
+
+    // Handle tabular material edit buttons
+    document.querySelectorAll('.tabular-material-edit-btn').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            const formId = this.getAttribute('data-form-id');
+            const form = document.getElementById('material-form-' + formId);
+            const checkedBoxes = form.querySelectorAll('.material-checkbox:checked');
+
+            if (checkedBoxes.length === 0) {
+                alert('Bitte wählen Sie mindestens ein Material für die Material-Tabellen-Bearbeitung aus.');
+                return;
+            }
+
+            const materialIds = Array.from(checkedBoxes).map(cb => cb.value);
+            
+            // Determine the correct URL based on the current page
+            let tabularUpdateUrl;
+            if (window.location.pathname.includes('lba')) {
+                tabularUpdateUrl = '/lba/materials/tabular-materials-mass-update/';
+            } else if (window.location.pathname.includes('il')) {
+                tabularUpdateUrl = '/il/materials/tabular-materials-mass-update/';
+            } else {
+                tabularUpdateUrl = '/il/materials/tabular-materials-mass-update/';
+            }
+            
+            const url = tabularUpdateUrl + '?' + materialIds.map(id => 'materials=' + id).join('&');
+            window.location.href = url;
+        });
+    });
+
+    // Handle tabular fields edit buttons
+    document.querySelectorAll('.tabular-fields-edit-btn').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            const formId = this.getAttribute('data-form-id');
+            const form = document.getElementById('material-form-' + formId);
+            const checkedBoxes = form.querySelectorAll('.material-checkbox:checked');
+
+            if (checkedBoxes.length === 0) {
+                alert('Bitte wählen Sie mindestens ein Material für die Felder-Tabellen-Bearbeitung aus.');
+                return;
+            }
+
+            const materialIds = Array.from(checkedBoxes).map(cb => cb.value);
+            
+            // Determine the correct URL based on the current page
+            let fieldsTabularUpdateUrl;
+            if (window.location.pathname.includes('lba')) {
+                fieldsTabularUpdateUrl = '/lba/materials/tabular-fields-mass-update/';
+            } else if (window.location.pathname.includes('il')) {
+                fieldsTabularUpdateUrl = '/il/materials/tabular-fields-mass-update/';
+            } else {
+                fieldsTabularUpdateUrl = '/il/materials/tabular-fields-mass-update/';
+            }
+            
+            const url = fieldsTabularUpdateUrl + '?' + materialIds.map(id => 'materials=' + id).join('&');
+            window.location.href = url;
+        });
+    });
+    
+    console.log('Material list button handlers initialized.');
+}
+
+// Mass Edit functionality
+function initializeMassEditHandlers() {
+    const selectAllBtn = document.getElementById('select-all-fields');
+    const deselectAllBtn = document.getElementById('deselect-all-fields');
+    const updateCheckboxes = document.querySelectorAll('.update-checkbox:not([disabled])');
+
+    // Select all fields button
+    if (selectAllBtn) {
+        selectAllBtn.addEventListener('click', function() {
+            updateCheckboxes.forEach(function(checkbox) {
+                checkbox.checked = true;
+            });
+        });
+    }
+
+    // Deselect all fields button
+    if (deselectAllBtn) {
+        deselectAllBtn.addEventListener('click', function() {
+            updateCheckboxes.forEach(function(checkbox) {
+                checkbox.checked = false;
+            });
+        });
+    }
+
+    // Form submission confirmation for mass edit
+    const massEditForm = document.querySelector('form[action*="mass-update"]') || 
+                        (document.querySelector('.mass-edit-table') ? document.querySelector('form') : null);
+    
+    if (massEditForm) {
+        massEditForm.addEventListener('submit', function(e) {
+            const checkedBoxes = document.querySelectorAll('.update-checkbox:checked:not([disabled])');
+            
+            if (checkedBoxes.length === 0) {
+                e.preventDefault();
+                alert('Bitte wählen Sie mindestens ein Feld zum Aktualisieren aus.');
+                return false;
+            }
+            
+            // Get material count from hidden inputs
+            const materialCount = document.querySelectorAll('input[name="material_ids"]').length;
+            const fieldCount = checkedBoxes.length;
+            
+            const materialText = materialCount > 1 ? 'ien' : '';
+            const fieldText = fieldCount > 1 ? 'er' : '';
+            
+            if (!confirm(`Sie werden ${fieldCount} Feld${fieldText} in ${materialCount} Material${materialText} aktualisieren. Sind Sie sicher?`)) {
+                e.preventDefault();
+                return false;
+            }
+        });
+    }
+}
+
 // Conditional requirement handling for manufacturer fields
 function updateRequiredStatus() {
     var cageCode = $('#id_cage_code').val();
@@ -187,7 +337,6 @@ function initializeConditionalRequirements() {
     }
 }
 
-// ===== MATERIAL-USER MANAGEMENT FUNCTIONS =====
 // ===== TABULAR MASS EDIT FUNCTIONALITY =====
 
 // Track changes in form fields for tabular editing
@@ -215,107 +364,16 @@ function initializeTabularChangeTracking() {
             });
         });
     });
-
-// Toggle all materials in bulk assignment form
-function toggleAllMaterials() {
-    const checkboxes = document.querySelectorAll('.material-checkbox input[type="checkbox"]');
-    const allChecked = Array.from(checkboxes).every(cb => cb.checked);
-    checkboxes.forEach(cb => cb.checked = !allChecked);
-}
-
-// Toggle all users in bulk assignment form
-function toggleAllUsers() {
-    const checkboxes = document.querySelectorAll('.user-checkbox input[type="checkbox"]');
-    const allChecked = Array.from(checkboxes).every(cb => cb.checked);
-    checkboxes.forEach(cb => cb.checked = !allChecked);
-}
-
-// Initialize material-user management functionality
-function initializeMaterialUserManagement() {
-    // Check if we're on the material-user management page
-    if ($('#bulk-assignment-form').length === 0) {
-        return;
-    }
-
-    // Toggle all materials button
-    $('#toggle-all-materials').click(function() {
-        toggleAllMaterials();
-    });
-
-    // Toggle all users button
-    $('#toggle-all-users').click(function() {
-        toggleAllUsers();
-    });
-
-    // Add confirmation for bulk operations
-    $('#bulk-assignment-form').submit(function(e) {
-        const selectedMaterials = document.querySelectorAll('.material-checkbox input:checked').length;
-        const selectedUsers = document.querySelectorAll('.user-checkbox input:checked').length;
-        const action = document.querySelector('input[name="action"]:checked');
-        
-        if (selectedMaterials === 0 || selectedUsers === 0) {
-            e.preventDefault();
-            alert('Please select at least one material and one user.');
-            return;
-        }
-        
-        if (!action) {
-            e.preventDefault();
-            alert('Please select an action.');
-            return;
-        }
-        
-        const actionValue = action.value;
-        const actionText = {
-            'assign': 'assign',
-            'remove': 'remove',
-            'replace': 'replace all assignments for'
-        };
-        
-        if (!confirm(`Are you sure you want to ${actionText[actionValue]} ${selectedUsers} user(s) to/from ${selectedMaterials} material(s)?`)) {
-            e.preventDefault();
-        }
-    });
-}
-
     
     return originalValues;
-    initializeMaterialUserManagement();
 }
 
 // ===== ENHANCED MULTI-CELL SELECTION FUNCTIONALITY =====
-    initializeValidations,
-    toggleAllMaterials,
-    toggleAllUsers,
-    initializeMaterialUserManagement
 
 // Global variables for cell selection
 let selectedCells = new Map(); // Map of column/field -> {cell, value, input}
 let selectionMode = 'single'; // 'single' or 'multiple'
-// Handle toggling of attachment deletion
-function initializeAttachmentDeleteToggle() {
-    $(document).on('click', '.toggle-delete-btn', function() {
-        const btn = $(this);
-        const attachmentRow = btn.closest('.attachment-row');
-        const attachmentLink = attachmentRow.find('.attachment-link');
-        const commentInput = attachmentRow.find('input[type="text"]');
-        const checkbox = attachmentRow.find('.attachment-delete-checkbox');
-        
-        if (btn.hasClass('btn-danger')) {
-            // Switch to "Keep" mode
-            btn.removeClass('btn-danger').addClass('btn-success');
-            btn.text('Keep');
-            attachmentLink.css('text-decoration', 'line-through');
-            commentInput.css('text-decoration', 'line-through');
-            checkbox.prop('checked', true);
-        } else {
-            // Switch to "Delete" mode
-            btn.removeClass('btn-success').addClass('btn-danger');
-            btn.text('Delete');
-            attachmentLink.css('text-decoration', 'none');
-            commentInput.css('text-decoration', 'none');
-            checkbox.prop('checked', false);
-        }
+
 // Initialize cell selection functionality
 function initializeCellSelection() {
     const copyBtn = document.getElementById('copy-value-btn');
@@ -456,43 +514,9 @@ function handleSingleCellSelection(cell, column, rowIndex) {
         if (sameColumnCell !== cell) {
             sameColumnCell.classList.add('same-column-highlight');
         }
-// Extend the initializeAttachmentHandlers function to include the new toggle functionality
-function initializeAttachmentHandlers() {
-    // Initialize button state on page load
-    updateAddAttachmentButton();
-
-    // Also initialize after a short delay to ensure all elements are loaded
-    setTimeout(updateAddAttachmentButton, 500);
-
-    // Initialize attachment delete toggle
-    initializeAttachmentDeleteToggle();
-
-    // Add attachment button handler
-    $('#add-attachment').click(function() {
-        const existingCount = $('.existing-attachment-row').length;
-        const newCount = $('.attachment-row').not('.existing-attachment-row').length;
-        const deletedCount = $('input[name="delete_attachments[]"]:checked').length;
-        const totalCount = existingCount + newCount - deletedCount;
-
-        if (totalCount >= MAX_ATTACHMENTS) {
-            alert(`Cannot have more than ${MAX_ATTACHMENTS} attachments per material.`);
-            return;
-        }
-
-        const newRow = $('.attachment-row').not('.existing-attachment-row').first().clone();
-        newRow.find('input').val('');
-        $('#attachments-container').append(newRow);
-
-        updateAddAttachmentButton();
     });
+}
 
-    // Remove attachment handler
-    $(document).on('click', '.remove-attachment', function() {
-        if ($('.attachment-row').not('.existing-attachment-row').length > 1) {
-            $(this).closest('.attachment-row').remove();
-        } else {
-            $('.attachment-row').not('.existing-attachment-row').first().find('input').val('');
-        }
 // Handle multiple cell selection
 function handleMultiCellSelection(cell, column, rowIndex) {
     // Get the input element and its value
@@ -761,72 +785,7 @@ function handleSingleFieldCellSelection(cell, fieldName, materialId) {
         if (sameRowCell !== cell) {
             sameRowCell.classList.add('same-row-highlight');
         }
-
-    // Handle deletion of existing attachments
-    $(document).on('change', 'input[name="delete_attachments[]"]', function() {
-        updateAddAttachmentButton();
     });
-
-    // File input change handler
-    $(document).on('change', 'input[type="file"]', function() {
-        const file = this.files[0];
-        if (file && !validateFileSize(file)) {
-            $(this).val(''); // Clear the file input
-        }
-    });
-
-    // Form submit handler for attachments
-    $('form').submit(function(e) {
-        // Only apply this to forms with file inputs
-        if ($(this).find('input[type="file"]').length === 0) {
-            return true;
-        }
-        
-        const files = $('input[type="file"]').get().filter(input => input.files.length > 0);
-
-        // Validate all file sizes
-        for (let input of files) {
-            if (!validateFileSize(input.files[0])) {
-                e.preventDefault();
-                return false;
-            }
-        }
-
-        // Count total attachments (existing + new - deleted)
-        const existingCount = $('.existing-attachment-row').length;
-        const deletedCount = $('input[name="delete_attachments[]"]:checked').length;
-        const newCount = files.length;
-        const totalCount = existingCount - deletedCount + newCount;
-
-        if (totalCount > MAX_ATTACHMENTS) {
-            alert(`Cannot have more than ${MAX_ATTACHMENTS} attachments per material.`);
-            e.preventDefault();
-            return false;
-        }
-    });
-}
-
-function updateAddAttachmentButton() {
-    // Wait for DOM to be fully loaded
-    setTimeout(() => {
-        const existingCount = $('.existing-attachment-row').length;
-        const newCount = $('.attachment-row').not('.existing-attachment-row').length;
-        const deletedCount = $('input[name="delete_attachments[]"]:checked').length;
-        const totalCount = existingCount + newCount - deletedCount;
-
-        const addButton = $('#add-attachment');
-        if (totalCount >= MAX_ATTACHMENTS) {
-            addButton.prop('disabled', true);
-            addButton.addClass('btn-secondary-disabled');
-            addButton.attr('title', `Maximum of ${MAX_ATTACHMENTS} attachments reached`);
-        } else {
-            addButton.prop('disabled', false);
-            addButton.removeClass('btn-secondary-disabled');
-            addButton.attr('title', '');
-        }
-        console.log('Button state updated. Total attachments:', totalCount);
-    }, 100);
-}
 }
 
 function handleMultiFieldCellSelection(cell, fieldName, materialId) {
@@ -1169,6 +1128,7 @@ function initializeValidations() {
     
     // Initialize conditional requirements
     initializeConditionalRequirements();
+    initializeMaterialUserManagement();
     
     // Initialize material list handlers (for list pages)
     if (document.querySelector('[id^="material-form-"]')) {
@@ -1188,12 +1148,81 @@ function initializeValidations() {
     console.log('Validation functionality initialized.');
 }
 
+// ===== MATERIAL-USER MANAGEMENT FUNCTIONS =====
+
+// Toggle all materials in bulk assignment form
+function toggleAllMaterials() {
+    const checkboxes = document.querySelectorAll('.material-checkbox input[type="checkbox"]');
+    const allChecked = Array.from(checkboxes).every(cb => cb.checked);
+    checkboxes.forEach(cb => cb.checked = !allChecked);
+}
+
+// Toggle all users in bulk assignment form
+function toggleAllUsers() {
+    const checkboxes = document.querySelectorAll('.user-checkbox input[type="checkbox"]');
+    const allChecked = Array.from(checkboxes).every(cb => cb.checked);
+    checkboxes.forEach(cb => cb.checked = !allChecked);
+}
+
+// Initialize material-user management functionality
+function initializeMaterialUserManagement() {
+    console.log("initializeMaterialUserManagement");
+    // Check if we're on the material-user management page
+    if ($('#bulk-assignment-form').length === 0) {
+        return;
+    }
+
+    // Toggle all materials button
+    $('#toggle-all-materials').click(function() {
+        console.log("toggle-all-materials");
+        toggleAllMaterials();
+    });
+
+    // Toggle all users button
+    $('#toggle-all-users').click(function() {
+        toggleAllUsers();
+    });
+
+    // Add confirmation for bulk operations
+    $('#bulk-assignment-form').submit(function(e) {
+        const selectedMaterials = document.querySelectorAll('.material-checkbox input:checked').length;
+        const selectedUsers = document.querySelectorAll('.user-checkbox input:checked').length;
+        const action = document.querySelector('input[name="action"]:checked');
+        
+        if (selectedMaterials === 0 || selectedUsers === 0) {
+            e.preventDefault();
+            alert('Please select at least one material and one user.');
+            return;
+        }
+        
+        if (!action) {
+            e.preventDefault();
+            alert('Please select an action.');
+            return;
+        }
+        
+        const actionValue = action.value;
+        const actionText = {
+            'assign': 'assign',
+            'remove': 'remove',
+            'replace': 'replace all assignments for'
+        };
+        
+        if (!confirm(`Are you sure you want to ${actionText[actionValue]} ${selectedUsers} user(s) to/from ${selectedMaterials} material(s)?`)) {
+            e.preventDefault();
+        }
+    });
+}
+
 // Make functions available globally
 window.ValidationUtils = {
     validateFileSize,
     updateAddAttachmentButton,
     updateRequiredStatus,
     initializeValidations,
+//    toggleAllMaterials,
+//    toggleAllUsers,
+//    initializeMaterialUserManagement,
     initializeMassEditHandlers,
     initializeTabularMassEdit,
     initializeTabularChangeTracking,
@@ -1221,3 +1250,4 @@ document.addEventListener('DOMContentLoaded', function() {
         window.ValidationUtils.initialized = true;
     }
 });
+

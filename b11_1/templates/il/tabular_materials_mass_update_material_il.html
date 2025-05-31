@@ -2,7 +2,7 @@
 {% load i18n %}
 {% load custom_filters %}
 
-<!-- templates/il/tabular_mass_update_material_il.html -->
+<!-- templates/il/tabular_materials_mass_update_material_il.html -->
 {% load help_tags %}
 {% block content %}
     <div class="tabular-edit">
@@ -90,11 +90,14 @@
                                             </td>
                                             
                                             {% for field_info in editable_fields %}
-                                                <td class="p-1 editable-cell" data-column="{{ field_info.name }}" data-row="{{ forloop.parentloop.counter0 }}">
+                                                <td class="p-1 editable-cell" 
+                                                    data-column="{{ field_info.name }}" 
+                                                    data-row="{{ forloop.parentloop.counter0 }}"
+                                                    data-material="{{ material.id }}">
                                                     {% for field in form.get_normal_fields %}
                                                         {% if field.name == field_info.name and not field.is_hidden %}
                                                             {% if field.errors %}
-                                                                <div class="border border-danger rounded">
+                                                                <div class="border border-danger rounded p-1">
                                                             {% endif %}
                                                             
                                                             {{ field }}
