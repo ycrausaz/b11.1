@@ -49,3 +49,9 @@ def striptags(value):
     """
     import re
     return re.sub(r'<[^>]*>', '', str(value))
+
+@register.filter
+def basename(value):
+    """Extract basename from a file path."""
+    import os
+    return os.path.basename(str(value))
