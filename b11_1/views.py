@@ -2612,7 +2612,9 @@ class MaterialUserManagementView(GroupRequiredMixin, FormView):
             })
         
         context['materials_with_users'] = materials_with_users
-        context['il_users'] = User.objects.filter(groups__name='grIL').order_by('email')
+        il_users = User.objects.filter(groups__name='grIL').order_by('email')
+        print("il_users = ", il_users)
+        context['il_users'] = il_users
         
         return context
 
@@ -2671,45 +2673,62 @@ class MaterialUserManagementView(GroupRequiredMixin, FormView):
         
         return super().form_valid(form)
 
-class MaterialDetailAssignmentView(GroupRequiredMixin, UpdateView):
+class MaterialDetailAssignmentView(GroupRequiredMixin, DetailView):
     """
     View for managing assignments for a single material
+    Changed from UpdateView to DetailView since we're using a regular Form
     """
     model = Material
     template_name = 'lba/material_assignment_detail.html'
     form_class = MaterialAssignmentInlineForm
     allowed_groups = ['grLBA']
-    success_url = reverse_lazy('material_user_management')
 
-    def form_valid(self, form):
-        try:
-            with transaction.atomic():
-                material = self.object
-                assigned_users = form.cleaned_data['assigned_users']
-                primary_user = form.cleaned_data['primary_user']
-                
-                # Remove all existing assignments
-                MaterialUserAssociation.objects.filter(material=material).delete()
-                
-                # Create new assignments
-                for user in assigned_users:
-                    is_primary = (user == primary_user)
-                    MaterialUserAssociation.objects.create(
-                        material=material,
-                        user=user,
-                        assigned_by=self.request.user,
-                        is_primary=is_primary
-                    )
-                
-                messages.success(
-                    self.request,
-                    f"Successfully updated assignments for {material.kurztext_de}"
-                )
-                
-                logger.info(f"Material {material.kurztext_de} assignments updated by {self.request.user.email}")
-                
-        except Exception as e:
-            messages.error(self.request, f"Error updating assignments: {str(e)}")
-            logger.error(f"Error updating material assignments: {str(e)}")
+    def get_context_data(self, **kwargs):
+        """Add form to context"""
+        context = super().get_context_data(**kwargs)
         
-        return super().form_valid(form)
+        # Create the form with the current material instance
+        form = self.form_class(instance=self.object)
+        context['form'] = form
+        
+        # Add all IL users for debugging
+        all_il_users = User.objects.filter(groups__name='grIL').order_by('email')
+        context['all_il_users'] = all_il_users
+        
+        print(f"DEBUG VIEW CLEAN: Context has {all_il_users.count()} IL users")
+        
+        return context
+
+    def post(self, request, *args, **kwargs):
+        """Handle form submission"""
+        self.object = self.get_object()
+        form = self.form_class(request.POST, instance=self.object)
+        
+        if form.is_valid():
+            try:
+                with transaction.atomic():
+                    # Use the form's custom save method
+                    form.save(material=self.object, request_user=request.user)
+                    
+                    messages.success(
+                        request,
+                        f"Successfully updated assignments for {self.object.kurztext_de}"
+                    )
+                    
+                    logger.info(f"Material {self.object.kurztext_de} assignments updated by {request.user.email}")
+                    
+                    return redirect('material_user_management')
+                    
+            except Exception as e:
+                messages.error(request, f"Error updating assignments: {str(e)}")
+                logger.error(f"Error updating material assignments: {str(e)}")
+        else:
+            # Form has errors
+            for field, errors in form.errors.items():
+                for error in errors:
+                    messages.error(request, f"{field}: {error}")
+        
+        # If we get here, there were errors - redisplay the form
+        context = self.get_context_data()
+        context['form'] = form
+        return self.render_to_response(context)

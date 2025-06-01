@@ -1,81 +1,156 @@
 {% extends 'base_generic.html' %}
 {% load i18n %}
 
-{% block title %}Material Assignment Detail{% endblock %}
+{% block title %}{% trans "Material Assignment Detail" %}{% endblock %}
 
 {% block content %}
 <div class="container">
     <div class="row">
         <div class="col-12">
-            <h2>{% trans "Manage Assignments for" %}: {{ object.kurztext_de }}</h2>
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2>{% trans "Manage Assignments for" %}: {{ object.kurztext_de }}</h2>
+                <a href="{% url 'material_user_management' %}" class="btn btn-outline-secondary">
+                    <i class="fas fa-arrow-left"></i> {% trans "Back to Management" %}
+                </a>
+            </div>
             
-            <div class="card">
+            <!-- Material Information Card -->
+            <div class="card mb-4">
                 <div class="card-header">
-                    <h4>{% trans "Material Information" %}</h4>
+                    <h4><i class="fas fa-info-circle"></i> {% trans "Material Information" %}</h4>
                 </div>
                 <div class="card-body">
                     <div class="row">
                         <div class="col-md-6">
-                            <p><strong>{% trans "Position Nr." %}:</strong> {{ object.positions_nr|default:"-" }}</p>
-                            <p><strong>{% trans "Short Text (DE)" %}:</strong> {{ object.kurztext_de }}</p>
-                            <p><strong>{% trans "Short Text (FR)" %}:</strong> {{ object.kurztext_fr|default:"-" }}</p>
-                            <p><strong>{% trans "Short Text (EN)" %}:</strong> {{ object.kurztext_en|default:"-" }}</p>
+                            <dl class="row">
+                                <dt class="col-sm-5">{% trans "Position Nr." %}:</dt>
+                                <dd class="col-sm-7">{{ object.positions_nr|default:"-" }}</dd>
+                                
+                                <dt class="col-sm-5">{% trans "Short Text (DE)" %}:</dt>
+                                <dd class="col-sm-7">{{ object.kurztext_de|default:"-" }}</dd>
+                                
+                                <dt class="col-sm-5">{% trans "Short Text (FR)" %}:</dt>
+                                <dd class="col-sm-7">{{ object.kurztext_fr|default:"-" }}</dd>
+                                
+                                <dt class="col-sm-5">{% trans "Short Text (EN)" %}:</dt>
+                                <dd class="col-sm-7">{{ object.kurztext_en|default:"-" }}</dd>
+                            </dl>
                         </div>
                         <div class="col-md-6">
-                            <p><strong>{% trans "System Name" %}:</strong> {{ object.systemname|default:"-" }}</p>
-                            <p><strong>{% trans "Primary Responsible User" %}:</strong> 
-                                {% if object.primary_user_email %}
-                                    <span class="user-assignment-badge primary">{{ object.responsible_user_display }}</span>
-                                {% else %}
-                                    <span class="text-muted">No responsible user assigned</span>
-                                {% endif %}
-                            </p>
-                            <p><strong>{% trans "Assigned Users Count" %}:</strong> {{ object.get_assigned_users.count }}</p>
-                            <p><strong>{% trans "Status" %}:</strong> 
-                                {% if object.is_transferred %}
-                                    <span class="user-assignment-badge assigned">{% trans "Transferred" %}</span>
-                                {% else %}
-                                    <span class="user-assignment-badge primary">{% trans "In Progress" %}</span>
-                                {% endif %}
-                            </p>
+                            <dl class="row">
+                                <dt class="col-sm-5">{% trans "System Name" %}:</dt>
+                                <dd class="col-sm-7">{{ object.systemname|default:"-" }}</dd>
+                                
+                                <dt class="col-sm-5">{% trans "Primary User" %}:</dt>
+                                <dd class="col-sm-7">
+                                    {% if object.primary_user_email %}
+                                        <span class="user-assignment-badge primary">{{ object.responsible_user_display }}</span>
+                                    {% else %}
+                                        <span class="text-muted">{% trans "No primary user assigned" %}</span>
+                                    {% endif %}
+                                </dd>
+                                
+                                <dt class="col-sm-5">{% trans "Assigned Users" %}:</dt>
+                                <dd class="col-sm-7">
+                                    <span class="user-assignment-badge assigned">{{ object.get_assigned_users.count }} {% trans "users" %}</span>
+                                </dd>
+                                
+                                <dt class="col-sm-5">{% trans "Status" %}:</dt>
+                                <dd class="col-sm-7">
+                                    {% if object.is_transferred %}
+                                        <span class="user-assignment-badge transferred">{% trans "Transferred" %}</span>
+                                    {% else %}
+                                        <span class="user-assignment-badge in-progress">{% trans "In Progress" %}</span>
+                                    {% endif %}
+                                </dd>
+                            </dl>
                         </div>
                     </div>
                 </div>
             </div>
             
-            <div class="card mt-4">
+            <!-- User Assignment Form -->
+            <div class="card">
                 <div class="card-header">
-                    <h4>{% trans "User Assignments" %}</h4>
+                    <h4><i class="fas fa-users"></i> {% trans "User Assignments" %}</h4>
                 </div>
                 <div class="card-body">
-                    <form method="post">
+                    <form method="post" id="assignment-form">
                         {% csrf_token %}
                         
                         <div class="row">
-                            <div class="col-md-8">
-                                <h5>{% trans "Assigned Users" %}</h5>
-                                <p class="text-muted">{% trans "Select all users who should have access to this material" %}</p>
-                                <div style="max-height: 300px; overflow-y: auto; border: 1px solid #ddd; padding: 15px;">
-                                    {{ form.assigned_users }}
+                            <!-- Assigned Users Section -->
+                            <div class="col-lg-8">
+                                <div class="assignment-form-section">
+                                    <h5>
+                                        <i class="fas fa-user-check"></i> 
+                                        {% trans "Assigned Users" %}
+                                    </h5>
+                                    <p class="text-muted mb-3">
+                                        {% trans "Select all users who should have access to this material. These users will be able to view and edit this material." %}
+                                    </p>
+                                    
+                                    <div class="assignment-checkbox-container">
+                                        {% if form.assigned_users %}
+                                            {{ form.assigned_users }}
+                                        {% else %}
+                                            <p class="text-muted">{% trans "No users available for assignment." %}</p>
+                                        {% endif %}
+                                    </div>
+                                    
+                                    {% if form.assigned_users.help_text %}
+                                        <small class="form-text text-muted mt-2">{{ form.assigned_users.help_text }}</small>
+                                    {% endif %}
                                 </div>
                             </div>
                             
-                            <div class="col-md-4">
-                                <h5>{% trans "Primary User" %}</h5>
-                                <p class="text-muted">{% trans "Select the main responsible user (optional)" %}</p>
-                                <p class="text-info"><small>{% trans "Only users selected on the left will appear here" %}</small></p>
-                                {{ form.primary_user }}
+                            <!-- Primary User Section -->
+                            <div class="col-lg-4">
+                                <div class="assignment-form-section">
+                                    <h5>
+                                        <i class="fas fa-user-crown"></i> 
+                                        {% trans "Primary User" %}
+                                    </h5>
+                                    <p class="text-muted mb-3">
+                                        {% trans "Select the main responsible user for this material (optional)." %}
+                                    </p>
+                                    
+                                    <div class="mb-3">
+                                        {% if form.primary_user %}
+                                            {{ form.primary_user }}
+                                        {% else %}
+                                            <select class="form-select" disabled>
+                                                <option>{% trans "No users available" %}</option>
+                                            </select>
+                                        {% endif %}
+                                    </div>
+                                    
+                                    <div class="alert alert-info">
+                                        <small>
+                                            <i class="fas fa-info-circle"></i>
+                                            {% trans "The primary user will be automatically included in the assigned users list." %}
+                                        </small>
+                                    </div>
+                                    
+                                    {% if form.primary_user.help_text %}
+                                        <small class="form-text text-muted">{{ form.primary_user.help_text }}</small>
+                                    {% endif %}
+                                </div>
                             </div>
                         </div>
                         
+                        <!-- Form Actions -->
                         <div class="row mt-4">
                             <div class="col-12">
-                                <button type="submit" class="btn btn-primary">
-                                    {% trans "Save Assignments" %}
-                                </button>
-                                <a href="{% url 'material_user_management' %}" class="btn btn-secondary">
-                                    {% trans "Back to Management" %}
-                                </a>
+                                <hr>
+                                <div class="d-flex justify-content-between">
+                                    <a href="{% url 'material_user_management' %}" class="btn btn-secondary">
+                                        <i class="fas fa-times"></i> {% trans "Cancel" %}
+                                    </a>
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="fas fa-save"></i> {% trans "Save Assignments" %}
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </form>
