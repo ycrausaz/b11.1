@@ -1,9 +1,10 @@
+<!-- templates/lba/mass_update_material_lba.html -->
+
 {% extends "base_generic.html" %}
 {% load i18n %}
 {% load custom_filters %}
 {% load field_filters %}
 
-<!-- templates/lba/mass_update_material_lba.html -->
 {% load help_tags %}
 {% block content %}
     <h1>{% trans "Massenbearbeitung von Materialien" %} ({{ material_count }} Material{% if material_count > 1 %}ien{% endif %})</h1>
