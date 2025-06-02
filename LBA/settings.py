@@ -323,12 +323,14 @@ CONTENT_SECURITY_POLICY = {
             "'unsafe-inline'",  # Required for inline scripts (minimize usage)
             "https://cdn.jsdelivr.net",  # Bootstrap, Select2
             "https://code.jquery.com",   # jQuery
+            "https://cdnjs.cloudflare.com",  # Font Awesome (if using JS)
         ),
         'style-src': (
             "'self'",
             "'unsafe-inline'",  # Required for inline styles
             "https://cdn.jsdelivr.net",  # Bootstrap, Select2
             "https://code.jquery.com",   # jQuery UI
+            "https://cdnjs.cloudflare.com",  # Font Awesome CSS
         ),
         'img-src': (
             "'self'",
@@ -338,6 +340,7 @@ CONTENT_SECURITY_POLICY = {
         'font-src': (
             "'self'",
             "https://cdn.jsdelivr.net",
+            "https://cdnjs.cloudflare.com",  # Font Awesome fonts
         ),
         'connect-src': (
             "'self'",
