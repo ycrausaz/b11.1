@@ -8,7 +8,11 @@ ENV PYTHONUNBUFFERED 1
 WORKDIR /app
 
 # Install dependencies
-RUN apt-get update && apt-get install -y postgresql-client libpq-dev
+RUN apt-get update && apt-get install -y \
+    postgresql-client \
+    libpq-dev \
+    libmagic1 \
+    && rm -rf /var/lib/apt/lists/*
 
 # Copy requirements and install Python packages
 COPY requirements.in /app/
