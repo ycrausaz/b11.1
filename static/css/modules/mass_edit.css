@@ -1,0 +1,113 @@
+/* Mass Edit Table Styles */
+.mass-edit-table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: auto;
+}
+
+.mass-edit-table th,
+.mass-edit-table td {
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    vertical-align: top;
+}
+
+.mass-edit-table th {
+    background-color: #f8f9fa;
+    font-weight: bold;
+    text-align: left;
+}
+
+.mass-edit-table .section-header td {
+    background-color: #e9ecef;
+    font-weight: bold;
+    text-align: left;
+}
+
+/* Update checkbox styling */
+.update-checkbox {
+    transform: scale(1.2);
+    cursor: pointer;
+}
+
+.update-checkbox:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+/* Field label styling for mass edit */
+.field-label {
+    font-weight: 500;
+    margin-bottom: 0;
+    display: block;
+}
+
+/* Form controls */
+form table input[type="text"],
+form table input[type="number"],
+form table input[type="email"],
+form table input[type="password"],
+form table select,
+form table textarea,
+form table .select2-container,
+.mass-edit-table input[type="text"],
+.mass-edit-table input[type="number"],
+.mass-edit-table input[type="email"],
+.mass-edit-table input[type="password"],
+.mass-edit-table select,
+.mass-edit-table textarea,
+.mass-edit-table .select2-container {
+    width: 100% !important;
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+/* Remove spinners from number inputs */
+/* For Chrome, Safari, Edge, Opera */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* For Firefox */
+input[type="number"] {
+    -moz-appearance: textfield;
+}
+
+/* Select2 customization */
+.select2-container {
+    width: 100% !important;
+}
+
+.select2-container--bootstrap-5 .select2--small.select2-selection {
+    min-height: calc(1.5em + .5rem + 2px);
+/* Mass Edit Button Styling */
+.btn-outline-secondary {
+    margin-right: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+/* Mass Edit Specific Responsive Styling */
+@media (max-width: 768px) {
+    .table-container {
+        width: 95%;
+        flex-direction: column;
+        height: auto;
+    }
+
+    .same-width {
+        width: 95%;
+    }
+
+    .mass-edit-table th:first-child,
+    .mass-edit-table td:first-child {
+        width: 60px;
+    }
+
+    .mass-edit-table th:nth-child(2),
+    .mass-edit-table td:nth-child(2) {
+        width: 150px;
+    }
+}
+

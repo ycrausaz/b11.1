@@ -1876,102 +1876,140 @@ class UpdateMaterial_LBA_View(ComputedContextMixin, FormValidMixin, GroupRequire
         return kwargs
 
     def form_valid(self, form):
+        print("1")
         try:
             with transaction.atomic():
+                print("2") 
                 # Start by validating the form data
                 self.object = form.save(commit=False)
+                print("3") 
 
                 # Get new files and comments
                 files = self.request.FILES.getlist('attachment_files[]')
                 comments = self.request.POST.getlist('attachment_comments[]')
                 attachments_to_delete = self.request.POST.getlist('delete_attachments[]')
 
+                print("4") 
                 # Handle deletion of existing attachments first
                 if attachments_to_delete:
+                    print("5") 
                     attachments = MaterialAttachment.objects.filter(
                         id__in=attachments_to_delete,
                         material=self.object
                     )
+                    print("6") 
                     for attachment in attachments:
+                        print("7") 
                         try:
+                            print("8") 
                             # Delete from S3 first
                             attachment.file.delete(save=False)
+                            print("9") 
                         except (BotoCoreError, ClientError) as e:
+                            print("10") 
                             error_msg = f"Failed to delete file {attachment.file.name} from storage: {str(e)}"
                             logger.error(error_msg)
                             form.add_error(None, error_msg)
                             return self.render_to_response(self.get_context_data(form=form))
 
                         # If S3 deletion successful, delete from database
+                        print("11") 
                         attachment.delete()
+                        print("12") 
 
+                print("13") 
                 # Create temporary list to track new attachments
                 new_attachments = []
+                print("14") 
 
                 # Process new file attachments
                 for i, (file, comment) in enumerate(zip(files, comments)):
                     if file:
                         try:
+                            print("15") 
                             attachment = MaterialAttachment(
                                 material=self.object,
                                 file=file,
                                 comment=comment,
                                 uploaded_by=self.request.user
                             )
+                            print("16") 
 
                             # Validate the attachment (this will call validate_file_extension)
                             attachment.full_clean()
+                            print("17") 
 
                             # Try to save file to S3 first
                             try:
                                 # Note: Don't save to database yet
+                                print("18") 
                                 attachment.file.save(file.name, file, save=False)
+                                print("19") 
                             except (BotoCoreError, ClientError) as e:
+                                print("20") 
                                 error_msg = f"Failed to upload file '{file.name}' to storage: {str(e)}"
                                 logger.error(error_msg)
                                 form.add_error(None, error_msg)
                                 return self.render_to_response(self.get_context_data(form=form))
 
+                            print("21") 
                             new_attachments.append(attachment)
+                            print("22") 
 
                         except ValidationError as e:
+                            print("23") 
                             # Handle validation errors (including file extension/size errors)
                             if hasattr(e, 'message_dict') and 'file' in e.message_dict:
+                                print("24") 
                                 # Field-specific validation error
                                 file_errors = e.message_dict['file']
+                                print("25") 
                                 for error in file_errors:
+                                    print("26") 
                                     error_msg = f"Error with file '{file.name}': {error}"
                                     logger.error(error_msg)
                                     form.add_error(None, error_msg)
+                                print("27") 
                             else:
+                                print("28") 
                                 # General validation error
                                 error_msg = f"Validation error for file '{file.name}': {str(e)}"
                                 logger.error(error_msg)
                                 form.add_error(None, error_msg)
 
                             # Clean up any successfully uploaded files before returning
+                            print("29") 
                             for uploaded_attachment in new_attachments:
                                 try:
+                                    print("30") 
                                     uploaded_attachment.file.delete(save=False)
+                                    print("31") 
                                 except (BotoCoreError, ClientError) as cleanup_error:
                                     logger.error(f"Failed to clean up file {uploaded_attachment.file.name}: {str(cleanup_error)}")
 
+                            print("32") 
                             return self.render_to_response(self.get_context_data(form=form))
 
+                print("33") 
                 # If we got here, all validations and S3 operations were successful
                 # Now save the material object
                 self.object.save()
+                print("34") 
 
                 # And save all new attachments to database
                 for attachment in new_attachments:
+                    print("35") 
                     attachment.save()
+                    print("36") 
 
+                print("37") 
                 # Log the successful update
                 logger.info(f"Material '{self.object.kurztext_de}' wurde durch '{self.request.user.email}' aktualisiert.")
 
                 return super().form_valid(form)
 
         except ValidationError as e:
+            print("38") 
             # Handle any other validation errors
             error_msg = f"Validation error: {str(e)}"
             logger.error(error_msg)
@@ -1984,15 +2022,18 @@ class UpdateMaterial_LBA_View(ComputedContextMixin, FormValidMixin, GroupRequire
                 except (BotoCoreError, ClientError) as s3_error:
                     logger.error(f"Failed to clean up file {attachment.file.name} after error: {str(s3_error)}")
 
+            print("39") 
             return self.render_to_response(self.get_context_data(form=form))
 
         except (BotoCoreError, ClientError) as e:
+            print("40") 
             error_msg = f"Failed to upload file to storage: {str(e)}"
             logger.error(error_msg)
             form.add_error(None, error_msg)
             return self.render_to_response(self.get_context_data(form=form))
 
         except Exception as e:
+            print("41") 
             error_msg = f"Unexpected error: {str(e)}"
             logger.error(error_msg)
             form.add_error(None, error_msg)

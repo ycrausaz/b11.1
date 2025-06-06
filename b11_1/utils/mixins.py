@@ -135,7 +135,7 @@ class FormValidMixin:
 #            print(f"Error: {error_msg}")
 
         # Revision Fremd
-        item.revision_fremd = form.cleaned_data['revision']
+#        item.revision_fremd = form.cleaned_data['revision']
 #        print("item.revision_fremd = " + str(item.revision_fremd))
 
         # Geschäftspartner

@@ -210,27 +210,42 @@ class BaseTemplateForm(forms.ModelForm):
         if editable_fields:
             # Get computed fields from the specific form's Meta class before removing fields
             computed_fields = getattr(self.Meta, 'computed_fields', [])
-            
+
+            # Import IL fields to determine what should be readonly
+            from ..utils.editable_fields_config import EDITABLE_FIELDS_IL
+
             # Get all model fields
             all_fields = [field.name for field in self._meta.model._meta.fields]
 
-            # Remove fields that are not in editable_fields AND not computed fields
+            # Instead of removing fields, categorize them
             fields_to_remove = []
+            fields_to_make_readonly = []
+
             for field_name in self.fields:
                 if field_name not in editable_fields and field_name not in computed_fields:
-                    fields_to_remove.append(field_name)
+                    # Check if it's an IL field that should be shown as readonly
+                    if field_name in EDITABLE_FIELDS_IL:
+                        fields_to_make_readonly.append(field_name)
+                    else:
+                        # Remove fields that are neither editable nor IL fields
+                        fields_to_remove.append(field_name)
 
-            # Actually remove the fields
+            # Actually remove the fields that shouldn't be shown at all
             for field_name in fields_to_remove:
                 del self.fields[field_name]
 
             # For remaining fields, set readonly/disabled status
             for field_name in self.fields:
                 field = self.fields[field_name]
-                if field_name not in editable_fields and field_name not in computed_fields:
-                    # If it's not in editable_fields and not computed, mark it as disabled
+
+                if field_name in fields_to_make_readonly:
+                    # IL fields in LBA forms should be readonly
                     field.disabled = True
-                    # Also ensure the widget has readonly attribute
+                    field.widget.attrs['readonly'] = True
+                    field.is_readonly_il = True  # Mark as IL readonly field
+                elif field_name not in editable_fields and field_name not in computed_fields:
+                    # Other non-editable fields
+                    field.disabled = True
                     field.widget.attrs['readonly'] = True
                 elif field_name in computed_fields:
                     # Mark computed fields as disabled and computed
@@ -250,10 +265,14 @@ class BaseTemplateForm(forms.ModelForm):
         """Return only readonly fields, excluding computed fields."""
         return [field for field in self if field.field.disabled and not getattr(field.field, 'is_computed', False)]
 
+    def get_il_readonly_fields(self):
+        """Return IL fields that are shown as readonly in LBA forms."""
+        return [field for field in self if getattr(field.field, 'is_readonly_il', False)]
+
     def save(self, commit=True):
         instance = super().save(commit=False)
         if commit:
-            # Only update fields that exist in the form
+            # Only update fields that exist in the form and are editable
             update_fields = [field.name for field in self.get_normal_fields() if field.name in self.fields]
             if update_fields:
                 instance.save(update_fields=update_fields)

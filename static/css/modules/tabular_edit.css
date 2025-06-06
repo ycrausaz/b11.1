@@ -1,0 +1,307 @@
+/* ===== TABULAR MASS EDIT STYLES ===== */
+
+/* Sticky column for material information */
+.sticky-column {
+    position: sticky;
+    left: 0;
+    z-index: 10;
+    background-color: #f8f9fa !important;
+}
+
+/* Table responsive container styling */
+.tabular-edit .table-responsive {
+    border: 1px solid #dee2e6;
+}
+
+/* Sticky header with higher z-index */
+.tabular-edit .sticky-top {
+    z-index: 20;
+}
+
+/* Compact view styles for smaller screens */
+.compact-view .table td,
+.compact-view .table th {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.85em;
+}
+
+.compact-view .form-control,
+.compact-view .form-select {
+    font-size: 0.85em;
+    padding: 0.25rem 0.5rem;
+}
+
+/* Highlight changed cells in tabular edit */
+.changed-cell {
+    background-color: #fff3cd !important;
+    border-color: #ffc107 !important;
+}
+
+/* Form controls styling within tabular edit table */
+.tabular-edit .table td .form-control,
+.tabular-edit .table td .form-select {
+    border: 1px solid #ced4da;
+    border-radius: 0.25rem;
+    font-size: 0.9em;
+}
+
+.tabular-edit .table td .form-control:focus,
+.tabular-edit .table td .form-select:focus {
+    border-color: #86b7fe;
+    box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+}
+
+/* Materials table specific styling */
+#materials-table {
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+#materials-table th,
+#materials-table td {
+    border: 1px solid #dee2e6;
+}
+
+/* ===== CELL SELECTION STYLES ===== */
+
+/* Editable cell styling for cell selection functionality */
+.editable-cell {
+    cursor: pointer;
+    position: relative;
+    transition: background-color 0.2s ease;
+}
+
+/* Selected cell highlighting */
+.editable-cell.selected {
+    background-color: #e3f2fd !important;
+    box-shadow: inset 0 0 0 2px #2196f3;
+    position: relative;
+}
+
+/* Multiple selected cells highlighting */
+.editable-cell.multi-selected {
+    background-color: #e8f5e8 !important;
+    box-shadow: inset 0 0 0 2px #4caf50;
+    position: relative;
+}
+
+/* Same column highlighting for single selection */
+.editable-cell.same-column-highlight {
+    background-color: #f3e5f5 !important;
+    transition: background-color 0.2s ease;
+}
+
+/* Same column highlighting for multiple selection */
+.editable-cell.multi-column-highlight {
+    background-color: #fff8e1 !important;
+    transition: background-color 0.2s ease;
+}
+
+/* Hover effect for editable cells */
+.editable-cell:hover {
+    background-color: #f5f5f5;
+}
+
+/* Prevent hover effect on selected cells */
+.editable-cell.selected:hover {
+    background-color: #e3f2fd !important;
+}
+
+.editable-cell.multi-selected:hover {
+    background-color: #e8f5e8 !important;
+}
+
+.editable-cell.same-column-highlight:hover {
+    background-color: #f3e5f5 !important;
+}
+
+.editable-cell.multi-column-highlight:hover {
+    background-color: #fff8e1 !important;
+}
+
+/* Selection info badge styling */
+#selected-cell-info {
+    font-size: 0.85em;
+    font-weight: normal;
+    padding: 0.25rem 0.5rem;
+    max-width: 300px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Multiple selection counter */
+#selection-counter {
+    font-size: 0.75em;
+    margin-left: 0.5rem;
+}
+
+/* Copy value button styling */
+#copy-value-btn {
+    transition: all 0.2s ease;
+}
+
+#copy-value-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+#copy-value-btn:not(:disabled):hover {
+    background-color: #0dcaf0;
+    border-color: #0dcaf0;
+    color: white;
+}
+
+/* Clear selection button styling */
+#clear-selection-btn {
+    margin-left: 0.5rem;
+}
+
+/* Enhanced visual feedback for single cell selection */
+.editable-cell.selected::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    border: 2px solid #2196f3;
+    border-radius: 3px;
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* Enhanced visual feedback for multiple cell selection */
+.editable-cell.multi-selected::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    border: 2px solid #4caf50;
+    border-radius: 3px;
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* Prevent form controls from blocking cell selection */
+.editable-cell input,
+.editable-cell select,
+.editable-cell textarea {
+    position: relative;
+    z-index: 2;
+}
+
+/* Animation for selection changes */
+@keyframes cellSelect {
+    0% {
+        transform: scale(1);
+        box-shadow: inset 0 0 0 0px #2196f3;
+    }
+    50% {
+        transform: scale(1.02);
+        box-shadow: inset 0 0 0 2px #2196f3;
+    }
+    100% {
+        transform: scale(1);
+        box-shadow: inset 0 0 0 2px #2196f3;
+    }
+}
+
+@keyframes multiCellSelect {
+    0% {
+        transform: scale(1);
+        box-shadow: inset 0 0 0 0px #4caf50;
+    }
+    50% {
+        transform: scale(1.02);
+        box-shadow: inset 0 0 0 2px #4caf50;
+    }
+    100% {
+        transform: scale(1);
+        box-shadow: inset 0 0 0 2px #4caf50;
+    }
+}
+
+.editable-cell.selected {
+    animation: cellSelect 0.3s ease-out;
+}
+
+.editable-cell.multi-selected {
+    animation: multiCellSelect 0.3s ease-out;
+}
+
+/* Success message styling for copy operations */
+.copy-success-alert {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1050;
+    max-width: 400px;
+    animation: slideInRight 0.3s ease-out;
+}
+
+@keyframes slideInRight {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+/* Tabular edit specific responsive design */
+@media (max-width: 992px) {
+    .tabular-edit .table-responsive {
+        font-size: 0.875rem;
+    }
+
+    .tabular-edit .table th,
+    .tabular-edit .table td {
+        padding: 0.5rem 0.25rem;
+    }
+
+    .sticky-column {
+        min-width: 120px !important;
+    }
+
+    /* Adjust cell selection styles for smaller screens */
+    .editable-cell.selected::before {
+        border-width: 1px;
+    }
+}
+
+@media (max-width: 768px) {
+    .tabular-edit .table-responsive {
+        font-size: 0.8rem;
+    }
+
+    .tabular-edit .form-control,
+    .tabular-edit .form-select {
+        font-size: 0.8rem;
+        padding: 0.25rem 0.5rem;
+    }
+
+    /* Simplify cell selection on mobile */
+    .editable-cell.selected {
+        animation: none;
+        box-shadow: inset 0 0 0 1px #2196f3;
+    }
+
+    .editable-cell.selected::before {
+        display: none;
+    }
+
+    /* Make copy success messages more mobile friendly */
+    .copy-success-alert {
+        position: fixed;
+        top: 10px;
+        left: 10px;
+        right: 10px;
+        max-width: none;
+    }
+}
+

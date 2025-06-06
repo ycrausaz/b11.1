@@ -76,42 +76,40 @@
                     </table>
                 </div>
             </div>
-            <div class="column">
-                <div class="mytitle">Stammdaten</div>
-                <div class="content">
-                    <table>
-                        <tr class="section-header"><td colspan="2"><strong>Daten Lieferant</strong></td></tr>
-                        {% for field in form.get_readonly_fields %}
-                            {% if field.name|is_in_il_fields %}
-                                {% if not field.is_hidden %}
-                                    <tr>
-                                        <td>
-                                            <label for="{{ field.id_for_label }}">
-                                                {{ field.label }}
-                                                {% if field.field.required %}
-                                                    <span class="required">*</span>
-                                                {% endif %}
-                                            </label>
-                                        </td>
-                                        <td>
-                                            {{ field }}
-                                            {% if field.errors %}
-                                                <div class="error">
-                                                    {% for error in field.errors %}
-                                                        <p>{{ error }}</p>
-                                                    {% endfor %}
-                                                </div>
-                                            {% endif %}
-                                        </td>
-                                    </tr>
-                                {% else %}
-                                    {{ field }}
+<div class="column">
+    <div class="mytitle">Stammdaten</div>
+    <div class="content">
+        <table>
+            <tr class="section-header"><td colspan="2"><strong>Daten Lieferant</strong></td></tr>
+            {% for field in form.get_il_readonly_fields %}
+                {% if not field.is_hidden %}
+                    <tr>
+                        <td>
+                            <label for="{{ field.id_for_label }}">
+                                {{ field.label }}
+                                {% if field.field.required %}
+                                    <span class="required">*</span>
                                 {% endif %}
+                            </label>
+                        </td>
+                        <td>
+                            {{ field }}
+                            {% if field.errors %}
+                                <div class="error">
+                                    {% for error in field.errors %}
+                                        <p>{{ error }}</p>
+                                    {% endfor %}
+                                </div>
                             {% endif %}
-                        {% endfor %}
-                    </table>
-                </div>
-            </div>
+                        </td>
+                    </tr>
+                {% else %}
+                    {{ field }}
+                {% endif %}
+            {% endfor %}
+        </table>
+    </div>
+</div>
         </div>
 
         <!-- Existing Attachments Section -->
