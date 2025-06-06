@@ -18,3 +18,4 @@ requests
 django-environ
 django-ratelimit
 django-csp
+python-magic

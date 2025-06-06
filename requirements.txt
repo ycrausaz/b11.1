@@ -120,6 +120,8 @@ python-dateutil==2.9.0.post0
     #   botocore
     #   divio-cli
     #   pandas
+python-magic==0.4.27
+    # via -r requirements.in
 pytz==2024.1
     # via pandas
 pyyaml==6.0.2
