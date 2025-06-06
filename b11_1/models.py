@@ -8,6 +8,129 @@ from django.conf import settings
 import boto3
 from botocore.client import Config
 from .utils.storage import MaterialAttachmentStorage
+import mimetypes
+from django.core.exceptions import ValidationError
+import magic
+
+def validate_file_extension_and_content(value):
+    """
+    Enhanced file validation that checks both extension and file content
+    """
+    # Define allowed extensions and their corresponding MIME types
+    allowed_types = {
+        '.pdf': ['application/pdf'],
+        '.doc': ['application/msword'],
+        '.docx': ['application/vnd.openxmlformats-officedocument.wordprocessingml.document'],
+        '.xls': ['application/vnd.ms-excel'],
+        '.xlsx': ['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'],
+        '.txt': ['text/plain'],
+        '.jpg': ['image/jpeg'],
+        '.jpeg': ['image/jpeg'],
+        '.png': ['image/png'],
+        '.gif': ['image/gif']
+    }
+    
+    # Get file extension
+    ext = os.path.splitext(value.name)[1].lower()
+    
+    # Check if extension is allowed
+    if ext not in allowed_types:
+        raise ValidationError(
+            f'Unsupported file extension "{ext}". Allowed extensions are: {", ".join(allowed_types.keys())}'
+        )
+    
+    # Check file size (5MB limit)
+    max_size = getattr(settings, 'DATA_UPLOAD_MAX_MEMORY_SIZE', 5242880)  # 5MB default
+    if value.size > max_size:
+        max_size_mb = max_size / (1024 * 1024)
+        raise ValidationError(
+            f'File size ({value.size / (1024 * 1024):.1f}MB) exceeds the maximum allowed size of {max_size_mb:.1f}MB'
+        )
+    
+    # Read file content to check MIME type
+    try:
+        # Reset file pointer to beginning
+        value.seek(0)
+        file_content = value.read(2048)  # Read first 2KB for MIME detection
+        value.seek(0)  # Reset pointer again
+        
+        # Detect MIME type using python-magic
+        detected_mime = magic.from_buffer(file_content, mime=True)
+        
+        # Check if detected MIME type matches expected types for the extension
+        expected_mimes = allowed_types[ext]
+        if detected_mime not in expected_mimes:
+            raise ValidationError(
+                f'File content does not match extension "{ext}". '
+                f'Detected type: {detected_mime}, Expected: {", ".join(expected_mimes)}. '
+                f'This might be a renamed malicious file.'
+            )
+            
+    except Exception as e:
+        # If we can't detect MIME type, log the error but allow the upload
+        # You might want to be more strict here depending on your security requirements
+        import logging
+        logger = logging.getLogger(__name__)
+        logger.warning(f"Could not validate MIME type for file {value.name}: {str(e)}")
+    
+    return value
+
+def validate_file_header_signatures(value):
+    """
+    Additional validation using file header signatures (magic numbers)
+    """
+    # File signatures (magic numbers) for common file types
+    file_signatures = {
+        '.pdf': [b'%PDF-'],
+        '.png': [b'\x89PNG\r\n\x1a\n'],
+        '.jpg': [b'\xff\xd8\xff'],
+        '.jpeg': [b'\xff\xd8\xff'],
+        '.gif': [b'GIF87a', b'GIF89a'],
+        '.doc': [b'\xd0\xcf\x11\xe0\xa1\xb1\x1a\xe1'],  # MS Office compound document
+        '.docx': [b'PK\x03\x04'],  # ZIP signature (DOCX is ZIP-based)
+    }
+    
+    ext = os.path.splitext(value.name)[1].lower()
+    
+    if ext in file_signatures:
+        value.seek(0)
+        file_header = value.read(20)  # Read first 20 bytes
+        value.seek(0)
+        
+        expected_signatures = file_signatures[ext]
+        header_match = any(file_header.startswith(sig) for sig in expected_signatures)
+        
+        if not header_match:
+            # For TXT files, we can't reliably check headers, so skip this validation
+            if ext != '.txt':
+                raise ValidationError(
+                    f'File header does not match expected signature for {ext} files. '
+                    f'This might be a renamed file with incorrect extension.'
+                )
+    
+    return value
+
+# Alternative: Combine both validations into one
+def comprehensive_file_validator(value):
+    """
+    Comprehensive file validator combining extension, MIME type, and header checks
+    """
+    try:
+        # First validate extension and basic MIME type
+        validate_file_extension_and_content(value)
+        
+        # Then validate file header signatures
+        validate_file_header_signatures(value)
+        
+    except ValidationError:
+        raise
+    except Exception as e:
+        # Log unexpected errors but don't block upload
+        import logging
+        logger = logging.getLogger(__name__)
+        logger.error(f"Unexpected error during file validation for {value.name}: {str(e)}")
+    
+    return value
 
 class MaterialUserAssociation(models.Model):
     """
@@ -454,8 +577,8 @@ def validate_file_extension(value):
     from django.core.exceptions import ValidationError
     from django.conf import settings
     
-    # Define allowed extensions
-    allowed_extensions = ['.pdf', '.doc', '.docx', '.txt', '.jpg', '.jpeg', '.png', '.gif']
+    # Define allowed extensions - ADD .xls and .xlsx
+    allowed_extensions = ['.pdf', '.doc', '.docx', '.xls', '.xlsx', '.txt', '.jpg', '.jpeg', '.png', '.gif']
     
     # Get file extension
     ext = os.path.splitext(value.name)[1].lower()
@@ -479,7 +602,7 @@ class MaterialAttachment(models.Model):
     file = models.FileField(
         upload_to=material_attachment_path,
         storage=MaterialAttachmentStorage(),
-        validators=[validate_file_extension]
+        validators=[comprehensive_file_validator]
     )
     comment = models.TextField(blank=True)
     uploaded_at = models.DateTimeField(auto_now_add=True)
