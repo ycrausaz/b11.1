@@ -283,12 +283,12 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 #DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL', 'yann.crausaz@gmail.com')
 
 # Email settings with Mailgun
-EMAIL_HOST = 'smtp.mailgun.org'
-EMAIL_PORT = 587
+EMAIL_HOST = env('MAILGUN_EMAIL_HOST', default='')
+EMAIL_PORT = env('MAILGUN_EMAIL_PORT', default='')
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = env('MAILGUN_SMTP_LOGIN', default='')
 EMAIL_HOST_PASSWORD = env('MAILGUN_SMTP_PASSWORD', default='')
-DEFAULT_FROM_EMAIL = env('DEFAULT_FROM_EMAIL', default='Your App <no-reply@yourdomain.com>')
+DEFAULT_FROM_EMAIL = env('MAILGUN_DEFAULT_FROM_EMAIL', default='Your App <no-reply@yourdomain.com>')
 
 AUTHENTICATION_BACKENDS = [
     'b11_1.utils.backends.EmailBackend',
